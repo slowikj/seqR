@@ -1,0 +1,38 @@
+vignette: >
+  %\VignetteIndexEntry{vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+Fast k-mer counting is crucial in working with peptides sequences. It may take part in building features for machine learning models for peptides prediction or as a part of sequence comparison software. SeqR provides fast k-mer counting implementation in R written with Rcpp.
+
+## Package installation and loading
+
+Current version is available on Github, it can be build on Windows, Linux and Mac OS. For package installation from R Console the \code{devtools} package is needed. To install seqR and load it to R session the following instructions have to be executed.
+
+```{r setup, eval=FALSE}
+#install.packages("devtools") #if you dont have it installed
+devtools::install_github("piotr-ole/seqR")
+library(seqR)
+```
+
+## Algorithm description
+
+Algorithm of seqR is based on hash table that counts occurrences of each k-mer in the sequence. The vector of elements is changed to integer representation for calculation of hash function and faster code execution. K-mers can be counted within specified alphabet, elements from outside of the alphabet are not counted. Implementation also allows to count gapped k-mers. Original code was written in C++ and ported to R with Rcpp library.
+
+## Function usage examples
+
+
+
+## Benchmark with other software
+
+To compare performance with other software doing k-mer counting we chose "kmer" and "biogram" packages as reference.

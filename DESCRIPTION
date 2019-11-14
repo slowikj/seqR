@@ -1,0 +1,24 @@
+Package: seqR
+Type: Package
+Title: kmer counting package
+Version: 1.1
+Date: 2019-11-03
+Author: Piotr Olesiejuk, Jadwiga Słowik
+Maintainer: Piotr Olesiejuk <piotrek.olesiejuk@gmail.com>
+Description: kmer is a package providing fast counting of k-mers in sequences. It allows user to specify
+  lengths of the k-mers and gaps between amino acids in the sequence. It's written with Rcpp to provide fast code
+  execution.
+License: MIT + file LICENSE
+Imports: Rcpp (>= 1.0.2), RcppParallel
+LinkingTo: Rcpp, RcppParallel
+SystemRequirements: C++11, GNU make
+RoxygenNote: 7.0.0
+Encoding: UTF-8
+Suggests:
+    testthat,
+    covr,
+    knitr,
+    rmarkdown,
+    spelling
+VignetteBuilder: knitr
+Language: en-US
