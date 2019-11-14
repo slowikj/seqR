@@ -16,3 +16,6 @@ mers
 rmarkdown
 unigram
 unigrams
+kmers
+kmer
+microbenchmark

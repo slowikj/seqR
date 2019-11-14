@@ -15,5 +15,7 @@ devtools::install_github("piotr-ole/seqR")
 library(seqR)
 ```
 
-# Examples
+# Cheatsheet
+<img src = "cheatsheet/cheatsheet.png" align = "center" width="700"/>
+
 

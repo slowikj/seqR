@@ -3,7 +3,13 @@ Type: Package
 Title: kmer counting package
 Version: 1.1
 Date: 2019-11-03
-Author: Piotr Olesiejuk, Jadwiga Słowik
+Authors@R: c(
+    person(given = "Piotr",
+           family = "Olesiejuk",
+           role = c("aut", "cre"),
+           email = "piotrek.olesiejuk@gmail.com"),
+    person(given = "Jadwiga", family = "Slowik", role = c("aut"))
+    )
 Maintainer: Piotr Olesiejuk <piotrek.olesiejuk@gmail.com>
 Description: kmer is a package providing fast counting of k-mers in sequences. It allows user to specify
   lengths of the k-mers and gaps between amino acids in the sequence. It's written with Rcpp to provide fast code
@@ -19,6 +25,7 @@ Suggests:
     covr,
     knitr,
     rmarkdown,
-    spelling
+    spelling,
+    ggplot2
 VignetteBuilder: knitr
 Language: en-US

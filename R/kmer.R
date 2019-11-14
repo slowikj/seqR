@@ -24,7 +24,7 @@
 #' each element is separated by . char.
 #' The format of the positional k-mer is similar to the above one.
 #' The only thing that differs is that the prefix index_ is added to its representation of elements.
-#' @example
+#' @examples
 #' count_kmers(c("a", "b", "c"), c(0), c("a", "b"), FALSE)
 count_kmers <- function(seq, d, alphabet, pos) {
   .validate_fields(seq, d, alphabet, pos)
