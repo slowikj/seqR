@@ -30,10 +30,13 @@ than abc that starts on the 2nd position.
 As for non positional k-mers, all abc, regardless of their position, are treated the same.
 Besides, it is important to note that during the generation of k-mers the given \code{alphabet} vector
 is taken into account which means that we do not count k-mers that contain elements not included in the alphabet
-and additionally, if non positional k-mers are used, all possible to create using the given alphabet are returned,
+and additionally, if non positional k-mers are used, all possible ones to create using the given alphabet are returned,
 even if their count is equal to 0.
 The format of the non positional k-mer is the following:
 each element is separated by . char.
 The format of the positional k-mer is similar to the above one.
 The only thing that differs is that the prefix index_ is added to its representation of elements.
+}
+\examples{
+count_kmers(c("a", "b", "c"), c(0), c("a", "b"), FALSE)
 }
