@@ -13,9 +13,9 @@
 #' 
 #' @details Depending on the value of parameter \code{pos} positional or non positional k-mers can be taken
 #' into account. Positional k-mers are related to its position (column index in the given \code{seq} matrix),
-#' so, for example k-mer abc that starts on the 1st position is a different k-mer
-#' than abc that starts on the 2nd position. 
-#' As for non positional k-mers, all abc, regardless of their position, are treated the same.
+#' so, for example k-mer \code{abc} that starts on the first position is a different k-mer
+#' than \code{abc} that starts on the second position. 
+#' As for non positional k-mers, all \code{abc}, regardless of their position, are treated the same.
 #' Besides, it is important to note that during the generation of k-mers the given \code{alphabet} vector
 #' is taken into account which means that we do not count k-mers that contain elements not included in the alphabet
 #' and additionally, if non positional k-mers are used, all possible ones to create using the given alphabet are returned,

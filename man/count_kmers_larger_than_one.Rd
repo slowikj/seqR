@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{count_kmers_larger_than_one}
 \alias{count_kmers_larger_than_one}
-\title{Count k-mers that containes more than one item}
+\title{Count k-mers that contains more than one item}
 \usage{
 count_kmers_larger_than_one(m, d, alphabet, pos)
 }
@@ -19,5 +19,5 @@ count_kmers_larger_than_one(m, d, alphabet, pos)
 a named vector with counts of k-mers
 }
 \description{
-Count k-mers that containes more than one item
+Count k-mers that contains more than one item
 }
