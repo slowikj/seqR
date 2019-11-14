@@ -1,6 +1,7 @@
 
+#' @name count_kmers
 #' @title Count k-mers
-#' #' @export
+#' @export
 #' 
 #' @description Counts positional or non positional k-mers
 #' @param seq  \code{string} matrix (each row of the matrix represents one sequence) or vector
@@ -23,7 +24,7 @@
 #' each element is separated by . char.
 #' The format of the positional k-mer is similar to the above one.
 #' The only thing that differs is that the prefix index_ is added to its representation of elements.
-#' @examples
+#' @example
 #' count_kmers(c("a", "b", "c"), c(0), c("a", "b"), FALSE)
 count_kmers <- function(seq, d, alphabet, pos) {
   if(class(seq) != "matrix") {
