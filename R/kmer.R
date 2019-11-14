@@ -27,9 +27,16 @@
 #' @example
 #' count_kmers(c("a", "b", "c"), c(0), c("a", "b"), FALSE)
 count_kmers <- function(seq, d, alphabet, pos) {
+  .validate_fields(seq, d, alphabet, pos)
+  
+  if(length(alphabet) == 0) {
+    return (c())
+  }
+  
   if(class(seq) != "matrix") {
     seq <- matrix(seq, nrow = 1)
   }
+  
   alphabet <- unique(alphabet)
   
   if(length(d) == 0) {
@@ -37,5 +44,19 @@ count_kmers <- function(seq, d, alphabet, pos) {
   } else {
     return (count_kmers_larger_than_one(seq, d, alphabet, pos))
   } 
+}
+
+.validate_fields <- function(seq, d, alphabet, pos) {
+  if(length(seq) == 0) {
+    stop("seq should have non zero length")
+  }
+  
+  if(!is.character(seq)) {
+    stop("seq should have items of type character")
+  }
+  
+  if(length(alphabet) > 0 && !is.character(alphabet)) {
+    stop("alphabet should have items of type character")
+  }
 }
 
