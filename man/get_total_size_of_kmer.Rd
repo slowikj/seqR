@@ -10,8 +10,6 @@
 
 \item{begin_index}{\code{integer} representing the begin index (in \code{s}) of the k-mer}
 
-\item{num2str}{a \code{hash map} representing the encoding between number and \code{string} representation of each alphabet's item}
-
 \item{kmer}{\code{integer} vector representing the encoded kmer (\link{get_total_size_of_kmer})}
 
 \item{num2str}{\code{hash map} representing the encoding between the integer and string}
