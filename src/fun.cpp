@@ -451,36 +451,6 @@ std::unordered_map<std::string, int> count_kmers_str(Rcpp::StringVector& s,
                                              positional);
 }
 
-//' @name count_kmer_num
-//' @title Count k-mers for numeric sequences (the size of k-mer should be larger than one)
-//' 
-//' 
-//' @param s  a \code{numeric} vector representing an input sequence
-//' @param d  an \code{integer} vector representing gaps between consecutive elements of k-mer
-//' @param alphabet a \code{numeric} vector representing valid elements of k-mer
-//' @param pos a \code{logical} value that denotes whether positional k-mers should be generated
-//' @return a named vector with counts of k-mers
-//' 
-//' @details K-mers that contain elements from \code{alphabet} but do not exist in the input sequence are also generated.
-//' 
-//' @examples
-//' count_kmers_str(c(1,2,3,5,3,7),
-//' d=c(0,0),
-//' c(1, 2, 3, 4),
-//' pos=FALSE)
-//' @export
-// [[Rcpp::export]]
-std::unordered_map<std::string, int> count_kmer_num(Rcpp::NumericVector& s,
-                                                    Rcpp::IntegerVector& d,
-                                                    Rcpp::NumericVector& alphabet,
-                                                    Rcpp::LogicalVector& pos) {
-  bool positional = is_first_true(pos);
-  return get_kmers<Rcpp::NumericVector, double>(s, d, alphabet,
-                                         [](double d) { return std::to_string(d); },
-                                         get_kmer_decorator(positional),
-                                         positional);
-}
-
 struct MapReduceWorker: public RcppParallel::Worker {
   
   std::unordered_map<std::string, int> output;

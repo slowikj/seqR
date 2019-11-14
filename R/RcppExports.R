@@ -214,28 +214,6 @@ count_kmers_str <- function(s, d, alphabet, pos) {
     .Call('_seqR_count_kmers_str', PACKAGE = 'seqR', s, d, alphabet, pos)
 }
 
-#' @name count_kmer_num
-#' @title Count k-mers for numeric sequences (the size of k-mer should be larger than one)
-#' 
-#' 
-#' @param s  a \code{numeric} vector representing an input sequence
-#' @param d  an \code{integer} vector representing gaps between consecutive elements of k-mer
-#' @param alphabet a \code{numeric} vector representing valid elements of k-mer
-#' @param pos a \code{logical} value that denotes whether positional k-mers should be generated
-#' @return a named vector with counts of k-mers
-#' 
-#' @details K-mers that contain elements from \code{alphabet} but do not exist in the input sequence are also generated.
-#' 
-#' @examples
-#' count_kmers_str(c(1,2,3,5,3,7),
-#' d=c(0,0),
-#' c(1, 2, 3, 4),
-#' pos=FALSE)
-#' @export
-count_kmer_num <- function(s, d, alphabet, pos) {
-    .Call('_seqR_count_kmer_num', PACKAGE = 'seqR', s, d, alphabet, pos)
-}
-
 #' @name count_kmers_larger_than_one
 #' @title Count k-mers that contains more than one item
 #' 
