@@ -21,7 +21,7 @@ NULL
 #' 
 #' @description The number of characters of the result k-mer (after decoding from \code{integer} to \code{string})
 #' 
-#' @param kmer  \code{integer} vector representing the encoded kmer (\link{get_total_size_of_kmer})
+#' @param kmer  \code{integer} vector representing the encoded k-mer (\link{get_total_size_of_kmer})
 #' @param num2str  \code{hash map} representing the encoding between the integer and string
 #' @return the number of characters in the result \code{string} that is the result of decoding each \code{integer} from \code{kmer}
 NULL
@@ -237,7 +237,7 @@ count_kmer_num <- function(s, d, alphabet, pos) {
 }
 
 #' @name count_kmers_larger_than_one
-#' @title Count k-mers that containes more than one item
+#' @title Count k-mers that contains more than one item
 #' 
 #' @param m  \code{character} matrix - each row represents one sequence
 #' @param d  an \code{integer} vector representing gaps between consecutive elements of k-mer

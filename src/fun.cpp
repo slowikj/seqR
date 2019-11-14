@@ -113,7 +113,7 @@ int get_total_size_of_kmer(const std::vector<int>& s,
 //' 
 //' @description The number of characters of the result k-mer (after decoding from \code{integer} to \code{string})
 //' 
-//' @param kmer  \code{integer} vector representing the encoded kmer (\link{get_total_size_of_kmer})
+//' @param kmer  \code{integer} vector representing the encoded k-mer (\link{get_total_size_of_kmer})
 //' @param num2str  \code{hash map} representing the encoding between the integer and string
 //' @return the number of characters in the result \code{string} that is the result of decoding each \code{integer} from \code{kmer}
 int get_total_size_of_kmer(const std::vector<int>& kmer,
@@ -305,7 +305,7 @@ std::unordered_map<std::string, int> count_kmers_helper(const std::vector<int>& 
   
   std::unordered_map<int, std::pair<std::string, int>> kmers; // hash -> (kmer, count)
   
-  // fill map with found (allowed) kmers
+  // fill map with found (allowed) k-mers
   int window_length = get_window_length(d);
   int last_window_index = s.size() - window_length;
   for(int kmer_begin_index = 0; kmer_begin_index <= last_window_index; ++kmer_begin_index) {
@@ -512,7 +512,7 @@ struct MapReduceWorker: public RcppParallel::Worker {
 
 
 //' @name count_kmers_larger_than_one
-//' @title Count k-mers that containes more than one item
+//' @title Count k-mers that contains more than one item
 //' 
 //' @param m  \code{character} matrix - each row represents one sequence
 //' @param d  an \code{integer} vector representing gaps between consecutive elements of k-mer

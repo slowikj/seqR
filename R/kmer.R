@@ -1,96 +1,41 @@
-#' @title Amino acids
+
+#' @name count_kmers
+#' @title Count k-mers
+#' @export
 #' 
-#' @return A dataframe which contains basic information about all of amino acids. 
-#' Every amino acid is described by it's name, short name and letter code. 
-#'
-#' @export
-amino_acids <- function() {
-  data.frame(Name = c("Arginine", "Histidine", "Lysine",
-                       "Aspartic Acid", "Glutamic Acid",
-                       "Serine", "Threonine", "Aspargine",
-                       "Glutamine", "Cysteine", "Selenocysteine",
-                       "Glycine", "Proline", "Alanine", "Valine",
-                       "Isoleucine", "Leucine", "Methionine", "Phenylalanine",
-                       "Tyrosine", "Tryptophan"),
-             Short = c("Arg", "His", "Lys", "Asp", "Glu", "Ser",
-                       "Thr", "Asn", "Gln", "Cys", "Sec", "Gly",
-                       "Pro", "Ala", "Val", "Ile", "Leu", "Met",
-                       "Phe", "Tyr", "Trp"),
-             Letter = c("R", "H", "K", "D", "E", "S", "T", "N",
-                        "Q", "C", "U", "G", "P", "A", "V", "I",
-                        "L", "M", "F", "Y", "W"))
-}
-
-#' @title Amino acids letters
+#' @description Counts positional or non positional k-mers
+#' @param seq  \code{string} matrix (each row of the matrix represents one sequence) or vector
+#' @param d  \code{integer} vector representing the length of gaps between consecutive items of k-mer. See details.
+#' @param alphabet  \code{string} vector representing the items which only should be used for generating k-mers
+#' @param pos  \code{logical} value representing whether positional k-mers should be count
 #' 
-#' @return A vector containing all of the valid amino acid letters
-#'
-#' @export
-amino_letters <- function() {
-  as.character(amino_acids()[, "Letter"])
-}
-
-#' @title Generate random alphabet
-#'
-#' @param nsize  \code{integer} number of elements in the alphabet 
-#' @return Random alphabet of given size created as a subset of valid amino acid letters.
-#'
-#' @examples
-#' generate_random_alphabet(10)
-#' @export
-generate_random_alphabet <- function(nsize = 10) {
-  set <- amino_letters()
-  set[sample(length(set), size = 10)]
-}
-
-#' @title Generate random sequence
-#'
-#' @param nsize  \code{integer} number of elements in the sequence
-#' @return Random \code{character} object of given length created from valid amino acid letters.
-#'
-#' @examples
-#' generate_random_seq(10)
-#' @export
-generate_random_seq <- function(nsize = 50) {
-  set <- amino_letters()
-  samp <- sample(set, nsize, replace = TRUE)
-  paste(samp, collapse = '')
-}
-
-#'@title Count all mers
-#'
-#'@param string \code{character} with the sequence
-#'@return table with number of occurrence of all mers in the sequence
-#'
-#'@export
-#'
-#'@examples
-#'count_mers("AAPGAGAYY")
-count_mers <- function(string) {
-  l <- list()
-  n <- nchar(string)
-  for (j in 0:n) {
-    for (i in 1:(n - j)) {
-      l[j*n + i] <- substr(string, i, i+j)
-    }
+#' @return named \code{integer} vector with k-mers counts
+#' 
+#' @details Depending on the value of parameter \code{pos} positional or non positional k-mers can be taken
+#' into account. Positional k-mers are related to its position (column index in the given \code{seq} matrix),
+#' so, for example k-mer \code{abc} that starts on the first position is a different k-mer
+#' than \code{abc} that starts on the second position. 
+#' As for non positional k-mers, all \code{abc}, regardless of their position, are treated the same.
+#' Besides, it is important to note that during the generation of k-mers the given \code{alphabet} vector
+#' is taken into account which means that we do not count k-mers that contain elements not included in the alphabet
+#' and additionally, if non positional k-mers are used, all possible ones to create using the given alphabet are returned,
+#' even if their count is equal to 0.
+#' The format of the non positional k-mer is the following:
+#' each element is separated by . char.
+#' The format of the positional k-mer is similar to the above one.
+#' The only thing that differs is that the prefix index_ is added to its representation of elements.
+#' @example
+#' count_kmers(c("a", "b", "c"), c(0), c("a", "b"), FALSE)
+count_kmers <- function(seq, d, alphabet, pos) {
+  if(class(seq) != "matrix") {
+    seq <- matrix(seq, nrow = 1)
   }
-  table(unlist(l))
+  alphabet <- unique(alphabet)
+  
+  if(length(d) == 0) {
+    return (count_unigrams(seq, alphabet, pos))
+  } else {
+    return (count_kmers_larger_than_one(seq, d, alphabet, pos))
+  } 
 }
 
-#'@title Count kmers
-#'
-#'@param string \code{character} with the sequence
-#'@param k \code{integer} defines length of the subsequence to be counted
-#'@return table with number of occurrence of all k-mers in the sequence
-#'@export
-#'
-#'@examples
-#'count_k_mers("AAPGAGAYY", 2)
-count_k_mers <- function(string, k = 2) {
-  l <- list()
-  n <- nchar(string)
-  for (i in 1:(n - k - 1)) {
-      l[i] <- substr(string, i, i+k - 1)
-    }
-  table(unlist(l))
-}
