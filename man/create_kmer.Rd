@@ -10,10 +10,6 @@
 
 \item{begin_index}{\code{integer} representing the start of k-mer (in \code{s})}
 
-\item{num2str}{\code{hash map} representing encoding of sequence items between \code{integer} and \code{string}}
-
-\item{kmer_decorator}{a \code{function} that can add extra characters to k-mer (for example position information)}
-
 \item{kmer}{\code{integer} vector representing an encoded sequence}
 
 \item{num2str}{\code{hash map} representing encoding of sequence items between \code{integer} and \code{string}}
