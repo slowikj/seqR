@@ -42,18 +42,20 @@ std::vector<short> enumerate_sequence(VECTOR_TYPE& seq,
 }
 
 template<class VECTOR_TYPE, class ITEM_TYPE>
-std::vector<short> enumerate_sequence(VECTOR_TYPE& v,
-                                      VECTOR_TYPE& alphabet) {
+std::tuple<std::vector<short>, std::unordered_map<ITEM_TYPE, short>*, std::unordered_map<short, ITEM_TYPE>*>
+enumerate_sequence(VECTOR_TYPE& v,
+                  VECTOR_TYPE& alphabet) {
   auto [val2short_encoder, short2val_decoder] = enumerate_alphabet<VECTOR_TYPE, ITEM_TYPE>(alphabet);
   auto res =enumerate_sequence<VECTOR_TYPE, ITEM_TYPE>(v, val2short_encoder);
-  delete val2short_encoder;
-  delete short2val_decoder;
-  return res;
+  return { res, val2short_encoder, short2val_decoder };
 }
 
 //' @export
 // [[Rcpp::export]]
 Rcpp::IntegerVector enumerate_string_sequence(Rcpp::StringVector& sequence,
                                               Rcpp::StringVector& alphabet) {
-  return Rcpp::wrap(enumerate_sequence<Rcpp::StringVector, std::string>(sequence, alphabet));
+  auto [res, val2short_encoder, short2val_decoder] = enumerate_sequence<Rcpp::StringVector, std::string>(sequence, alphabet);
+  delete val2short_encoder;
+  delete short2val_decoder;
+  return Rcpp::wrap(res);
 }
