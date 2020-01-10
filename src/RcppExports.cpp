@@ -6,13 +6,13 @@
 using namespace Rcpp;
 
 // enumerate_string_sequence
-Rcpp::IntegerVector enumerate_string_sequence(Rcpp::StringVector& sequence, Rcpp::StringVector& alphabet);
+Rcpp::IntegerVector enumerate_string_sequence(Rcpp::Nullable<Rcpp::StringVector> sequence, Rcpp::Nullable<Rcpp::StringVector> alphabet);
 RcppExport SEXP _seqR_enumerate_string_sequence(SEXP sequenceSEXP, SEXP alphabetSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type sequence(sequenceSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::StringVector> >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::StringVector> >::type alphabet(alphabetSEXP);
     rcpp_result_gen = Rcpp::wrap(enumerate_string_sequence(sequence, alphabet));
     return rcpp_result_gen;
 END_RCPP

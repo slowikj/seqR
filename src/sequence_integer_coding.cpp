@@ -6,6 +6,7 @@
 #include<vector>
 #include<functional>
 #include<tuple>
+#include<iostream>
 
 template<class ALPHABET_VECTOR_TYPE, class CPP_ITEM_TYPE>
 std::tuple<std::unordered_map<CPP_ITEM_TYPE, short>*, std::unordered_map<short, CPP_ITEM_TYPE>*>
@@ -44,17 +45,27 @@ std::vector<short> enumerate_sequence(VECTOR_TYPE& seq,
 template<class VECTOR_TYPE, class ITEM_TYPE>
 std::tuple<std::vector<short>, std::unordered_map<ITEM_TYPE, short>*, std::unordered_map<short, ITEM_TYPE>*>
 enumerate_sequence(VECTOR_TYPE& v,
-                  VECTOR_TYPE& alphabet) {
+                   VECTOR_TYPE& alphabet) {
   auto [val2short_encoder, short2val_decoder] = enumerate_alphabet<VECTOR_TYPE, ITEM_TYPE>(alphabet);
-  auto res =enumerate_sequence<VECTOR_TYPE, ITEM_TYPE>(v, val2short_encoder);
+  auto res = enumerate_sequence<VECTOR_TYPE, ITEM_TYPE>(v, val2short_encoder);
   return { res, val2short_encoder, short2val_decoder };
+}
+
+template<class NON_NULL_TYPE>
+NON_NULL_TYPE get_value_or_construct_default(Rcpp::Nullable<NON_NULL_TYPE> nullableValue) {
+  return nullableValue.isNull() ? NON_NULL_TYPE() : NON_NULL_TYPE(nullableValue);
 }
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerVector enumerate_string_sequence(Rcpp::StringVector& sequence,
-                                              Rcpp::StringVector& alphabet) {
-  auto [res, val2short_encoder, short2val_decoder] = enumerate_sequence<Rcpp::StringVector, std::string>(sequence, alphabet);
+Rcpp::IntegerVector enumerate_string_sequence(Rcpp::Nullable<Rcpp::StringVector> sequence,
+                                              Rcpp::Nullable<Rcpp::StringVector> alphabet) {
+  Rcpp::StringVector nonNullSequence = get_value_or_construct_default(sequence);
+  Rcpp::StringVector nonNullAlphabet = get_value_or_construct_default(alphabet);
+  auto [res, val2short_encoder, short2val_decoder] = enumerate_sequence<Rcpp::StringVector, std::string>(
+    nonNullSequence,
+    nonNullAlphabet
+  );
   delete val2short_encoder;
   delete short2val_decoder;
   return Rcpp::wrap(res);
