@@ -6,7 +6,6 @@
 #include<vector>
 #include<functional>
 #include<tuple>
-#include<iostream>
 
 template<class ALPHABET_VECTOR_TYPE, class CPP_ITEM_TYPE>
 std::tuple<std::unordered_map<CPP_ITEM_TYPE, short>*, std::unordered_map<short, CPP_ITEM_TYPE>*>
@@ -56,17 +55,23 @@ NON_NULL_TYPE get_value_or_construct_default(Rcpp::Nullable<NON_NULL_TYPE> nulla
   return nullableValue.isNull() ? NON_NULL_TYPE() : NON_NULL_TYPE(nullableValue);
 }
 
-//' @export
-// [[Rcpp::export]]
-Rcpp::IntegerVector enumerate_string_sequence(Rcpp::Nullable<Rcpp::StringVector> sequence,
-                                              Rcpp::Nullable<Rcpp::StringVector> alphabet) {
-  Rcpp::StringVector nonNullSequence = get_value_or_construct_default(sequence);
-  Rcpp::StringVector nonNullAlphabet = get_value_or_construct_default(alphabet);
-  auto [res, val2short_encoder, short2val_decoder] = enumerate_sequence<Rcpp::StringVector, std::string>(
+template<class VECTOR_TYPE, class CPP_ITEM_TYPE>
+Rcpp::IntegerVector enumerate_sequence(Rcpp::Nullable<VECTOR_TYPE> sequence,
+                                       Rcpp::Nullable<VECTOR_TYPE> alphabet) {
+  VECTOR_TYPE nonNullSequence = get_value_or_construct_default(sequence);
+  VECTOR_TYPE nonNullAlphabet = get_value_or_construct_default(alphabet);
+  auto [res, val2short_encoder, short2val_decoder] = enumerate_sequence<VECTOR_TYPE, CPP_ITEM_TYPE>(
     nonNullSequence,
     nonNullAlphabet
   );
   delete val2short_encoder;
   delete short2val_decoder;
   return Rcpp::wrap(res);
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerVector enumerate_string_sequence(Rcpp::Nullable<Rcpp::StringVector> sequence,
+                                              Rcpp::Nullable<Rcpp::StringVector> alphabet) {
+  return enumerate_sequence<Rcpp::StringVector, std::string>(sequence, alphabet);
 }
