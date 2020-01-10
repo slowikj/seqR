@@ -8,7 +8,7 @@ Authors@R: c(
            family = "Olesiejuk",
            role = c("aut", "cre"),
            email = "piotrek.olesiejuk@gmail.com"),
-    person(given = "Jadwiga", family = "Slowik", role = c("aut"))
+    person(given = "Jadwiga", family = "Słowik", role = c("aut"))
     )
 Maintainer: Piotr Olesiejuk <piotrek.olesiejuk@gmail.com>
 Description: kmer is a package providing fast counting of k-mers in sequences. It allows user to specify
@@ -17,7 +17,7 @@ Description: kmer is a package providing fast counting of k-mers in sequences. I
 License: MIT + file LICENSE
 Imports: Rcpp (>= 1.0.2), RcppParallel
 LinkingTo: Rcpp, RcppParallel
-SystemRequirements: C++11, GNU make
+SystemRequirements: c++1z, GNU make
 RoxygenNote: 7.0.2
 Encoding: UTF-8
 Suggests:
