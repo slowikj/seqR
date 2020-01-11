@@ -17,9 +17,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// enumerate_integer_sequence
+Rcpp::IntegerVector enumerate_integer_sequence(Rcpp::Nullable<Rcpp::IntegerVector> sequence, Rcpp::Nullable<Rcpp::IntegerVector> alphabet);
+RcppExport SEXP _seqR_enumerate_integer_sequence(SEXP sequenceSEXP, SEXP alphabetSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::IntegerVector> >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::IntegerVector> >::type alphabet(alphabetSEXP);
+    rcpp_result_gen = Rcpp::wrap(enumerate_integer_sequence(sequence, alphabet));
+    return rcpp_result_gen;
+END_RCPP
+}
+// enumerate_numeric_sequence
+Rcpp::IntegerVector enumerate_numeric_sequence(Rcpp::Nullable<Rcpp::NumericVector> sequence, Rcpp::Nullable<Rcpp::NumericVector> alphabet);
+RcppExport SEXP _seqR_enumerate_numeric_sequence(SEXP sequenceSEXP, SEXP alphabetSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type alphabet(alphabetSEXP);
+    rcpp_result_gen = Rcpp::wrap(enumerate_numeric_sequence(sequence, alphabet));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_seqR_enumerate_string_sequence", (DL_FUNC) &_seqR_enumerate_string_sequence, 2},
+    {"_seqR_enumerate_integer_sequence", (DL_FUNC) &_seqR_enumerate_integer_sequence, 2},
+    {"_seqR_enumerate_numeric_sequence", (DL_FUNC) &_seqR_enumerate_numeric_sequence, 2},
     {NULL, NULL, 0}
 };
 

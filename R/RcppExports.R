@@ -6,3 +6,13 @@ enumerate_string_sequence <- function(sequence, alphabet) {
     .Call('_seqR_enumerate_string_sequence', PACKAGE = 'seqR', sequence, alphabet)
 }
 
+#' @export
+enumerate_integer_sequence <- function(sequence, alphabet) {
+    .Call('_seqR_enumerate_integer_sequence', PACKAGE = 'seqR', sequence, alphabet)
+}
+
+#' @export
+enumerate_numeric_sequence <- function(sequence, alphabet) {
+    .Call('_seqR_enumerate_numeric_sequence', PACKAGE = 'seqR', sequence, alphabet)
+}
+
