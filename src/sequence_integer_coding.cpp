@@ -215,11 +215,13 @@ void update_kmers_for_subsequence(std::unordered_map<int, KMerHashInfo>& kmer_co
 
 int compute_power_fast(int base, int power, int modulo) {
   long long res = 1;
+  long long current_base_power = base;
   while(power > 0) {
-    if((power & 1) == 0) {
-      res = (res * res) % modulo;
+    if(power & 1) {
+      res = (res * current_base_power) % modulo;
     }
     power >>= 1;
+    current_base_power = (current_base_power * current_base_power) % modulo;
   }
   return static_cast<int>(res);
 }
