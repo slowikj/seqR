@@ -17,7 +17,7 @@ enumerate_numeric_sequence <- function(sequence, alphabet) {
 }
 
 #' @export
-get_valid_sequence_ranges <- function(encoded_sequence, window_length) {
-    .Call('_seqR_get_valid_sequence_ranges', PACKAGE = 'seqR', encoded_sequence, window_length)
+get_not_allowed_sequence_positions <- function(encoded_sequence) {
+    .Call('_seqR_get_not_allowed_sequence_positions', PACKAGE = 'seqR', encoded_sequence)
 }
 

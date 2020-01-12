@@ -3,5 +3,6 @@
 export(enumerate_integer_sequence)
 export(enumerate_numeric_sequence)
 export(enumerate_string_sequence)
+export(get_not_allowed_sequence_positions)
 importFrom(Rcpp,sourceCpp)
 useDynLib(seqR)

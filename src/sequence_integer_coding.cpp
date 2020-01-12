@@ -135,47 +135,23 @@ Rcpp::IntegerVector enumerate_numeric_sequence(Rcpp::Nullable<Rcpp::NumericVecto
 
 std::vector<int> get_not_allowed_sequence_positions(std::vector<short>& encoded_sequence) {
   std::vector<int> res;
+  res.push_back(-1); // left sentinel
   for(size_t seq_i = 0; seq_i < encoded_sequence.size(); ++seq_i) {
     if(encoded_sequence[seq_i] == NOT_ALLOWED_CHARACTER_CODE) {
       res.push_back(seq_i);
     }
   }
-  res.push_back(encoded_sequence.size()); // sentinel
+  res.push_back(encoded_sequence.size()); // right sentinel
   return res;
-}
-
-std::vector<std::pair<int, int>> get_valid_sequence_ranges(std::vector<int>& not_allowed_sequence_positions,
-                                                           int window_length) {
-  std::vector<std::pair<int, int>> res;
-  
-  int previous_not_allowed_position = -1;
-  for(const int& not_allowed_position: not_allowed_sequence_positions) {
-    int allowed_characters_between = not_allowed_position - previous_not_allowed_position - 1;
-    if(allowed_characters_between >= window_length) {
-      res.push_back(std::make_pair(previous_not_allowed_position + 1, not_allowed_position - window_length));
-    }
-    previous_not_allowed_position = not_allowed_position;
-  }
-  return res; 
 }
 
 // ------------------------ COMPUTATION OF ALLOWED SEQUENCE RANGES - R WRAPPER ------------------------
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::List get_valid_sequence_ranges(Rcpp::IntegerVector encoded_sequence,
-                                     int window_length) {
+Rcpp::IntegerVector get_not_allowed_sequence_positions(Rcpp::IntegerVector encoded_sequence) {
   std::vector<short> cpp_encoded_sequence = Rcpp::as<std::vector<short>>(encoded_sequence);
   auto not_allowed_sequence_positions = get_not_allowed_sequence_positions(cpp_encoded_sequence);
-  auto valid_sequence_ranges = get_valid_sequence_ranges(not_allowed_sequence_positions, window_length);
-  
-  std::vector<int> ranges_begins, ranges_ends;
-  std::transform(valid_sequence_ranges.begin(), valid_sequence_ranges.end(), std::back_inserter(ranges_begins),
-                 [](const std::pair<int,int>& p) -> int { return p.first + 1; });
-  std::transform(valid_sequence_ranges.begin(), valid_sequence_ranges.end(), std::back_inserter(ranges_ends),
-                 [](const std::pair<int,int>& p) -> int { return p.second + 1; });
-  
-  return Rcpp::List::create(
-    Rcpp::_["begin"]=Rcpp::wrap(ranges_begins),
-    Rcpp::_["end"]=Rcpp::wrap(ranges_ends));
+  return static_cast<Rcpp::IntegerVector>(Rcpp::wrap(not_allowed_sequence_positions)) + 1;
 }
+
