@@ -31,17 +31,17 @@ enumerate_alphabet(ALPHABET_VECTOR_TYPE& alphabet,
   return {val2num_encoder, num2val_decoder};
 }
 
-const short NOT_ALLOWED_CHARACTER_CODE = -1;
+const ITEM_ENCODING_TYPE NOT_ALLOWED_CHARACTER_CODE = -1;
 
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
-std::vector<short> enumerate_sequence(VECTOR_TYPE& seq,
+std::vector<ITEM_ENCODING_TYPE> enumerate_sequence(VECTOR_TYPE& seq,
                                       std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>* val2num_encoder,
                                       std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter) {
-  std::vector<short> res;
+  std::vector<ITEM_ENCODING_TYPE> res;
   res.reserve(seq.size());
   for(const auto& seq_item: seq) {
     CPP_ITEM_TYPE item_cpp = rcpp2cpp_converter(seq_item);
-    short item_encoded = val2num_encoder -> find(item_cpp) == val2num_encoder -> end()
+    ITEM_ENCODING_TYPE item_encoded = val2num_encoder -> find(item_cpp) == val2num_encoder -> end()
       ? NOT_ALLOWED_CHARACTER_CODE
       : (*val2num_encoder)[item_cpp];
     res.push_back(item_encoded);
@@ -50,9 +50,9 @@ std::vector<short> enumerate_sequence(VECTOR_TYPE& seq,
 }
 
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
-std::tuple<std::vector<short>,
+std::tuple<std::vector<ITEM_ENCODING_TYPE>,
            std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
-           std::unordered_map<short, CPP_ITEM_TYPE>*>
+           std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>*>
 enumerate_sequence_nonnull(VECTOR_TYPE& sequence,
                            VECTOR_TYPE& alphabet,
                            std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter) {
@@ -133,7 +133,7 @@ Rcpp::IntegerVector enumerate_numeric_sequence(Rcpp::Nullable<Rcpp::NumericVecto
 
 // ------------------------ COMPUTATION OF ALLOWED SEQUENCE RANGES ------------------------
 
-std::vector<int> get_not_allowed_sequence_positions(std::vector<short>& encoded_sequence) {
+std::vector<int> get_not_allowed_sequence_positions(const std::vector<ITEM_ENCODING_TYPE>& encoded_sequence) {
   std::vector<int> res;
   res.push_back(-1); // left sentinel
   for(size_t seq_i = 0; seq_i < encoded_sequence.size(); ++seq_i) {
@@ -150,8 +150,49 @@ std::vector<int> get_not_allowed_sequence_positions(std::vector<short>& encoded_
 //' @export
 // [[Rcpp::export]]
 Rcpp::IntegerVector get_not_allowed_sequence_positions(Rcpp::IntegerVector encoded_sequence) {
-  std::vector<short> cpp_encoded_sequence = Rcpp::as<std::vector<short>>(encoded_sequence);
+  std::vector<ITEM_ENCODING_TYPE> cpp_encoded_sequence = Rcpp::as<std::vector<ITEM_ENCODING_TYPE>>(encoded_sequence);
   auto not_allowed_sequence_positions = get_not_allowed_sequence_positions(cpp_encoded_sequence);
   return static_cast<Rcpp::IntegerVector>(Rcpp::wrap(not_allowed_sequence_positions)) + 1;
+}
+
+// ------------------------ K-MERS COMPUTATION (COMPACT SUBWORDS - ROLLING WINDOW HASHES) --------------
+
+struct StringHash {
+  int seq_pos;
+  int cnt;
+  
+  StringHash(int seq_pos, int cnt): seq_pos(seq_pos), cnt(cnt) {}
+  
+  StringHash(const StringHash& second) {
+    this -> seq_pos = second.seq_pos;
+    this -> cnt = second.cnt;
+  }
+  
+  ~StringHash() {}
+};
+
+void update_kmers_for_subsequence(std::unordered_map<int, StringHash>& kmer_counter,
+                                  std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
+                                  int sequence_begin,
+                                  int sequence_end,
+                                  bool positional_kmer) {
+  
+  // TODO
+}
+
+std::unordered_map<int, StringHash> count_kmers(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
+                                                int k,
+                                                bool positional_kmer) {
+  std::unordered_map<int, StringHash> res;
+  auto not_allowed_positions = get_not_allowed_sequence_positions(encoded_sequence);
+  
+  for(int not_allowed_position_ind = 0; not_allowed_position_ind < not_allowed_positions.size() - 1; ++not_allowed_position_ind) {
+    if(not_allowed_positions[not_allowed_position_ind + 1] - not_allowed_positions[not_allowed_position_ind] > k) {
+      int sequence_begin = not_allowed_positions[not_allowed_position_ind] + 1;
+      int sequence_end = not_allowed_positions[not_allowed_position_ind + 1] - k;
+      update_kmers_for_subsequence(res, encoded_sequence, sequence_begin, sequence_end, positional_kmer);
+    }
+  }
+  return res;
 }
 
