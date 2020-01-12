@@ -157,42 +157,88 @@ Rcpp::IntegerVector get_not_allowed_sequence_positions(Rcpp::IntegerVector encod
 
 // ------------------------ K-MERS COMPUTATION (COMPACT SUBWORDS - ROLLING WINDOW HASHES) --------------
 
-struct StringHash {
-  int seq_pos;
+// ------------------------ K-MERS COMPUTATION FOR ONE SEQUENCE ----------------------------------------
+
+struct KMerHashInfo {
+  int seq_start_pos;
   int cnt;
   
-  StringHash(int seq_pos, int cnt): seq_pos(seq_pos), cnt(cnt) {}
+  KMerHashInfo() {}
   
-  StringHash(const StringHash& second) {
-    this -> seq_pos = second.seq_pos;
+  KMerHashInfo(int seq_start_pos, int cnt): seq_start_pos(seq_start_pos), cnt(cnt) {}
+  
+  KMerHashInfo(const KMerHashInfo& second) {
+    this -> seq_start_pos = second.seq_start_pos;
     this -> cnt = second.cnt;
   }
   
-  ~StringHash() {}
+  ~KMerHashInfo() {}
 };
 
-void update_kmers_for_subsequence(std::unordered_map<int, StringHash>& kmer_counter,
+int compute_hash(int previous_hash, int current_item, int P, int M) {
+  return (static_cast<long long>(previous_hash) * P + current_item) % M;
+}
+
+void add_hash(std::unordered_map<int, KMerHashInfo>& kmer_counter,
+              int begin,
+              int hash,
+              bool positional_kmer,
+              int P,
+              int M) {
+  if(positional_kmer) {
+    hash = compute_hash(hash, (begin + 1), P, M);
+  }
+  if(kmer_counter.find(hash) == kmer_counter.end()) {
+    kmer_counter[hash] = KMerHashInfo(begin, 0);
+  }
+  ++kmer_counter[hash].cnt;
+}
+
+void update_kmers_for_subsequence(std::unordered_map<int, KMerHashInfo>& kmer_counter,
+                                  int k,
                                   std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
                                   int sequence_begin,
                                   int sequence_end,
-                                  bool positional_kmer) {
-  
-  // TODO
+                                  bool positional_kmer,
+                                  int P,
+                                  int P_K_1,
+                                  int M) {
+  int hash = std::accumulate(encoded_sequence.begin(), encoded_sequence.begin() + k, 0,
+                             [&P, &M](int prev_hash, int current_item) -> int { return compute_hash(prev_hash, current_item, P, M); });
+  add_hash(kmer_counter, hash, sequence_begin, positional_kmer, P, M);
+  for(int current_sequence_begin = sequence_begin + 1; current_sequence_begin <= sequence_end - k; ++current_sequence_begin) {
+    hash = (hash - encoded_sequence[current_sequence_begin - 1] * P_K_1) % M; // remove a previous item
+    hash = compute_hash(hash, encoded_sequence[current_sequence_begin + k - 1], P, M); // add a current item
+    add_hash(kmer_counter, hash, current_sequence_begin, positional_kmer, P, M);
+  }
 }
 
-std::unordered_map<int, StringHash> count_kmers(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
-                                                int k,
-                                                bool positional_kmer) {
-  std::unordered_map<int, StringHash> res;
+int compute_power_fast(int base, int power, int modulo) {
+  long long res = 1;
+  while(power > 0) {
+    if((power & 1) == 0) {
+      res = (res * res) % modulo;
+    }
+    power >>= 1;
+  }
+  return static_cast<int>(res);
+}
+
+std::unordered_map<int, KMerHashInfo> count_kmers(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
+                                                  int k,
+                                                  bool positional_kmer,
+                                                  int P,
+                                                  int P_K_1,
+                                                  int M) {
+  std::unordered_map<int, KMerHashInfo> res;
   auto not_allowed_positions = get_not_allowed_sequence_positions(encoded_sequence);
   
   for(int not_allowed_position_ind = 0; not_allowed_position_ind < not_allowed_positions.size() - 1; ++not_allowed_position_ind) {
     if(not_allowed_positions[not_allowed_position_ind + 1] - not_allowed_positions[not_allowed_position_ind] > k) {
       int sequence_begin = not_allowed_positions[not_allowed_position_ind] + 1;
       int sequence_end = not_allowed_positions[not_allowed_position_ind + 1] - k;
-      update_kmers_for_subsequence(res, encoded_sequence, sequence_begin, sequence_end, positional_kmer);
+      update_kmers_for_subsequence(res, k, encoded_sequence, sequence_begin, sequence_end, positional_kmer, P, P_K_1, M);
     }
   }
   return res;
 }
-

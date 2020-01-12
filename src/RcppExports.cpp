@@ -52,12 +52,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// compute_power_fast
+int compute_power_fast(int base, int power, int modulo);
+RcppExport SEXP _seqR_compute_power_fast(SEXP baseSEXP, SEXP powerSEXP, SEXP moduloSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type base(baseSEXP);
+    Rcpp::traits::input_parameter< int >::type power(powerSEXP);
+    Rcpp::traits::input_parameter< int >::type modulo(moduloSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_power_fast(base, power, modulo));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_seqR_enumerate_string_sequence", (DL_FUNC) &_seqR_enumerate_string_sequence, 2},
     {"_seqR_enumerate_integer_sequence", (DL_FUNC) &_seqR_enumerate_integer_sequence, 2},
     {"_seqR_enumerate_numeric_sequence", (DL_FUNC) &_seqR_enumerate_numeric_sequence, 2},
     {"_seqR_get_not_allowed_sequence_positions", (DL_FUNC) &_seqR_get_not_allowed_sequence_positions, 1},
+    {"_seqR_compute_power_fast", (DL_FUNC) &_seqR_compute_power_fast, 3},
     {NULL, NULL, 0}
 };
 
