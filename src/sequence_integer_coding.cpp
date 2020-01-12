@@ -6,11 +6,15 @@
 #include<vector>
 #include<functional>
 #include<tuple>
+#include<algorithm>
+
+// ------------------------ SEQUENCE INTEGER ENCODING ------------------------
 
 typedef short ITEM_ENCODING_TYPE;
 
 template<class ALPHABET_VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
-std::tuple<std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*, std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>*>
+std::tuple<std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
+           std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>*>
 enumerate_alphabet(ALPHABET_VECTOR_TYPE& alphabet,
                    std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter) {
   ITEM_ENCODING_TYPE least_available_number = 1;
@@ -46,7 +50,9 @@ std::vector<short> enumerate_sequence(VECTOR_TYPE& seq,
 }
 
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
-std::tuple<std::vector<short>, std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*, std::unordered_map<short, CPP_ITEM_TYPE>*>
+std::tuple<std::vector<short>,
+           std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
+           std::unordered_map<short, CPP_ITEM_TYPE>*>
 enumerate_sequence_nonnull(VECTOR_TYPE& sequence,
                            VECTOR_TYPE& alphabet,
                            std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter) {
@@ -64,8 +70,7 @@ NON_NULL_TYPE get_value_or_construct_default(Rcpp::Nullable<NON_NULL_TYPE>& null
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 std::tuple<std::vector<ITEM_ENCODING_TYPE>,
            std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
-           std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>*
->
+           std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>*>
 enumerate_sequence(Rcpp::Nullable<VECTOR_TYPE>& sequence,
                    Rcpp::Nullable<VECTOR_TYPE>& alphabet,
                    std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter) {
@@ -78,7 +83,8 @@ enumerate_sequence(Rcpp::Nullable<VECTOR_TYPE>& sequence,
   );
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ------------------------ SEQUENCE INTEGER ENCODING - R WRAPPERS ------------------------
+
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 Rcpp::IntegerVector enumerate_sequence_and_wrap(Rcpp::Nullable<VECTOR_TYPE> sequence,
                                                 Rcpp::Nullable<VECTOR_TYPE> alphabet,
@@ -125,3 +131,51 @@ Rcpp::IntegerVector enumerate_numeric_sequence(Rcpp::Nullable<Rcpp::NumericVecto
   );
 }
 
+// ------------------------ COMPUTATION OF ALLOWED SEQUENCE RANGES ------------------------
+
+std::vector<int> get_not_allowed_sequence_positions(std::vector<short>& encoded_sequence) {
+  std::vector<int> res;
+  for(size_t seq_i = 0; seq_i < encoded_sequence.size(); ++seq_i) {
+    if(encoded_sequence[seq_i] == NOT_ALLOWED_CHARACTER_CODE) {
+      res.push_back(seq_i);
+    }
+  }
+  res.push_back(encoded_sequence.size()); // sentinel
+  return res;
+}
+
+std::vector<std::pair<int, int>> get_valid_sequence_ranges(std::vector<int>& not_allowed_sequence_positions,
+                                                           int window_length) {
+  std::vector<std::pair<int, int>> res;
+  
+  int previous_not_allowed_position = -1;
+  for(const int& not_allowed_position: not_allowed_sequence_positions) {
+    int allowed_characters_between = not_allowed_position - previous_not_allowed_position - 1;
+    if(allowed_characters_between >= window_length) {
+      res.push_back(std::make_pair(previous_not_allowed_position + 1, not_allowed_position - window_length));
+    }
+    previous_not_allowed_position = not_allowed_position;
+  }
+  return res; 
+}
+
+// ------------------------ COMPUTATION OF ALLOWED SEQUENCE RANGES - R WRAPPER ------------------------
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::List get_valid_sequence_ranges(Rcpp::IntegerVector encoded_sequence,
+                                     int window_length) {
+  std::vector<short> cpp_encoded_sequence = Rcpp::as<std::vector<short>>(encoded_sequence);
+  auto not_allowed_sequence_positions = get_not_allowed_sequence_positions(cpp_encoded_sequence);
+  auto valid_sequence_ranges = get_valid_sequence_ranges(not_allowed_sequence_positions, window_length);
+  
+  std::vector<int> ranges_begins, ranges_ends;
+  std::transform(valid_sequence_ranges.begin(), valid_sequence_ranges.end(), std::back_inserter(ranges_begins),
+                 [](const std::pair<int,int>& p) -> int { return p.first + 1; });
+  std::transform(valid_sequence_ranges.begin(), valid_sequence_ranges.end(), std::back_inserter(ranges_ends),
+                 [](const std::pair<int,int>& p) -> int { return p.second + 1; });
+  
+  return Rcpp::List::create(
+    Rcpp::_["begin"]=Rcpp::wrap(ranges_begins),
+    Rcpp::_["end"]=Rcpp::wrap(ranges_ends));
+}

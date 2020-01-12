@@ -16,3 +16,8 @@ enumerate_numeric_sequence <- function(sequence, alphabet) {
     .Call('_seqR_enumerate_numeric_sequence', PACKAGE = 'seqR', sequence, alphabet)
 }
 
+#' @export
+get_valid_sequence_ranges <- function(encoded_sequence, window_length) {
+    .Call('_seqR_get_valid_sequence_ranges', PACKAGE = 'seqR', encoded_sequence, window_length)
+}
+

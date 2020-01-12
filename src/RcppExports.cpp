@@ -41,11 +41,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_valid_sequence_ranges
+Rcpp::List get_valid_sequence_ranges(Rcpp::IntegerVector encoded_sequence, int window_length);
+RcppExport SEXP _seqR_get_valid_sequence_ranges(SEXP encoded_sequenceSEXP, SEXP window_lengthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type encoded_sequence(encoded_sequenceSEXP);
+    Rcpp::traits::input_parameter< int >::type window_length(window_lengthSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_valid_sequence_ranges(encoded_sequence, window_length));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_seqR_enumerate_string_sequence", (DL_FUNC) &_seqR_enumerate_string_sequence, 2},
     {"_seqR_enumerate_integer_sequence", (DL_FUNC) &_seqR_enumerate_integer_sequence, 2},
     {"_seqR_enumerate_numeric_sequence", (DL_FUNC) &_seqR_enumerate_numeric_sequence, 2},
+    {"_seqR_get_valid_sequence_ranges", (DL_FUNC) &_seqR_get_valid_sequence_ranges, 2},
     {NULL, NULL, 0}
 };
 
