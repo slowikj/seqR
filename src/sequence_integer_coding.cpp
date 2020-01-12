@@ -12,7 +12,7 @@ typedef short ITEM_ENCODING_TYPE;
 template<class ALPHABET_VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 std::tuple<std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*, std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>*>
 enumerate_alphabet(ALPHABET_VECTOR_TYPE& alphabet,
-                   std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter) {
+                   std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter) {
   ITEM_ENCODING_TYPE least_available_number = 1;
   auto val2num_encoder = new std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>();
   auto num2val_decoder = new std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>();
@@ -32,7 +32,7 @@ const short NOT_ALLOWED_CHARACTER_CODE = -1;
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 std::vector<short> enumerate_sequence(VECTOR_TYPE& seq,
                                       std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>* val2num_encoder,
-                                      std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter) {
+                                      std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter) {
   std::vector<short> res;
   res.reserve(seq.size());
   for(const auto& seq_item: seq) {
@@ -57,7 +57,7 @@ enumerate_sequence_nonnull(VECTOR_TYPE& sequence,
 }
 
 template<class NON_NULL_TYPE>
-NON_NULL_TYPE get_value_or_construct_default(Rcpp::Nullable<NON_NULL_TYPE> nullableValue) {
+NON_NULL_TYPE get_value_or_construct_default(Rcpp::Nullable<NON_NULL_TYPE>& nullableValue) {
   return nullableValue.isNull() ? NON_NULL_TYPE() : NON_NULL_TYPE(nullableValue);
 }
 
@@ -66,8 +66,8 @@ std::tuple<std::vector<ITEM_ENCODING_TYPE>,
            std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
            std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>*
 >
-enumerate_sequence(Rcpp::Nullable<VECTOR_TYPE> sequence,
-                   Rcpp::Nullable<VECTOR_TYPE> alphabet,
+enumerate_sequence(Rcpp::Nullable<VECTOR_TYPE>& sequence,
+                   Rcpp::Nullable<VECTOR_TYPE>& alphabet,
                    std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter) {
   VECTOR_TYPE nonNullSequence = get_value_or_construct_default(sequence);
   VECTOR_TYPE nonNullAlphabet = get_value_or_construct_default(alphabet);
@@ -78,6 +78,7 @@ enumerate_sequence(Rcpp::Nullable<VECTOR_TYPE> sequence,
   );
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 Rcpp::IntegerVector enumerate_sequence_and_wrap(Rcpp::Nullable<VECTOR_TYPE> sequence,
                                                 Rcpp::Nullable<VECTOR_TYPE> alphabet,
@@ -123,3 +124,4 @@ Rcpp::IntegerVector enumerate_numeric_sequence(Rcpp::Nullable<Rcpp::NumericVecto
     [](const double& x) -> double { return x; }
   );
 }
+
