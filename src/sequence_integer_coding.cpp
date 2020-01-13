@@ -58,10 +58,10 @@ enumerate_sequence_nonnull(VECTOR_TYPE& sequence,
                            VECTOR_TYPE& alphabet,
                            std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter,
                            std::function<std::string(const CPP_ITEM_TYPE&)> cpp2string_converter) {
-  auto [val2num_encoder, num2val_decoder] = enumerate_alphabet<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(
+  auto [val2num_encoder, num2str_decoder] = enumerate_alphabet<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(
     alphabet, rcpp2cpp_converter, cpp2string_converter);
   auto res = enumerate_sequence<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(sequence, val2num_encoder, rcpp2cpp_converter);
-  return { res, val2num_encoder, num2val_decoder };
+  return { res, val2num_encoder, num2str_decoder };
 }
 
 template<class NON_NULL_TYPE>
@@ -94,14 +94,14 @@ Rcpp::IntegerVector enumerate_sequence_and_wrap(Rcpp::Nullable<VECTOR_TYPE> sequ
                                                 Rcpp::Nullable<VECTOR_TYPE> alphabet,
                                                 std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter,
                                                 std::function<std::string(const CPP_ITEM_TYPE&)> cpp2string_converter) {
-  auto [res, val2num_encoder, num2val_decoder] = enumerate_sequence<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(
+  auto [res, val2num_encoder, num2str_decoder] = enumerate_sequence<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(
     sequence,
     alphabet,
     rcpp2cpp_converter,
     cpp2string_converter
   );
   delete val2num_encoder;
-  delete num2val_decoder;
+  delete num2str_decoder;
   return Rcpp::wrap(res);
 }
 
