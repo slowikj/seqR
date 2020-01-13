@@ -329,14 +329,6 @@ std::string decode_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
   return kmer_string_decorator(res, begin_position);
 }
 
-std::string decode_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
-                        int k,
-                        std::unordered_map<ITEM_ENCODING_TYPE, std::string>& num2str_decoder,
-                        NEXT_KMER_POSITION_GENERATOR& next_sequence_position,
-                        KMER_STRING_DECORATOR& kmer_string_decorator) {
-  return decode_kmer(encoded_sequence, NO_POSITION, k, num2str_decoder, next_sequence_position, kmer_string_decorator);
-}
-
 std::string decorated_with_position(std::string& kmer, int position, bool positional_kmer) {
   return positional_kmer ?
     std::to_string(position + 1) + KMER_POSITION_SEPARATOR + kmer :
@@ -370,7 +362,7 @@ Rcpp::StringVector decode_kmer(Rcpp::IntegerVector encoded_sequence,
    return decorated_with_position(cur_str, begin_pos, positional_kmer);
   };
   
-  return Rcpp::wrap(
+  return Rcpp::wrap(  
     decode_kmer(encoded_sequence_cpp, begin_position - 1, d.size() + 1, num2str_decoder, next_pos, decorator)
   );
 }
