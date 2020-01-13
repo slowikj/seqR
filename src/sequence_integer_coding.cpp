@@ -285,4 +285,92 @@ Rcpp::DataFrame count_kmers_hashed(Rcpp::IntegerVector encoded_sequence,
   );
 }
 
+// ------------------------ K-MERS (BOTH GAPPED AND NORMAL) DECODING ----------------------------------------
 
+typedef std::function<std::string(std::string&, int)> KMER_STRING_DECORATOR; // (current_string, kmer_begin_pos) -> decorated_string
+
+typedef std::function<int(int,int)> NEXT_KMER_POSITION_GENERATOR; // (current_pos, current_position) -> next position
+
+int get_total_size_of_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
+                           int begin_position,
+                           int k,
+                           std::unordered_map<ITEM_ENCODING_TYPE, std::string>& num2str_decoder,
+                           NEXT_KMER_POSITION_GENERATOR& next_sequence_position) {
+  int res = 0;
+  int current_position = begin_position;
+  for(int i = 0; i < k; ++i) {
+    int item_size = num2str_decoder[encoded_sequence[current_position]].size();
+    res += i == 0 ? item_size : item_size + 1;
+    current_position = next_sequence_position(current_position, i);
+  }
+  return res;
+}
+
+const std::string KMER_ITEM_SEPARATOR = ".";
+
+const std::string KMER_POSITION_SEPARATOR = "_";
+
+const int NO_POSITION = -1;
+
+std::string decode_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
+                        int begin_position,
+                        int k,
+                        std::unordered_map<ITEM_ENCODING_TYPE, std::string>& num2str_decoder,
+                        NEXT_KMER_POSITION_GENERATOR& next_sequence_position,
+                        KMER_STRING_DECORATOR& kmer_string_decorator) {
+  int kmer_size = get_total_size_of_kmer(encoded_sequence, begin_position, k, num2str_decoder, next_sequence_position);
+  std::string res;
+  res.reserve(kmer_size);
+  int current_position = begin_position;
+  for(int i = 0; i < k; ++i) {
+    res += num2str_decoder[encoded_sequence[current_position]] + (i == k - 1 ? "" : KMER_ITEM_SEPARATOR);
+    current_position = next_sequence_position(current_position, i);
+  }
+  return kmer_string_decorator(res, begin_position);
+}
+
+std::string decode_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
+                        int k,
+                        std::unordered_map<ITEM_ENCODING_TYPE, std::string>& num2str_decoder,
+                        NEXT_KMER_POSITION_GENERATOR& next_sequence_position,
+                        KMER_STRING_DECORATOR& kmer_string_decorator) {
+  return decode_kmer(encoded_sequence, NO_POSITION, k, num2str_decoder, next_sequence_position, kmer_string_decorator);
+}
+
+std::string decorated_with_position(std::string& kmer, int position, bool positional_kmer) {
+  return positional_kmer ?
+    std::to_string(position) + KMER_POSITION_SEPARATOR + kmer :
+    kmer;
+}
+
+int generate_next_kmer_position(int cur_pos, int d_i, Rcpp::IntegerVector& d) {
+  return cur_pos + d[d_i] + 1;
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::StringVector decode_kmer(Rcpp::IntegerVector encoded_sequence,
+                               Rcpp::IntegerVector d,
+                               int begin_position,
+                               Rcpp::DataFrame df_code2str,
+                               bool positional_kmer) {
+  Rcpp::IntegerVector codes = df_code2str["code"];
+  Rcpp::StringVector strings = df_code2str["string"];
+    
+  std::unordered_map<ITEM_ENCODING_TYPE, std::string> num2str_decoder;
+  for(int i = 0; i < codes.size(); ++i) {
+    num2str_decoder[codes[i]] = Rcpp::as<std::string>(strings[i]);
+  }
+  
+  std::vector<ITEM_ENCODING_TYPE> encoded_sequence_cpp = Rcpp::as<std::vector<ITEM_ENCODING_TYPE>>(encoded_sequence);
+  NEXT_KMER_POSITION_GENERATOR next_pos = [&d](int cur_pos, int i) -> int {
+    return generate_next_kmer_position(cur_pos, i, d);  
+  };
+  KMER_STRING_DECORATOR decorator = [&positional_kmer](std::string& cur_str, int begin_pos) -> std::string {
+   return decorated_with_position(cur_str, begin_pos + 1, positional_kmer);
+  };
+  
+  return Rcpp::wrap(
+    decode_kmer(encoded_sequence_cpp, begin_position - 1, d.size() + 1, num2str_decoder, next_pos, decorator)
+  );
+}

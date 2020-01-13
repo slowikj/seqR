@@ -68,6 +68,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// decode_kmer
+Rcpp::StringVector decode_kmer(Rcpp::IntegerVector encoded_sequence, Rcpp::IntegerVector d, int begin_position, Rcpp::DataFrame df_code2str, bool positional_kmer);
+RcppExport SEXP _seqR_decode_kmer(SEXP encoded_sequenceSEXP, SEXP dSEXP, SEXP begin_positionSEXP, SEXP df_code2strSEXP, SEXP positional_kmerSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type encoded_sequence(encoded_sequenceSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< int >::type begin_position(begin_positionSEXP);
+    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type df_code2str(df_code2strSEXP);
+    Rcpp::traits::input_parameter< bool >::type positional_kmer(positional_kmerSEXP);
+    rcpp_result_gen = Rcpp::wrap(decode_kmer(encoded_sequence, d, begin_position, df_code2str, positional_kmer));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_seqR_enumerate_string_sequence", (DL_FUNC) &_seqR_enumerate_string_sequence, 2},
@@ -75,6 +90,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_seqR_enumerate_numeric_sequence", (DL_FUNC) &_seqR_enumerate_numeric_sequence, 2},
     {"_seqR_get_not_allowed_sequence_positions", (DL_FUNC) &_seqR_get_not_allowed_sequence_positions, 1},
     {"_seqR_count_kmers_hashed", (DL_FUNC) &_seqR_count_kmers_hashed, 6},
+    {"_seqR_decode_kmer", (DL_FUNC) &_seqR_decode_kmer, 5},
     {NULL, NULL, 0}
 };
 
