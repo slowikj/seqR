@@ -52,16 +52,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// compute_power_fast
-int compute_power_fast(int base, int power, int modulo);
-RcppExport SEXP _seqR_compute_power_fast(SEXP baseSEXP, SEXP powerSEXP, SEXP moduloSEXP) {
+// count_kmers_hashed
+Rcpp::DataFrame count_kmers_hashed(Rcpp::IntegerVector encoded_sequence, int k, bool positional_kmer, int P, int P_K_1, int M);
+RcppExport SEXP _seqR_count_kmers_hashed(SEXP encoded_sequenceSEXP, SEXP kSEXP, SEXP positional_kmerSEXP, SEXP PSEXP, SEXP P_K_1SEXP, SEXP MSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type base(baseSEXP);
-    Rcpp::traits::input_parameter< int >::type power(powerSEXP);
-    Rcpp::traits::input_parameter< int >::type modulo(moduloSEXP);
-    rcpp_result_gen = Rcpp::wrap(compute_power_fast(base, power, modulo));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type encoded_sequence(encoded_sequenceSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< bool >::type positional_kmer(positional_kmerSEXP);
+    Rcpp::traits::input_parameter< int >::type P(PSEXP);
+    Rcpp::traits::input_parameter< int >::type P_K_1(P_K_1SEXP);
+    Rcpp::traits::input_parameter< int >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_kmers_hashed(encoded_sequence, k, positional_kmer, P, P_K_1, M));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -71,7 +74,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_seqR_enumerate_integer_sequence", (DL_FUNC) &_seqR_enumerate_integer_sequence, 2},
     {"_seqR_enumerate_numeric_sequence", (DL_FUNC) &_seqR_enumerate_numeric_sequence, 2},
     {"_seqR_get_not_allowed_sequence_positions", (DL_FUNC) &_seqR_get_not_allowed_sequence_positions, 1},
-    {"_seqR_compute_power_fast", (DL_FUNC) &_seqR_compute_power_fast, 3},
+    {"_seqR_count_kmers_hashed", (DL_FUNC) &_seqR_count_kmers_hashed, 6},
     {NULL, NULL, 0}
 };
 

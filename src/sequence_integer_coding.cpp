@@ -180,8 +180,8 @@ int compute_hash(int previous_hash, int current_item, int P, int M) {
 }
 
 void add_hash(std::unordered_map<int, KMerHashInfo>& kmer_counter,
-              int begin,
               int hash,
+              int begin,
               bool positional_kmer,
               int P,
               int M) {
@@ -203,10 +203,10 @@ void update_kmers_for_subsequence(std::unordered_map<int, KMerHashInfo>& kmer_co
                                   int P,
                                   int P_K_1,
                                   int M) {
-  int hash = std::accumulate(encoded_sequence.begin(), encoded_sequence.begin() + k, 0,
+  int hash = std::accumulate(encoded_sequence.begin() + sequence_begin, encoded_sequence.begin() + sequence_begin + k, 0,
                              [&P, &M](int prev_hash, int current_item) -> int { return compute_hash(prev_hash, current_item, P, M); });
   add_hash(kmer_counter, hash, sequence_begin, positional_kmer, P, M);
-  for(int current_sequence_begin = sequence_begin + 1; current_sequence_begin <= sequence_end - k; ++current_sequence_begin) {
+  for(int current_sequence_begin = sequence_begin + 1; current_sequence_begin <= sequence_end; ++current_sequence_begin) {
     hash = (hash - encoded_sequence[current_sequence_begin - 1] * P_K_1) % M; // remove a previous item
     hash = compute_hash(hash, encoded_sequence[current_sequence_begin + k - 1], P, M); // add a current item
     add_hash(kmer_counter, hash, current_sequence_begin, positional_kmer, P, M);
@@ -243,4 +243,33 @@ std::unordered_map<int, KMerHashInfo> count_kmers(std::vector<ITEM_ENCODING_TYPE
     }
   }
   return res;
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::DataFrame count_kmers_hashed(Rcpp::IntegerVector encoded_sequence,
+                                   int k,
+                                   bool positional_kmer,
+                                   int P,
+                                   int P_K_1,
+                                   int M) {
+  auto cpp_encoded_sequence = Rcpp::as<std::vector<ITEM_ENCODING_TYPE>>(encoded_sequence);
+  auto kmers_counter_hash_map = count_kmers(cpp_encoded_sequence, k, positional_kmer, P, P_K_1, M);
+  
+  std::map<int, int> kmers_counter_map;
+  for(const auto& kmer_info_entry: kmers_counter_hash_map) {
+    kmers_counter_map[kmer_info_entry.second.seq_start_pos] = kmer_info_entry.second.cnt;
+  }
+  
+  std::vector<short> positions;
+  std::vector<int> counts;
+  for(const auto& map_entry: kmers_counter_map) {
+    positions.push_back(map_entry.first + 1);
+    counts.push_back(map_entry.second);
+  }
+  
+  return Rcpp::DataFrame::create(
+    Rcpp::Named("position") = Rcpp::wrap(positions),
+    Rcpp::Named("cnt") = Rcpp::wrap(counts)
+  );
 }

@@ -27,3 +27,8 @@ test_that("a sequence (1,2,-1,3,4,-1) gives c(0, 3, 6, 7)", {
   invoke_test(encoded_sequence=c(1,2,-1,3,4,-1),
               expected_result=c(0,3,6,7))
 })
+
+test_that("a sequence (1,2,-1,2,1) gives c(0, 3, 6)", {
+  invoke_test(encoded_sequence = c(1,2,-1,2,1),
+              expected_result = c(0, 3, 6))
+})

@@ -22,7 +22,7 @@ get_not_allowed_sequence_positions <- function(encoded_sequence) {
 }
 
 #' @export
-compute_power_fast <- function(base, power, modulo) {
-    .Call('_seqR_compute_power_fast', PACKAGE = 'seqR', base, power, modulo)
+count_kmers_hashed <- function(encoded_sequence, k, positional_kmer, P, P_K_1, M) {
+    .Call('_seqR_count_kmers_hashed', PACKAGE = 'seqR', encoded_sequence, k, positional_kmer, P, P_K_1, M)
 }
 
