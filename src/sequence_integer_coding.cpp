@@ -14,29 +14,30 @@ typedef short ITEM_ENCODING_TYPE;
 
 template<class ALPHABET_VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 std::tuple<std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
-           std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>*>
+           std::unordered_map<ITEM_ENCODING_TYPE, std::string>*>
 enumerate_alphabet(ALPHABET_VECTOR_TYPE& alphabet,
-                   std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter) {
+                   std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter,
+                   std::function<std::string(const CPP_ITEM_TYPE&)>& cpp2string_converter) {
   ITEM_ENCODING_TYPE least_available_number = 1;
   auto val2num_encoder = new std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>();
-  auto num2val_decoder = new std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>();
+  auto num2str_decoder = new std::unordered_map<ITEM_ENCODING_TYPE, std::string>();
   for(const auto& alphabet_item: alphabet) {
     CPP_ITEM_TYPE cpp_alfabet_item = rcpp2cpp_converter(alphabet_item);
     if(val2num_encoder->find(cpp_alfabet_item) == val2num_encoder->end()) {
       (*val2num_encoder)[cpp_alfabet_item] = least_available_number;
-      (*num2val_decoder)[least_available_number] = cpp_alfabet_item;
+      (*num2str_decoder)[least_available_number] = cpp2string_converter(cpp_alfabet_item);
       ++least_available_number;
     }
   }
-  return {val2num_encoder, num2val_decoder};
+  return {val2num_encoder, num2str_decoder};
 }
 
 const ITEM_ENCODING_TYPE NOT_ALLOWED_CHARACTER_CODE = -1;
 
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 std::vector<ITEM_ENCODING_TYPE> enumerate_sequence(VECTOR_TYPE& seq,
-                                      std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>* val2num_encoder,
-                                      std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter) {
+                                                   std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>* val2num_encoder,
+                                                   std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter) {
   std::vector<ITEM_ENCODING_TYPE> res;
   res.reserve(seq.size());
   for(const auto& seq_item: seq) {
@@ -52,12 +53,13 @@ std::vector<ITEM_ENCODING_TYPE> enumerate_sequence(VECTOR_TYPE& seq,
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 std::tuple<std::vector<ITEM_ENCODING_TYPE>,
            std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
-           std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>*>
+           std::unordered_map<ITEM_ENCODING_TYPE, std::string>*>
 enumerate_sequence_nonnull(VECTOR_TYPE& sequence,
                            VECTOR_TYPE& alphabet,
-                           std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter) {
+                           std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter,
+                           std::function<std::string(const CPP_ITEM_TYPE&)> cpp2string_converter) {
   auto [val2num_encoder, num2val_decoder] = enumerate_alphabet<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(
-    alphabet, rcpp2cpp_converter);
+    alphabet, rcpp2cpp_converter, cpp2string_converter);
   auto res = enumerate_sequence<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(sequence, val2num_encoder, rcpp2cpp_converter);
   return { res, val2num_encoder, num2val_decoder };
 }
@@ -70,16 +72,18 @@ NON_NULL_TYPE get_value_or_construct_default(Rcpp::Nullable<NON_NULL_TYPE>& null
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 std::tuple<std::vector<ITEM_ENCODING_TYPE>,
            std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
-           std::unordered_map<ITEM_ENCODING_TYPE, CPP_ITEM_TYPE>*>
+           std::unordered_map<ITEM_ENCODING_TYPE, std::string>*>
 enumerate_sequence(Rcpp::Nullable<VECTOR_TYPE>& sequence,
                    Rcpp::Nullable<VECTOR_TYPE>& alphabet,
-                   std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter) {
+                   std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter,
+                   std::function<std::string(const CPP_ITEM_TYPE&)>& cpp2string_converter) {
   VECTOR_TYPE nonNullSequence = get_value_or_construct_default(sequence);
   VECTOR_TYPE nonNullAlphabet = get_value_or_construct_default(alphabet);
   return enumerate_sequence_nonnull<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(
       nonNullSequence,
       nonNullAlphabet,
-      rcpp2cpp_converter
+      rcpp2cpp_converter,
+      cpp2string_converter
   );
 }
 
@@ -88,11 +92,13 @@ enumerate_sequence(Rcpp::Nullable<VECTOR_TYPE>& sequence,
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 Rcpp::IntegerVector enumerate_sequence_and_wrap(Rcpp::Nullable<VECTOR_TYPE> sequence,
                                                 Rcpp::Nullable<VECTOR_TYPE> alphabet,
-                                                std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter) {
+                                                std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter,
+                                                std::function<std::string(const CPP_ITEM_TYPE&)> cpp2string_converter) {
   auto [res, val2num_encoder, num2val_decoder] = enumerate_sequence<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(
     sequence,
     alphabet,
-    rcpp2cpp_converter
+    rcpp2cpp_converter,
+    cpp2string_converter
   );
   delete val2num_encoder;
   delete num2val_decoder;
@@ -106,7 +112,8 @@ Rcpp::IntegerVector enumerate_string_sequence(Rcpp::Nullable<Rcpp::StringVector>
   return enumerate_sequence_and_wrap<Rcpp::StringVector, std::string, Rcpp::String::StringProxy>(
       sequence,
       alphabet,
-      [](const Rcpp::String::StringProxy& s) -> std::string {return Rcpp::as<std::string>(s);});
+      [](const Rcpp::String::StringProxy& s) -> std::string {return Rcpp::as<std::string>(s);},
+      [](const std::string& s) -> std::string { return s; });
 }
 
 //' @export
@@ -116,7 +123,8 @@ Rcpp::IntegerVector enumerate_integer_sequence(Rcpp::Nullable<Rcpp::IntegerVecto
   return enumerate_sequence_and_wrap<Rcpp::IntegerVector, int, int>(
       sequence,
       alphabet,
-      [](const int& x) -> int { return x; }
+      [](const int& x) -> int { return x; },
+      [](const int& x) -> std::string { return std::to_string(x); }
   );
 }
 
@@ -127,7 +135,8 @@ Rcpp::IntegerVector enumerate_numeric_sequence(Rcpp::Nullable<Rcpp::NumericVecto
   return enumerate_sequence_and_wrap<Rcpp::NumericVector, double, double>(
     sequence,
     alphabet,
-    [](const double& x) -> double { return x; }
+    [](const double& x) -> double { return x; },
+    [](const double& x) -> std::string { return std::to_string(x); }
   );
 }
 
@@ -213,7 +222,7 @@ void update_kmers_for_subsequence(std::unordered_map<int, KMerHashInfo>& kmer_co
     hash = compute_hash(hash, encoded_sequence[current_sequence_begin + k - 1], P, M); // add a current item
     add_hash(kmer_counter, hash, current_sequence_begin, positional_kmer, P, M);
   }
-}
+}   
 
 int compute_power_fast(int base, int power, int modulo) {
   long long res = 1;
@@ -268,10 +277,12 @@ Rcpp::DataFrame count_kmers_hashed(Rcpp::IntegerVector encoded_sequence,
   for(const auto& map_entry: kmers_counter_map) {
     positions.push_back(map_entry.first + 1);
     counts.push_back(map_entry.second);
-  }
+  } 
   
   return Rcpp::DataFrame::create(
     Rcpp::Named("position") = Rcpp::wrap(positions),
     Rcpp::Named("cnt") = Rcpp::wrap(counts)
   );
 }
+
+
