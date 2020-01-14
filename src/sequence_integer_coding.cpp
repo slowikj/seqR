@@ -216,7 +216,7 @@ void update_kmers_for_subsequence(std::unordered_map<int, KMerHashInfo>& kmer_co
                              [&P, &M](int prev_hash, int current_item) -> int { return compute_hash(prev_hash, current_item, P, M); });
   add_hash(kmer_counter, hash, sequence_begin, positional_kmer, P, M);
   for(int current_sequence_begin = sequence_begin + 1; current_sequence_begin <= sequence_end; ++current_sequence_begin) {
-    hash = (hash - encoded_sequence[current_sequence_begin - 1] * P_K_1) % M; // remove a previous item
+    hash = (hash - encoded_sequence[current_sequence_begin - 1] * P_K_1 + M) % M; // remove a previous item
     hash = compute_hash(hash, encoded_sequence[current_sequence_begin + k - 1], P, M); // add a current item
     add_hash(kmer_counter, hash, current_sequence_begin, positional_kmer, P, M);
   }
@@ -292,7 +292,7 @@ typedef std::function<int(int,int)> NEXT_KMER_POSITION_GENERATOR; // (current_po
 int get_total_size_of_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
                            int begin_position,
                            int k,
-                           std::unordered_map<ITEM_ENCODING_TYPE, std::string>& num2str_decoder,
+                           std::vector<std::string>& num2str_decoder,
                            NEXT_KMER_POSITION_GENERATOR& next_sequence_position) {
   int res = 0;
   int current_position = begin_position;
@@ -304,6 +304,14 @@ int get_total_size_of_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
   return res;
 }
 
+int get_total_size_of_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_kmer,
+                           std::vector<std::string>& num2str_decoder) {
+  return std::accumulate(encoded_kmer.begin() + 1,
+                         encoded_kmer.end(),
+                         num2str_decoder[encoded_kmer[0]].size(),
+                         [&num2str_decoder](int prev_sum, int code) -> int { return prev_sum + num2str_decoder[code].size() + 1; });
+}
+
 const std::string KMER_ITEM_SEPARATOR = ".";
 
 const std::string KMER_POSITION_SEPARATOR = "_";
@@ -313,18 +321,29 @@ const int NO_POSITION = -1;
 std::string decode_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
                         int begin_position,
                         int k,
-                        std::unordered_map<ITEM_ENCODING_TYPE, std::string>& num2str_decoder,
+                        std::vector<std::string>& decoder,
                         NEXT_KMER_POSITION_GENERATOR& next_sequence_position,
                         KMER_STRING_DECORATOR& kmer_string_decorator) {
-  int kmer_size = get_total_size_of_kmer(encoded_sequence, begin_position, k, num2str_decoder, next_sequence_position);
+  int kmer_size = get_total_size_of_kmer(encoded_sequence, begin_position, k, decoder, next_sequence_position);
   std::string res;
   res.reserve(kmer_size);
   int current_position = begin_position;
   for(int i = 0; i < k; ++i) {
-    res += num2str_decoder[encoded_sequence[current_position]] + (i == k - 1 ? "" : KMER_ITEM_SEPARATOR);
+    res += decoder[encoded_sequence[current_position]] + (i == k - 1 ? "" : KMER_ITEM_SEPARATOR);
     current_position = next_sequence_position(current_position, i);
   }
   return kmer_string_decorator(res, begin_position);
+}
+
+std::string decode_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_kmer,
+                        std::vector<std::string>& num2str_decoder) {
+  std::string res;
+  res.reserve(get_total_size_of_kmer(encoded_kmer, num2str_decoder));
+  res += num2str_decoder[encoded_kmer[0]];
+  for(int ek_i = 1; ek_i < encoded_kmer.size(); ++ek_i) {
+    res += KMER_ITEM_SEPARATOR + num2str_decoder[encoded_kmer[ek_i]];
+  }
+  return res;
 }
 
 std::string decorated_with_position(std::string& kmer, int position, bool positional_kmer) {
@@ -342,17 +361,13 @@ int generate_next_kmer_position(int cur_pos, int d_i, Rcpp::IntegerVector& d) {
 Rcpp::StringVector decode_kmer(Rcpp::IntegerVector encoded_sequence,
                                Rcpp::IntegerVector d,
                                int begin_position,
-                               Rcpp::DataFrame df_code2str,
+                               Rcpp::StringVector decoder,
                                bool positional_kmer) {
-  Rcpp::IntegerVector codes = df_code2str["code"];
-  Rcpp::StringVector strings = df_code2str["string"];
-    
-  std::unordered_map<ITEM_ENCODING_TYPE, std::string> num2str_decoder;
-  for(int i = 0; i < codes.size(); ++i) {
-    num2str_decoder[codes[i]] = Rcpp::as<std::string>(strings[i]);
+  std::vector<std::string> num2str_decoder = Rcpp::as<std::vector<std::string>>(decoder);
+  std::vector<ITEM_ENCODING_TYPE> encoded_sequence_cpp;
+  for(const auto& elem: encoded_sequence) {
+    encoded_sequence_cpp.push_back(elem - 1);
   }
-  
-  std::vector<ITEM_ENCODING_TYPE> encoded_sequence_cpp = Rcpp::as<std::vector<ITEM_ENCODING_TYPE>>(encoded_sequence);
   NEXT_KMER_POSITION_GENERATOR next_pos = [&d](int cur_pos, int i) -> int {
     return generate_next_kmer_position(cur_pos, i, d);  
   };
@@ -363,4 +378,55 @@ Rcpp::StringVector decode_kmer(Rcpp::IntegerVector encoded_sequence,
   return Rcpp::wrap(  
     decode_kmer(encoded_sequence_cpp, begin_position - 1, d.size() + 1, num2str_decoder, next_pos, decorator)
   );
+}
+
+// ------------------------ ALL K-MERS GENERATION ----------------------------------------
+
+void add_encoded_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_kmer,
+                      std::vector<std::string>& num2str_decoder,
+                      int hash,
+                      std::unordered_map<int, KMerHashInfo>& found_kmer_hashes,
+                      std::vector<std::string>& used_kmers, // with count > 0
+                      std::vector<std::string>& unused_kmers) { // with count == 0
+  std::string str_kmer = decode_kmer(encoded_kmer, num2str_decoder);
+  if(found_kmer_hashes.find(hash) == found_kmer_hashes.end()) {
+    unused_kmers.push_back(std::move(str_kmer));
+  } else {
+    used_kmers.push_back(std::move(str_kmer));
+  }
+}
+
+void generate_all_kmers(size_t k,
+                        std::vector<ITEM_ENCODING_TYPE>& current_kmer,
+                        int current_hash,
+                        int P,
+                        int M,
+                        std::vector<std::string>& used_kmers,
+                        std::vector<std::string>& unused_kmers,
+                        std::unordered_map<int, KMerHashInfo>& found_kmer_hashes,
+                        std::vector<std::string>& num2str_decoder) {
+  if(current_kmer.size() == k) {
+    add_encoded_kmer(current_kmer, num2str_decoder, current_hash, found_kmer_hashes, used_kmers, unused_kmers);
+  } else {
+    for(int code = 0; code < num2str_decoder.size(); ++code) {
+      int next_hash = compute_hash(current_hash, code, P, M);
+      current_kmer.push_back(code);
+      generate_all_kmers(k, current_kmer, next_hash, P, M, used_kmers, unused_kmers, found_kmer_hashes, num2str_decoder);
+      current_kmer.pop_back();
+    }
+  }
+}
+
+//' @export
+// [[Rcpp::export]]
+std::vector<std::string> generate_all_kmers(int k,
+                                      int P,
+                                      int M,
+                                      Rcpp::StringVector& decoder) {
+  std::vector<std::string> used_kmers, unused_kmers;
+  std::unordered_map<int, KMerHashInfo> found_kmer_hashes;
+  std::vector<std::string> num2str_decoder = Rcpp::as<std::vector<std::string>>(decoder);
+  std::vector<ITEM_ENCODING_TYPE> current_kmer;
+  generate_all_kmers(k, current_kmer, 0, P, M, used_kmers, unused_kmers, found_kmer_hashes, num2str_decoder);
+  return unused_kmers;
 }

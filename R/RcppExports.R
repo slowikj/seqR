@@ -27,7 +27,12 @@ count_kmers_hashed <- function(encoded_sequence, k, positional_kmer, P, P_K_1, M
 }
 
 #' @export
-decode_kmer <- function(encoded_sequence, d, begin_position, df_code2str, positional_kmer) {
-    .Call('_seqR_decode_kmer', PACKAGE = 'seqR', encoded_sequence, d, begin_position, df_code2str, positional_kmer)
+decode_kmer <- function(encoded_sequence, d, begin_position, decoder, positional_kmer) {
+    .Call('_seqR_decode_kmer', PACKAGE = 'seqR', encoded_sequence, d, begin_position, decoder, positional_kmer)
+}
+
+#' @export
+generate_all_kmers <- function(k, P, M, decoder) {
+    .Call('_seqR_generate_all_kmers', PACKAGE = 'seqR', k, P, M, decoder)
 }
 
