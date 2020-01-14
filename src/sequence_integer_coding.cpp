@@ -399,7 +399,7 @@ void add_encoded_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_kmer,
   }
 }
 
-void generate_all_kmers(size_t k,
+void generate_all_kmers(int k,
                         std::vector<ITEM_ENCODING_TYPE>& current_kmer,
                         int current_hash,
                         int P,
@@ -420,16 +420,68 @@ void generate_all_kmers(size_t k,
   }
 }
 
+class AllKMersGeneratorWorker: public RcppParallel::Worker {
+
+  private:
+    
+  const int k, P, M;
+  
+  std::unordered_map<int, KMerHashInfo>& found_kmer_hashes;
+  
+  std::vector<std::string>& num2str_decoder;
+  
+public:
+  
+  std::vector<std::string> used_kmers, unused_kmers;
+  
+  AllKMersGeneratorWorker(int k,
+                          int P,
+                          int M,
+                          std::unordered_map<int, KMerHashInfo>& found_kmer_hashes,
+                          std::vector<std::string>& num2str_decoder):
+    k(k), P(P), M(M), found_kmer_hashes(found_kmer_hashes), num2str_decoder(num2str_decoder) {
+  }
+  
+  AllKMersGeneratorWorker(const AllKMersGeneratorWorker& other, RcppParallel::Split):
+    k(other.k), P(other.P), M(other.M), found_kmer_hashes(other.found_kmer_hashes), num2str_decoder(other.num2str_decoder) {
+  }
+  
+  ~AllKMersGeneratorWorker() {}
+  
+  void operator()(size_t code_begin, size_t code_end) {
+    std::vector<ITEM_ENCODING_TYPE> initial_1mer;
+    initial_1mer.reserve(1);
+    initial_1mer.push_back(-1);
+    for(int code = code_begin; code < code_end; ++code) {
+      initial_1mer[0] = code;
+      generate_all_kmers(k, initial_1mer, compute_hash(0, code, P, M), P, M, used_kmers, unused_kmers, found_kmer_hashes, num2str_decoder);
+    }
+  }
+  
+  void join(const AllKMersGeneratorWorker& other) {
+    unused_kmers.insert(unused_kmers.end(), other.unused_kmers.begin(), other.unused_kmers.end());
+    used_kmers.insert(used_kmers.end(), other.used_kmers.begin(), other.used_kmers.end());
+  }
+};
+
+std::vector<std::string> generate_all_kmers(int k,
+                                           int P,
+                                           int M,
+                                           std::unordered_map<int, KMerHashInfo>& found_kmer_hashes,
+                                           std::vector<std::string>& num2str_decoder) {
+  AllKMersGeneratorWorker worker(k, P, M, found_kmer_hashes, num2str_decoder);
+  RcppParallel::parallelReduce(0, num2str_decoder.size(), worker);
+  
+  return worker.unused_kmers;
+}
+
 //' @export
 // [[Rcpp::export]]
 std::vector<std::string> generate_all_kmers(int k,
-                                      int P,
-                                      int M,
-                                      Rcpp::StringVector& decoder) {
-  std::vector<std::string> used_kmers, unused_kmers;
+                                            int P,
+                                            int M,
+                                            Rcpp::StringVector& decoder) {
   std::unordered_map<int, KMerHashInfo> found_kmer_hashes;
   std::vector<std::string> num2str_decoder = Rcpp::as<std::vector<std::string>>(decoder);
-  std::vector<ITEM_ENCODING_TYPE> current_kmer;
-  generate_all_kmers(k, current_kmer, 0, P, M, used_kmers, unused_kmers, found_kmer_hashes, num2str_decoder);
-  return unused_kmers;
+  return generate_all_kmers(k, P, M, found_kmer_hashes, num2str_decoder);
 }
