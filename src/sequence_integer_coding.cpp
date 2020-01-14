@@ -14,19 +14,17 @@ typedef short ITEM_ENCODING_TYPE;
 
 template<class ALPHABET_VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 std::tuple<std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
-           std::unordered_map<ITEM_ENCODING_TYPE, std::string>*>
+           std::vector<std::string>*>
 enumerate_alphabet(ALPHABET_VECTOR_TYPE& alphabet,
                    std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter,
                    std::function<std::string(const CPP_ITEM_TYPE&)>& cpp2string_converter) {
-  ITEM_ENCODING_TYPE least_available_number = 1;
   auto val2num_encoder = new std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>();
-  auto num2str_decoder = new std::unordered_map<ITEM_ENCODING_TYPE, std::string>();
+  auto num2str_decoder = new std::vector<std::string>();
   for(const auto& alphabet_item: alphabet) {
     CPP_ITEM_TYPE cpp_alfabet_item = rcpp2cpp_converter(alphabet_item);
     if(val2num_encoder->find(cpp_alfabet_item) == val2num_encoder->end()) {
-      (*val2num_encoder)[cpp_alfabet_item] = least_available_number;
-      (*num2str_decoder)[least_available_number] = cpp2string_converter(cpp_alfabet_item);
-      ++least_available_number;
+      (*num2str_decoder).push_back(cpp2string_converter(cpp_alfabet_item));
+      (*val2num_encoder)[cpp_alfabet_item] = (*num2str_decoder).size();
     }
   }
   return {val2num_encoder, num2str_decoder};
@@ -53,7 +51,7 @@ std::vector<ITEM_ENCODING_TYPE> enumerate_sequence(VECTOR_TYPE& seq,
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 std::tuple<std::vector<ITEM_ENCODING_TYPE>,
            std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
-           std::unordered_map<ITEM_ENCODING_TYPE, std::string>*>
+           std::vector<std::string>*>
 enumerate_sequence_nonnull(VECTOR_TYPE& sequence,
                            VECTOR_TYPE& alphabet,
                            std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter,
@@ -72,7 +70,7 @@ NON_NULL_TYPE get_value_or_construct_default(Rcpp::Nullable<NON_NULL_TYPE>& null
 template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
 std::tuple<std::vector<ITEM_ENCODING_TYPE>,
            std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
-           std::unordered_map<ITEM_ENCODING_TYPE, std::string>*>
+           std::vector<std::string>*>
 enumerate_sequence(Rcpp::Nullable<VECTOR_TYPE>& sequence,
                    Rcpp::Nullable<VECTOR_TYPE>& alphabet,
                    std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter,
