@@ -1,6 +1,9 @@
 
 // [[Rcpp::plugins("c++1z")]]
 #include<Rcpp.h>
+// [[Rcpp::depends(RcppParallel)]]
+//' @importFrom  RcppParallel RcppParallelLibs
+#include <RcppParallel.h>
 #include<string>
 #include<unordered_map>
 #include<vector>
