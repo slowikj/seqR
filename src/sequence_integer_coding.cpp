@@ -312,7 +312,9 @@ int get_total_size_of_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_kmer,
   return std::accumulate(encoded_kmer.begin() + 1,
                          encoded_kmer.end(),
                          num2str_decoder[encoded_kmer[0]].size(),
-                         [&num2str_decoder](int prev_sum, int code) -> int { return prev_sum + num2str_decoder[code].size() + 1; });
+                         [&num2str_decoder](int prev_sum, int code) -> int {
+                           return prev_sum + num2str_decoder[code].size() + 1;
+                        });
 }
 
 const std::string KMER_ITEM_SEPARATOR = ".";
@@ -422,16 +424,12 @@ void generate_all_kmers(int k,
 
 class AllKMersGeneratorWorker: public RcppParallel::Worker {
 
-  private:
-    
+private:
   const int k, P, M;
-  
   std::unordered_map<int, KMerHashInfo>& found_kmer_hashes;
-  
   std::vector<std::string>& num2str_decoder;
   
 public:
-  
   std::vector<std::string> used_kmers, unused_kmers;
   
   AllKMersGeneratorWorker(int k,
@@ -470,7 +468,7 @@ std::vector<std::string> generate_all_kmers(int k,
                                            std::unordered_map<int, KMerHashInfo>& found_kmer_hashes,
                                            std::vector<std::string>& num2str_decoder) {
   AllKMersGeneratorWorker worker(k, P, M, found_kmer_hashes, num2str_decoder);
-  RcppParallel::parallelReduce(0, num2str_decoder.size(), worker);
+  RcppParallel::parallelReduce(0, num2str_decoder.size(), worker, 1);
   
   return worker.unused_kmers;
 }
@@ -485,3 +483,4 @@ std::vector<std::string> generate_all_kmers(int k,
   std::vector<std::string> num2str_decoder = Rcpp::as<std::vector<std::string>>(decoder);
   return generate_all_kmers(k, P, M, found_kmer_hashes, num2str_decoder);
 }
+
