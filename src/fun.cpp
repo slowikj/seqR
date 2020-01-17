@@ -216,7 +216,9 @@ void update_kmers_for_subsequence(std::unordered_map<int, KMerHashInfo>& kmer_co
   int hash = std::accumulate(encoded_sequence.begin() + sequence_begin,
                              encoded_sequence.begin() + sequence_begin + k,
                              0,
-                             [&P, &M](int prev_hash, int current_item) -> int { return compute_hash(prev_hash, current_item, P, M); });
+                             [&P, &M](int prev_hash, int current_item) -> int {
+                               return compute_hash(prev_hash, current_item, P, M);
+                             });
   add_hash(kmer_counter, hash, sequence_begin, positional_kmer, P, M);
   for(int current_sequence_begin = sequence_begin + 1; current_sequence_begin <= sequence_end; ++current_sequence_begin) {
     hash = (hash - encoded_sequence[current_sequence_begin - 1] * P_K_1 + M) % M; // remove a previous item
