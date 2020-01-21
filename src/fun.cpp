@@ -450,7 +450,7 @@ public:
   
   void operator()(size_t code_begin, size_t code_end) {
     std::vector<ITEM_ENCODING_TYPE> initial_1mer;
-    initial_1mer.reserve(1);
+    initial_1mer.reserve(k);
     initial_1mer.push_back(-1);
     for(int code = code_begin; code < code_end; ++code) {
       initial_1mer[0] = code;
@@ -458,7 +458,7 @@ public:
     }
   }
   
-  void join(const AllKMersGeneratorWorker& other) {
+  void join(const AllKMersGeneratorWorker& other) { 
     unused_kmers.insert(unused_kmers.end(), other.unused_kmers.begin(), other.unused_kmers.end());
     used_kmers.insert(used_kmers.end(), other.used_kmers.begin(), other.used_kmers.end());
   }
