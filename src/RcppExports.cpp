@@ -5,91 +5,107 @@
 
 using namespace Rcpp;
 
-// get_window_length
-int get_window_length(const Rcpp::IntegerVector& d);
-RcppExport SEXP _seqR_get_window_length(SEXP dSEXP) {
+// enumerate_string_sequence
+Rcpp::IntegerVector enumerate_string_sequence(Rcpp::Nullable<Rcpp::StringVector> sequence, Rcpp::Nullable<Rcpp::StringVector> alphabet);
+RcppExport SEXP _seqR_enumerate_string_sequence(SEXP sequenceSEXP, SEXP alphabetSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_window_length(d));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::StringVector> >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::StringVector> >::type alphabet(alphabetSEXP);
+    rcpp_result_gen = Rcpp::wrap(enumerate_string_sequence(sequence, alphabet));
     return rcpp_result_gen;
 END_RCPP
 }
-// get_hash
-int get_hash(const std::vector<int>& s, const Rcpp::IntegerVector& d, int begin_index, bool pos);
-RcppExport SEXP _seqR_get_hash(SEXP sSEXP, SEXP dSEXP, SEXP begin_indexSEXP, SEXP posSEXP) {
+// enumerate_integer_sequence
+Rcpp::IntegerVector enumerate_integer_sequence(Rcpp::Nullable<Rcpp::IntegerVector> sequence, Rcpp::Nullable<Rcpp::IntegerVector> alphabet);
+RcppExport SEXP _seqR_enumerate_integer_sequence(SEXP sequenceSEXP, SEXP alphabetSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::vector<int>& >::type s(sSEXP);
-    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type d(dSEXP);
-    Rcpp::traits::input_parameter< int >::type begin_index(begin_indexSEXP);
-    Rcpp::traits::input_parameter< bool >::type pos(posSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_hash(s, d, begin_index, pos));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::IntegerVector> >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::IntegerVector> >::type alphabet(alphabetSEXP);
+    rcpp_result_gen = Rcpp::wrap(enumerate_integer_sequence(sequence, alphabet));
     return rcpp_result_gen;
 END_RCPP
 }
-// get_hash_for_word
-int get_hash_for_word(const std::vector<int>& kmer);
-RcppExport SEXP _seqR_get_hash_for_word(SEXP kmerSEXP) {
+// enumerate_numeric_sequence
+Rcpp::IntegerVector enumerate_numeric_sequence(Rcpp::Nullable<Rcpp::NumericVector> sequence, Rcpp::Nullable<Rcpp::NumericVector> alphabet);
+RcppExport SEXP _seqR_enumerate_numeric_sequence(SEXP sequenceSEXP, SEXP alphabetSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::vector<int>& >::type kmer(kmerSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_hash_for_word(kmer));
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type alphabet(alphabetSEXP);
+    rcpp_result_gen = Rcpp::wrap(enumerate_numeric_sequence(sequence, alphabet));
     return rcpp_result_gen;
 END_RCPP
 }
-// count_kmers_str
-std::unordered_map<std::string, int> count_kmers_str(Rcpp::StringVector& s, Rcpp::IntegerVector& d, Rcpp::StringVector& alphabet, Rcpp::LogicalVector& pos);
-RcppExport SEXP _seqR_count_kmers_str(SEXP sSEXP, SEXP dSEXP, SEXP alphabetSEXP, SEXP posSEXP) {
+// get_not_allowed_sequence_positions
+Rcpp::IntegerVector get_not_allowed_sequence_positions(Rcpp::IntegerVector encoded_sequence);
+RcppExport SEXP _seqR_get_not_allowed_sequence_positions(SEXP encoded_sequenceSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type s(sSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type d(dSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
-    Rcpp::traits::input_parameter< Rcpp::LogicalVector& >::type pos(posSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_kmers_str(s, d, alphabet, pos));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type encoded_sequence(encoded_sequenceSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_not_allowed_sequence_positions(encoded_sequence));
     return rcpp_result_gen;
 END_RCPP
 }
-// count_kmers_larger_than_one
-std::unordered_map<std::string, int> count_kmers_larger_than_one(Rcpp::StringMatrix& m, Rcpp::IntegerVector& d, Rcpp::StringVector& alphabet, Rcpp::LogicalVector& pos);
-RcppExport SEXP _seqR_count_kmers_larger_than_one(SEXP mSEXP, SEXP dSEXP, SEXP alphabetSEXP, SEXP posSEXP) {
+// count_kmers_hashed
+Rcpp::DataFrame count_kmers_hashed(Rcpp::IntegerVector encoded_sequence, int k, bool positional_kmer, int P, int P_K_1, int M);
+RcppExport SEXP _seqR_count_kmers_hashed(SEXP encoded_sequenceSEXP, SEXP kSEXP, SEXP positional_kmerSEXP, SEXP PSEXP, SEXP P_K_1SEXP, SEXP MSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringMatrix& >::type m(mSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type d(dSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
-    Rcpp::traits::input_parameter< Rcpp::LogicalVector& >::type pos(posSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_kmers_larger_than_one(m, d, alphabet, pos));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type encoded_sequence(encoded_sequenceSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< bool >::type positional_kmer(positional_kmerSEXP);
+    Rcpp::traits::input_parameter< int >::type P(PSEXP);
+    Rcpp::traits::input_parameter< int >::type P_K_1(P_K_1SEXP);
+    Rcpp::traits::input_parameter< int >::type M(MSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_kmers_hashed(encoded_sequence, k, positional_kmer, P, P_K_1, M));
     return rcpp_result_gen;
 END_RCPP
 }
-// count_unigrams
-std::unordered_map<std::string, int> count_unigrams(Rcpp::StringMatrix& m, Rcpp::StringVector& alphabet, Rcpp::LogicalVector& pos);
-RcppExport SEXP _seqR_count_unigrams(SEXP mSEXP, SEXP alphabetSEXP, SEXP posSEXP) {
+// decode_kmer
+Rcpp::StringVector decode_kmer(Rcpp::IntegerVector encoded_sequence, Rcpp::IntegerVector d, int begin_position, Rcpp::StringVector decoder, bool positional_kmer);
+RcppExport SEXP _seqR_decode_kmer(SEXP encoded_sequenceSEXP, SEXP dSEXP, SEXP begin_positionSEXP, SEXP decoderSEXP, SEXP positional_kmerSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringMatrix& >::type m(mSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
-    Rcpp::traits::input_parameter< Rcpp::LogicalVector& >::type pos(posSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_unigrams(m, alphabet, pos));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type encoded_sequence(encoded_sequenceSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< int >::type begin_position(begin_positionSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type decoder(decoderSEXP);
+    Rcpp::traits::input_parameter< bool >::type positional_kmer(positional_kmerSEXP);
+    rcpp_result_gen = Rcpp::wrap(decode_kmer(encoded_sequence, d, begin_position, decoder, positional_kmer));
+    return rcpp_result_gen;
+END_RCPP
+}
+// generate_all_kmers
+std::vector<std::string> generate_all_kmers(int k, int P, int M, Rcpp::StringVector& decoder);
+RcppExport SEXP _seqR_generate_all_kmers(SEXP kSEXP, SEXP PSEXP, SEXP MSEXP, SEXP decoderSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type P(PSEXP);
+    Rcpp::traits::input_parameter< int >::type M(MSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type decoder(decoderSEXP);
+    rcpp_result_gen = Rcpp::wrap(generate_all_kmers(k, P, M, decoder));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_seqR_get_window_length", (DL_FUNC) &_seqR_get_window_length, 1},
-    {"_seqR_get_hash", (DL_FUNC) &_seqR_get_hash, 4},
-    {"_seqR_get_hash_for_word", (DL_FUNC) &_seqR_get_hash_for_word, 1},
-    {"_seqR_count_kmers_str", (DL_FUNC) &_seqR_count_kmers_str, 4},
-    {"_seqR_count_kmers_larger_than_one", (DL_FUNC) &_seqR_count_kmers_larger_than_one, 4},
-    {"_seqR_count_unigrams", (DL_FUNC) &_seqR_count_unigrams, 3},
+    {"_seqR_enumerate_string_sequence", (DL_FUNC) &_seqR_enumerate_string_sequence, 2},
+    {"_seqR_enumerate_integer_sequence", (DL_FUNC) &_seqR_enumerate_integer_sequence, 2},
+    {"_seqR_enumerate_numeric_sequence", (DL_FUNC) &_seqR_enumerate_numeric_sequence, 2},
+    {"_seqR_get_not_allowed_sequence_positions", (DL_FUNC) &_seqR_get_not_allowed_sequence_positions, 1},
+    {"_seqR_count_kmers_hashed", (DL_FUNC) &_seqR_count_kmers_hashed, 6},
+    {"_seqR_decode_kmer", (DL_FUNC) &_seqR_decode_kmer, 5},
+    {"_seqR_generate_all_kmers", (DL_FUNC) &_seqR_generate_all_kmers, 4},
     {NULL, NULL, 0}
 };
 

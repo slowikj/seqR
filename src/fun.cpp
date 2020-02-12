@@ -1,562 +1,488 @@
 
-// [[Rcpp::depends(RcppParallel)]]
-#include <RcppParallel.h>
-// [[Rcpp::plugins("cpp11")]]
+// [[Rcpp::plugins("c++1z")]]
 #include<Rcpp.h>
+// [[Rcpp::depends(RcppParallel)]]
+//' @importFrom  RcppParallel RcppParallelLibs
+#include <RcppParallel.h>
 #include<string>
 #include<unordered_map>
 #include<vector>
-#include<iostream>
-#include<algorithm>
 #include<functional>
-#include<mutex>
+#include<tuple>
+#include<algorithm>
 
+// ------------------------ SEQUENCE INTEGER ENCODING ------------------------
 
-// a helper typedef used for adding presentation details for k-mer
-// the first parameter denotes input k-mer string
-// the second parameter denotes the position of k-mer in the given sequence
-typedef std::function<std::string(std::string&, int)> KMER_DECORATOR;
+typedef short ITEM_ENCODING_TYPE;
 
-// a prime number used as a base for hashing function
-const int HASH_CONST = 233;
+template<class ALPHABET_VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
+std::tuple<std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
+           std::vector<std::string>*>
+enumerate_alphabet(ALPHABET_VECTOR_TYPE& alphabet,
+                   std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter,
+                   std::function<std::string(const CPP_ITEM_TYPE&)>& cpp2string_converter) {
+  auto val2num_encoder = new std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>();
+  auto num2str_decoder = new std::vector<std::string>();
+  for(const auto& alphabet_item: alphabet) {
+    CPP_ITEM_TYPE cpp_alfabet_item = rcpp2cpp_converter(alphabet_item);
+    if(val2num_encoder->find(cpp_alfabet_item) == val2num_encoder->end()) {
+      (*num2str_decoder).push_back(cpp2string_converter(cpp_alfabet_item));
+      (*val2num_encoder)[cpp_alfabet_item] = (*num2str_decoder).size();
+    }
+  }
+  return {val2num_encoder, num2str_decoder};
+}
 
-// a modulo constant used for hashing function
-const int MOD = 1e9 + 33;
+const ITEM_ENCODING_TYPE NOT_ALLOWED_CHARACTER_CODE = -1;
+
+template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
+std::vector<ITEM_ENCODING_TYPE> enumerate_sequence(VECTOR_TYPE& seq,
+                                                   std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>* val2num_encoder,
+                                                   std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)>& rcpp2cpp_converter) {
+  std::vector<ITEM_ENCODING_TYPE> res;
+  res.reserve(seq.size());
+  for(const auto& seq_item: seq) {
+    CPP_ITEM_TYPE item_cpp = rcpp2cpp_converter(seq_item);
+    ITEM_ENCODING_TYPE item_encoded = val2num_encoder -> find(item_cpp) == val2num_encoder -> end()
+      ? NOT_ALLOWED_CHARACTER_CODE
+      : (*val2num_encoder)[item_cpp];
+    res.push_back(item_encoded);
+  }
+  return res;
+}
+
+template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
+std::tuple<std::vector<ITEM_ENCODING_TYPE>,
+           std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
+           std::vector<std::string>*>
+enumerate_sequence_nonnull(VECTOR_TYPE& sequence,
+                           VECTOR_TYPE& alphabet,
+                           std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter,
+                           std::function<std::string(const CPP_ITEM_TYPE&)> cpp2string_converter) {
+  auto [val2num_encoder, num2str_decoder] = enumerate_alphabet<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(
+    alphabet, rcpp2cpp_converter, cpp2string_converter);
+  auto res = enumerate_sequence<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(sequence, val2num_encoder, rcpp2cpp_converter);
+  return { res, val2num_encoder, num2str_decoder };
+}
+
+template<class NON_NULL_TYPE>
+NON_NULL_TYPE get_value_or_construct_default(Rcpp::Nullable<NON_NULL_TYPE>& nullableValue) {
+  return nullableValue.isNull() ? NON_NULL_TYPE() : NON_NULL_TYPE(nullableValue);
+}
+
+template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
+std::tuple<std::vector<ITEM_ENCODING_TYPE>,
+           std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>*,
+           std::vector<std::string>*>
+enumerate_sequence(Rcpp::Nullable<VECTOR_TYPE>& sequence,
+                   Rcpp::Nullable<VECTOR_TYPE>& alphabet,
+                   std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter,
+                   std::function<std::string(const CPP_ITEM_TYPE&)>& cpp2string_converter) {
+  VECTOR_TYPE nonNullSequence = get_value_or_construct_default(sequence);
+  VECTOR_TYPE nonNullAlphabet = get_value_or_construct_default(alphabet);
+  return enumerate_sequence_nonnull<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(
+      nonNullSequence,
+      nonNullAlphabet,
+      rcpp2cpp_converter,
+      cpp2string_converter
+  );
+}
+
+// ------------------------ SEQUENCE INTEGER ENCODING - R WRAPPERS ------------------------
+
+template<class VECTOR_TYPE, class CPP_ITEM_TYPE, class RCPP_ITEM_TYPE>
+Rcpp::IntegerVector enumerate_sequence_and_wrap(Rcpp::Nullable<VECTOR_TYPE> sequence,
+                                                Rcpp::Nullable<VECTOR_TYPE> alphabet,
+                                                std::function<CPP_ITEM_TYPE(const RCPP_ITEM_TYPE&)> rcpp2cpp_converter,
+                                                std::function<std::string(const CPP_ITEM_TYPE&)> cpp2string_converter) {
+  auto [res, val2num_encoder, num2str_decoder] = enumerate_sequence<VECTOR_TYPE, CPP_ITEM_TYPE, RCPP_ITEM_TYPE>(
+    sequence,
+    alphabet,
+    rcpp2cpp_converter,
+    cpp2string_converter
+  );
+  delete val2num_encoder;
+  delete num2str_decoder;
+  return Rcpp::wrap(res);
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerVector enumerate_string_sequence(Rcpp::Nullable<Rcpp::StringVector> sequence,
+                                              Rcpp::Nullable<Rcpp::StringVector> alphabet) {
+  return enumerate_sequence_and_wrap<Rcpp::StringVector, std::string, Rcpp::String::StringProxy>(
+      sequence,
+      alphabet,
+      [](const Rcpp::String::StringProxy& s) -> std::string {return Rcpp::as<std::string>(s);},
+      [](const std::string& s) -> std::string { return s; });
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerVector enumerate_integer_sequence(Rcpp::Nullable<Rcpp::IntegerVector> sequence,
+                                               Rcpp::Nullable<Rcpp::IntegerVector> alphabet) {
+  return enumerate_sequence_and_wrap<Rcpp::IntegerVector, int, int>(
+      sequence,
+      alphabet,
+      [](const int& x) -> int { return x; },
+      [](const int& x) -> std::string { return std::to_string(x); }
+  );
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerVector enumerate_numeric_sequence(Rcpp::Nullable<Rcpp::NumericVector> sequence,
+                                               Rcpp::Nullable<Rcpp::NumericVector> alphabet) {
+  return enumerate_sequence_and_wrap<Rcpp::NumericVector, double, double>(
+    sequence,
+    alphabet,
+    [](const double& x) -> double { return x; },
+    [](const double& x) -> std::string { return std::to_string(x); }
+  );
+}
+
+// ------------------------ COMPUTATION OF ALLOWED SEQUENCE RANGES ------------------------
+
+std::vector<int> get_not_allowed_sequence_positions(const std::vector<ITEM_ENCODING_TYPE>& encoded_sequence) {
+  std::vector<int> res;
+  res.push_back(-1); // left sentinel
+  for(size_t seq_i = 0; seq_i < encoded_sequence.size(); ++seq_i) {
+    if(encoded_sequence[seq_i] == NOT_ALLOWED_CHARACTER_CODE) {
+      res.push_back(seq_i);
+    }
+  }
+  res.push_back(encoded_sequence.size()); // right sentinel
+  return res;
+}
+
+// ------------------------ COMPUTATION OF ALLOWED SEQUENCE RANGES - R WRAPPER ------------------------
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerVector get_not_allowed_sequence_positions(Rcpp::IntegerVector encoded_sequence) {
+  std::vector<ITEM_ENCODING_TYPE> cpp_encoded_sequence = Rcpp::as<std::vector<ITEM_ENCODING_TYPE>>(encoded_sequence);
+  auto not_allowed_sequence_positions = get_not_allowed_sequence_positions(cpp_encoded_sequence);
+  return static_cast<Rcpp::IntegerVector>(Rcpp::wrap(not_allowed_sequence_positions)) + 1;
+}
+
+// ------------------------ K-MERS COMPUTATION (COMPACT SUBWORDS - ROLLING WINDOW HASHES) --------------
+
+// ------------------------ K-MERS COMPUTATION FOR ONE SEQUENCE ----------------------------------------
+
+struct KMerHashInfo {
+  int seq_start_pos;
+  int cnt;
+  
+  KMerHashInfo() {}
+  
+  KMerHashInfo(int seq_start_pos, int cnt): seq_start_pos(seq_start_pos), cnt(cnt) {}
+  
+  KMerHashInfo(const KMerHashInfo& second) {
+    this -> seq_start_pos = second.seq_start_pos;
+    this -> cnt = second.cnt;
+  }
+  
+  ~KMerHashInfo() {}
+};
+
+int compute_hash(int previous_hash, int current_item, int P, int M) {
+  return (static_cast<long long>(previous_hash) * P + current_item) % M;
+}
+
+void add_hash(std::unordered_map<int, KMerHashInfo>& kmer_counter,
+              int hash,
+              int begin,
+              bool positional_kmer,
+              int P,
+              int M) {
+  if(positional_kmer) {
+    hash = compute_hash(hash, (begin + 1), P, M);
+  }
+  if(kmer_counter.find(hash) == kmer_counter.end()) {
+    kmer_counter[hash] = KMerHashInfo(begin, 0);
+  }
+  ++kmer_counter[hash].cnt;
+}
+
+void update_kmers_for_subsequence(std::unordered_map<int, KMerHashInfo>& kmer_counter,
+                                  int k,
+                                  std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
+                                  int sequence_begin,
+                                  int sequence_end,
+                                  bool positional_kmer,
+                                  int P,
+                                  int P_K_1,
+                                  int M) {
+  int hash = std::accumulate(encoded_sequence.begin() + sequence_begin,
+                             encoded_sequence.begin() + sequence_begin + k,
+                             0,
+                             [&P, &M](int prev_hash, int current_item) -> int {
+                               return compute_hash(prev_hash, current_item, P, M);
+                             });
+  add_hash(kmer_counter, hash, sequence_begin, positional_kmer, P, M);
+  for(int current_sequence_begin = sequence_begin + 1; current_sequence_begin <= sequence_end; ++current_sequence_begin) {
+    hash = (hash - encoded_sequence[current_sequence_begin - 1] * P_K_1 + M) % M; // remove a previous item
+    hash = compute_hash(hash, encoded_sequence[current_sequence_begin + k - 1], P, M); // add a current item
+    add_hash(kmer_counter, hash, current_sequence_begin, positional_kmer, P, M);
+  }
+}   
+
+int compute_power_fast(int base, int power, int modulo) {
+  long long res = 1;
+  long long current_base_power = base;
+  while(power > 0) {
+    if(power & 1) {
+      res = (res * current_base_power) % modulo;
+    }
+    power >>= 1;
+    current_base_power = (current_base_power * current_base_power) % modulo;
+  }
+  return static_cast<int>(res);
+}
+
+std::unordered_map<int, KMerHashInfo> count_kmers(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
+                                                  int k,
+                                                  bool positional_kmer,
+                                                  int P,
+                                                  int P_K_1,
+                                                  int M) {
+  std::unordered_map<int, KMerHashInfo> res;
+  auto not_allowed_positions = get_not_allowed_sequence_positions(encoded_sequence);
+  
+  for(int not_allowed_position_ind = 0; not_allowed_position_ind < not_allowed_positions.size() - 1; ++not_allowed_position_ind) {
+    if(not_allowed_positions[not_allowed_position_ind + 1] - not_allowed_positions[not_allowed_position_ind] > k) {
+      int sequence_begin = not_allowed_positions[not_allowed_position_ind] + 1;
+      int sequence_end = not_allowed_positions[not_allowed_position_ind + 1] - k;
+      update_kmers_for_subsequence(res, k, encoded_sequence, sequence_begin, sequence_end, positional_kmer, P, P_K_1, M);
+    }
+  }
+  return res;
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::DataFrame count_kmers_hashed(Rcpp::IntegerVector encoded_sequence,
+                                   int k,
+                                   bool positional_kmer,
+                                   int P,
+                                   int P_K_1,
+                                   int M) {
+  auto cpp_encoded_sequence = Rcpp::as<std::vector<ITEM_ENCODING_TYPE>>(encoded_sequence);
+  auto kmers_counter_hash_map = count_kmers(cpp_encoded_sequence, k, positional_kmer, P, P_K_1, M);
+  
+  std::map<int, int> kmers_counter_map;
+  for(const auto& kmer_info_entry: kmers_counter_hash_map) {
+    kmers_counter_map[kmer_info_entry.second.seq_start_pos] = kmer_info_entry.second.cnt;
+  }
+  
+  std::vector<short> positions;
+  std::vector<int> counts;
+  for(const auto& map_entry: kmers_counter_map) {
+    positions.push_back(map_entry.first + 1);
+    counts.push_back(map_entry.second);
+  } 
+  
+  return Rcpp::DataFrame::create(
+    Rcpp::Named("position") = Rcpp::wrap(positions),
+    Rcpp::Named("cnt") = Rcpp::wrap(counts)
+  );
+}
+
+// ------------------------ K-MERS (BOTH GAPPED AND NORMAL) DECODING ----------------------------------------
+
+typedef std::function<std::string(std::string&, int)> KMER_STRING_DECORATOR; // (current_string, kmer_begin_pos) -> decorated_string
+
+typedef std::function<int(int,int)> NEXT_KMER_POSITION_GENERATOR; // (current_pos, current_position) -> next position
+
+int get_total_size_of_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
+                           int begin_position,
+                           int k,
+                           std::vector<std::string>& num2str_decoder,
+                           NEXT_KMER_POSITION_GENERATOR& next_sequence_position) {
+  int res = 0;
+  int current_position = begin_position;
+  for(int i = 0; i < k; ++i) {
+    int item_size = num2str_decoder[encoded_sequence[current_position]].size();
+    res += i == 0 ? item_size : item_size + 1;
+    current_position = next_sequence_position(current_position, i);
+  }
+  return res;
+}
+
+int get_total_size_of_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_kmer,
+                           std::vector<std::string>& num2str_decoder) {
+  return std::accumulate(encoded_kmer.begin() + 1,
+                         encoded_kmer.end(),
+                         num2str_decoder[encoded_kmer[0]].size(),
+                         [&num2str_decoder](int prev_sum, int code) -> int {
+                           return prev_sum + num2str_decoder[code].size() + 1;
+                        });
+}
 
 const std::string KMER_ITEM_SEPARATOR = ".";
+
+const std::string KMER_POSITION_SEPARATOR = "_";
+
+const int NO_POSITION = -1;
+
+std::string decode_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_sequence,
+                        int begin_position,
+                        int k,
+                        std::vector<std::string>& decoder,
+                        NEXT_KMER_POSITION_GENERATOR& next_sequence_position,
+                        KMER_STRING_DECORATOR& kmer_string_decorator) {
+  int kmer_size = get_total_size_of_kmer(encoded_sequence, begin_position, k, decoder, next_sequence_position);
+  std::string res;
+  res.reserve(kmer_size);
+  int current_position = begin_position;
+  for(int i = 0; i < k; ++i) {
+    res += decoder[encoded_sequence[current_position]] + (i == k - 1 ? "" : KMER_ITEM_SEPARATOR);
+    current_position = next_sequence_position(current_position, i);
+  }
+  return kmer_string_decorator(res, begin_position);
+}
+
+std::string decode_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_kmer,
+                        std::vector<std::string>& num2str_decoder) {
+  std::string res;
+  res.reserve(get_total_size_of_kmer(encoded_kmer, num2str_decoder));
+  res += num2str_decoder[encoded_kmer[0]];
+  for(int ek_i = 1; ek_i < encoded_kmer.size(); ++ek_i) {
+    res += KMER_ITEM_SEPARATOR + num2str_decoder[encoded_kmer[ek_i]];
+  }
+  return res;
+}
+
+std::string decorated_with_position(std::string& kmer, int position, bool positional_kmer) {
+  return positional_kmer ?
+    std::to_string(position + 1) + KMER_POSITION_SEPARATOR + kmer :
+    kmer;
+}
+
+int generate_next_kmer_position(int cur_pos, int d_i, Rcpp::IntegerVector& d) {
+  return cur_pos + d[d_i] + 1;
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::StringVector decode_kmer(Rcpp::IntegerVector encoded_sequence,
+                               Rcpp::IntegerVector d,
+                               int begin_position,
+                               Rcpp::StringVector decoder,
+                               bool positional_kmer) {
+  std::vector<std::string> num2str_decoder = Rcpp::as<std::vector<std::string>>(decoder);
+  std::vector<ITEM_ENCODING_TYPE> encoded_sequence_cpp;
+  for(const auto& elem: encoded_sequence) {
+    encoded_sequence_cpp.push_back(elem - 1);
+  }
+  NEXT_KMER_POSITION_GENERATOR next_pos = [&d](int cur_pos, int i) -> int {
+    return generate_next_kmer_position(cur_pos, i, d);  
+  };
+  KMER_STRING_DECORATOR decorator = [&positional_kmer](std::string& cur_str, int begin_pos) -> std::string {
+   return decorated_with_position(cur_str, begin_pos, positional_kmer);
+  };
   
-//' @name get_window_length
-//' @title Get k-mer window length
-//' 
-//' @description Compute a k-mer window length. The window length is the total size 
-//' used by the k-mer - the number of elements and the size of gaps.
-//' 
-//' @param d  \code{integer} vector with distances between consequent elements
-//' @return \code{integer} representing the total window length
-//' @export
-// [[Rcpp::export]]
-int get_window_length(const Rcpp::IntegerVector& d) {
-  int res = 1;
-  for(const int& item: d) {
-    res += item + 1;
-  }
-  return res;
+  return Rcpp::wrap(  
+    decode_kmer(encoded_sequence_cpp, begin_position - 1, d.size() + 1, num2str_decoder, next_pos, decorator)
+  );
 }
 
-//' @name get_hash
-//' @title Get hash of k-mer that is in a given sequence
-//' 
-//' @param s  \code{integer} vector representing input sequence
-//' @param d  \code{integer} vector representing the gaps between consecutive elements of k-mer
-//' @param begin_index  \code{integer} value representing the begin index of the k-mer
-//' @param pos  \code{logical} value representing whether k-mer is positional
-//' 
-//' @return \code{integer} value representing the result of a hashing function
-//' @export
-// [[Rcpp::export]]
-int get_hash(const std::vector<int>& s,
-             const Rcpp::IntegerVector& d,
-             int begin_index,
-             bool pos) {
-  long long lres = ((pos ? begin_index : 0) * HASH_CONST + s[begin_index]) % MOD;
-  int current_letter_index = begin_index;
-  for(int i = 0; i < d.size(); ++i) {
-    current_letter_index += d[i] + 1;
-    lres = ((lres * HASH_CONST) + s[current_letter_index]) % MOD;
-  }
-  return (int)lres;
-}
+// ------------------------ ALL K-MERS GENERATION ----------------------------------------
 
-//' @name get_hash_for_word
-//' @title Get hash of a sequence
-//' 
-//' @param kmer  \code{integer} vector representing a word to be hashed
-//' @return \code{integer} value representing the result of a hashing function
-//' @export
-// [[Rcpp::export]]
-int get_hash_for_word(const std::vector<int>& kmer) {
-  long long hash = 0;
-  for(int i = 0; i < kmer.size(); ++i) {
-    hash = ((hash * HASH_CONST) + kmer[i]) % MOD;
-  }
-  return (int)hash;
-}
-
-//' @name get_total_size_of_kmer
-//' @title Get the total size of k-mer
-//' 
-//' @description Computes the number of characters of the result k-mer
-//' taking into account the base alphabet. 
-//' 
-//' @param s  \code{integer} vector of encoded elements of a sequence (see Details)
-//' @param d  \code{integer} vector which denotes the gaps in k-mer
-//' @param begin_index  \code{integer} representing the begin index (in \code{s}) of the k-mer
-//' @param num2str  a \code{hash map} representing the encoding between number and \code{string} representation of each alphabet's item
-//' @return \code{int} denoting the total size (number of characters) of k-mer
-//' @details Each element of a sequence is previously encoded to an integer in order to make hashing computation
-//' more convenient
-int get_total_size_of_kmer(const std::vector<int>& s,
-                           const Rcpp::IntegerVector& d,
-                           int begin_index,
-                           std::unordered_map<int, std::string>& num2str) {
-  int res = num2str[s[begin_index]].size();
-  int current_index = begin_index;
-  for(int d_i = 0; d_i < d.size(); ++d_i) {
-    current_index += d[d_i] + 1;
-    res += num2str[s[current_index]].size() + 1; // + 1 because of the dot separator
-  }
-  return res;
-}
-
-//' @name get_total_size_of_kmer
-//' @title Get the total size (number of characters) of a k-mer
-//' 
-//' @description The number of characters of the result k-mer (after decoding from \code{integer} to \code{string})
-//' 
-//' @param kmer  \code{integer} vector representing the encoded k-mer (\link{get_total_size_of_kmer})
-//' @param num2str  \code{hash map} representing the encoding between the integer and string
-//' @return the number of characters in the result \code{string} that is the result of decoding each \code{integer} from \code{kmer}
-int get_total_size_of_kmer(const std::vector<int>& kmer,
-                           std::unordered_map<int, std::string>& num2str) {
-  int total_size = 0;
-  for(const int& item: kmer) {
-    total_size += num2str[item].size() + 1;
-  }
-  return total_size - 1;
-}
-
-//' @name create_kmer
-//' @title Create k-mer
-//' 
-//' @description Creates k-mer (of type \code{string}) from encoded (\code{integer}) vector
-//' based on encoding described in \code{num2str} and kmer_decorator
-//' 
-//' @param s  \code{integer} vector representing an encoded sequence
-//' @param d  \code{integer} vector representing the gaps in k-mer
-//' @param begin_index  \code{integer} representing the start of k-mer (in \code{s})
-//' @param num2str  \code{hash map} representing encoding of sequence items between \code{integer} and \code{string}
-//' @param kmer_decorator  a \code{function} that can add extra characters to k-mer (for example position information)
-//' 
-//' @return a \code{string} representing a result k-mer (that is used for presentation)
-std::string create_kmer(const std::vector<int>& s,
-                        const Rcpp::IntegerVector& d,
-                        int begin_index,
-                        std::unordered_map<int, std::string>& num2str,
-                        KMER_DECORATOR kmer_decorator) {
-  int total_kmer_size = get_total_size_of_kmer(s, d, begin_index, num2str);
-  std::string res;
-  res.reserve(total_kmer_size);
-  res += num2str[s[begin_index]];
-  int current_index = begin_index;
-  for(int d_i = 0; d_i < d.size(); ++d_i) {
-    current_index += d[d_i] + 1;
-    res += KMER_ITEM_SEPARATOR + num2str[s[current_index]];
-  }
-  return kmer_decorator(res, begin_index);
-}
-
-//' @name create_kmer
-//' @title Create k-mer
-//' 
-//' @description Creates k-mer (of type \code{string}) from encoded (\code{integer}) vector
-//' based on encoding described in \code{num2str} and kmer_decorator
-//' 
-//' @param kmer  \code{integer} vector representing an encoded sequence
-//' @param num2str  \code{hash map} representing encoding of sequence items between \code{integer} and \code{string}
-//' @param kmer_decorator  a \code{function} that can add extra characters to k-mer (for example position information)
-//' 
-//' @return a \code{string} representing a result k-mer (that is used for presentation)
-std::string create_kmer(const std::vector<int>& kmer,
-                        std::unordered_map<int, std::string>& num2str,
-                        KMER_DECORATOR kmer_decorator) {
-  int total_kmer_size = get_total_size_of_kmer(kmer, num2str);
-  std::string res;
-  res.reserve(total_kmer_size);
-  for(const int& elem: kmer) {
-    if(res.size() == 0) {
-      res += num2str[elem];
-    } else {
-      res += KMER_ITEM_SEPARATOR + num2str[elem];
-    }
-  }
-  return kmer_decorator(res, -1);
-}
-
-//' @name update_kmers
-//' @title Update k-mers in a \code{hash map}
-//' 
-//' @param kmers  a \code{hash map} reference representing the found k-mers (see details)
-//' @param d  \code{integer} vector representing gaps in k-mer
-//' @param s  \code{integer} vector representing an encoded sequence
-//' @param kmer_hash \code{integer} representing computed hash of k-mer
-//' @param kmer_begin_index \code{integer} representing the begin index of k-mer in \code{s}
-//' @param num2str  \code{hash map} representing encoding of sequence items between \code{integer} and \code{string}
-//' @param kmer_decorator  \code{function} that can add extra characters to \code{string} k-mer (for example position information)
-//' 
-//' @details k-mers \code{hashmap} contains key-value pairs: key is an \code{integer} representing a hash of k-mer,
-//' whereas the value represents a pair: (k-mer \code{string} for presentation, number of k-mer occurrences)
-void update_kmers(std::unordered_map<int, std::pair<std::string, int>>& kmers,
-                  const Rcpp::IntegerVector& d,
-                  const std::vector<int>& s,
-                  int kmer_hash,
-                  int kmer_begin_index,
-                  std::unordered_map<int, std::string>& num2str,
-                  KMER_DECORATOR kmer_decorator) {
-  auto map_elem = kmers.find(kmer_hash);
-  if(map_elem == kmers.end()) {
-    kmers[kmer_hash] = std::make_pair(create_kmer(s, d, kmer_begin_index, num2str, kmer_decorator), 0);
-  }
-  ++kmers[kmer_hash].second;
-}
-
-//' @name add_kmer_if_not_exists
-//' @title Add k-mer to a \code{hash map} if it does not exist
-//' 
-//' @param kmers  \code{hash map} containing k-mers (see \link{update_kmers})
-//' @param kmer  encoded \code{integer} vector representing a k-mer
-//' @param num2str  \code{hash map} representing encoding between \code{integer} and \code{string}
-//' @param kmer_decorator  \code{function} that can add extra characters to the \code{string} representation of k-mer
-void add_kmer_if_not_exists(std::unordered_map<int, std::pair<std::string, int>>& kmers,
-                            std::vector<int> kmer,
-                            std::unordered_map<int, std::string>& num2str,
-                            KMER_DECORATOR kmer_decorator) {
-  int hash = get_hash_for_word(kmer);
-  auto map_entry = kmers.find(hash);
-  if(map_entry == kmers.end()) {
-    kmers[hash] = std::make_pair(create_kmer(kmer, num2str, kmer_decorator), 0);
-  }
-}
-
-//' @name update_kmers_with_alphabet
-//' @title Update k-mers with alphabet
-//' 
-//' @description Generates and add k-mers (based on the given alphabet) that do not exist in the \code{hash map}.
-//' 
-//' @param kmers  \code{hash map} reference that stores k-mers (see \link{update_kmers})
-//' @param alphabet  \code{integer} vector representing encoded alphabet
-//' @param currentKmer \code{integer} vector representing the part of currently generated k-mer
-//' @param k  \code{integer} representing the number of k-mer items
-//' @param num2str  \code{hash map} representing the sequence encoding between \code{integer} and \code{string}
-//' @param kmer_decorator  \code{function} that can add extra characters for \code{string} representation of k-mer (for presentation reasons)
-void update_kmers_with_alphabet(std::unordered_map<int, std::pair<std::string, int>>& kmers,
-                                const std::vector<int>& alphabet,
-                                std::vector<int>& currentKmer,
-                                int k,
-                                std::unordered_map<int, std::string>& num2str,
-                                KMER_DECORATOR kmer_decorator) {
-  if(currentKmer.size() == k) {
-    add_kmer_if_not_exists(kmers, currentKmer, num2str, kmer_decorator);
+void add_encoded_kmer(std::vector<ITEM_ENCODING_TYPE>& encoded_kmer,
+                      std::vector<std::string>& num2str_decoder,
+                      int hash,
+                      std::unordered_map<int, KMerHashInfo>& found_kmer_hashes,
+                      std::vector<std::string>& used_kmers, // with count > 0
+                      std::vector<std::string>& unused_kmers) { // with count == 0
+  std::string str_kmer = decode_kmer(encoded_kmer, num2str_decoder);
+  if(found_kmer_hashes.find(hash) == found_kmer_hashes.end()) {
+    unused_kmers.push_back(std::move(str_kmer));
   } else {
-    for(char letter: alphabet) {
-      currentKmer.push_back(letter);
-      update_kmers_with_alphabet(kmers, alphabet, currentKmer, k, num2str, kmer_decorator);
-      currentKmer.pop_back();
+    used_kmers.push_back(std::move(str_kmer));
+  }
+}
+
+void generate_all_kmers(int k,
+                        std::vector<ITEM_ENCODING_TYPE>& current_kmer,
+                        int current_hash,
+                        int P,
+                        int M,
+                        std::vector<std::string>& used_kmers,
+                        std::vector<std::string>& unused_kmers,
+                        std::unordered_map<int, KMerHashInfo>& found_kmer_hashes,
+                        std::vector<std::string>& num2str_decoder) {
+  if(current_kmer.size() == k) {
+    add_encoded_kmer(current_kmer, num2str_decoder, current_hash, found_kmer_hashes, used_kmers, unused_kmers);
+  } else {
+    for(int code = 0; code < num2str_decoder.size(); ++code) {
+      int next_hash = compute_hash(current_hash, code, P, M);
+      current_kmer.push_back(code);
+      generate_all_kmers(k, current_kmer, next_hash, P, M, used_kmers, unused_kmers, found_kmer_hashes, num2str_decoder);
+      current_kmer.pop_back();
     }
   }
 }
 
-//' @name is_kmer_allowed
-//' @title Is k-mer allowed
-//' 
-//' @description Checks whether all elements of the given k-mer are contained in the alphabet set
-//' @param s  \code{integer} vector of encoded sequence characters
-//' @param d  \code{integer} vector representing gaps between elements of k-mer
-//' @param begin_index  \code{integer} representing the start index of k-mer in \code{s}
-//' @param is_item_allowed \code{hash map} that answers the question whether the element is in the alphabet
-//' @return \code{logical} value denoting whether k-mer is valid (contains valid characters that are in the alphabet)
-bool is_kmer_allowed(const std::vector<int>& s,
-                     const Rcpp::IntegerVector& d,
-                     int begin_index,
-                     std::unordered_map<int, bool>& is_item_allowed) {
-  int current_index = begin_index;
-  int i = 0;
-  do {
-    if(!is_item_allowed[s[current_index]]) {
-      return false;
-    }
-    current_index += d[i] + 1;
-    ++i;
-  } while (i <= d.length());
-  return true;
-}
+class AllKMersGeneratorWorker: public RcppParallel::Worker {
 
-//' @name count_kmers_helper
-//' @title Count k-mers 
-//' @description Counts the occurrences of k-mers (the size of k-mer should be larger than one)
-//' 
-//' @param s  \code{integer} vector representing encoded input sequence
-//' @param d  \code{integer} vector representing gaps in k-mer
-//' @param alphabet  \code{integer} vector representing encoded alphabet
-//' @param num2str  \code{hash map} representing the sequence elements encoding between \code{integer} and \code{string}
-//' @param kmer_decorator \code{function} that can add extra characters in order to enhance the presentation of \code{string} k-mer
-//' @param pos  \code{logical} value representing whether to count positional k-mers
-//' 
-//' @return \code{hash map} whose key is a \code{string} presentation of k-mer and value is the number of its occurrences
-std::unordered_map<std::string, int> count_kmers_helper(const std::vector<int>& s,
-                                                   const Rcpp::IntegerVector& d,
-                                                   const std::vector<int>& alphabet,
-                                                   std::unordered_map<int, std::string> num2str,
-                                                   KMER_DECORATOR kmer_decorator,
-                                                   bool pos) {
-  std::unordered_map<int, bool> isItemAllowed;
-  for(const int& c: alphabet) {
-    isItemAllowed[c] = true;
+private:
+  const int k, P, M;
+  std::unordered_map<int, KMerHashInfo>& found_kmer_hashes;
+  std::vector<std::string>& num2str_decoder;
+  
+public:
+  std::vector<std::string> used_kmers, unused_kmers;
+  
+  AllKMersGeneratorWorker(int k,
+                          int P,
+                          int M,
+                          std::unordered_map<int, KMerHashInfo>& found_kmer_hashes,
+                          std::vector<std::string>& num2str_decoder):
+    k(k), P(P), M(M), found_kmer_hashes(found_kmer_hashes), num2str_decoder(num2str_decoder) {
   }
   
-  std::unordered_map<int, std::pair<std::string, int>> kmers; // hash -> (kmer, count)
+  AllKMersGeneratorWorker(const AllKMersGeneratorWorker& other, RcppParallel::Split):
+    k(other.k), P(other.P), M(other.M), found_kmer_hashes(other.found_kmer_hashes), num2str_decoder(other.num2str_decoder) {
+  }
   
-  // fill map with found (allowed) k-mers
-  int window_length = get_window_length(d);
-  int last_window_index = s.size() - window_length;
-  for(int kmer_begin_index = 0; kmer_begin_index <= last_window_index; ++kmer_begin_index) {
-    if(is_kmer_allowed(s, d, kmer_begin_index, isItemAllowed)) {
-      update_kmers(kmers, d, s, get_hash(s, d, kmer_begin_index, pos), kmer_begin_index, num2str, kmer_decorator);
+  ~AllKMersGeneratorWorker() {}
+  
+  void operator()(size_t code_begin, size_t code_end) {
+    std::vector<ITEM_ENCODING_TYPE> initial_1mer;
+    initial_1mer.reserve(k);
+    initial_1mer.push_back(-1);
+    for(int code = code_begin; code < code_end; ++code) {
+      initial_1mer[0] = code;
+      generate_all_kmers(k, initial_1mer, compute_hash(0, code, P, M), P, M, used_kmers, unused_kmers, found_kmer_hashes, num2str_decoder);
     }
   }
   
-  if(!pos) {
-    // fill map with kmers that can be created with the given alphabet
-    std::vector<int> currentKmer;
-    currentKmer.clear();
-    update_kmers_with_alphabet(kmers, alphabet, currentKmer, (int)(d.size() + 1), num2str, kmer_decorator);
-  }
-  
-  std::unordered_map<std::string, int> res;
-  for(const auto& entry: kmers) {
-    res[entry.second.first] = entry.second.second;
-  }
-  return res;
-}
-
-//' @name fill_items_coding_maps
-//' @title Prepare encoding and decoding \code{hash maps} for sequence items
-//' 
-//' @details Enumerates each sequence item in order to convert \code{non-integer} values to \code{integer} ones
-//' \code{B} is the template Rcpp input type
-//' \code{S} is the template c++ input type of one element
-//' @param elems  the input elements of a sequence
-//' @param val2num  the reference to \code{hash map} representing the encoding to \code{integer} value
-//' @param num2str the reference to \code{hash map} representing the (reversed to \code{val2num}) encoding to \code{string} value
-//' @param lowest_not_used_num  the reference to \code{integer} value denoting current counter used to encode elements
-//' @param val2str_converter  \code{function} that take a sequence item and returns its string representation that is used for presentation
-template <class B, class S>
-void fill_items_coding_maps(B& elems,
-                            std::unordered_map<S, int>& val2num,
-                            std::unordered_map<int, std::string>& num2str,
-                            int& lowest_not_used_num,
-                            std::function<std::string(S)> val2str_converter) {
-  for(int i = 0; i < elems.size(); ++i) {
-    S s_item = static_cast<S>(elems[i]);
-    if(val2num.find(s_item) == val2num.end()) {
-      val2num[s_item] = lowest_not_used_num;
-      num2str[lowest_not_used_num] = val2str_converter(s_item);
-      ++lowest_not_used_num;
-    }
-  }
-}
-
-//' @name fill_encoded_int_vector
-//' @title Encode sequence vector (replace items to numbers)
-//' 
-//' @details \code{SEQ_TYPE} - the type of a sequence of the input sequence (Rcpp)
-//' \code{ELEM_TYPE} - the type of an item of the input sequence (c++)
-//' 
-//' @param str_v  the input (Rcpp) sequence
-//' @param res  the result (encoded) vector
-//' @param val2int  the encoder
-template <class SEQ_TYPE, class ELEM_TYPE>
-void fill_encoded_int_vector(SEQ_TYPE str_v,
-                             std::vector<int>& res,
-                             std::unordered_map<ELEM_TYPE, int>& val2int) {
-  for(int i = 0; i < str_v.size(); ++i) {
-    res[i] = val2int[static_cast<ELEM_TYPE>(str_v[i])];
-  }
-}
-
-//' @name get_kmers
-//' @title Get k-mers
-//' 
-//' @description Counts the occurrences of k-mers (the size of k-mer should be larger than one)
-//' \code{B} - the (Rcpp) type of an input sequence
-//' \code{S} - the (c++) type of an item of the sequence
-//' 
-//' @param s  input sequence
-//' @param d  \code{integer} vector representing gaps in k-mer
-//' @param alphabet  Rcpp sequence representing alphabet
-//' @param val2str_converter  \code{function} representing the conversion to string representation of an item
-//' @param kmer_decorator  \code{function} that can add extra characters in order to enhance the presentation of k-mer.
-//' @return \code{hash map} containing string representations of k-mers with their occurrence counts 
-template <class B, class S>
-std::unordered_map<std::string, int> get_kmers(B& s,
-                                               Rcpp::IntegerVector& d,
-                                               B& alphabet,
-                                               std::function<std::string(S)> val2str_converter,
-                                               KMER_DECORATOR kmer_decorator,
-                                               bool pos) {
-  // create S -> int (and vice versa) coding maps in order to deal with numbers
-  int lowest_not_used_num = 1;
-  std::unordered_map<S, int> val2num;
-  std::unordered_map<int, std::string> num2str;
-  fill_items_coding_maps(s, val2num, num2str, lowest_not_used_num, val2str_converter);
-  fill_items_coding_maps(alphabet, val2num, num2str, lowest_not_used_num, val2str_converter);
-  
-  std::vector<int> int_s(s.size());
-  fill_encoded_int_vector<B, S>(s, int_s, val2num);
-  
-  std::vector<int> int_alphabet(alphabet.size());
-  fill_encoded_int_vector<B, S>(alphabet, int_alphabet, val2num);
-  
-  return count_kmers_helper(int_s, d, int_alphabet, num2str, kmer_decorator, pos);
-}
-
-// a helper function used for determining how to decorate k-mer
-KMER_DECORATOR get_kmer_decorator(bool pos) {
-  return pos ?
-    [](std::string& s, int p) { return std::to_string(p) + "_" + s; } :
-    [](std::string& s, int p) { return s; };
-}
-
-// a helper function for extracting a single logical value
-bool is_first_true(Rcpp::LogicalVector& v) {
-  return static_cast<bool>(v[0]);
-}
-
-//' @name count_kmers_str
-//' @title Count k-mers for string sequences (the size of k-mer should be larger than one)
-//' 
-//' @param s  a \code{string} vector representing an input sequence
-//' @param d  an \code{integer} vector representing gaps between consecutive elements of k-mer
-//' @param alphabet a \code{string} vector representing valid elements of k-mer
-//' @param pos a \code{logical} value that denotes whether positional k-mers should be generated
-//' @return a named vector with counts of k-mers
-//' 
-//' @details K-mers that contain elements from \code{alphabet} but do not exist in the input sequence are also generated.
-//' 
-//' @examples
-//' count_kmers_str(
-//' c("a", "b", "c", "d", "x", "y", "z", "z", "a", "a"),
-//' d=c(0,0),
-//' c("a", "b", "c", "z"),
-//' pos=FALSE)
-//' @export
-// [[Rcpp::export]]
-std::unordered_map<std::string, int> count_kmers_str(Rcpp::StringVector& s,
-                                                     Rcpp::IntegerVector& d,
-                                                     Rcpp::StringVector& alphabet,
-                                                     Rcpp::LogicalVector& pos) {
-  bool positional = is_first_true(pos);
-  return get_kmers<Rcpp::StringVector, std::string>(s, d, alphabet,
-                                             [](std::string s) { return s; },
-                                             get_kmer_decorator(positional),
-                                             positional);
-}
-
-struct MapReduceWorker: public RcppParallel::Worker {
-  
-  std::unordered_map<std::string, int> output;
-  
-  std::function<std::unordered_map<std::string, int>(int)> proc;
-  
-  std::mutex mr_mutex;
-  
-  MapReduceWorker(std::unordered_map<std::string, int> output,
-            std::function<std::unordered_map<std::string, int>(int)> proc)
-    : output(output), proc(proc) {
-  }
-  
-  void operator()(std::size_t begin, std::size_t end) {
-    std::unordered_map<std::string, int> tmp_res;
-    for(int r_ind = begin; r_ind < end; ++r_ind) {
-      for(auto& pair: proc(r_ind)) {
-        tmp_res[pair.first] += pair.second;
-      }
-    }
-    
-    mr_mutex.lock();
-    for(auto& pair: tmp_res) {
-      output[pair.first] += pair.second; 
-    }
-    mr_mutex.unlock();
+  void join(const AllKMersGeneratorWorker& other) { 
+    unused_kmers.insert(unused_kmers.end(), other.unused_kmers.begin(), other.unused_kmers.end());
+    used_kmers.insert(used_kmers.end(), other.used_kmers.begin(), other.used_kmers.end());
   }
 };
 
-
-//' @name count_kmers_larger_than_one
-//' @title Count k-mers that contains more than one item
-//' 
-//' @param m  \code{character} matrix - each row represents one sequence
-//' @param d  an \code{integer} vector representing gaps between consecutive elements of k-mer
-//' @param alphabet a \code{numeric} vector representing valid elements of k-mer
-//' @param pos a \code{logical} value that denotes whether positional k-mers should be generated
-//' @return a named vector with counts of k-mers
-//' @example count_kmers_larger_than_one(
-//' matrix(data=c("a", "b", "c", "b", "c", "a"), nrow=2),
-//' c(0),
-//' c("a", "b", "c"),
-//' FALSE)
-//' @importFrom  RcppParallel RcppParallelLibs
-//' @export
-// [[Rcpp::export]]
-std::unordered_map<std::string, int> count_kmers_larger_than_one(Rcpp::StringMatrix& m,
-                                                 Rcpp::IntegerVector& d,
-                                                 Rcpp::StringVector& alphabet,
-                                                 Rcpp::LogicalVector& pos) {
-  std::function<std::unordered_map<std::string, int>(int)> proc = [&m, &d, &alphabet, &pos](int r_ind) {
-    Rcpp::StringVector v = m(r_ind, Rcpp::_);
-    return count_kmers_str(v, d, alphabet, pos);
-  };
+std::vector<std::string> generate_all_kmers(int k,
+                                           int P,
+                                           int M,
+                                           std::unordered_map<int, KMerHashInfo>& found_kmer_hashes,
+                                           std::vector<std::string>& num2str_decoder) {
+  AllKMersGeneratorWorker worker(k, P, M, found_kmer_hashes, num2str_decoder);
+  RcppParallel::parallelReduce(0, num2str_decoder.size(), worker, 1);
   
-  std::unordered_map<std::string, int> res;
-  MapReduceWorker worker(res, proc);
-  RcppParallel::parallelFor(0, m.rows(), worker);
-  
-  return worker.output;
+  return worker.unused_kmers;
 }
 
-//' @name count_unigrams
-//' @title Count unigrams
-//' @param m  \code{string} matrix that contains one sequence in each row
-//' @param alphabet  \code{string} vector that contains valid elements to construct unigrams
-//' @param pos  \code{logical} vector denoting whether to count positional k-mers
-//' @return named \code{integer} vector with unigrams' counts 
 //' @export
 // [[Rcpp::export]]
-std::unordered_map<std::string, int> count_unigrams(Rcpp::StringMatrix& m,
-                                                    Rcpp::StringVector& alphabet,
-                                                    Rcpp::LogicalVector& pos) {
-  std::unordered_map<std::string, int> is_allowed;
-  for(auto& a: alphabet) {
-    is_allowed[static_cast<std::string>(a)] = true;
-  }
-  
-  bool is_positional = is_first_true(pos);
-  KMER_DECORATOR decorator = get_kmer_decorator(is_positional);
-  
-  std::function<std::unordered_map<std::string, int>(int)> proc = [&decorator, &m, &is_allowed](int row_index) {
-    std::unordered_map<std::string, int> kmers;
-    Rcpp::StringMatrix::Row row = m(row_index, Rcpp::_);
-    for(int c=0; c < row.size(); ++c) {
-      std::string str = static_cast<std::string>(row[c]);
-      if(is_allowed[str]) {
-        kmers[decorator(str, c)]++;
-      }
-    }
-    return kmers;
-  };
-  
-  std::unordered_map<std::string, int> res;
-  MapReduceWorker worker(res, proc);
-  RcppParallel::parallelFor(0, m.nrow(), worker);
-  
-  if(!is_positional) {
-    for(auto& a: alphabet) {
-      std::string str = static_cast<std::string>(a);
-      if(worker.output.find(str) == worker.output.end()) {
-        worker.output[str] = 0;
-      }
-    }
-  }
-  return worker.output;
+std::vector<std::string> generate_all_kmers(int k,
+                                            int P,
+                                            int M,
+                                            Rcpp::StringVector& decoder) {
+  std::unordered_map<int, KMerHashInfo> found_kmer_hashes;
+  std::vector<std::string> num2str_decoder = Rcpp::as<std::vector<std::string>>(decoder);
+  return generate_all_kmers(k, P, M, found_kmer_hashes, num2str_decoder);
 }
-
 
