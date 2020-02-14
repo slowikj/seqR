@@ -1,4 +1,5 @@
-CXX17=g++ -std=c++17
-CXX17FLAGS= -Wall -O2
+CXX17 = g++
+CXX17FLAGS = -Wall -O2
+CXX17STD = -std=c++17
 
 PKG_LIBS = `shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()"`	
