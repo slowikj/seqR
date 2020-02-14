@@ -8,8 +8,9 @@ init:
         Import-Module '..\appveyor-tool.ps1'
 
 install:
+  - cmd: set CXX17=std=c++17
   ps: Bootstrap
-
+   
 cache:
   - C:\RLibrary
 
@@ -21,9 +22,6 @@ environment:
   # R_REMOTES_STANDALONE: true
 
 # Adapt as necessary starting from here
-
-install:
-  - cmd: set CXX17=std=c++17
 
 build_script:
   - travis-tool.sh install_deps
