@@ -3,6 +3,7 @@
 language: R
 compiler: gcc
 cache: packages
+sudo: require
 
 addons:
   apt:
