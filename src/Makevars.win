@@ -1,3 +1,4 @@
+CXX = g++ -std=c++17
 CXX17 = g++
 CXX17FLAGS = -Wall -O2
 CXX17STD = -std=c++17
