@@ -22,6 +22,9 @@ environment:
 
 # Adapt as necessary starting from here
 
+install:
+  - cmd: set CXX17=std=c++17
+
 build_script:
   - travis-tool.sh install_deps
 
