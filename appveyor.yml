@@ -1,12 +1,16 @@
-# DO NOT CHANGE the "init" and "install" sections below
 
-# Download script file from GitHub
 init:
   ps: |
         $ErrorActionPreference = "Stop"
         Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
         Import-Module '..\appveyor-tool.ps1'
-  cmd: set CXX17=std=c++17
+  cmd: sudo ln -s /usr/bin/gcc-8 /usr/local/bin/gcc
+  cmd: sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++
+  # Export CC and CXX to tell cmake which compiler to use
+  cmd: export CC=/usr/bin/gcc-8
+  cmd: export CXX=/usr/bin/g++-8
+  cmd: export CXX17=std=c+++17
+  # Check versions of gcc, g++ 
 
 install:
   ps: Bootstrap
