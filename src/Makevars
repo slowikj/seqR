@@ -1,2 +1,3 @@
-CXX_STD = CXX1z
-PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()")
+CXX=g++
+CXX_STD=CXX17
+PKG_LIBS = `shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()"`
