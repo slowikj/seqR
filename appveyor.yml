@@ -11,7 +11,6 @@ init:
     - export CC=/usr/bin/gcc-8
     - export CXX=/usr/bin/g++-8
     - export CXX17=std=c+++17
-    # Check versions of gcc, g++ 
 
 install:
   ps: Bootstrap
@@ -21,6 +20,7 @@ cache:
 
 environment:
   NOT_CRAN: true
+  CXX17: std=c+++17
   # env vars that may need to be set, at least temporarily, from time to time
   # see https://github.com/krlmlr/r-appveyor#readme for details
   # USE_RTOOLS: true
