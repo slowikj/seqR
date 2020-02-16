@@ -26,4 +26,5 @@ script:
 
 after_success:
   - curl -s https://codecov.io/bash
-  - Rscript -e 'covr::codecov()'
+  - Rscript -e 'covr::package_coverage(quiet=FALSE)'
+  
