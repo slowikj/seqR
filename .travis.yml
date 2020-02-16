@@ -25,5 +25,5 @@ script:
   - gcc -v && g++ -v
 
 after_success:
-  - `curl -s https://codecov.io/bash`
+  - curl -s https://codecov.io/bash
   - Rscript -e 'covr::codecov()'
