@@ -4,36 +4,85 @@
 #' @importFrom  RcppParallel RcppParallelLibs
 NULL
 
+#' @name enumerate_string_sequence
+#' @title Enumerate string sequence
+#' 
+#' @param sequence a \code{string} sequence
+#' @param alphabet an alphabet containing \code{string} items
+#' @return an \code{integer} vector representing enumerated sequence items
 #' @export
 enumerate_string_sequence <- function(sequence, alphabet) {
     .Call('_seqR_enumerate_string_sequence', PACKAGE = 'seqR', sequence, alphabet)
 }
 
+#' @name enumerate_integer_sequence
+#' @title Enumerate integer sequence
+#' 
+#' @param sequence an \code{integer} sequence
+#' @param alphabet an alphabet containing \code{integer} items
+#' @return an \code{integer} vector representing enumerated sequence items
 #' @export
 enumerate_integer_sequence <- function(sequence, alphabet) {
     .Call('_seqR_enumerate_integer_sequence', PACKAGE = 'seqR', sequence, alphabet)
 }
 
+#' @name enumerate_numeric_sequence
+#' @title Enumerate numeric sequence
+#' 
+#' @param sequence an \code{numeric} sequence
+#' @param alphabet an alphabet containing \code{numeric} items
+#' @return an \code{integer} vector representing enumerated sequence items
 #' @export
 enumerate_numeric_sequence <- function(sequence, alphabet) {
     .Call('_seqR_enumerate_numeric_sequence', PACKAGE = 'seqR', sequence, alphabet)
 }
 
+#' @name get_not_allowed_sequence_positions
+#' @title Get not allowed sequence positions
+#' 
+#' @param encoded_sequence an \code{integer} vector representing an encoded sequence
+#' @return an \code{integer} vector representing positions in a sequence where there are items equal to \code{NOT_ALLOWED_CHARACTER_CODE}
 #' @export
 get_not_allowed_sequence_positions <- function(encoded_sequence) {
     .Call('_seqR_get_not_allowed_sequence_positions', PACKAGE = 'seqR', encoded_sequence)
 }
 
+#' @name count_kmers_hashed
+#' @title Count k-mers hashed
+#' 
+#' @param encoded_sequence an encoded sequence
+#' @param k the length of a k-mer
+#' @param positional_kmer a \code{boolean} determining whether a k-mer is positional
+#' @param P a hashing base
+#' @param P_K_1 a computed value for P to the power of k-1
+#' @param M a modulo value for a hashing function
+#' @return a \code{DataFrame} with k-mer counts, it has 2 columns: \code{position} (the first position in the sequence) and \code{cnt}
 #' @export
 count_kmers_hashed <- function(encoded_sequence, k, positional_kmer, P, P_K_1, M) {
     .Call('_seqR_count_kmers_hashed', PACKAGE = 'seqR', encoded_sequence, k, positional_kmer, P, P_K_1, M)
 }
 
+#' @name decode_kmer
+#' @title Decode a k-mer
+#' @param encoded_sequence an encoded \code{integer} sequence
+#' @param d an \code{integer} vector representing gaps in a k-mer
+#' @param begin_position the starting position in the \code{encoded_sequence}
+#' @param decoder an \code{integer} code to \code{string} sequence item decoder
+#' @param positional_kmer a flag indicating whether a k-mer is positional
+#' @return a \code{StringVector} representing a decoded k-mer
 #' @export
 decode_kmer <- function(encoded_sequence, d, begin_position, decoder, positional_kmer) {
     .Call('_seqR_decode_kmer', PACKAGE = 'seqR', encoded_sequence, d, begin_position, decoder, positional_kmer)
 }
 
+#' @name generate_all_kmers
+#' @title Generate all k-mers
+#' 
+#' @param k the size of the k-mer
+#' @param P a base for a hashing function
+#' @param M a modulo value for a hashing function
+#' @param decoder an \code{StringVector} representing integer-string sequence item decoding
+#' @return a \code{string} vector representing all k-mers 
 #' @export
 generate_all_kmers <- function(k, P, M, decoder) {
     .Call('_seqR_generate_all_kmers', PACKAGE = 'seqR', k, P, M, decoder)
