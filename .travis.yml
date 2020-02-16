@@ -25,6 +25,6 @@ script:
   - gcc -v && g++ -v
 
 after_success:
-  - Rscript -e `packageVersion("covr")`
+  - Rscript -e 'packageVersion("covr")'
   - Rscript -e 'covr::package_coverage(quiet=FALSE)'
   
