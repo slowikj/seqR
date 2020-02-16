@@ -12,7 +12,10 @@ addons:
     packages:
       - gcc-8
       - g++-8
-      - cmake
+
+r_packages:
+  - covr
+  - devtools
       
 script:
   # Link gcc-8 and g++-8 to their standard commands
