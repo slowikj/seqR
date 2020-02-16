@@ -23,14 +23,12 @@ before_install:
   - echo "CXX17=g++ -std=c++17 -fPIC" >> ~/.R/Makevars
       
 script:
-  # Link gcc-8 and g++-8 to their standard commands
+  # Link gcc-7 and g++-7 to their standard commands
   - sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
   - sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++
   # Check versions of gcc, g++ and cmake
   - gcc -v && g++ -v
 
 after_success:
-  - Rscript -e 'packageVersion("covr")'
   - Rscript -e 'covr::codecov(quiet=FALSE)'
-  #- Rscript -e 'covr::package_coverage(quiet=FALSE)'
   
