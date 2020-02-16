@@ -1,5 +1,1 @@
-export CXX17 = g++
-export CXX17FLAGS = -Wall -O2
-export CXX17STD = -std=c++17
-
 PKG_LIBS = `shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()"`	

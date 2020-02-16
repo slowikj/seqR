@@ -14,9 +14,8 @@ cache:
 
 environment:
   NOT_CRAN: true
-  CXX17: -std=c++17
+  PKG_CXXFLAGS: -std=c++17
   CXX: /usr/bin/g++-8
-  CXX17FLAGS: -O3 -Wall
 
 build_script:
   - travis-tool.sh install_deps
