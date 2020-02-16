@@ -10,3 +10,5 @@ src/*.o
 src/*.dll
 .Rproj.user/*
 inst/doc
+src-i386/*
+src-x64/*
