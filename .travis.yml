@@ -16,6 +16,11 @@ addons:
 r_packages:
   - covr
   - devtools
+  
+before_install:
+  - mkdir -p ~/.R
+  - echo "CXX17FLAGS=-O3 -mtune=native -march=native -Wno-unused-variable -Wno-unused-function  -Wno-macro-redefined" >> ~/.R/Makevars
+  - echo "CXX17=g++ -std=c++17 -fPIC" >> ~/.R/Makevars
       
 script:
   # Link gcc-8 and g++-8 to their standard commands
