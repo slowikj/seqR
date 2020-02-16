@@ -22,7 +22,8 @@ script:
   - sudo ln -s /usr/bin/gcc-8 /usr/local/bin/gcc
   - sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++
   # Check versions of gcc, g++ and cmake
-  - gcc -v && g++ -v && cmake --version
+  - gcc -v && g++ -v
 
 after_success:
+  - curl -s https://codecov.io/bash
   - Rscript -e 'covr::codecov()'
