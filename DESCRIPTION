@@ -16,6 +16,7 @@ Description: kmer is a package providing fast counting of k-mers in sequences. I
   execution.
 License: MIT + file LICENSE
 Imports: Rcpp (>= 1.0.2), RcppParallel
+Depends: R(>= 3.6)
 LinkingTo: Rcpp, RcppParallel
 SystemRequirements: c++17
 RoxygenNote: 7.0.2
