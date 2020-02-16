@@ -25,6 +25,8 @@ script:
   - gcc -v && g++ -v
 
 after_success:
-  - curl -s https://codecov.io/bash
+  -  gcc -v && g++ -v
+  - sudo ln -s /usr/bin/gcc-8 /usr/local/bin/gcc
+  - sudo ln -s /usr/bin/g++-8 /usr/local/bin/g++
   - Rscript -e 'covr::package_coverage(quiet=FALSE)'
   
