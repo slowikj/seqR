@@ -24,10 +24,10 @@ enumerate_alphabet(ALPHABET_VECTOR_TYPE& alphabet,
   auto val2num_encoder = new std::unordered_map<CPP_ITEM_TYPE, ITEM_ENCODING_TYPE>();
   auto num2str_decoder = new std::vector<std::string>();
   for(const auto& alphabet_item: alphabet) {
-    CPP_ITEM_TYPE cpp_alfabet_item = rcpp2cpp_converter(alphabet_item);
-    if(val2num_encoder->find(cpp_alfabet_item) == val2num_encoder->end()) {
-      (*num2str_decoder).push_back(cpp2string_converter(cpp_alfabet_item));
-      (*val2num_encoder)[cpp_alfabet_item] = (*num2str_decoder).size();
+    CPP_ITEM_TYPE cpp_alphabet_item = rcpp2cpp_converter(alphabet_item);
+    if(val2num_encoder->find(cpp_alphabet_item) == val2num_encoder->end()) {
+      (*num2str_decoder).push_back(cpp2string_converter(cpp_alphabet_item));
+      (*val2num_encoder)[cpp_alphabet_item] = (*num2str_decoder).size();
     }
   }
   return {val2num_encoder, num2str_decoder};
