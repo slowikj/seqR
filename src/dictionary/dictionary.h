@@ -3,9 +3,8 @@
 
 #include<vector>
 
-
 template<class K, class V>
-class Dictionary {
+class dictionary {
 public:
   virtual V &operator[](const K &key) = 0;
   
