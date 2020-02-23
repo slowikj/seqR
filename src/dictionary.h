@@ -56,6 +56,8 @@ public:
   
   V &operator[](const K &key);
   
+  const V &operator[](const K &key) const;
+  
   std::vector<K> getKeys() const;
   
   bool isPresent(const K &key) const;
@@ -83,34 +85,45 @@ private:
 #include <algorithm>
 
 template<class K, class V>
-V &Dictionary<K, V>::operator[](const K &key) {
-  return this->inner_map_[key];
-}
-
-template<class K, class V>
-std::vector<K> Dictionary<K, V>::getKeys() const {
-  std::vector<K> res;
-  res.reserve(this->inner_map_.size());
-  for (const std::pair<K, V> &elem: this->inner_map_) {
-    res.push_back(elem.first);
+inline
+  V &Dictionary<K, V>::operator[](const K &key) {
+    return this->inner_map_[key];
   }
-  return res;
-}
 
 template<class K, class V>
-bool Dictionary<K, V>::isPresent(const K &key) const {
-  return this->inner_map_.find(key) != std::end(this->inner_map_);
-}
+inline
+  const V &Dictionary<K, V>::operator[](const K &key) const {
+    return this->inner_map_[key];
+  }
 
 template<class K, class V>
-typename Dictionary<K, V>::iterator Dictionary<K, V>::begin() {
-  return iterator(this->inner_map_.begin());
-}
+inline
+  std::vector<K> Dictionary<K, V>::getKeys() const {
+    std::vector<K> res;
+    res.reserve(this->inner_map_.size());
+    for (const std::pair<K, V> &elem: this->inner_map_) {
+      res.push_back(elem.first);
+    }
+    return res;
+  }
 
 template<class K, class V>
-typename Dictionary<K, V>::iterator Dictionary<K, V>::end() {
-  return iterator(this->inner_map_.end());
-}
+inline
+  bool Dictionary<K, V>::isPresent(const K &key) const {
+    return this->inner_map_.find(key) != std::end(this->inner_map_);
+  }
+
+template<class K, class V>
+inline
+  typename Dictionary<K, V>::iterator Dictionary<K, V>::begin() {
+    return iterator(this->inner_map_.begin());
+  }
+
+template<class K, class V>
+inline
+  typename Dictionary<K, V>::iterator Dictionary<K, V>::end() {
+    return iterator(this->inner_map_.end());
+  }
 
 
 #endif //CUSTOM_DICTIONARY_H
