@@ -14,9 +14,9 @@ public:
   class iterator {
   public:
     // iterator_traits
-    using value_type = std::pair<K, V>;
-    using pointer = std::pair<K, V> *;
-    using reference = std::pair<K, V> &;
+    using value_type = std::pair<const K&, V>;
+    using pointer = std::pair<const K&, V> *;
+    using reference = std::pair<const K&, V> &;
     using iterator_category = std::forward_iterator_tag;
     using difference_type = void;
     
