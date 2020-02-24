@@ -6,12 +6,12 @@
 using namespace Rcpp;
 
 // encode_alphabet
-Rcpp::NumericVector encode_alphabet(const Rcpp::NumericVector& input);
+Rcpp::IntegerVector encode_alphabet(Rcpp::IntegerVector input);
 RcppExport SEXP _seqR_encode_alphabet(SEXP inputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type input(inputSEXP);
     rcpp_result_gen = Rcpp::wrap(encode_alphabet(input));
     return rcpp_result_gen;
 END_RCPP
