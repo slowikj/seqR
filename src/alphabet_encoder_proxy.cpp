@@ -4,17 +4,21 @@
 
 #include "alphabet_encoder/concrete_encoders.h"
 #include "alphabet_encoder/alphabet_encoder.h"
+#include <utility>
 
 //' @export
 // [[Rcpp::export]]
 Rcpp::IntegerVector encode_alphabet(Rcpp::IntegerVector input) {
   AlphabetEncoder<int,int> integer_encoder = getIntegerAlphabetEncoder();
   Dictionary<int, short> encoded = integer_encoder.getEncoding<short, Rcpp::IntegerVector>(input);
-  for(const auto& elem: encoded) {
-    Rcpp::Rcout << elem.first << " " << elem.second << std::endl;
+  
+  auto res = Rcpp::IntegerVector(encoded.size());
+  auto keys = encoded.getKeys();
+  
+  for(int i = 0; i < keys.size(); ++i) {
+    res[i] = encoded[keys[i]];
   }
+  res.names() = keys;
   
-  Rcpp::Rcout << encoded.size() << std::endl;
-  
-  return Rcpp::IntegerVector::create(1,2,3);
+  return res;
 }
