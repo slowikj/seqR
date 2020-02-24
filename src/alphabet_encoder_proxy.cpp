@@ -14,5 +14,7 @@ Rcpp::IntegerVector encode_alphabet(Rcpp::IntegerVector input) {
     Rcpp::Rcout << elem.first << " " << elem.second << std::endl;
   }
   
+  Rcpp::Rcout << encoded.size() << std::endl;
+  
   return Rcpp::IntegerVector::create(1,2,3);
 }

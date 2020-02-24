@@ -60,6 +60,8 @@ public:
   
   std::vector<K> getKeys() const;
   
+  std::size_t size() const;
+  
   bool isPresent(const K &key) const;
   
   iterator begin();
@@ -125,5 +127,10 @@ inline
     return iterator(this->inner_map_.end());
   }
 
+template<class K, class V>
+inline
+  std::size_t Dictionary<K, V>::size() const {
+    return this->inner_map_.size();
+  }
 
 #endif //CUSTOM_DICTIONARY_H
