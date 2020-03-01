@@ -16,9 +16,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// encode_numeric_alphabet
+Rcpp::NumericVector encode_numeric_alphabet(const Rcpp::NumericVector& input);
+RcppExport SEXP _seqR_encode_numeric_alphabet(SEXP inputSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type input(inputSEXP);
+    rcpp_result_gen = Rcpp::wrap(encode_numeric_alphabet(input));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_seqR_encode_integer_alphabet", (DL_FUNC) &_seqR_encode_integer_alphabet, 1},
+    {"_seqR_encode_numeric_alphabet", (DL_FUNC) &_seqR_encode_numeric_alphabet, 1},
     {NULL, NULL, 0}
 };
 

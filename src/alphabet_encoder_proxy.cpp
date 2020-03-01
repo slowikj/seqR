@@ -21,3 +21,9 @@ rcpp_input_t prepareOutputVector(const rcpp_input_t& input) {
 Rcpp::IntegerVector encode_integer_alphabet(const Rcpp::IntegerVector& input) {
   return prepareOutputVector<Rcpp::IntegerVector, int>(input);
 }
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::NumericVector encode_numeric_alphabet(const Rcpp::NumericVector& input) {
+  return prepareOutputVector<Rcpp::NumericVector, double>(input);
+}

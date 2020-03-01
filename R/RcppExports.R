@@ -6,3 +6,8 @@ encode_integer_alphabet <- function(input) {
     .Call('_seqR_encode_integer_alphabet', PACKAGE = 'seqR', input)
 }
 
+#' @export
+encode_numeric_alphabet <- function(input) {
+    .Call('_seqR_encode_numeric_alphabet', PACKAGE = 'seqR', input)
+}
+

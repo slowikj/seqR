@@ -16,5 +16,11 @@ auto getEncoding(const Rcpp::IntegerVector& input) {
   );
 }
 
+auto getEncoding(const Rcpp::NumericVector& input) {
+  return getAlphabetEncoding<Rcpp::NumericVector, double, double, ENCODED_T>(
+    input,
+    [](const double& elem) -> double { return elem; }
+  );
+}
 
 #endif //CONCRETE_ENCODERS_H
