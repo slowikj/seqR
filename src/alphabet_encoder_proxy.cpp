@@ -5,20 +5,19 @@
 #include "alphabet_encoder/concrete_encoders.h"
 #include <utility>
 
-template<class rcpp_item_t, class rcpp_input_t>
+template<class rcpp_input_t, class rcpp_item_t>
 rcpp_input_t prepareOutputVector(const rcpp_input_t& input) {
-  Dictionary<rcpp_item_t, ENCODED_T> encoded = getEncoding(input);
-  auto res = Rcpp::IntegerVector(encoded.size());
-  auto keys = encoded.getKeys();
-  for(int i = 0; i < keys.size(); ++i) {
-    res[i] = encoded[keys[i]];
+  auto alphabetEncoding = getEncoding(input);
+  auto res = rcpp_input_t(alphabetEncoding.alphabetSize());
+  for(int i = 0; i < input.size(); ++i) {
+    res[i] = alphabetEncoding.encode(input(i));
   }
-  res.names() = keys;
+  res.names() = input;
   return res;
 }
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerVector encode_integer_alphabet(Rcpp::IntegerVector input) {
-  return prepareOutputVector<int, Rcpp::IntegerVector>(input);
+Rcpp::IntegerVector encode_integer_alphabet(const Rcpp::IntegerVector& input) {
+  return prepareOutputVector<Rcpp::IntegerVector, int>(input);
 }

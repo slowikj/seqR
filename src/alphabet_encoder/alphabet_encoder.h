@@ -5,33 +5,57 @@
 #include <memory>
 #include "../dictionary.h"
 
-template<class input_elem_t, class internal_elem_t>
-class AlphabetEncoder {
+template<class input_elem_t, class internal_elem_t, class encoded_elem_t>
+class AlphabetEncoding {
 public:
-  explicit AlphabetEncoder(std::function<internal_elem_t(input_elem_t)>&& input_to_internal_item_converter)
-    : input_to_internal_item_converter(std::move(input_to_internal_item_converter)) { }
+  AlphabetEncoding(std::function<internal_elem_t(input_elem_t)> inputToInternalItemConverter,
+                   std::unique_ptr<Dictionary<internal_elem_t, encoded_elem_t>>&& internalToEncoded):
+    internalToEncoded(std::move(internalToEncoded)),
+    inputToInternalItemConverter(inputToInternalItemConverter) {
+  }
   
-  template<class encoded_item_t, class input_t>
-  Dictionary<internal_elem_t, encoded_item_t> getEncoding(const input_t& input);
+  AlphabetEncoding() = default;
+  
+  AlphabetEncoding(AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&&) noexcept = default;
+  
+  AlphabetEncoding(const AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&) = default;
+  
+  AlphabetEncoding& operator=(const AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&) = default;
+  
+  AlphabetEncoding& operator=(AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&&) noexcept = default;
+  
+  encoded_elem_t encode(const input_elem_t& inputElem) const {
+    return (*internalToEncoded)[inputToInternalItemConverter(inputElem)];
+  }
+  
+  std::size_t alphabetSize() const {
+    return internalToEncoded -> size();
+  } 
   
 private:
-  std::function<internal_elem_t(input_elem_t)> input_to_internal_item_converter;
+  std::unique_ptr<Dictionary<internal_elem_t, encoded_elem_t>> internalToEncoded;
   
+  std::function<internal_elem_t(input_elem_t)> inputToInternalItemConverter;
 };
 
-template<class input_elem_t, class internal_elem_t>
-template<class encoded_item_t, class input_t>
-Dictionary<internal_elem_t, encoded_item_t>
-    AlphabetEncoder<input_elem_t, internal_elem_t>::getEncoding(const input_t &input) {
-      encoded_item_t currentNum = 1;
-      auto res = Dictionary<internal_elem_t, encoded_item_t>();
-      for(const input_elem_t& inputElem: input) {
-        internal_elem_t internalElem = this->input_to_internal_item_converter(inputElem);
-        if(!res.isPresent(internalElem)) {
-          res[internalElem] = currentNum++;
-        }
-      }
-      return res;
+template<class input_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t> getAlphabetEncoding(
+    const input_t& input,
+    std::function<internal_elem_t(input_elem_t)> inputToInternalItemConverter,
+    encoded_elem_t startEncodingNum = 1) {
+  encoded_elem_t currentNum = startEncodingNum;
+  std::unique_ptr<Dictionary<internal_elem_t, encoded_elem_t>> internalToEncoded(
+    new Dictionary<internal_elem_t, encoded_elem_t>()
+  );
+  for(const input_elem_t& inputElem: input) {
+    internal_elem_t internalElem = inputToInternalItemConverter(inputElem);
+    if(!internalToEncoded->isPresent(internalElem)) {
+      (*internalToEncoded)[internalElem] = currentNum++;
     }
+  }
+  return AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>(
+      inputToInternalItemConverter,
+      std::move(internalToEncoded));
+}
 
 #endif //ALPHABET_ENCODER_H

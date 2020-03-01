@@ -2,7 +2,7 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' @export
-encode_alphabet_integer <- function(input) {
-    .Call('_seqR_encode_alphabet_integer', PACKAGE = 'seqR', input)
+encode_integer_alphabet <- function(input) {
+    .Call('_seqR_encode_integer_alphabet', PACKAGE = 'seqR', input)
 }
 

@@ -5,20 +5,20 @@
 
 using namespace Rcpp;
 
-// encode_alphabet_integer
-Rcpp::IntegerVector encode_alphabet_integer(Rcpp::IntegerVector input);
-RcppExport SEXP _seqR_encode_alphabet_integer(SEXP inputSEXP) {
+// encode_integer_alphabet
+Rcpp::IntegerVector encode_integer_alphabet(const Rcpp::IntegerVector& input);
+RcppExport SEXP _seqR_encode_integer_alphabet(SEXP inputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type input(inputSEXP);
-    rcpp_result_gen = Rcpp::wrap(encode_alphabet_integer(input));
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type input(inputSEXP);
+    rcpp_result_gen = Rcpp::wrap(encode_integer_alphabet(input));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_seqR_encode_alphabet_integer", (DL_FUNC) &_seqR_encode_alphabet_integer, 1},
+    {"_seqR_encode_integer_alphabet", (DL_FUNC) &_seqR_encode_integer_alphabet, 1},
     {NULL, NULL, 0}
 };
 
