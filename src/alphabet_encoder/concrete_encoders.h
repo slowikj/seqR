@@ -8,7 +8,7 @@
 #include <memory>
 #include <string>
 
-typedef int ENCODED_T;
+typedef short ENCODED_T;
 
 auto getEncoding(Rcpp::IntegerVector& input) {
   return getAlphabetEncoding<Rcpp::IntegerVector, int, int, ENCODED_T>(
@@ -16,7 +16,7 @@ auto getEncoding(Rcpp::IntegerVector& input) {
     [](const int& elem) -> int { return elem; }
   );
 }
-
+  
 auto getEncoding(Rcpp::NumericVector& input) {
   return getAlphabetEncoding<Rcpp::NumericVector, double, double, ENCODED_T>(
     input,
