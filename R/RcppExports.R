@@ -11,3 +11,8 @@ encode_numeric_alphabet <- function(input) {
     .Call('_seqR_encode_numeric_alphabet', PACKAGE = 'seqR', input)
 }
 
+#' @export
+encode_string_alphabet <- function(input) {
+    .Call('_seqR_encode_string_alphabet', PACKAGE = 'seqR', input)
+}
+

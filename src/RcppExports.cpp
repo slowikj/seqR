@@ -6,24 +6,35 @@
 using namespace Rcpp;
 
 // encode_integer_alphabet
-Rcpp::IntegerVector encode_integer_alphabet(const Rcpp::IntegerVector& input);
+Rcpp::IntegerVector encode_integer_alphabet(Rcpp::IntegerVector& input);
 RcppExport SEXP _seqR_encode_integer_alphabet(SEXP inputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type input(inputSEXP);
     rcpp_result_gen = Rcpp::wrap(encode_integer_alphabet(input));
     return rcpp_result_gen;
 END_RCPP
 }
 // encode_numeric_alphabet
-Rcpp::NumericVector encode_numeric_alphabet(const Rcpp::NumericVector& input);
+Rcpp::IntegerVector encode_numeric_alphabet(Rcpp::NumericVector& input);
 RcppExport SEXP _seqR_encode_numeric_alphabet(SEXP inputSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::NumericVector& >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type input(inputSEXP);
     rcpp_result_gen = Rcpp::wrap(encode_numeric_alphabet(input));
+    return rcpp_result_gen;
+END_RCPP
+}
+// encode_string_alphabet
+Rcpp::IntegerVector encode_string_alphabet(Rcpp::StringVector& input);
+RcppExport SEXP _seqR_encode_string_alphabet(SEXP inputSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type input(inputSEXP);
+    rcpp_result_gen = Rcpp::wrap(encode_string_alphabet(input));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -31,6 +42,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_seqR_encode_integer_alphabet", (DL_FUNC) &_seqR_encode_integer_alphabet, 1},
     {"_seqR_encode_numeric_alphabet", (DL_FUNC) &_seqR_encode_numeric_alphabet, 1},
+    {"_seqR_encode_string_alphabet", (DL_FUNC) &_seqR_encode_string_alphabet, 1},
     {NULL, NULL, 0}
 };
 

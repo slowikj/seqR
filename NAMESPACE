@@ -2,5 +2,6 @@
 
 export(encode_integer_alphabet)
 export(encode_numeric_alphabet)
+export(encode_string_alphabet)
 importFrom(Rcpp,sourceCpp)
 useDynLib(seqR)

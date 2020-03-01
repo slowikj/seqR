@@ -5,10 +5,10 @@
 #include "alphabet_encoder/concrete_encoders.h"
 #include <utility>
 
-template<class rcpp_input_t, class rcpp_item_t>
-rcpp_input_t prepareOutputVector(const rcpp_input_t& input) {
+template<class rcpp_input_t>
+Rcpp::IntegerVector prepareOutputVector(rcpp_input_t& input) {
   auto alphabetEncoding = getEncoding(input);
-  auto res = rcpp_input_t(alphabetEncoding.alphabetSize());
+  auto res = Rcpp::IntegerVector(alphabetEncoding.alphabetSize());
   for(int i = 0; i < input.size(); ++i) {
     res[i] = alphabetEncoding.encode(input(i));
   }
@@ -18,12 +18,18 @@ rcpp_input_t prepareOutputVector(const rcpp_input_t& input) {
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerVector encode_integer_alphabet(const Rcpp::IntegerVector& input) {
-  return prepareOutputVector<Rcpp::IntegerVector, int>(input);
+Rcpp::IntegerVector encode_integer_alphabet(Rcpp::IntegerVector& input) {
+  return prepareOutputVector<Rcpp::IntegerVector>(input);
 }
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::NumericVector encode_numeric_alphabet(const Rcpp::NumericVector& input) {
-  return prepareOutputVector<Rcpp::NumericVector, double>(input);
+Rcpp::IntegerVector encode_numeric_alphabet(Rcpp::NumericVector& input) {
+  return prepareOutputVector<Rcpp::NumericVector>(input);
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerVector encode_string_alphabet(Rcpp::StringVector& input) {
+  return prepareOutputVector<Rcpp::StringVector>(input);
 }
