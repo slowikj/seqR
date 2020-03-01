@@ -8,7 +8,7 @@
 template<class rcpp_input_t>
 Rcpp::IntegerVector prepareOutputVector(rcpp_input_t& input) {
   auto alphabetEncoding = getEncoding(input);
-  auto res = Rcpp::IntegerVector(alphabetEncoding.alphabetSize());
+  auto res = Rcpp::IntegerVector(input.size());
   for(int i = 0; i < input.size(); ++i) {
     res[i] = alphabetEncoding.encode(input(i));
   }
