@@ -6,8 +6,9 @@
 #include <memory>
 #include <iterator>
 #include <unordered_map>
+#include <functional>
 
-template<class K, class V>
+template<class K, class V, class Hash=std::hash<K>>
 class Dictionary {
 public:
   
@@ -50,7 +51,7 @@ public:
     }
     
   private:
-    typename std::unordered_map<K, V>::iterator container_iterator_;
+    typename std::unordered_map<K, V, Hash>::iterator container_iterator_;
     
   };
   
@@ -70,37 +71,37 @@ public:
   
   Dictionary() = default;
   
-  Dictionary(const Dictionary<K, V> &) = default;
+  Dictionary(const Dictionary<K, V, Hash> &) = default;
   
-  Dictionary<K, V> &operator=(const Dictionary<K, V> &) = default;
+  Dictionary<K, V> &operator=(const Dictionary<K, V, Hash> &) = default;
   
-  Dictionary(Dictionary<K, V> &&) noexcept = default;
+  Dictionary(Dictionary<K, V, Hash> &&) noexcept = default;
   
-  Dictionary<K, V> &operator=(Dictionary<K, V> &&) noexcept = default;
+  Dictionary<K, V, Hash> &operator=(Dictionary<K, V, Hash> &&) noexcept = default;
   
   ~Dictionary() = default;
   
 private:
-  std::unordered_map<K, V> inner_map_;
+  std::unordered_map<K, V, Hash> inner_map_;
 };
 
 #include <algorithm>
 
-template<class K, class V>
+template<class K, class V, class Hash>
 inline
-  V &Dictionary<K, V>::operator[](const K &key) {
+  V &Dictionary<K, V, Hash>::operator[](const K &key) {
     return this->inner_map_[key];
   }
 
-template<class K, class V>
+template<class K, class V, class Hash>
 inline
-  const V &Dictionary<K, V>::operator[](const K &key) const {
+  const V &Dictionary<K, V, Hash>::operator[](const K &key) const {
     return this->inner_map_[key];
   }
 
-template<class K, class V>
+template<class K, class V, class Hash>
 inline
-  std::vector<K> Dictionary<K, V>::getKeys() const {
+  std::vector<K> Dictionary<K, V, Hash>::getKeys() const {
     std::vector<K> res;
     res.reserve(this->inner_map_.size());
     for (const std::pair<K, V> &elem: this->inner_map_) {
@@ -109,27 +110,27 @@ inline
     return res;
   }
 
-template<class K, class V>
+template<class K, class V, class Hash>
 inline
-  bool Dictionary<K, V>::isPresent(const K &key) const {
+  bool Dictionary<K, V, Hash>::isPresent(const K &key) const {
     return this->inner_map_.find(key) != std::end(this->inner_map_);
   }
 
-template<class K, class V>
+template<class K, class V, class Hash>
 inline
-  typename Dictionary<K, V>::iterator Dictionary<K, V>::begin() {
+  typename Dictionary<K, V, Hash>::iterator Dictionary<K, V, Hash>::begin() {
     return iterator(this->inner_map_.begin());
   }
 
-template<class K, class V>
+template<class K, class V, class Hash>
 inline
-  typename Dictionary<K, V>::iterator Dictionary<K, V>::end() {
+  typename Dictionary<K, V, Hash>::iterator Dictionary<K, V, Hash>::end() {
     return iterator(this->inner_map_.end());
   }
 
-template<class K, class V>
+template<class K, class V, class Hash>
 inline
-  std::size_t Dictionary<K, V>::size() const {
+  std::size_t Dictionary<K, V, Hash>::size() const {
     return this->inner_map_.size();
   }
 
