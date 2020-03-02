@@ -15,7 +15,7 @@ public:
   }
   
   void clear() {
-    std::for_each(std::begin(this->singleHashers), std::end(this->singleHashers)),
+    std::for_each(std::begin(this->singleHashers), std::end(this->singleHashers),
                   [](std::unique_ptr<SingleHasher> &singleHasher) {
                     singleHasher->clear();
                   }
@@ -38,7 +38,7 @@ public:
   
   std::vector<int> getHashes(int position) const {
     return prepareResultHashes(
-      [&position](std::unique_ptr<SingleHasher> &singleHasher) -> int {
+      [&position](const std::unique_ptr<SingleHasher> &singleHasher) -> int {
         return singleHasher->getHash(position);
       }
     );
@@ -46,7 +46,7 @@ public:
   
   std::vector<int> getHashes() const {
     return prepareResultHashes(
-      [](std::unique_ptr<SingleHasher> &singleHasher) -> int {
+      [](const std::unique_ptr<SingleHasher> &singleHasher) -> int {
         return singleHasher->getHash();
       }
     );
@@ -55,7 +55,8 @@ public:
 private:
   std::vector<std::unique_ptr<SingleHasher>> singleHashers;
   
-  std::vector<int> prepareResultHashes(std::function<int(std::unique_ptr<SingleHasher> &)> &&transformFunc) {
+  std::vector<int> prepareResultHashes(
+      std::function<int(const std::unique_ptr<SingleHasher> &)> &&transformFunc) const {
     std::vector<int> resultHashes;
     std::transform(std::begin(singleHashers), std::end(singleHashers),
                    std::back_inserter(resultHashes),
