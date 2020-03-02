@@ -38,11 +38,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// compute_polynomial_hash
+int compute_polynomial_hash(int P, int M, Rcpp::IntegerVector items, int begin);
+RcppExport SEXP _seqR_compute_polynomial_hash(SEXP PSEXP, SEXP MSEXP, SEXP itemsSEXP, SEXP beginSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type P(PSEXP);
+    Rcpp::traits::input_parameter< int >::type M(MSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type items(itemsSEXP);
+    Rcpp::traits::input_parameter< int >::type begin(beginSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_polynomial_hash(P, M, items, begin));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_seqR_encode_integer_alphabet", (DL_FUNC) &_seqR_encode_integer_alphabet, 1},
     {"_seqR_encode_numeric_alphabet", (DL_FUNC) &_seqR_encode_numeric_alphabet, 1},
     {"_seqR_encode_string_alphabet", (DL_FUNC) &_seqR_encode_string_alphabet, 1},
+    {"_seqR_compute_polynomial_hash", (DL_FUNC) &_seqR_compute_polynomial_hash, 4},
     {NULL, NULL, 0}
 };
 
