@@ -19,22 +19,13 @@ public:
   
   AlphabetEncoding() = default;
   
-  AlphabetEncoding(AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&& other) noexcept:
-    internalToEncoded(std::move(other.internalToEncoded)),
-    inputToInternalItemConverter(other.inputToInternalItemConverter) {
-  }
+  AlphabetEncoding(AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&& other) noexcept = default;
   
   AlphabetEncoding(const AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&) = delete;
   
   AlphabetEncoding& operator=(const AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&) = delete;
   
-  AlphabetEncoding& operator=(AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&& other) noexcept {
-    if(this != &other) {
-      this -> internalToEncoded = std::move(other.internalToEncoded);
-      this -> inputToInternalItemConverter = other.inputToInternalItemConverter;
-    }
-    return *this;
-  }
+  AlphabetEncoding& operator=(AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&& other) noexcept = default;
   
   encoded_elem_t encode(const input_elem_t& inputElem) const {
     return (*internalToEncoded)[inputToInternalItemConverter(inputElem)];
@@ -42,7 +33,7 @@ public:
   
   std::size_t alphabetSize() const {
     return internalToEncoded -> size();
-  } 
+  }
   
 private:
   std::unique_ptr<Dictionary<internal_elem_t, encoded_elem_t>> internalToEncoded;
