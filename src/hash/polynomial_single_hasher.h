@@ -2,7 +2,7 @@
 #define SECOND_POLYNOMIAL_SINGLE_HASHER_H
 
 #include "single_hasher.h"
-#include "../power_helper.h"
+#include "../utils.h"
 
 class PolynomialSingleHasher : public SingleHasher {
 public:
