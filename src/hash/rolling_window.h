@@ -4,6 +4,7 @@
 #include <memory>
 #include "../alphabet_encoder/alphabet_encoder.h"
 #include "../hash/complex_hasher.h"
+#include "../utils.h"
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t>
 class RollingWindow {
@@ -20,7 +21,7 @@ public:
   
   void resetIndex(int nextElementIndex) {
     this->nextElementIndex = nextElementIndex;
-    this->window.clear();
+    clear(this->window);
     this->hasher->clear();
   }
   
