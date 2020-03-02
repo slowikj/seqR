@@ -10,7 +10,7 @@ public:
   
   virtual void append(const int &elem) = 0;
   
-  virtual void removeFirst(const int &item) = 0;
+  virtual void removeFirst(const int &elem) = 0;
   
   [[nodiscard]] virtual int getHash() const {
     return currentHash;

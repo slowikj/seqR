@@ -16,10 +16,10 @@ public:
     this->nextPowerP = this->computeNextPowerP(this->nextPowerP);
   }
   
-  void removeFirst(const int &item) override {
+  void removeFirst(const int &elem) override {
     this->currentHash = static_cast<int>(
       (this->currentHash -
-        (static_cast<long long>(item) * this->computePreviousPowerP(this->nextPowerP)) + M) % M
+        (static_cast<long long>(elem) * this->computePreviousPowerP(this->nextPowerP)) + M) % M
     );
     this->nextPowerP = this->computePreviousPowerP(nextPowerP);
   }
