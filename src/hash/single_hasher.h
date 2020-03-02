@@ -18,6 +18,10 @@ public:
   
   [[nodiscard]] virtual int getHash(int position) const = 0;
   
+  virtual void clear() {
+    this->currentHash = 0;
+  }
+  
 protected:
   int currentHash = 0;
   

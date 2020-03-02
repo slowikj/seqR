@@ -32,6 +32,10 @@ public:
     return this->computeHash(currentHash, position);
   }
   
+  void clear() override {
+    SingleHasher::clear();
+  }
+  
 private:
   int P;
   int M;
