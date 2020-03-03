@@ -17,6 +17,11 @@ encode_string_alphabet <- function(input) {
 }
 
 #' @export
+count_kmers <- function(alphabet, sequence, k, isPositionalKMer) {
+    .Call('_seqR_count_kmers', PACKAGE = 'seqR', alphabet, sequence, k, isPositionalKMer)
+}
+
+#' @export
 compute_polynomial_hash <- function(P, M, items, begin, position) {
     .Call('_seqR_compute_polynomial_hash', PACKAGE = 'seqR', P, M, items, begin, position)
 }

@@ -32,7 +32,7 @@ public:
       this->sequence[this->nextElementIndex]
     );
     this->window.push(encodedElem);
-    this->hasher.append(elem);
+    this->hasher.append(encodedElem);
     ++this->nextElementIndex;
   }
   

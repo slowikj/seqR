@@ -38,6 +38,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// count_kmers
+Rcpp::IntegerVector count_kmers(Rcpp::StringVector& alphabet, Rcpp::StringVector& sequence, int k, bool isPositionalKMer);
+RcppExport SEXP _seqR_count_kmers(SEXP alphabetSEXP, SEXP sequenceSEXP, SEXP kSEXP, SEXP isPositionalKMerSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< bool >::type isPositionalKMer(isPositionalKMerSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_kmers(alphabet, sequence, k, isPositionalKMer));
+    return rcpp_result_gen;
+END_RCPP
+}
 // compute_polynomial_hash
 int compute_polynomial_hash(int P, int M, Rcpp::IntegerVector items, int begin, int position);
 RcppExport SEXP _seqR_compute_polynomial_hash(SEXP PSEXP, SEXP MSEXP, SEXP itemsSEXP, SEXP beginSEXP, SEXP positionSEXP) {
@@ -73,6 +87,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_seqR_encode_integer_alphabet", (DL_FUNC) &_seqR_encode_integer_alphabet, 1},
     {"_seqR_encode_numeric_alphabet", (DL_FUNC) &_seqR_encode_numeric_alphabet, 1},
     {"_seqR_encode_string_alphabet", (DL_FUNC) &_seqR_encode_string_alphabet, 1},
+    {"_seqR_count_kmers", (DL_FUNC) &_seqR_count_kmers, 4},
     {"_seqR_compute_polynomial_hash", (DL_FUNC) &_seqR_compute_polynomial_hash, 5},
     {"_seqR_compute_polynomial_multihash", (DL_FUNC) &_seqR_compute_polynomial_multihash, 5},
     {NULL, NULL, 0}

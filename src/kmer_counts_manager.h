@@ -29,6 +29,9 @@ struct KMerHashInfo {
 
 class KMerCountsManager {
 public:
+  
+  KMerCountsManager() = default;
+  
   void add(std::vector<int>&& hash, int position) {
     if(!this->dictionary.isPresent(hash)) {
       this->dictionary[hash] = KMerHashInfo(position);
@@ -36,12 +39,12 @@ public:
     this->dictionary[std::move(hash)].cnt++; 
   }
   
-  const Dictionary<std::vector<int>, KMerHashInfo, container_hash>& getDictionary() const {
+  const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher>& getDictionary() const {
     return this->dictionary;
   }
   
 private:
-  Dictionary<std::vector<int>, KMerHashInfo, container_hash<std::vector<int>> dictionary;
+  Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher> dictionary;
   
 };
 

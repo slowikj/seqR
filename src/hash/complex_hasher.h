@@ -66,14 +66,13 @@ private:
   
 };
 
-template<typename Container>
-struct container_hash {
+struct vector_int_hasher {
   
   const static int P = 47;
   
   const static int M = 1e9 + 7;
   
-  std::size_t operator()(const Container &c) const {
+  std::size_t operator()(const std::vector<int> &c) const {
     // TODO: try to use boost::hash_range(c.begin(), c.end());
     return std::accumulate(std::begin(c), std::end(c),
                            0,
