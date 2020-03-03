@@ -11,26 +11,28 @@ class RollingWindow {
 public:
   
   RollingWindow(input_vector_t& sequence,
-                std::unique_ptr<ComplexHasher>&& hasher,
-                std::unique_ptr<AlphabetEncoding<input_vector_t, input_elem_t, encoded_elem_t>>&& alphabetEncoding):
+                ComplexHasher&& hasher,
+                const AlphabetEncoding<input_vector_t, input_elem_t, encoded_elem_t>& alphabetEncoding):
     sequence(sequence),
     hasher(std::move(hasher)),
-    alphabetEncoding(std::move(alphabetEncoding)) {
+    alphabetEncoding(alphabetEncoding) {
     this->nextElementIndex = 0;
   }
+  
+  RollingWindow() = delete;
   
   void resetIndex(int nextElementIndex) {
     this->nextElementIndex = nextElementIndex;
     clear(this->window);
-    this->hasher->clear();
+    this->hasher.clear();
   }
   
   void append() {
-    encoded_elem_t encodedElem = this->alphabetEncoding->encode(
+    encoded_elem_t encodedElem = this->alphabetEncoding.encode(
       this->sequence[this->nextElementIndex]
     );
     this->window.push(encodedElem);
-    this->hasher->append(elem);
+    this->hasher.append(elem);
     ++this->nextElementIndex;
   }
   
@@ -40,7 +42,7 @@ public:
   }
   
   void removeFirst() {
-    this->hasher->removeFirst(this->window.front());
+    this->hasher.removeFirst(this->window.front());
     this->window.pop();
   }
   
@@ -53,15 +55,15 @@ public:
   }
   
   std::vector<int> getWindowedPositionedHashes() const {
-    return this->hasher->getHashes(this->nextElementIndex);
+    return this->hasher.getHashes(this->nextElementIndex);
   }
   
 private:
   input_vector_t& sequence;
   
-  std::unique_ptr<AlphabetEncoding<input_vector_t, input_elem_t, encoded_elem_t>> alphabetEncoding;
+  const AlphabetEncoding<input_vector_t, input_elem_t, encoded_elem_t>& alphabetEncoding;
   
-  std::unique_ptr<ComplexHasher> hasher;
+  ComplexHasher hasher;
   
   std::queue<encoded_elem_t> window;
   
