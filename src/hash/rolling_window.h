@@ -41,6 +41,7 @@ public:
   
   void removeFirst() {
     this->hasher->removeFirst(this->window.front());
+    this->window.pop();
   }
   
   std::size_t sequenceSize() const {
