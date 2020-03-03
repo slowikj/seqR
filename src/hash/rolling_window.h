@@ -58,6 +58,10 @@ public:
     return this->hasher.getHashes(this->nextElementIndex);
   }
   
+  int currentBeginIndex() const {
+    return this->nextElementIndex - this->window.size();
+  }
+  
 private:
   input_vector_t& sequence;
   
