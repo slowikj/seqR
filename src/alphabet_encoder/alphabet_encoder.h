@@ -12,7 +12,7 @@ template<class input_elem_t, class internal_elem_t, class encoded_elem_t>
 class AlphabetEncoding {
 public:
   AlphabetEncoding(std::function<internal_elem_t(const input_elem_t&)> inputToInternalItemConverter,
-                   std::unique_ptr<Dictionary<internal_elem_t, encoded_elem_t>>&& internalToEncoded):
+                   Dictionary<internal_elem_t, encoded_elem_t>&& internalToEncoded):
     internalToEncoded(std::move(internalToEncoded)),
     inputToInternalItemConverter(inputToInternalItemConverter) {
   }
@@ -27,16 +27,16 @@ public:
   
   AlphabetEncoding& operator=(AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&& other) noexcept = default;
   
-  encoded_elem_t encode(const input_elem_t& inputElem) const {
-    return (*internalToEncoded)[inputToInternalItemConverter(inputElem)];
+  encoded_elem_t encode(const input_elem_t& inputElem) {
+    return internalToEncoded[inputToInternalItemConverter(inputElem)];
   }
   
   std::size_t alphabetSize() const {
-    return internalToEncoded -> size();
+    return internalToEncoded.size();
   }
   
 private:
-  std::unique_ptr<Dictionary<internal_elem_t, encoded_elem_t>> internalToEncoded;
+  Dictionary<internal_elem_t, encoded_elem_t> internalToEncoded;
   
   std::function<internal_elem_t(const input_elem_t&)> inputToInternalItemConverter;
 };
@@ -47,13 +47,11 @@ AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t> getAlphabetEncod
     std::function<internal_elem_t(const input_elem_t&)> inputToInternalItemConverter,
     encoded_elem_t startEncodingNum = 1) {
   encoded_elem_t currentNum = startEncodingNum;
-  std::unique_ptr<Dictionary<internal_elem_t, encoded_elem_t>> internalToEncoded(
-    new Dictionary<internal_elem_t, encoded_elem_t>()
-  );
+  Dictionary<internal_elem_t, encoded_elem_t> internalToEncoded;
   for(const auto& inputElem: input) {
     internal_elem_t internalElem = inputToInternalItemConverter(inputElem);
-    if(!internalToEncoded->isPresent(internalElem)) {
-      (*internalToEncoded)[internalElem] = currentNum++;
+    if(!internalToEncoded.isPresent(internalElem)) {
+      internalToEncoded[internalElem] = currentNum++;
     }
   }
   return AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>(

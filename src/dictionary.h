@@ -57,8 +57,6 @@ public:
   
   V &operator[](const K &key);
   
-  const V &operator[](const K &key) const;
-  
   std::vector<K> getKeys() const;
   
   std::size_t size() const;
@@ -90,12 +88,6 @@ private:
 template<class K, class V, class Hash>
 inline
   V &Dictionary<K, V, Hash>::operator[](const K &key) {
-    return this->inner_map_[key];
-  }
-
-template<class K, class V, class Hash>
-inline
-  const V &Dictionary<K, V, Hash>::operator[](const K &key) const {
     return this->inner_map_[key];
   }
 
