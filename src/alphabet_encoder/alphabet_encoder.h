@@ -31,6 +31,10 @@ public:
     return internalToEncoded[inputToInternalItemConverter(inputElem)];
   }
   
+  bool isAllowed(const input_elem_t& inputElem) const {
+    return internalToEncoded.isPresent(inputToInternalItemConverter(inputElem));
+  }
+  
   std::size_t alphabetSize() const {
     return internalToEncoded.size();
   }
