@@ -53,7 +53,7 @@ public:
   }
   
   std::vector<int> getWindowedPositionedHashes() const {
-    return this->hasher->getHashes(this->nextElementIndex - 1);
+    return this->hasher->getHashes(this->nextElementIndex);
   }
   
 private:
