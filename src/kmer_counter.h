@@ -46,7 +46,7 @@ inline ComplexHasher createComplexHasher() {
 }
 
 template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
-std::vector<int> computeNotAllowedPositions(
+inline std::vector<int> computeNotAllowedPositions(
     AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
     input_vector_t& sequence) {
   std::vector<int> res;
@@ -75,7 +75,9 @@ inline KMerCountsManager countKMers(int k,
     if(allowedItemsBetween >= k) {
       int begin = notAllowedSequencePositions[i] + 1;
       int end = notAllowedSequencePositions[i + 1] - 1;
-      countKMersForContiguousSeq(k, begin, end, rollingWindow, kmerCountsManager, isPositionalKMer);
+      countKMersForContiguousSeq<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+          k, begin, end, rollingWindow, kmerCountsManager, isPositionalKMer
+      );
     }
   }
   return kmerCountsManager;

@@ -2,7 +2,7 @@
 #include<Rcpp.h>
 #include<iostream>
 
-#include "alphabet_encoder/concrete_encoders.h"
+#include "concrete_encoders.h"
 #include <utility>
 
 template<class rcpp_input_t>
@@ -11,7 +11,7 @@ Rcpp::IntegerVector prepareOutputVector(rcpp_input_t& input) {
   auto res = Rcpp::IntegerVector(input.size());
   for(int i = 0; i < input.size(); ++i) {
     res[i] = alphabetEncoding.encode(input(i));
-  }
+  } 
   res.names() = input;
   return res;
 }

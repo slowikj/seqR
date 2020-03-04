@@ -1,7 +1,7 @@
 // [[Rcpp::plugins("c++17")]]
 #include<Rcpp.h>
 #include<memory>
-#include "alphabet_encoder/concrete_encoders.h"
+#include "concrete_encoders.h"
 #include "kmer_counter.h"
 
 //' @export

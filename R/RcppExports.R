@@ -2,6 +2,21 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' @export
+encode_integer_alphabet <- function(input) {
+    .Call('_seqR_encode_integer_alphabet', PACKAGE = 'seqR', input)
+}
+
+#' @export
+encode_numeric_alphabet <- function(input) {
+    .Call('_seqR_encode_numeric_alphabet', PACKAGE = 'seqR', input)
+}
+
+#' @export
+encode_string_alphabet <- function(input) {
+    .Call('_seqR_encode_string_alphabet', PACKAGE = 'seqR', input)
+}
+
+#' @export
 count_kmers <- function(alphabet, sequence, k, isPositionalKMer) {
     .Call('_seqR_count_kmers', PACKAGE = 'seqR', alphabet, sequence, k, isPositionalKMer)
 }

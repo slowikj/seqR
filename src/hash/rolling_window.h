@@ -2,7 +2,7 @@
 #define ROLLING_WINDOW_H
 
 #include <memory>
-#include "../alphabet_encoder/alphabet_encoder.h"
+#include "../alphabet_encoder.h"
 #include "../hash/complex_hasher.h"
 #include "../utils.h"
 
@@ -23,7 +23,7 @@ public:
   
   void resetIndex(int nextElementIndex) {
     this->nextElementIndex = nextElementIndex;
-    clear(this->window);
+    clear<encoded_elem_t>(this->window);
     this->hasher.clear();
   }
   

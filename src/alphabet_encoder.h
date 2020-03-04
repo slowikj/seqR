@@ -6,7 +6,7 @@
 
 #include <functional>
 #include <memory>
-#include "../dictionary.h"
+#include "dictionary.h"
 
 template<class input_elem_t, class internal_elem_t, class encoded_elem_t>
 class AlphabetEncoding {
