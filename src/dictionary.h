@@ -21,7 +21,7 @@ public:
     using iterator_category = std::forward_iterator_tag;
     using difference_type = void;
     
-    explicit iterator(typename std::unordered_map<K, V>::iterator it) : container_iterator_(it) {}
+    explicit iterator(typename std::unordered_map<K, V, Hash>::iterator it) : container_iterator_(it) {}
     
     iterator& operator++() {
       ++this->container_iterator_;
