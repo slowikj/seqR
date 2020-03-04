@@ -17,12 +17,8 @@ struct KMerHashInfo {
   }
   
   KMerHashInfo() = default;
-  
-  KMerHashInfo(KMerHashInfo&&) noexcept = default;
-  
+
   KMerHashInfo& operator=(const KMerHashInfo&) = default;
-  
-  KMerHashInfo& operator=(KMerHashInfo&&) noexcept = default;
   
   ~KMerHashInfo() = default;
 };
