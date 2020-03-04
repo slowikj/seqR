@@ -30,7 +30,7 @@ inline void countKMersForContiguousSeq(int k,
   for(int i = 0; i < k; ++i) {
     rollingWindow.append();
   }
-  for(int beginPosition = begin; beginPosition < end; ++beginPosition) {
+  for(int beginPosition = begin; beginPosition < end - k + 1; ++beginPosition) {
     updateKMerCounts(rollingWindow, kmerCountsManager, isPositionalKMer);
     rollingWindow.moveWindowRight();
   }
