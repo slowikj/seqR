@@ -71,7 +71,7 @@ public:
   
   Dictionary(const Dictionary<K, V, Hash> &) = default;
   
-  Dictionary<K, V> &operator=(const Dictionary<K, V, Hash> &) = default;
+  Dictionary<K, V, Hash> &operator=(const Dictionary<K, V, Hash> &) = default;
   
   Dictionary(Dictionary<K, V, Hash> &&) noexcept = default;
   

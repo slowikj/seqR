@@ -8,8 +8,8 @@
 #include "kmer_counts_manager.h"
 #include <vector>
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t>
-inline void updateKMerCounts(RollingWindow<input_vector_t, input_elem_t, encoded_elem_t>& rollingWindow,
+template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+inline void updateKMerCounts(RollingWindow<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>& rollingWindow,
                              KMerCountsManager& kmerCountsManager,
                              bool isPositionalKMer) {
   kmerCountsManager.add(
@@ -19,11 +19,11 @@ inline void updateKMerCounts(RollingWindow<input_vector_t, input_elem_t, encoded
   );
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t>
+template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 inline void countKMersForContiguousSeq(int k,
                                        int begin,
                                        int end,
-                                       RollingWindow<input_vector_t, input_elem_t, encoded_elem_t>& rollingWindow,
+                                       RollingWindow<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>& rollingWindow,
                                        KMerCountsManager& kmerCountsManager,
                                        bool isPositionalKMer) {
   rollingWindow.resetIndex(begin);
@@ -45,9 +45,9 @@ inline ComplexHasher createComplexHasher() {
   return complexHasher;
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t>
+template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 std::vector<int> computeNotAllowedPositions(
-    const AlphabetEncoding<input_vector_t, input_elem_t, encoded_elem_t>& alphabetEncoding,
+    AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
     input_vector_t& sequence) {
   std::vector<int> res;
   res.push_back(-1); // left sentinel
@@ -60,13 +60,13 @@ std::vector<int> computeNotAllowedPositions(
   return res;
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t>
+template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 inline KMerCountsManager countKMers(int k,
                                     input_vector_t& sequence,
-                                    const AlphabetEncoding<input_vector_t, input_elem_t, encoded_elem_t>& alphabetEncoding,
+                                    AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
                                     bool isPositionalKMer) {
   KMerCountsManager kmerCountsManager;
-  RollingWindow<input_vector_t, input_elem_t, encoded_elem_t> rollingWindow(
+  RollingWindow<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t> rollingWindow(
       sequence, std::move(createComplexHasher()), alphabetEncoding
   );
   auto notAllowedSequencePositions = computeNotAllowedPositions(alphabetEncoding, sequence);

@@ -16,7 +16,7 @@ struct KMerHashInfo {
     cnt(0), seqStartPosition(seqStartPosition) {
   }
   
-  KMerHashInfo() = delete;
+  KMerHashInfo() = default;
   
   KMerHashInfo(KMerHashInfo&&) noexcept = default;
   
