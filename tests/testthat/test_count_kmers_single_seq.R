@@ -36,3 +36,19 @@ test_that("count positional 1-mers", {
               k=1,
               isPositionalKMer=TRUE)
 })
+
+test_that("count non positional 1-mers if some sequence items are not allowed", {
+  invoke_test(expected_res=c("a"=3),
+              alphabet=c("a"),
+              sequence=c("a", "a", "b", "a", "b"),
+              k=1,
+              isPositionalKMer=FALSE)
+})
+
+test_that("count positional 1-mers if some sequence items are not allowed", {
+  invoke_test(expected_res=c("1_a"=1, "2_a"=1, "4_a"=1),
+              alphabet=c("a"),
+              sequence=c("a", "a", "b", "a", "b"),
+              k=1,
+              isPositionalKMer=TRUE)
+})

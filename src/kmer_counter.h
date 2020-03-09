@@ -7,6 +7,7 @@
 #include "hash/polynomial_single_hasher.h"
 #include "kmer_counts_manager.h"
 #include <vector>
+#include <iostream>
 
 template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 inline void updateKMerCounts(RollingWindow<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>& rollingWindow,
@@ -71,7 +72,7 @@ inline KMerCountsManager countKMers(int k,
   );
   auto notAllowedSequencePositions = computeNotAllowedPositions(alphabetEncoding, sequence);
   for(int i = 0; i < notAllowedSequencePositions.size() - 1; ++i) {
-    int allowedItemsBetween = notAllowedSequencePositions[i + 1] - notAllowedSequencePositions[i];
+    int allowedItemsBetween = notAllowedSequencePositions[i + 1] - notAllowedSequencePositions[i] - 1;
     if(allowedItemsBetween >= k) {
       int begin = notAllowedSequencePositions[i] + 1;
       int end = notAllowedSequencePositions[i + 1] - 1;
