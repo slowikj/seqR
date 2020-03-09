@@ -7,7 +7,6 @@
 #include "hash/polynomial_single_hasher.h"
 #include "kmer_counts_manager.h"
 #include <vector>
-#include <iostream>
 
 template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 inline void updateKMerCounts(RollingWindow<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>& rollingWindow,
