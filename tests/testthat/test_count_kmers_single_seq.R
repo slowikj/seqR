@@ -2,6 +2,7 @@ library(testthat)
 
 invoke_test <- function(expected_res, ...) {
   res <- seqR::count_kmers(...)
+  print(res)
   expect_mapequal(res, expected_res)
 }
 
@@ -18,5 +19,21 @@ test_that("count positional 2-mers", {
               alphabet=c("a", "b"),
               sequence=c("a", "b", "a", "b", "a", "a"),
               k=2,
+              isPositionalKMer=TRUE)
+})
+
+test_that("count non positional 1-mers", {
+  invoke_test(expected_res=c("a"=3, "b"=2),
+              alphabet=c("a", "b"),
+              sequence=c("a", "a", "b", "a", "b"),
+              k=1,
+              isPositionalKMer=FALSE)
+})
+
+test_that("count positional 1-mers", {
+  invoke_test(expected_res=c("1_a"=1, "2_a"=1, "3_b"=1, "4_a"=1, "5_b"=1),
+              alphabet=c("a", "b"),
+              sequence=c("a", "a", "b", "a", "b"),
+              k=1,
               isPositionalKMer=TRUE)
 })
