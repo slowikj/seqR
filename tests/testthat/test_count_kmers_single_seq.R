@@ -2,7 +2,6 @@ library(testthat)
 
 invoke_test <- function(expected_res, ...) {
   res <- seqR::count_kmers(...)
-  print(res)
   expect_mapequal(res, expected_res)
 }
 
