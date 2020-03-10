@@ -28,6 +28,14 @@ public:
   
   KMerCountsManager() = default;
   
+  KMerCountsManager(const KMerCountsManager&) = default;
+  
+  KMerCountsManager(KMerCountsManager&&) noexcept = default;
+  
+  KMerCountsManager& operator=(const KMerCountsManager&) = default;
+  
+  KMerCountsManager& operator=(KMerCountsManager&&) noexcept = default;
+  
   void add(std::vector<int>&& hash, int position) {
     if(!this->dictionary.isPresent(hash)) {
       this->dictionary[hash] = KMerHashInfo(position);
