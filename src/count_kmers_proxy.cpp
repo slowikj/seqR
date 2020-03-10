@@ -41,7 +41,7 @@ Rcpp::IntegerVector count_kmers(Rcpp::StringVector& alphabet,
         k, sequence, alphabetEncoding, isPositionalKMer)
   );
   
-  const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher>& kmersDict = kmerCountsManager.getDictionary();  
+  const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher>& kmersDict = kmerCountsManager->getDictionary();  
   Rcpp::IntegerVector res(kmersDict.size());
   int resIndex = 0;
   for(const auto& kmerDictElem: kmersDict) {
