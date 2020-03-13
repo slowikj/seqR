@@ -14,9 +14,9 @@
 template <class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 class KMerCounterWorker : public RcppParallel::Worker {
 public:
-  std::vector<std::unique_ptr<KMerCountsManager>> kmerCounts;
+  std::vector<KMerCountsManager> kmerCounts;
   
-  using CountingProcedure_t = std::function<std::unique_ptr<KMerCountsManager>(
+  using CountingProcedure_t = std::function<KMerCountsManager(
     input_vector_t&,
     AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&
   )>;
@@ -47,7 +47,7 @@ private:
 };
 
 template <class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
-std::vector<std::unique_ptr<KMerCountsManager>> parallelComputeKMerCounts(
+std::vector<KMerCountsManager> parallelComputeKMerCounts(
     int k,
     bool positionalKMer,
     input_matrix_t& sequenceMatrix,
@@ -58,7 +58,7 @@ std::vector<std::unique_ptr<KMerCountsManager>> parallelComputeKMerCounts(
       [k, positionalKMer](
           input_vector_t& v,
           AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& enc
-      ) -> std::unique_ptr<KMerCountsManager> {
+      ) -> KMerCountsManager {
         return countKMers<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
             k,
             v,

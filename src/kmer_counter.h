@@ -11,9 +11,9 @@
 template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 inline void updateKMerCounts(
     RollingWindow<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>& rollingWindow,
-    std::unique_ptr<KMerCountsManager>& kmerCountsManager,
+    KMerCountsManager& kmerCountsManager,
     bool isPositionalKMer) {
-  kmerCountsManager->add(
+  kmerCountsManager.add(
     isPositionalKMer ? rollingWindow.getWindowedPositionedHashes()
                      : rollingWindow.getWindowedHashes(),
     rollingWindow.currentBeginIndex()
@@ -26,7 +26,7 @@ inline void countKMersForContiguousSeq(
     int begin,
     int end,
     RollingWindow<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>& rollingWindow,
-    std::unique_ptr<KMerCountsManager>& kmerCountsManager,
+    KMerCountsManager& kmerCountsManager,
     bool isPositionalKMer) {
   rollingWindow.resetIndex(begin);
   for(int i = 0; i < k; ++i) {
@@ -63,12 +63,12 @@ inline std::vector<int> computeNotAllowedPositions(
 }
 
 template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
-inline std::unique_ptr<KMerCountsManager> countKMers(
+inline KMerCountsManager countKMers(
     int k,
     input_vector_t& sequence,
     AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
     bool isPositionalKMer) {
-  std::unique_ptr<KMerCountsManager> kmerCountsManager(new KMerCountsManager());
+  KMerCountsManager kmerCountsManager;
   RollingWindow<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t> rollingWindow(
       sequence, std::move(createComplexHasher()), alphabetEncoding
   );
@@ -83,7 +83,7 @@ inline std::unique_ptr<KMerCountsManager> countKMers(
       );
     }
   }
-  return kmerCountsManager;
+  return std::move(kmerCountsManager);
 }
 
 #endif //KMER_COUNTER_H
