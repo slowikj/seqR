@@ -18,7 +18,7 @@ public:
   using iterator_category = std::forward_iterator_tag;
   using difference_type = void;
   
-  explicit iterator_t(INNER_CONTAINER_IT_T it) : container_iterator_(it) {}
+  explicit iterator_t(const INNER_CONTAINER_IT_T& it) : container_iterator_(it) {}
   
   iterator_t<ITER_V, INNER_CONTAINER_IT_T>& operator++() {
     ++this->container_iterator_;
