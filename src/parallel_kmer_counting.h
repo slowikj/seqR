@@ -10,12 +10,11 @@
 #include "kmer_counter.h"
 #include <memory>
 #include <functional>
-
+#include <tuple>
+  
 template <class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 class KMerCounterWorker : public RcppParallel::Worker {
 public:
-  std::vector<KMerCountsManager> kmerCounts;
-  
   using CountingProcedure_t = std::function<KMerCountsManager(
     input_vector_t&,
     AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&
@@ -43,7 +42,9 @@ private:
   input_matrix_t& sequenceMatrix;
   AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding;
   CountingProcedure_t countingKMersProc;
-
+  
+public:
+  std::vector<KMerCountsManager> kmerCounts;
 };
 
 template <class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
@@ -69,4 +70,39 @@ std::vector<KMerCountsManager> parallelComputeKMerCounts(
   );
   RcppParallel::parallelFor(0, sequenceMatrix.nrow(), worker);
   return std::move(worker.kmerCounts);
+}
+
+struct KMerPositionInfo {
+public:
+  int seqNum;
+  
+  int position;
+  
+  KMerPositionInfo(int seqNum, int position):
+    seqNum(seqNum), position(position) {
+  }
+  
+  KMerPositionInfo(const KMerPositionInfo&) = default;
+  
+  KMerPositionInfo& operator=(const KMerPositionInfo&) = default;
+  
+};
+
+std::tuple<Dictionary<std::vector<int>, int, vector_int_hasher>,
+           std::vector<KMerPositionInfo>>
+prepareIndexingHashes(const std::vector<KMerCountsManager> kmerCounts) {
+  Dictionary<std::vector<int>, int, vector_int_hasher> hashIndexer;
+  std::vector<KMerPositionInfo> uniqueKMers;
+  int currentIndex = 0;
+  for(int seqNum = 0; seqNum < kmerCounts.size(); ++seqNum) {
+    for(const auto& hashPair: kmerCounts[seqNum].getDictionary()) {
+      auto hash = hashPair.first;
+      auto seqStartPosition = hashPair.second.seqStartPosition;
+      if(!hashIndexer.isPresent(hash)) {
+        hashIndexer[hash] = currentIndex++;
+        uniqueKMers.emplace_back(seqNum, seqStartPosition);
+      }
+    }
+  }
+  return { std::move(hashIndexer), std::move(uniqueKMers) };
 }
