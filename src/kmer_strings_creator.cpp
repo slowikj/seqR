@@ -32,3 +32,27 @@ std::string KMerCreatorForSequence::getPositional(int position,
 Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector& gaps) {
   return static_cast<Rcpp::IntegerVector>(Rcpp::cumsum(gaps + 1));
 }
+
+Rcpp::StringVector getKMerNames(
+    const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher>& kmerCountsDictionary,
+    const Rcpp::StringVector& sequence,
+    const Rcpp::IntegerVector& gaps,
+    bool isPositionalKMer,
+    std::string itemSeparator,
+    std::string positionSeparator) {
+  auto gapsAccumulated = getGapsAccumulated(gaps);
+  KMerCreatorForSequence kmerCreator(sequence, gapsAccumulated, itemSeparator);
+  std::function<std::string(int)> createKMer = isPositionalKMer ?
+  static_cast<std::function<std::string(int)>>([&kmerCreator, &positionSeparator](int begin) {
+    return kmerCreator.getPositional(begin, positionSeparator);
+  }) :
+    static_cast<std::function<std::string(int)>>([&kmerCreator](int begin) {
+      return kmerCreator.get(begin);
+    });
+  Rcpp::StringVector res(kmerCountsDictionary.size());
+  int resIndex = 0;
+  for(const auto& kmerDictElem: kmerCountsDictionary) {
+    res[resIndex++] = createKMer(kmerDictElem.second.seqStartPosition);
+  }
+  return res;
+}

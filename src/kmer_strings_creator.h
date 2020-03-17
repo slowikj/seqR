@@ -8,6 +8,9 @@
 #include "kmer_counter.h"
 #include "hash/complex_hasher.h"
 
+const std::string default_item_separator = ".";
+const std::string default_position_separator = "_";
+
 class KMerCreatorForSequence {
 public:
   KMerCreatorForSequence(const Rcpp::StringVector& sequence,
@@ -38,6 +41,8 @@ Rcpp::StringVector getKMerNames(
     const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher>& kmerCountsDictionary,
     const Rcpp::StringVector& sequence,
     const Rcpp::IntegerVector& gaps,
-    bool isPositionalKMer);
+    bool isPositionalKMer,
+    std::string itemSeparator = default_item_separator,
+    std::string positionSeparator = default_position_separator);
 
 #endif
