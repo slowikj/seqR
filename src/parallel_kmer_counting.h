@@ -1,3 +1,6 @@
+#ifndef PARALLEL_KMER_COUNTING_H
+#define PARALLEL_KMER_COUNTING_H
+
 // [[Rcpp::plugins("c++17")]]
 #include<Rcpp.h>
 // [[Rcpp::depends(RcppParallel)]]
@@ -10,7 +13,6 @@
 #include "kmer_counter.h"
 #include <memory>
 #include <functional>
-#include <tuple>
   
 template <class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 class KMerCounterWorker : public RcppParallel::Worker {
@@ -72,37 +74,4 @@ std::vector<KMerCountsManager> parallelComputeKMerCounts(
   return std::move(worker.kmerCounts);
 }
 
-struct KMerPositionInfo {
-public:
-  int seqNum;
-  
-  int position;
-  
-  KMerPositionInfo(int seqNum, int position):
-    seqNum(seqNum), position(position) {
-  }
-  
-  KMerPositionInfo(const KMerPositionInfo&) = default;
-  
-  KMerPositionInfo& operator=(const KMerPositionInfo&) = default;
-  
-};
-
-std::tuple<Dictionary<std::vector<int>, int, vector_int_hasher>,
-           std::vector<KMerPositionInfo>>
-indexHashes(const std::vector<KMerCountsManager> kmerCounts) {
-  Dictionary<std::vector<int>, int, vector_int_hasher> hashIndexer;
-  std::vector<KMerPositionInfo> uniqueKMers;
-  int currentIndex = 0;
-  for(int seqNum = 0; seqNum < kmerCounts.size(); ++seqNum) {
-    for(const auto& hashPair: kmerCounts[seqNum].getDictionary()) {
-      auto hash = hashPair.first;
-      auto seqStartPosition = hashPair.second.seqStartPosition;
-      if(!hashIndexer.isPresent(hash)) {
-        hashIndexer[hash] = currentIndex++;
-        uniqueKMers.emplace_back(seqNum, seqStartPosition);
-      }
-    }
-  }
-  return { std::move(hashIndexer), std::move(uniqueKMers) };
-}
+#endif
