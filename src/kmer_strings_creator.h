@@ -8,14 +8,14 @@
 #include "kmer_counter.h"
 #include "hash/complex_hasher.h"
 
-class KMerCreator {
+class KMerCreatorForSequence {
 public:
-  KMerCreator(const Rcpp::StringVector& sequence,
-              const Rcpp::IntegerVector& gaps,
-              const std::string& itemSeparator):
-  sequence(sequence),
-  itemSeparator(itemSeparator) {
-    this->gapsAccumulated = static_cast<Rcpp::IntegerVector>(Rcpp::cumsum(gaps + 1));
+  KMerCreatorForSequence(const Rcpp::StringVector& sequence,
+                         const Rcpp::IntegerVector& gapsAccumulated,
+                         const std::string& itemSeparator):
+    sequence(sequence),
+    gapsAccumulated(gapsAccumulated),
+    itemSeparator(itemSeparator) {
   }
   
   std::string get(int begin) const;
@@ -31,6 +31,8 @@ private:
   std::size_t getTotalSize(int begin, int separatorLength) const;
   
 };
+
+Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector& gaps);
 
 Rcpp::StringVector getKMerNames(
     const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher>& kmerCountsDictionary,

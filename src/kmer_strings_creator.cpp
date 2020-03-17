@@ -1,7 +1,7 @@
 #include "kmer_strings_creator.h"
 #include <utility>
 
-std::size_t KMerCreator::getTotalSize(int begin, int separatorLength) const {
+std::size_t KMerCreatorForSequence::getTotalSize(int begin, int separatorLength) const {
   return this->sequence[begin].size() + std::accumulate(
       std::begin(this->gapsAccumulated),
       std::end(this->gapsAccumulated),
@@ -12,7 +12,7 @@ std::size_t KMerCreator::getTotalSize(int begin, int separatorLength) const {
   );
 }
 
-std::string KMerCreator::get(int begin) const {
+std::string KMerCreatorForSequence::get(int begin) const {
   int totalSize = getTotalSize(begin, itemSeparator.size());
   std::string res;
   res.reserve(totalSize);
@@ -23,9 +23,12 @@ std::string KMerCreator::get(int begin) const {
   return res;
 }
 
-std::string KMerCreator::getPositional(int position,
+std::string KMerCreatorForSequence::getPositional(int position,
                                        std::string positionSeparator) const {
   std::string withoutPositionString = this->get(position);
   return std::to_string(position + 1) + positionSeparator + withoutPositionString;
 }
 
+Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector& gaps) {
+  return static_cast<Rcpp::IntegerVector>(Rcpp::cumsum(gaps + 1));
+}
