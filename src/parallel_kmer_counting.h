@@ -90,7 +90,7 @@ public:
 
 std::tuple<Dictionary<std::vector<int>, int, vector_int_hasher>,
            std::vector<KMerPositionInfo>>
-prepareIndexingHashes(const std::vector<KMerCountsManager> kmerCounts) {
+indexHashes(const std::vector<KMerCountsManager> kmerCounts) {
   Dictionary<std::vector<int>, int, vector_int_hasher> hashIndexer;
   std::vector<KMerPositionInfo> uniqueKMers;
   int currentIndex = 0;
