@@ -34,7 +34,7 @@ public:
     for(int r = beginRow; r < endRow; ++r) {
       for(const auto& kmerHashPair: kmerCountsManagers[r].getDictionary()) {
         int c = hashIndexer[kmerHashPair.first];
-        outputKMerCounts[r, c] = kmerHashPair.second.cnt;
+        outputKMerCounts(r, c) = kmerHashPair.second.cnt;
       }
     }
   }
