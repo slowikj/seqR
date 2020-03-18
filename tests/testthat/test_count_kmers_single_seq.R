@@ -76,3 +76,11 @@ test_that("count non positional 3-mers", {
               k=3,
               positionalKMers=FALSE)
 })
+
+test_that("count positional 3-mers", {
+  invoke_test(expected_res=c("1_a.a.a"=1, "2_a.a.b"=1, "3_a.b.a"=1, "4_b.a.a"=1, "5_a.a.a"=1),
+              alphabet=c("a", "b"),
+              sequence=c("a", "a", "a", "b", "a", "a", "a"),
+              k=3,
+              positionalKMers=TRUE)
+})
