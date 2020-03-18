@@ -31,3 +31,6 @@ compute_polynomial_multihash <- function(P, M, items, begin, position) {
     .Call('_seqR_compute_polynomial_multihash', PACKAGE = 'seqR', P, M, items, begin, position)
 }
 
+#' @importFrom  RcppParallel RcppParallelLibs
+NULL
+

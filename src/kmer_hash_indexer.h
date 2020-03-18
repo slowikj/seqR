@@ -1,12 +1,14 @@
 #ifndef KMER_HASH_INDEXER_H
 #define KMER_HASH_INDEXER_H
 
-#include "../dictionary.h"
+#include "dictionary.h"
+#include "kmer_counts_manager.h"
+#include "hash/complex_hasher.h"
 #include <vector>
 #include <tuple>
 #include <memory>
 
-struct KMerPositionInfo {
+class KMerPositionInfo {
 public:
   int seqNum;
   
@@ -24,6 +26,6 @@ public:
 
 std::tuple<Dictionary<std::vector<int>, int, vector_int_hasher>,
            std::vector<KMerPositionInfo>>
-indexHashes(const std::vector<KMerCountsManager> kmerCounts);
+indexKMerHashes(const std::vector<KMerCountsManager>& kmerCounts);
 
 #endif
