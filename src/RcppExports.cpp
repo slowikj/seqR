@@ -39,16 +39,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // count_kmers
-Rcpp::IntegerVector count_kmers(Rcpp::StringVector& alphabet, Rcpp::StringVector& sequence, int k, bool isPositionalKMer);
-RcppExport SEXP _seqR_count_kmers(SEXP alphabetSEXP, SEXP sequenceSEXP, SEXP kSEXP, SEXP isPositionalKMerSEXP) {
+Rcpp::IntegerMatrix count_kmers(Rcpp::StringVector& alphabet, Rcpp::StringMatrix& sequenceMatrix, int k, bool positionalKMers);
+RcppExport SEXP _seqR_count_kmers(SEXP alphabetSEXP, SEXP sequenceMatrixSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type sequence(sequenceSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    Rcpp::traits::input_parameter< bool >::type isPositionalKMer(isPositionalKMerSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_kmers(alphabet, sequence, k, isPositionalKMer));
+    Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_kmers(alphabet, sequenceMatrix, k, positionalKMers));
     return rcpp_result_gen;
 END_RCPP
 }

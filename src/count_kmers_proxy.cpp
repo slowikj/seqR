@@ -1,5 +1,8 @@
 // [[Rcpp::plugins("c++17")]]
 #include<Rcpp.h>
+// [[Rcpp::depends(RcppParallel)]]
+//' @importFrom  RcppParallel RcppParallelLibs
+#include <RcppParallel.h>
 #include<memory>
 #include "concrete_encoders.h"
 #include "kmer_counter.h"
@@ -11,65 +14,79 @@
 #include "kmer_counter.h"
 #include "kmer_hash_indexer.h"
 
+class KMerMatrixCreatorWorker: public RcppParallel::Worker {
+public:
+  Rcpp::IntegerMatrix outputKMerCounts;
+  
+  KMerMatrixCreatorWorker(int nrow,
+                          int ncol,
+                          std::vector<KMerCountsManager>& kmerCountsManagers,
+                          Dictionary<std::vector<int>, int, vector_int_hasher>& hashIndexer,
+                          Rcpp::StringVector& uniqueKMerStrings):
+    outputKMerCounts(std::move(Rcpp::IntegerMatrix(nrow, ncol))),
+    kmerCountsManagers(kmerCountsManagers),
+    hashIndexer(hashIndexer),
+    uniqueKMerStrings(uniqueKMerStrings) {
+    Rcpp::colnames(this->outputKMerCounts) = Rcpp::wrap(uniqueKMerStrings);
+  }
+  
+  void operator()(std::size_t beginRow, std::size_t endRow) {
+    for(int r = beginRow; r < endRow; ++r) {
+      for(const auto& kmerHashPair: kmerCountsManagers[r].getDictionary()) {
+        int c = hashIndexer[kmerHashPair.first];
+        outputKMerCounts[r, c] = kmerHashPair.second.cnt;
+      }
+    }
+  }
+  
+private:
+  std::vector<KMerCountsManager>& kmerCountsManagers;
+  Dictionary<std::vector<int>, int, vector_int_hasher>& hashIndexer;
+  Rcpp::StringVector& uniqueKMerStrings;
+  
+};
+
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerVector count_kmers(Rcpp::StringVector& alphabet,
-                                Rcpp::StringVector& sequence,
+Rcpp::IntegerMatrix count_kmers(Rcpp::StringVector& alphabet,
+                                Rcpp::StringMatrix& sequenceMatrix,
                                 int k,
-                                bool isPositionalKMer) {
+                                bool positionalKMers) {
+  Rcpp::IntegerVector gaps(k-1);
+  
   auto alphabetEncoding = getEncoding(alphabet);
-  auto kmerCountsManager = std::move(
-    countKMers<Rcpp::StringVector, Rcpp::String::StringProxy, std::string, ENCODED_ELEM_T>(
-        k, sequence, alphabetEncoding, isPositionalKMer)
+  auto kmerCountsManagers = std::move(
+    parallelComputeKMerCounts<Rcpp::StringMatrix,
+                              Rcpp::StringMatrix::Row,
+                              Rcpp::String::StringProxy,
+                              std::string,
+                              ENCODED_ELEM_T>(
+        k,
+        positionalKMers,
+        sequenceMatrix,
+        alphabetEncoding
+    )
+  );
+  auto [hashIndexer, uniqueKMers] = indexKMerHashes(kmerCountsManagers);
+  Rcpp::StringVector uniqueKMerStrings = std::move(
+    parallelComputeKMerStrings(
+      uniqueKMers,
+      sequenceMatrix,
+      gaps,
+      positionalKMers,
+      default_item_separator,
+      default_position_separator
+    )
   );
   
-  const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher>& kmersDict = kmerCountsManager.getDictionary();  
-  Rcpp::IntegerVector res(kmersDict.size());
-  int resIndex = 0;
-  for(const auto& kmerDictElem: kmersDict) {
-    res[resIndex++] = kmerDictElem.second.cnt;
-  }
+  KMerMatrixCreatorWorker worker(
+      sequenceMatrix.nrow(),
+      uniqueKMerStrings.size(),
+      kmerCountsManagers,
+      hashIndexer,
+      uniqueKMerStrings
+  );
+  RcppParallel::parallelFor(0, sequenceMatrix.nrow(), worker);
   
-  std::vector<KMerCountsManager> kmerCounts;
-  kmerCounts.push_back(std::move(kmerCountsManager));
-  auto [hashIndexer, uniqueKMers] = indexKMerHashes(kmerCounts);
-
-  Rcpp::StringMatrix sequences(1, sequence.size());
-  for(int i = 0; i < sequence.size(); ++i) {
-    sequences[0, i] = sequence(i);
-  }
-
-  Rcpp::IntegerVector gaps(k-1);
-  res.names() = parallelComputeKMerStrings(
-    uniqueKMers,
-    sequences,
-    gaps,
-    isPositionalKMer,
-    ".",
-    "_");
-  
-  return res;
+  return worker.outputKMerCounts;
 }
-
-// //' @export
-// // [[Rcpp::export]]
-// void count(Rcpp::StringVector alphabet,
-//            Rcpp::StringMatrix sequenceMatrix,
-//            int k,
-//            bool isPositionalKMer) {
-//   auto alphabetEncoding = getEncoding(alphabet);
-//   auto res = std::move(
-//     parallelComputeKMerCounts<Rcpp::StringMatrix, Rcpp::StringMatrix::Row, Rcpp::String::StringProxy, std::string, ENCODED_ELEM_T>(
-//       k,
-//       isPositionalKMer,
-//       sequenceMatrix,
-//       alphabetEncoding
-//   ));
-//   for(int i = 0; i < res.size(); ++i) {
-//     Rcpp::Rcout << "seq " << i << std::endl;
-//     for(const auto& elem: (res[i]).getDictionary()) {
-//       Rcpp::Rcout << "beg: " << elem.second.seqStartPosition << " cnt: " << elem.second.cnt << std::endl;
-//     }
-//   }
-//   
-// }

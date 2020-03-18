@@ -1,8 +1,24 @@
 library(testthat)
 
-invoke_test <- function(expected_res, ...) {
-  res <- seqR::count_kmers(...)
-  expect_mapequal(res, expected_res)
+to_matrix <- function(v) {
+  res <- matrix(unname(v), byrow=TRUE, nrow=1)
+  colnames(res) <- names(v)
+  res
+}
+
+invoke_test <- function(expected_res, alphabet, sequence, k, positionalKMers) {
+  sequenceMatrix <- to_matrix(sequence)
+  expected_res <- to_matrix(expected_res)
+  
+  res <- seqR::count_kmers(alphabet=alphabet,
+                           sequenceMatrix = sequenceMatrix,
+                           k=k,
+                           positionalKMers = positionalKMers)
+ 
+  expect_setequal(colnames(res), colnames(expected_res))
+  
+  ordered_expected_res <- expected_res[, colnames(res)]
+  expect_equal(as.vector(res), as.vector(ordered_expected_res))
 }
 
 test_that("count non positional 2-mers", {
@@ -10,7 +26,7 @@ test_that("count non positional 2-mers", {
               alphabet=c("a", "b"),
               sequence=c("a", "b", "a", "b", "a", "a"),
               k=2,
-              isPositionalKMer=FALSE)
+              positionalKMers=FALSE)
 })
 
 test_that("count positional 2-mers", {
@@ -18,7 +34,7 @@ test_that("count positional 2-mers", {
               alphabet=c("a", "b"),
               sequence=c("a", "b", "a", "b", "a", "a"),
               k=2,
-              isPositionalKMer=TRUE)
+              positionalKMers=TRUE)
 })
 
 test_that("count non positional 1-mers", {
@@ -26,7 +42,7 @@ test_that("count non positional 1-mers", {
               alphabet=c("a", "b"),
               sequence=c("a", "a", "b", "a", "b"),
               k=1,
-              isPositionalKMer=FALSE)
+              positionalKMers=FALSE)
 })
 
 test_that("count positional 1-mers", {
@@ -34,7 +50,7 @@ test_that("count positional 1-mers", {
               alphabet=c("a", "b"),
               sequence=c("a", "a", "b", "a", "b"),
               k=1,
-              isPositionalKMer=TRUE)
+              positionalKMers=TRUE)
 })
 
 test_that("count non positional 1-mers if some sequence items are not allowed", {
@@ -42,7 +58,7 @@ test_that("count non positional 1-mers if some sequence items are not allowed", 
               alphabet=c("a"),
               sequence=c("a", "a", "b", "a", "b"),
               k=1,
-              isPositionalKMer=FALSE)
+              positionalKMers=FALSE)
 })
 
 test_that("count positional 1-mers if some sequence items are not allowed", {
@@ -50,7 +66,7 @@ test_that("count positional 1-mers if some sequence items are not allowed", {
               alphabet=c("a"),
               sequence=c("a", "a", "b", "a", "b"),
               k=1,
-              isPositionalKMer=TRUE)
+              positionalKMers=TRUE)
 })
 
 test_that("count non positional 3-mers", {
@@ -58,5 +74,5 @@ test_that("count non positional 3-mers", {
               alphabet=c("a", "b", "c"),
               sequence=c("a", "a", "b", "c", "a", "a", "b", "c", "a"),
               k=3,
-              isPositionalKMer=FALSE)
+              positionalKMers=FALSE)
 })
