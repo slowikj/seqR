@@ -93,19 +93,16 @@ inline KMerCountsManager countKMers(
   return std::move(kmerCountsManager);
 }
 
-template <class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+template <class input_matrix_t, class input_vector_t>
 class KMerCounterWorker : public RcppParallel::Worker {
 public:
   using CountingProcedure_t = std::function<KMerCountsManager(
-    input_vector_t&,
-    AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&
+    input_vector_t&
   )>;
   
   KMerCounterWorker(input_matrix_t& sequenceMatrix,
-                    AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
                     CountingProcedure_t countingKMersProc):
     sequenceMatrix(sequenceMatrix),
-    alphabetEncoding(alphabetEncoding),
     countingKMersProc(countingKMersProc) {
     kmerCounts.resize(sequenceMatrix.nrow());
   }
@@ -113,15 +110,12 @@ public:
   void operator()(size_t begin, size_t end) {
     for(int rowNum=begin; rowNum < end; ++rowNum) {
       auto row = this->sequenceMatrix(rowNum, Rcpp::_);
-      kmerCounts[rowNum] = std::move(
-        countingKMersProc(row, this->alphabetEncoding)
-      );
+      kmerCounts[rowNum] = std::move(countingKMersProc(row));
     }
   }
   
 private:
   input_matrix_t& sequenceMatrix;
-  AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding;
   CountingProcedure_t countingKMersProc;
   
 public:
@@ -134,17 +128,13 @@ std::vector<KMerCountsManager> parallelComputeKMerCounts(
     bool positionalKMer,
     input_matrix_t& sequenceMatrix,
     AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
-  KMerCounterWorker<input_matrix_t, input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t> worker(
+  KMerCounterWorker<input_matrix_t, input_vector_t> worker(
       sequenceMatrix,
-      alphabetEncoding,
-      [k, positionalKMer](
-          input_vector_t& v,
-          AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& enc
-      ) -> KMerCountsManager {
+      [k, positionalKMer, &alphabetEncoding](input_vector_t& v) -> KMerCountsManager {
         return countKMers<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
             k,
             v,
-            enc,
+            alphabetEncoding,
             positionalKMer
         );
       }
