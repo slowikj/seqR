@@ -11,6 +11,7 @@
 #include "hash/single_hasher.h"
 #include "hash/polynomial_single_hasher.h"
 #include "kmer_counts_manager.h"
+#include "kmer_counting_common.h"
 #include <vector>
 #include <memory>
 #include <functional>
@@ -92,35 +93,6 @@ inline KMerCountsManager countKMers(
   }
   return std::move(kmerCountsManager);
 }
-
-template <class input_matrix_t, class input_vector_t>
-class KMerCounterWorker : public RcppParallel::Worker {
-public:
-  using CountingProcedure_t = std::function<KMerCountsManager(
-    input_vector_t&
-  )>;
-  
-  KMerCounterWorker(input_matrix_t& sequenceMatrix,
-                    CountingProcedure_t countingKMersProc):
-    sequenceMatrix(sequenceMatrix),
-    countingKMersProc(countingKMersProc) {
-    kmerCounts.resize(sequenceMatrix.nrow());
-  }
-  
-  void operator()(size_t begin, size_t end) {
-    for(int rowNum=begin; rowNum < end; ++rowNum) {
-      auto row = this->sequenceMatrix(rowNum, Rcpp::_);
-      kmerCounts[rowNum] = std::move(countingKMersProc(row));
-    }
-  }
-  
-private:
-  input_matrix_t& sequenceMatrix;
-  CountingProcedure_t countingKMersProc;
-  
-public:
-  std::vector<KMerCountsManager> kmerCounts;
-};
 
 template <class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 std::vector<KMerCountsManager> parallelComputeKMerCounts(
