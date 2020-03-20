@@ -60,3 +60,29 @@ test_that("test two contiguous interval greater than 1 and singleton between", {
     seqR::get_contiguous_intervals_matrix(gaps=c(rep(0, 4), 1, 2, rep(0, 5)))
   )
 })
+
+test_that("test singleton at the end", {
+  expectedRes <- matrix(c(
+    1, 5,
+    7, 7
+  ), ncol=2, byrow=TRUE)
+  
+  expect_equal(
+    expectedRes,
+    seqR::get_contiguous_intervals_matrix(gaps=c(rep(0, 4), 1))
+  )
+})
+
+test_that("test singleton, 2 pairs and singleton", {
+  expectedRes <- matrix(c(
+    1, 1,
+    3, 4,
+    6, 7,
+    10, 10
+  ), ncol=2, byrow=TRUE)
+  
+  expect_equal(
+    expectedRes,
+    seqR::get_contiguous_intervals_matrix(gaps=c(1, 0, 1, 0, 2))
+  )
+})
