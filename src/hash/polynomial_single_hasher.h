@@ -7,12 +7,15 @@
 class PolynomialSingleHasher : public SingleHasher {
 public:
   PolynomialSingleHasher(int P, int M) :
-  P(P), M(M) {
+    P(P), M(M) {
     this->P_M_2 = compute_power_fast(P, M - 2, M);
+    this->nextPowerP = 1;
+    this->currentPowerP = 0;
   }
   
   void append(const int &elem) override {
     this->currentHash = this->computeHash(this->currentHash, elem);
+    this->currentPowerP = this->nextPowerP;
     this->nextPowerP = this->computeNextPowerP(this->nextPowerP);
   }
   
@@ -22,6 +25,7 @@ public:
         (static_cast<long long>(elem) * this->computePreviousPowerP(this->nextPowerP)) + M) % M
     );
     this->nextPowerP = this->computePreviousPowerP(nextPowerP);
+    this->currentPowerP = this->computePreviousPowerP(nextPowerP);
   }
   
   [[nodiscard]] int getHash() const override {
@@ -36,11 +40,24 @@ public:
     SingleHasher::clear();
   }
   
+  int getP() const {
+    return this->P;
+  }
+  
+  int getM() const {
+    return this->M;
+  }
+  
+  int getCurrentPowerP() const {
+    return this->currentPowerP;
+  }
+  
 private:
   int P;
   int M;
   int P_M_2; // P^(M-2) MOD M
-  int nextPowerP = 1;
+  int nextPowerP;
+  int currentPowerP;
   
   [[nodiscard]] int computeHash(int currentHash, const int &elem) const {
     return static_cast<int>(
