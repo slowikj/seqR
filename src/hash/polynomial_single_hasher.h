@@ -4,11 +4,28 @@
 #include "single_hasher.h"
 #include "../utils.h"
 
+struct PolynomialSingleHasherConfig {
+  
+  int P;
+  int M;
+  
+  PolynomialSingleHasherConfig(int P, int M):
+    P(P), M(M) {
+  }
+  
+  PolynomialSingleHasherConfig() = delete;
+  
+  PolynomialSingleHasherConfig(const PolynomialSingleHasherConfig&) = default;
+  
+  PolynomialSingleHasherConfig& operator=(const PolynomialSingleHasherConfig&) = default;
+  
+};
+
 class PolynomialSingleHasher : public SingleHasher {
 public:
-  PolynomialSingleHasher(int P, int M) :
-    P(P), M(M) {
-    this->P_M_2 = compute_power_fast(P, M - 2, M);
+  PolynomialSingleHasher(PolynomialSingleHasherConfig&& config) :
+    config(std::move(config)) {
+    this->P_M_2 = compute_power_fast(config.P, config.M - 2, config.M);
     this->nextPowerP = 1;
     this->currentPowerP = 0;
   }
@@ -22,7 +39,7 @@ public:
   void removeFirst(const int &elem) override {
     this->currentHash = static_cast<int>(
       (this->currentHash -
-        (static_cast<long long>(elem) * this->computePreviousPowerP(this->nextPowerP)) + M) % M
+        (static_cast<long long>(elem) * this->computePreviousPowerP(this->nextPowerP)) + config.M) % config.M
     );
     this->nextPowerP = this->computePreviousPowerP(nextPowerP);
     this->currentPowerP = this->computePreviousPowerP(nextPowerP);
@@ -41,11 +58,11 @@ public:
   }
   
   int getP() const {
-    return this->P;
+    return this->config.P;
   }
   
   int getM() const {
-    return this->M;
+    return this->config.M;
   }
   
   int getCurrentPowerP() const {
@@ -53,27 +70,26 @@ public:
   }
   
 private:
-  int P;
-  int M;
+  PolynomialSingleHasherConfig config;
   int P_M_2; // P^(M-2) MOD M
   int nextPowerP;
   int currentPowerP;
   
   [[nodiscard]] int computeHash(int currentHash, const int &elem) const {
     return static_cast<int>(
-      (static_cast<long long>(this->currentHash) * P + elem) % M
+      (static_cast<long long>(this->currentHash) * config.P + elem) % config.M
     );
   }
   
   [[nodiscard]] int computeNextPowerP(int currentPowerP) const {
     return static_cast<int>(
-      (static_cast<long long>(currentPowerP) * P) % M
+      (static_cast<long long>(currentPowerP) * config.P) % config.M
     );
   }
   
   [[nodiscard]] int computePreviousPowerP(int currentPowerP) const {
     return static_cast<int>(
-      (static_cast<long long>(currentPowerP) * this->P_M_2) % M
+      (static_cast<long long>(currentPowerP) * this->P_M_2) % config.M
     );
   }
 };
