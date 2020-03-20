@@ -38,6 +38,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// get_contiguous_intervals_matrix
+Rcpp::IntegerMatrix get_contiguous_intervals_matrix(const Rcpp::IntegerVector& gaps);
+RcppExport SEXP _seqR_get_contiguous_intervals_matrix(SEXP gapsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type gaps(gapsSEXP);
+    rcpp_result_gen = Rcpp::wrap(get_contiguous_intervals_matrix(gaps));
+    return rcpp_result_gen;
+END_RCPP
+}
 // count_kmers
 Rcpp::IntegerMatrix count_kmers(Rcpp::StringVector& alphabet, Rcpp::StringMatrix& sequenceMatrix, int k, bool positionalKMers);
 RcppExport SEXP _seqR_count_kmers(SEXP alphabetSEXP, SEXP sequenceMatrixSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
@@ -87,6 +98,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_seqR_encode_integer_alphabet", (DL_FUNC) &_seqR_encode_integer_alphabet, 1},
     {"_seqR_encode_numeric_alphabet", (DL_FUNC) &_seqR_encode_numeric_alphabet, 1},
     {"_seqR_encode_string_alphabet", (DL_FUNC) &_seqR_encode_string_alphabet, 1},
+    {"_seqR_get_contiguous_intervals_matrix", (DL_FUNC) &_seqR_get_contiguous_intervals_matrix, 1},
     {"_seqR_count_kmers", (DL_FUNC) &_seqR_count_kmers, 4},
     {"_seqR_compute_polynomial_hash", (DL_FUNC) &_seqR_compute_polynomial_hash, 5},
     {"_seqR_compute_polynomial_multihash", (DL_FUNC) &_seqR_compute_polynomial_multihash, 5},

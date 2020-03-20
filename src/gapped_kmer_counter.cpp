@@ -1,4 +1,5 @@
 #include "gapped_kmer_counter.h"
+#include <Rcpp.h>
 
 std::vector<std::pair<int, int>> getContiguousIntervals(const Rcpp::IntegerVector& gaps) {
   std::vector<std::pair<int,int>> res;

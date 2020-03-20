@@ -16,6 +16,11 @@ encode_string_alphabet <- function(input) {
     .Call('_seqR_encode_string_alphabet', PACKAGE = 'seqR', input)
 }
 
+#' @export
+get_contiguous_intervals_matrix <- function(gaps) {
+    .Call('_seqR_get_contiguous_intervals_matrix', PACKAGE = 'seqR', gaps)
+}
+
 #' @importFrom  RcppParallel RcppParallelLibs
 NULL
 
