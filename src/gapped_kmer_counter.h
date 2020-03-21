@@ -4,6 +4,7 @@
 #include "Rcpp.h"
 #include "alphabet_encoder.h"
 #include "hash/polynomial_single_hasher.h"
+#include "kmer_counts_manager.h"
 #include <vector>
 #include <memory>
 #include <utility>
@@ -46,14 +47,16 @@ public:
     return std::move(res);
   }
   
-  std::vector<int> getHashPositional(int begin, int end) const {
-    std::vector<int> res = std::move(getHash(begin, end));
-    for(int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
-      int P = polynomialHasherConfigs[hasherInd].P;
-      int M = polynomialHasherConfigs[hasherInd].M;
-      res[hasherInd] = static_cast<int>((static_cast<long long>(res[hasherInd]) * P + begin) % M);
-    }
-    return std::move(res);
+  int getHasherP(int hasherIndex, int power = 1) const {
+    return this->prefixP[power][hasherIndex];
+  }
+  
+  int getHasherM(int hasherIndex) const {
+    return this->polynomialHasherConfigs[hasherIndex].M;
+  }
+
+  int getHashersNum() const {
+    return this->polynomialHasherConfigs.size();
   }
   
 private:
@@ -117,5 +120,80 @@ private:
     prefixP.push_back(std::move(powersP));
   }
 };
+
+bool isGappedKMerAllowed(const std::vector<std::pair<int,int>>& contiguousKMerIntervals,
+                         const std::vector<int>& notAllowedItemsPrefixCount);
+
+int getIntervalLength(const std::pair<int, int>& interval);
+
+template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+std::vector<int> getGappedKMerHashNotPositional(
+    int beginPosition,
+    const PrefixSequencePolynomialHasher<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>& seqHasher,
+    const std::vector<std::pair<int,int>>& contiguousKMerIntervals) {
+  std::vector<int> res(seqHasher.getHashersNum());
+  for(const auto& kmerInterval: contiguousKMerIntervals) {
+    auto intervalHash = std::move(seqHasher.getHash(
+      kmerInterval.first + beginPosition,
+      kmerInterval.second + beginPosition));
+    int intervalLength = getIntervalLength(kmerInterval);
+    for(int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
+      int powerP = seqHasher.getHasherP(hasherInd, intervalLength);
+      int M = seqHasher.getHasherM(hasherInd);
+      res[hasherInd] = static_cast<int>((
+        static_cast<long long>(res[hasherInd]) * powerP + intervalHash[hasherInd]) % M);
+    }
+  }
+  return std::move(res);
+}
+
+template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+std::vector<int> getGappedKMerHash(
+  int beginPosition,
+  const PrefixSequencePolynomialHasher<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>& seqHasher,
+  const std::vector<std::pair<int,int>>& contiguousKMerIntervals,
+  bool isPositionalKMer) {
+  std::vector<int> res = std::move(
+    getGappedKMerHashNotPositional<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+     beginPosition, seqHasher, contiguousKMerIntervals 
+  ));
+  if(isPositionalKMer) {
+    for(int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
+      res[hasherInd] = static_cast<int>(
+        (static_cast<long long>(res[hasherInd]) * seqHasher.getHasherP(hasherInd)
+           + beginPosition) % seqHasher.getHasherM(hasherInd));
+    }
+  }
+  return std::move(res);
+}
+
+template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+KMerCountsManager countGappedKMers(const Rcpp::IntegerVector& gaps,
+                                   input_vector_t& sequence,
+                                   AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
+                                   bool isPositionalKMer,
+                                   std::vector<PolynomialSingleHasherConfig>&& hasherConfigs) {
+  std::vector<std::pair<int,int>> contiguousIntervals = getContiguousIntervals(gaps);
+  PrefixSequencePolynomialHasher<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t> sequenceHasher(
+      sequence, alphabetEncoding, std::move(hasherConfigs)
+  );
+  
+  std::vector<int> notAllowedItemsPrefixCount = std::move(
+    prepareNotAllowedItemsPrefixCount<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+      sequence,
+      alphabetEncoding
+    )
+  );
+  
+  KMerCountsManager kmerCountsManager;
+  for(int seqInd = 0; seqInd < sequence.size(); ++seqInd) {
+    if(isGappedKMerAllowed(contiguousIntervals, notAllowedItemsPrefixCount)) {
+      auto hash = std::move(getGappedKMerHash(seqInd, sequenceHasher, contiguousIntervals, isPositionalKMer));
+      kmerCountsManager.add(hash, seqInd);
+    }
+  }
+  
+  return std::move(kmerCountsManager);
+}
 
 #endif
