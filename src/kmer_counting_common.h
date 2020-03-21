@@ -11,12 +11,8 @@
 template <class input_matrix_t, class input_vector_t>
 class KMerCounterWorker : public RcppParallel::Worker {
 public:
-  using CountingProcedure_t = std::function<KMerCountsManager(
-    input_vector_t&
-  )>;
-  
   KMerCounterWorker(input_matrix_t& sequenceMatrix,
-                    CountingProcedure_t countingKMersProc):
+                    std::function<KMerCountsManager(input_vector_t&)> countingKMersProc):
     sequenceMatrix(sequenceMatrix),
     countingKMersProc(countingKMersProc) {
     kmerCounts.resize(sequenceMatrix.nrow());
@@ -31,10 +27,22 @@ public:
   
 private:
   input_matrix_t& sequenceMatrix;
-  CountingProcedure_t countingKMersProc;
+  std::function<KMerCountsManager(input_vector_t&)> countingKMersProc;
   
 public:
   std::vector<KMerCountsManager> kmerCounts;
 };
+
+template <class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+std::vector<KMerCountsManager> parallelComputeKMerCounts(
+    input_matrix_t& sequenceMatrix,
+    std::function<KMerCountsManager(input_vector_t&)> countingProc) {
+  KMerCounterWorker<input_matrix_t, input_vector_t> worker(
+      sequenceMatrix,
+      countingProc
+  );
+  RcppParallel::parallelFor(0, sequenceMatrix.nrow(), worker);
+  return std::move(worker.kmerCounts);
+}
 
 #endif

@@ -100,7 +100,7 @@ std::vector<KMerCountsManager> parallelComputeKMerCounts(
     bool positionalKMer,
     input_matrix_t& sequenceMatrix,
     AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
-  KMerCounterWorker<input_matrix_t, input_vector_t> worker(
+  return std::move(parallelComputeKMerCounts<input_matrix_t, input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
       sequenceMatrix,
       [k, positionalKMer, &alphabetEncoding](input_vector_t& v) -> KMerCountsManager {
         return countKMers<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
@@ -110,9 +110,7 @@ std::vector<KMerCountsManager> parallelComputeKMerCounts(
             positionalKMer
         );
       }
-  );
-  RcppParallel::parallelFor(0, sequenceMatrix.nrow(), worker);
-  return std::move(worker.kmerCounts);
+  ));
 }
 
 #endif //KMER_COUNTER_H

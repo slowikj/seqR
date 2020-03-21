@@ -203,19 +203,17 @@ std::vector<KMerCountsManager> parallelComputeGappedKMers(
   input_matrix_t& sequenceMatrix,
   bool isPositionalKMer,
   AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
-  KMerCounterWorker<input_matrix_t, input_vector_t> worker(
-      sequenceMatrix,
-      [&gapsVector = std::as_const(gaps), isPositionalKMer, &alphabetEncoding](input_vector_t& v) -> KMerCountsManager {
-        return countGappedKMers<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
-            gapsVector,
-            v,
-            alphabetEncoding,
-            isPositionalKMer
-        );
-      }
-  );
-  RcppParallel::parallelFor(0, sequenceMatrix.nrow(), worker);
-  return std::move(worker.kmerCounts);
+  return std::move(parallelComputeKMerCounts<input_matrix_t, input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+    sequenceMatrix,
+    [&gapsVector = std::as_const(gaps), isPositionalKMer, &alphabetEncoding](input_vector_t& v) -> KMerCountsManager {
+      return countGappedKMers<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+          gapsVector,
+          v,
+          alphabetEncoding,
+          isPositionalKMer
+      );
+    }
+  ));
 }
 
 #endif
