@@ -4,6 +4,7 @@
 #include "Rcpp.h"
 #include "alphabet_encoder.h"
 #include "hash/polynomial_single_hasher.h"
+#include "kmer_counting_common.h"
 #include "kmer_counts_manager.h"
 #include <vector>
 #include <memory>
@@ -194,6 +195,27 @@ KMerCountsManager countGappedKMers(const Rcpp::IntegerVector& gaps,
   }
   
   return std::move(kmerCountsManager);
+}
+
+template<class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+std::vector<KMerCountsManager> parallelComputeGappedKMers(
+  const Rcpp::IntegerVector& gaps,
+  input_matrix_t& sequenceMatrix,
+  bool isPositionalKMer,
+  AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
+  KMerCounterWorker<input_matrix_t, input_vector_t> worker(
+      sequenceMatrix,
+      [&gapsVector = std::as_const(gaps), isPositionalKMer, &alphabetEncoding](input_vector_t& v) -> KMerCountsManager {
+        return countGappedKMers<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+            gapsVector,
+            v,
+            alphabetEncoding,
+            isPositionalKMer
+        );
+      }
+  );
+  RcppParallel::parallelFor(0, sequenceMatrix.nrow(), worker);
+  return std::move(worker.kmerCounts);
 }
 
 #endif
