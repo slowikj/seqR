@@ -1,10 +1,9 @@
 library(testthat)
+source("utils.R")
 
 invoke_test <- function(expectedRes, ...) {
   res <- seqR::count_kmers(...)
-  expect_setequal(colnames(expectedRes), colnames(res))
-  expectedRes <- expectedRes[, colnames(res)]
-  expect_equal(as.vector(expectedRes), as.vector(res))
+  expect_matrices_equal(res, expectedRes)
 }
 
 test_that("count non-positional 2-mers for 2 sequences", {

@@ -1,4 +1,5 @@
 library(testthat)
+source("utils.R")
 
 to_matrix <- function(v) {
   res <- matrix(unname(v), byrow=TRUE, nrow=1)
@@ -14,11 +15,8 @@ invoke_test <- function(expected_res, alphabet, sequence, k, positionalKMers) {
                            sequenceMatrix = sequenceMatrix,
                            k=k,
                            positionalKMers = positionalKMers)
- 
-  expect_setequal(colnames(res), colnames(expected_res))
   
-  ordered_expected_res <- expected_res[, colnames(res)]
-  expect_equal(as.vector(res), as.vector(ordered_expected_res))
+  expect_matrices_equal(res, expected_res)
 }
 
 test_that("count non positional 2-mers", {
