@@ -39,3 +39,7 @@ bool isGappedKMerAllowed(const std::vector<std::pair<int,int>>& contiguousKMerIn
   );
 }
 
+inline std::size_t getTotalKMerSize(const Rcpp::IntegerVector& gaps) {
+  return Rcpp::sum(gaps + 1) + 1;
+}
+

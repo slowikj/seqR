@@ -13,6 +13,8 @@
 
 std::vector<std::pair<int, int>> getContiguousIntervals(const Rcpp::IntegerVector& gaps);
 
+std::size_t getTotalKMerSize(const Rcpp::IntegerVector& gaps);
+
 template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 std::vector<int> prepareNotAllowedItemsPrefixCount(
     input_vector_t& sequence,
@@ -186,8 +188,9 @@ KMerCountsManager countGappedKMers(const Rcpp::IntegerVector& gaps,
     )
   );
   
+  std::size_t totalKMerSize = getTotalKMerSize(gaps);
   KMerCountsManager kmerCountsManager;
-  for(int seqInd = 0; seqInd < sequence.size(); ++seqInd) {
+  for(int seqInd = 0; seqInd < sequence.size() - totalKMerSize + 1; ++seqInd) {
     if(isGappedKMerAllowed(contiguousIntervals, notAllowedItemsPrefixCount)) {
       auto hash = std::move(getGappedKMerHash(seqInd, sequenceHasher, contiguousIntervals, isPositionalKMer));
       kmerCountsManager.add(hash, seqInd);
