@@ -22,6 +22,11 @@ get_contiguous_intervals_matrix <- function(gaps) {
 }
 
 #' @export
+count_gapped_kmers <- function(alphabet, sequenceMatrix, gaps, positionalKMers) {
+    .Call('_seqR_count_gapped_kmers', PACKAGE = 'seqR', alphabet, sequenceMatrix, gaps, positionalKMers)
+}
+
+#' @export
 count_kmers <- function(alphabet, sequenceMatrix, k, positionalKMers) {
     .Call('_seqR_count_kmers', PACKAGE = 'seqR', alphabet, sequenceMatrix, k, positionalKMers)
 }

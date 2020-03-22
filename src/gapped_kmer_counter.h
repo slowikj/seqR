@@ -18,7 +18,7 @@ std::size_t getTotalKMerSize(const Rcpp::IntegerVector& gaps);
 template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 std::vector<int> prepareNotAllowedItemsPrefixCount(
     input_vector_t& sequence,
-    const AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
+    AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
   std::vector<int> res;
   res.reserve(sequence.size());
   for(int i = 0; i < sequence.size(); ++i) {
@@ -34,7 +34,7 @@ template<class input_vector_t, class input_elem_t, class internal_elem_t, class 
 class PrefixSequencePolynomialHasher {
 public:
   PrefixSequencePolynomialHasher(input_vector_t& sequence,
-                                 const AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
+                                 AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
                                  std::vector<PolynomialSingleHasherConfig>&& polynomialHasherConfigs):
     polynomialHasherConfigs(std::move(polynomialHasherConfigs)) {
     computePrefixValues(sequence, alphabetEncoding);
@@ -68,7 +68,7 @@ private:
   std::vector<std::vector<int>> prefixComplexHashes;
   
   void computePrefixValues(input_vector_t& sequence,
-                           const AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
+                           AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
     initPrefixP(sequence.size(), polynomialHasherConfigs.size());
     initPrefixComplexHashes(sequence.size(), polynomialHasherConfigs.size());
     for(int seqInd  = 0; seqInd < sequence.size(); ++seqInd) {
@@ -89,37 +89,35 @@ private:
   }
   
   void appendPrefixValues(input_vector_t& sequence,
-                          const AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
+                          AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
                           int seqInd) {
     encoded_elem_t encodedElem = alphabetEncoding.isAllowed(sequence[seqInd]) ?
       alphabetEncoding.encode(sequence[seqInd]) :
       alphabetEncoding.getNotAllowedEncodingNum();
     
-    appendCurrentComplexHash();
+    appendCurrentComplexHash(encodedElem);
     appendCurrentPowerP();
   }
   
-  void appendCurrentComplexHash() {
-    std::vector<int> prefixHash;
-    std::transform(std::begin(polynomialHasherConfigs), std::end(polynomialHasherConfigs),
-                   std::back_inserter(prefixHash),
-                   [this](const PolynomialSingleHasherConfig& hasherConfig) -> int {
-                     return static_cast<int>(
-                       (static_cast<long long>(prefixComplexHashes.back()) * hasherConfig.P) %  hasherConfig.M);
-                   }
-    );
+  void appendCurrentComplexHash(const encoded_elem_t& encodedElem) {
+    std::vector<int> prefixHash(polynomialHasherConfigs.size());
+    for(int hasherInd = 0; hasherInd < prefixHash.size(); ++hasherInd) {
+      int P = polynomialHasherConfigs[hasherInd].P;
+      int M = polynomialHasherConfigs[hasherInd].M;
+      prefixHash[hasherInd] = static_cast<int>(
+        (static_cast<long long>(prefixComplexHashes.back()[hasherInd]) * P + encodedElem) %  M);
+    }
     prefixComplexHashes.push_back(std::move(prefixHash));
   }
   
   void appendCurrentPowerP() {
-    std::vector<int> powersP;
-    std::transform(std::begin(polynomialHasherConfigs), std::end(polynomialHasherConfigs),
-                   std::back_inserter(powersP),
-                   [this](const PolynomialSingleHasherConfig& hasherConfig) -> int {
-                     return static_cast<int>(
-                       (static_cast<long long>(prefixP.back()) * hasherConfig.P) % hasherConfig.M);
-                   }
-    );
+    std::vector<int> powersP(polynomialHasherConfigs.size());
+    for(int hasherInd = 0; hasherInd < powersP.size(); ++hasherInd) {
+      int P = polynomialHasherConfigs[hasherInd].P;
+      int M = polynomialHasherConfigs[hasherInd].M;
+      powersP[hasherInd] = static_cast<int>(
+        (static_cast<long long>(prefixP.back()[hasherInd]) * P) % M);
+    }
     prefixP.push_back(std::move(powersP));
   }
 };
@@ -193,12 +191,14 @@ KMerCountsManager countGappedKMers(const Rcpp::IntegerVector& gaps,
   for(int seqInd = 0; seqInd < sequence.size() - totalKMerSize + 1; ++seqInd) {
     if(isGappedKMerAllowed(contiguousIntervals, notAllowedItemsPrefixCount)) {
       auto hash = std::move(getGappedKMerHash(seqInd, sequenceHasher, contiguousIntervals, isPositionalKMer));
-      kmerCountsManager.add(hash, seqInd);
+      kmerCountsManager.add(std::move(hash), seqInd);
     }
   }
   
   return std::move(kmerCountsManager);
 }
+
+std::vector<PolynomialSingleHasherConfig> getHasherConfigs();
 
 template<class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
@@ -216,7 +216,8 @@ std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
           totalKMerSize,
           v,
           alphabetEncoding,
-          isPositionalKMer
+          isPositionalKMer,
+          std::move(getHasherConfigs())
       );
     }
   ));

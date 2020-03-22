@@ -39,7 +39,14 @@ bool isGappedKMerAllowed(const std::vector<std::pair<int,int>>& contiguousKMerIn
   );
 }
 
-inline std::size_t getTotalKMerSize(const Rcpp::IntegerVector& gaps) {
+std::size_t getTotalKMerSize(const Rcpp::IntegerVector& gaps) {
   return Rcpp::sum(gaps + 1) + 1;
+}
+
+std::vector<PolynomialSingleHasherConfig> getHasherConfigs() {
+  std::vector<PolynomialSingleHasherConfig> res;
+  res.emplace_back(101, 1e9 + 7);
+  res.emplace_back(97, 1e9 + 33);
+  return std::move(res);
 }
 

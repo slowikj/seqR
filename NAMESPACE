@@ -2,6 +2,7 @@
 
 export(compute_polynomial_hash)
 export(compute_polynomial_multihash)
+export(count_gapped_kmers)
 export(count_kmers)
 export(encode_integer_alphabet)
 export(encode_numeric_alphabet)

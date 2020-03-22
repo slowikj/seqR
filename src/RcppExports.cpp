@@ -49,6 +49,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// count_gapped_kmers
+Rcpp::IntegerMatrix count_gapped_kmers(Rcpp::StringVector& alphabet, Rcpp::StringMatrix& sequenceMatrix, Rcpp::IntegerVector& gaps, bool positionalKMers);
+RcppExport SEXP _seqR_count_gapped_kmers(SEXP alphabetSEXP, SEXP sequenceMatrixSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type gaps(gapsSEXP);
+    Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers(alphabet, sequenceMatrix, gaps, positionalKMers));
+    return rcpp_result_gen;
+END_RCPP
+}
 // count_kmers
 Rcpp::IntegerMatrix count_kmers(Rcpp::StringVector& alphabet, Rcpp::StringMatrix& sequenceMatrix, int k, bool positionalKMers);
 RcppExport SEXP _seqR_count_kmers(SEXP alphabetSEXP, SEXP sequenceMatrixSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
@@ -99,6 +113,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_seqR_encode_numeric_alphabet", (DL_FUNC) &_seqR_encode_numeric_alphabet, 1},
     {"_seqR_encode_string_alphabet", (DL_FUNC) &_seqR_encode_string_alphabet, 1},
     {"_seqR_get_contiguous_intervals_matrix", (DL_FUNC) &_seqR_get_contiguous_intervals_matrix, 1},
+    {"_seqR_count_gapped_kmers", (DL_FUNC) &_seqR_count_gapped_kmers, 4},
     {"_seqR_count_kmers", (DL_FUNC) &_seqR_count_kmers, 4},
     {"_seqR_compute_polynomial_hash", (DL_FUNC) &_seqR_compute_polynomial_hash, 5},
     {"_seqR_compute_polynomial_multihash", (DL_FUNC) &_seqR_compute_polynomial_multihash, 5},
