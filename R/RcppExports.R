@@ -21,9 +21,6 @@ get_contiguous_intervals_matrix <- function(gaps) {
     .Call('_seqR_get_contiguous_intervals_matrix', PACKAGE = 'seqR', gaps)
 }
 
-#' @importFrom  RcppParallel RcppParallelLibs
-NULL
-
 #' @export
 count_kmers <- function(alphabet, sequenceMatrix, k, positionalKMers) {
     .Call('_seqR_count_kmers', PACKAGE = 'seqR', alphabet, sequenceMatrix, k, positionalKMers)
@@ -38,6 +35,9 @@ compute_polynomial_hash <- function(P, M, items, begin, position) {
 compute_polynomial_multihash <- function(P, M, items, begin, position) {
     .Call('_seqR_compute_polynomial_multihash', PACKAGE = 'seqR', P, M, items, begin, position)
 }
+
+#' @importFrom  RcppParallel RcppParallelLibs
+NULL
 
 #' @importFrom  RcppParallel RcppParallelLibs
 NULL
