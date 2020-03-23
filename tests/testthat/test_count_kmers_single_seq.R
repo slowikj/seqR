@@ -1,12 +1,6 @@
 library(testthat)
 source("utils.R")
 
-to_matrix <- function(v) {
-  res <- matrix(unname(v), byrow=TRUE, nrow=1)
-  colnames(res) <- names(v)
-  res
-}
-
 invoke_test <- function(expected_res, alphabet, sequence, k, positionalKMers) {
   sequenceMatrix <- to_matrix(sequence)
   expected_res <- to_matrix(expected_res)

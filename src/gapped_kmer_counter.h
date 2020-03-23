@@ -44,8 +44,8 @@ public:
     std::vector<int> res(polynomialHasherConfigs.size());
     for(int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
       int M = polynomialHasherConfigs[hasherInd].M;
-      res[hasherInd] = static_cast<int>((prefixComplexHashes[end + 1][hasherInd]
-        - static_cast<long long>(prefixComplexHashes[begin][hasherInd]) * prefixP[end - begin][hasherInd] + M) % M);
+      res[hasherInd] = static_cast<int>(((prefixComplexHashes[end + 1][hasherInd]
+        - (static_cast<long long>(prefixComplexHashes[begin][hasherInd]) * prefixP[end - begin + 1][hasherInd])) % M + M) % M);
     }
     return std::move(res);
   }
