@@ -38,3 +38,21 @@ test_that("test one sequence with gapps (1,0) not positional", {
               gaps=c(1, 0),
               positionalKMers=FALSE)
 })
+
+test_that("test 2 sequences with gaps (1,1) positional; some items are not from alphabet", {
+  seqMatrix <- matrix(c(
+    "a", "b", "c", "c", "as", "b", "c", "a", "a", "b", "a",
+    "b", "b", "c", "c", "a",  "a", "b", "c", "a", "b", "a"
+  ), nrow=2, byrow=TRUE)
+  expectedRes <- matrix(c(
+    1, 0, 0,
+    0, 1, 1
+  ), nrow=2, byrow=TRUE)
+  colnames(expectedRes) <- c("6_b.a.b", "7_b.a.a", "5_a.b.a")
+  
+  invoke_test(expected_res <- expectedRes,
+              alphabet=c("a", "b"),
+              sequenceMatrix=seqMatrix,
+              gaps=c(1,1),
+              positionalKMers=TRUE)
+})

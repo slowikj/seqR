@@ -27,14 +27,17 @@ int getIntervalLength(const std::pair<int, int>& interval) {
   return interval.second - interval.first + 1;
 }
 
-bool isGappedKMerAllowed(const std::vector<std::pair<int,int>>& contiguousKMerIntervals,
+bool isGappedKMerAllowed(int seqBegin,
+                         const std::vector<std::pair<int,int>>& contiguousKMerIntervals,
                          const std::vector<int>& notAllowedItemsPrefixCount) {
   return std::all_of(
     std::begin(contiguousKMerIntervals),
     std::end(contiguousKMerIntervals),
-    [&notAllowedItemsPrefixCount](const std::pair<int, int>& interval) -> bool {
-      return (notAllowedItemsPrefixCount[interval.second]
-                - (interval.first == 0 ? 0 : notAllowedItemsPrefixCount[interval.first - 1])) == 0;
+    [&notAllowedItemsPrefixCount, &seqBegin](const std::pair<int, int>& interval) -> bool {
+      return (notAllowedItemsPrefixCount[seqBegin + interval.second]
+                - (seqBegin + interval.first == 0 ?
+                   0 :
+                   notAllowedItemsPrefixCount[seqBegin + interval.first - 1])) == 0;
     }
   );
 }

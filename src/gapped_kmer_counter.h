@@ -122,7 +122,8 @@ private:
   }
 };
 
-bool isGappedKMerAllowed(const std::vector<std::pair<int,int>>& contiguousKMerIntervals,
+bool isGappedKMerAllowed(int seqBegin,
+                         const std::vector<std::pair<int,int>>& contiguousKMerIntervals,
                          const std::vector<int>& notAllowedItemsPrefixCount);
 
 int getIntervalLength(const std::pair<int, int>& interval);
@@ -189,7 +190,7 @@ KMerCountsManager countGappedKMers(const Rcpp::IntegerVector& gaps,
 
   KMerCountsManager kmerCountsManager;
   for(int seqInd = 0; seqInd < sequence.size() - totalKMerSize + 1; ++seqInd) {
-    if(isGappedKMerAllowed(contiguousIntervals, notAllowedItemsPrefixCount)) {
+    if(isGappedKMerAllowed(seqInd, contiguousIntervals, notAllowedItemsPrefixCount)) {
       auto hash = std::move(getGappedKMerHash(seqInd, sequenceHasher, contiguousIntervals, isPositionalKMer));
       kmerCountsManager.add(std::move(hash), seqInd);
     }
