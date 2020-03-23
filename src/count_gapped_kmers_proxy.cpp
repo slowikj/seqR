@@ -15,10 +15,14 @@ Rcpp::IntegerMatrix get_contiguous_intervals_matrix(const Rcpp::IntegerVector& g
   return res;
 }
 
-//' @export
-// [[Rcpp::export]]
-Rcpp::IntegerMatrix count_gapped_kmers(Rcpp::StringVector& alphabet,
-                                       Rcpp::StringMatrix& sequenceMatrix,
+template <class input_matrix_t,
+          class input_vector_t,
+          class input_view_vector_t,
+          class input_elem_t,
+          class internal_elem_t,
+          class encoded_elem_t>
+Rcpp::IntegerMatrix count_gapped_kmers(input_vector_t& alphabet,
+                                       input_matrix_t& sequenceMatrix,
                                        Rcpp::IntegerVector& gaps,
                                        bool positionalKMers) {
   auto alphabetEncoding = std::move(getEncoding(alphabet));
@@ -26,20 +30,71 @@ Rcpp::IntegerMatrix count_gapped_kmers(Rcpp::StringVector& alphabet,
     [&gaps, &alphabetEncoding, &positionalKMers, &sequenceMatrix]
     () -> std::vector<KMerCountsManager> {
       return std::move(
-        parallelComputeGappedKMersCounts<Rcpp::StringMatrix,
-                                         Rcpp::StringMatrix::Row,
-                                         Rcpp::String::StringProxy,
-                                         std::string,
-                                         ENCODED_ELEM_T>(
+        parallelComputeGappedKMersCounts<input_matrix_t,
+                                         input_view_vector_t,
+                                         input_elem_t,
+                                         internal_elem_t,
+                                         encoded_elem_t>(
                                            gaps,
                                            positionalKMers,
                                            sequenceMatrix,
                                            alphabetEncoding));
     };
-    return getKMerCountsMatrix<Rcpp::StringMatrix>(
+  return std::move(getKMerCountsMatrix<input_matrix_t>(
       sequenceMatrix,
       gaps,
       positionalKMers,
       parallelKMerCountingProc
-    );
+  ));
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringVector& alphabet,
+                                              Rcpp::StringMatrix& sequenceMatrix,
+                                              Rcpp::IntegerVector& gaps,
+                                              bool positionalKMers) {
+  return std::move(count_gapped_kmers<Rcpp::StringMatrix,
+                                      Rcpp::StringVector,
+                                      Rcpp::StringMatrix::Row,
+                                      Rcpp::String::StringProxy,
+                                      std::string,
+                                      ENCODED_ELEM_T>(alphabet,
+                                                      sequenceMatrix,
+                                                      gaps,
+                                                      positionalKMers));
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerVector& alphabet,
+                                               Rcpp::IntegerMatrix& sequenceMatrix,
+                                               Rcpp::IntegerVector& gaps,
+                                               bool positionalKMers) {
+  return std::move(count_gapped_kmers<Rcpp::IntegerMatrix,
+                                      Rcpp::IntegerVector,
+                                      Rcpp::IntegerMatrix::Row,
+                                      int,
+                                      int,
+                                      ENCODED_ELEM_T>(alphabet,
+                                                      sequenceMatrix,
+                                                      gaps,
+                                                      positionalKMers));
+}
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericVector& alphabet,
+                                               Rcpp::NumericMatrix& sequenceMatrix,
+                                               Rcpp::IntegerVector& gaps,
+                                               bool positionalKMers) {
+  return std::move(count_gapped_kmers<Rcpp::NumericMatrix,
+                                      Rcpp::NumericVector,
+                                      Rcpp::NumericMatrix::Row,
+                                      double,
+                                      double,
+                                      ENCODED_ELEM_T>(alphabet,
+                                                      sequenceMatrix,
+                                                      gaps,
+                                                      positionalKMers));
 }
