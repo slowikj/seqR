@@ -91,6 +91,14 @@ test_that("(string) count positional 3-mers", {
                      positionalKMers=TRUE)
 })
 
+test_that("(string) count non positional 1-mers", {
+  invoke_test_string(expected_res=c("a"=5, "b"=3, "c"=2),
+                     alphabet=c("a", "b", "c"),
+                     sequence=c("a", "a", "b", "b", "a", "a", "b", "c", "c", "a"),
+                     k=1,
+                     positionalKMers=FALSE)
+})
+
 # INTEGER
 test_that("(integer) count non positional 2-mers with not allowed item", {
   invoke_test_integer(expected_res=c("1.0"=2, "1.1"=3, "0.1"=2),
