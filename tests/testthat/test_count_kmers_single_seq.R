@@ -99,6 +99,14 @@ test_that("(string) count non positional 1-mers", {
                      positionalKMers=FALSE)
 })
 
+test_that("(string) count 2-mers: long (ab){1000} sequence", {
+  invoke_test_string(expected_res=c("a.b"=1000, "b.a"=999),
+                     alphabet=c("a", "b"),
+                     sequence=rep(c("a", "b"), 1000),
+                     k=2,
+                     positionalKMers=FALSE)
+})
+
 # INTEGER
 test_that("(integer) count non positional 2-mers with not allowed item", {
   invoke_test_integer(expected_res=c("1.0"=2, "1.1"=3, "0.1"=2),
