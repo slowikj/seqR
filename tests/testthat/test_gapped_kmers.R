@@ -89,3 +89,22 @@ test_that("(integer) test 2 sequences with gaps (1,1) non positional; some items
                       gaps=c(1,1),
                       positionalKMers=FALSE)
 })
+
+# NUMERIC
+
+test_that("(numeric) test 2 sequences with gaps (1,1) non positional; some items are not from alphabet", {
+  seqMatrix <- matrix(as.numeric(c(
+    1, 2, 0, 1, 1, 1, 2, 1, 0, 1,
+    1, 1, 1, 0, 0, 0, 0, 2, 2, 1
+  )), nrow=2, byrow=TRUE)
+  expected_res <- matrix(c(
+    1, 2, 0, 0,
+    0, 0, 1, 2 
+  ), nrow=2, byrow=TRUE)
+  colnames(expected_res) <- c("1.000.0.000.1.000", "1.000.1.000.1.000", "1.000.1.000.0.000", "1.000.0.000.0.000")
+  invoke_test_numeric(expected_res=expected_res,
+                      alphabet=c(0,1),
+                      sequenceMatrix=seqMatrix,
+                      gaps=c(1,1),
+                      positionalKMers=FALSE)
+})

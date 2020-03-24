@@ -100,3 +100,11 @@ test_that("(integer) count non positional 2-mers with not allowed item", {
                       positionalKMers=FALSE)
 })
 
+# NUMERIC
+test_that("(numeric) count non positional 2-mers with not allowed item", {
+  invoke_test_numeric(expected_res=c("0.000.1.000"=2, "1.000.1.000"=3, "1.000.0.000"=2),
+                     alphabet=c(0, 1),
+                     sequence=as.numeric(c(1,0,1,1,0,1,1,2,1,1)),
+                     k=2,
+                     positionalKMers=FALSE)
+})

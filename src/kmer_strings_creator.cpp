@@ -1,5 +1,7 @@
 #include "kmer_strings_creator.h"
 #include <utility>
+#include <iomanip>
+#include <sstream>
 
 Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector& gaps) {
   return static_cast<Rcpp::IntegerVector>(Rcpp::cumsum(gaps + 1));
@@ -41,6 +43,7 @@ Rcpp::StringVector parallelComputeKMerStrings(
   ));
 }
 
+const int decimal_precision = 3;
 Rcpp::StringVector parallelComputeKMerStrings(
     const std::vector<KMerPositionInfo>& indexedKMers,
     Rcpp::NumericMatrix& sequences,
@@ -50,7 +53,12 @@ Rcpp::StringVector parallelComputeKMerStrings(
     std::string positionSeparator) {
   return std::move(parallelComputeKMerStrings<Rcpp::NumericMatrix,  Rcpp::NumericMatrix::Row, double>(
       indexedKMers,
-      [](const double& elem) -> std::string { return std::to_string(elem); },
+      [](const double& elem) -> std::string {
+        std::ostringstream stream;
+        stream << std::fixed << std::setprecision(decimal_precision);
+        stream << elem;
+        return stream.str();
+      },
       sequences,
       gaps,
       isPositionalKMer,
