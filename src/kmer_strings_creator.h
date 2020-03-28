@@ -11,7 +11,6 @@
 #include<functional>
 #include<algorithm>
 #include "dictionary.h"
-#include "kmer_counter.h"
 #include "hash/complex_hasher.h"
 #include "kmer_hash_indexer.h"
 
