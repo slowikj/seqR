@@ -1,5 +1,5 @@
-#ifndef SECOND_POWER_HELPER_H
-#define SECOND_POWER_HELPER_H
+#ifndef UTILS_H
+#define UTILS_H
 
 #include<queue>
 
@@ -11,4 +11,4 @@ void clear(std::queue<T>& q) {
   std::swap(q, empty);
 }
 
-#endif //SECOND_POWER_HELPER_H
+#endif //UTILS_H
