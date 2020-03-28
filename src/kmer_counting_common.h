@@ -17,40 +17,49 @@
 extern const std::string default_item_separator;
 extern const std::string default_position_separator;
 
-template <class input_matrix_t, class input_vector_t>
+template<class input_vector_t>
+using CountingKMersProc_t = std::function<KMerCountsManager(input_vector_t&)>;
+
+template<class input_vector_t>
+using RowGetter_t = std::function<input_vector_t(int)>;
+
+template <class input_vector_t>
 class KMerCounterWorker : public RcppParallel::Worker {
 public:
-  KMerCounterWorker(input_matrix_t& sequenceMatrix,
-                    std::function<KMerCountsManager(input_vector_t&)> countingKMersProc):
-    sequenceMatrix(sequenceMatrix),
-    countingKMersProc(countingKMersProc) {
-    kmerCounts.resize(sequenceMatrix.nrow());
+  KMerCounterWorker(int rowsNum,
+                    CountingKMersProc_t<input_vector_t> countingKMersProc,
+                    RowGetter_t<input_vector_t> rowGetter):
+    countingKMersProc(countingKMersProc),
+    rowGetter(rowGetter) {
+    kmerCounts.resize(rowsNum);
   }
   
   void operator()(size_t begin, size_t end) {
     for(int rowNum=begin; rowNum < end; ++rowNum) {
-      auto row = this->sequenceMatrix(rowNum, Rcpp::_);
+      auto row = rowGetter(rowNum);
       kmerCounts[rowNum] = std::move(countingKMersProc(row));
     }
   }
   
 private:
-  input_matrix_t& sequenceMatrix;
-  std::function<KMerCountsManager(input_vector_t&)> countingKMersProc;
+  CountingKMersProc_t<input_vector_t> countingKMersProc;
+  RowGetter_t<input_vector_t> rowGetter;
   
 public:
   std::vector<KMerCountsManager> kmerCounts;
 };
 
-template <class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+template <class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 std::vector<KMerCountsManager> parallelComputeKMerCounts(
-    input_matrix_t& sequenceMatrix,
-    std::function<KMerCountsManager(input_vector_t&)> countingProc) {
-  KMerCounterWorker<input_matrix_t, input_vector_t> worker(
-      sequenceMatrix,
-      countingProc
+    int rowsNum,
+    CountingKMersProc_t<input_vector_t> countingProc,
+    RowGetter_t<input_vector_t> rowGetter) {
+  KMerCounterWorker<input_vector_t> worker(
+      rowsNum,
+      countingProc,
+      rowGetter
   );
-  RcppParallel::parallelFor(0, sequenceMatrix.nrow(), worker);
+  RcppParallel::parallelFor(0, rowsNum, worker);
   return std::move(worker.kmerCounts);
 }
 

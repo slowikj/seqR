@@ -94,14 +94,15 @@ inline KMerCountsManager countKMers(
   return std::move(kmerCountsManager);
 }
 
-template <class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+template <class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 std::vector<KMerCountsManager> parallelComputeKMerCounts(
     int k,
     bool positionalKMer,
-    input_matrix_t& sequenceMatrix,
+    int rowsNum,
+    RowGetter_t<input_vector_t> rowGetter,
     AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
-  return std::move(parallelComputeKMerCounts<input_matrix_t, input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
-      sequenceMatrix,
+  return std::move(parallelComputeKMerCounts<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+      rowsNum,
       [k, positionalKMer, &alphabetEncoding](input_vector_t& v) -> KMerCountsManager {
         return countKMers<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
             k,
@@ -109,7 +110,8 @@ std::vector<KMerCountsManager> parallelComputeKMerCounts(
             alphabetEncoding,
             positionalKMer
         );
-      }
+      },
+      rowGetter
   ));
 }
 

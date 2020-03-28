@@ -201,15 +201,16 @@ KMerCountsManager countGappedKMers(const Rcpp::IntegerVector& gaps,
 
 std::vector<PolynomialSingleHasherConfig> getHasherConfigs();
 
-template<class input_matrix_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
   const Rcpp::IntegerVector& gaps,
   bool isPositionalKMer,
-  input_matrix_t& sequenceMatrix,
+  int rowsNum,
+  RowGetter_t<input_vector_t> rowGetter,
   AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
   std::size_t totalKMerSize = getTotalKMerSize(gaps);
-  return std::move(parallelComputeKMerCounts<input_matrix_t, input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
-    sequenceMatrix,
+  return std::move(parallelComputeKMerCounts<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+    rowsNum,
     [&gapsVector = std::as_const(gaps), isPositionalKMer, &alphabetEncoding, &totalKMerSize]
     (input_vector_t& v) -> KMerCountsManager {
       return countGappedKMers<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
@@ -220,7 +221,8 @@ std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
           isPositionalKMer,
           std::move(getHasherConfigs())
       );
-    }
+    },
+    rowGetter
   ));
 }
 

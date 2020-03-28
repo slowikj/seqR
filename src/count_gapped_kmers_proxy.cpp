@@ -1,5 +1,7 @@
 #include "gapped_kmer_counter.h"
 #include "kmer_counts_manager.h"
+#include "kmer_counting_common.h"
+#include "rcpp_utils.h"
 #include <Rcpp.h>
 #include <memory>
 
@@ -26,18 +28,20 @@ Rcpp::IntegerMatrix count_gapped_kmers(input_vector_t& alphabet,
                                        Rcpp::IntegerVector& gaps,
                                        bool positionalKMers) {
   auto alphabetEncoding = std::move(getEncoding(alphabet));
+  RowGetter_t<input_view_vector_t> rowGetter = getRcppMatrixRowGetter<input_matrix_t,
+                                                                      input_view_vector_t>(sequenceMatrix);
   std::function<std::vector<KMerCountsManager>()> parallelKMerCountingProc =
-    [&gaps, &alphabetEncoding, &positionalKMers, &sequenceMatrix]
+    [&gaps, &alphabetEncoding, &positionalKMers, rowsNum = sequenceMatrix.nrow(), &rowGetter]
     () -> std::vector<KMerCountsManager> {
       return std::move(
-        parallelComputeGappedKMersCounts<input_matrix_t,
-                                         input_view_vector_t,
+        parallelComputeGappedKMersCounts<input_view_vector_t,
                                          input_elem_t,
                                          internal_elem_t,
                                          encoded_elem_t>(
                                            gaps,
                                            positionalKMers,
-                                           sequenceMatrix,
+                                           rowsNum,
+                                           rowGetter,
                                            alphabetEncoding));
     };
   return std::move(getKMerCountsMatrix<input_matrix_t>(

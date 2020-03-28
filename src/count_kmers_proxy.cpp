@@ -4,6 +4,7 @@
 #include <functional>
 #include <vector>
 #include "kmer_counting_common.h"
+#include "rcpp_utils.h"
 
 template <class input_matrix_t,
           class input_vector_t,
@@ -17,18 +18,20 @@ Rcpp::IntegerMatrix count_kmers(input_vector_t& alphabet,
                                 bool positionalKMers) {
   Rcpp::IntegerVector gaps(k-1);
   auto alphabetEncoding = getEncoding(alphabet);
+  RowGetter_t<input_view_vector_t> rowGetter = getRcppMatrixRowGetter<input_matrix_t,
+                                                                      input_view_vector_t>(sequenceMatrix);
   std::function<std::vector<KMerCountsManager>()> parallelKMerCountingProc =
-    [&k, &positionalKMers, &sequenceMatrix, &alphabetEncoding]
+    [&k, &positionalKMers, rowsNum=sequenceMatrix.nrow(), &alphabetEncoding, &rowGetter]
     () -> std::vector<KMerCountsManager> {
       return std::move(
-        parallelComputeKMerCounts<input_matrix_t,
-                                  input_view_vector_t,
+        parallelComputeKMerCounts<input_view_vector_t,
                                   input_elem_t,
                                   internal_elem_t,
                                   ENCODED_ELEM_T>(
                                     k,
                                     positionalKMers,
-                                    sequenceMatrix,
+                                    rowsNum,
+                                    rowGetter,
                                     alphabetEncoding));
     };
   return std::move(getKMerCountsMatrix<input_matrix_t>(
