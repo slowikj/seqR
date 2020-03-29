@@ -15,7 +15,7 @@
 #include "kmer_hash_indexer.h"
 
 const std::string default_item_separator = ".";
-const std::string default_position_separator = "_";
+const std::string default_section_separator = "_";
 
 Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector& gaps);
 
@@ -44,9 +44,9 @@ public:
   }
   
   std::string getPositional(int begin,
-                            std::string positionSeparator) const {
+                            std::string sectionSeparator) const {
     std::string withoutPositionString = this->get(begin);
-    return std::to_string(begin + 1) + positionSeparator + withoutPositionString;
+    return std::to_string(begin + 1) + sectionSeparator + withoutPositionString;
   }
   
 private:
@@ -82,10 +82,10 @@ public:
                            bool isPositionalKMer,
                            std::function<std::string(const input_elem_t&)> inputItemToStringConverter,
                            std::string itemSeparator,
-                           std::string positionSeparator):
+                           std::string sectionSeparator):
     indexedKMers(indexedKMers),
     itemSeparator(itemSeparator),
-    positionSeparator(positionSeparator),
+    sectionSeparator(sectionSeparator),
     outputKMerStrings(std::move(Rcpp::StringVector(indexedKMers.size()))) {
     Rcpp::IntegerVector gapsAccumulated = std::move(getGapsAccumulated(gaps));
     prepareKMerStringsCreators(sequences, gapsAccumulated, inputItemToStringConverter, itemSeparator);
@@ -103,7 +103,7 @@ public:
 private:
   const std::vector<KMerPositionInfo>& indexedKMers;
   const std::string& itemSeparator;
-  const std::string& positionSeparator;
+  const std::string& sectionSeparator;
   std::vector<KMerStringCreatorForSequence<input_vector_t, input_elem_t>> kmerStringCreators;
   std::function<std::string(int, int)> createKMerFunc;
   
@@ -122,7 +122,7 @@ private:
     this->createKMerFunc = isPositionalKMer ?
       static_cast<std::function<std::string(int, int)>>(
           [this](int seqNum, int pos) {
-            return kmerStringCreators[seqNum].getPositional(pos, positionSeparator);
+            return kmerStringCreators[seqNum].getPositional(pos, sectionSeparator);
       }) :
       static_cast<std::function<std::string(int, int)>>(
           [this](int seqNum, int pos) {
@@ -140,7 +140,7 @@ Rcpp::StringVector parallelComputeKMerStrings(
   const Rcpp::IntegerVector& gaps,
   bool isPositionalKMer,
   std::string itemSeparator = default_item_separator,
-  std::string positionSeparator = default_position_separator) {
+  std::string sectionSeparator = default_section_separator) {
   
   KMerStringsCreatorWorker<input_matrix_t, input_vector_t, input_elem_t> worker(
       indexedKMers,
@@ -149,7 +149,7 @@ Rcpp::StringVector parallelComputeKMerStrings(
       isPositionalKMer,
       inputItemToStringConverter,
       itemSeparator,
-      positionSeparator);
+      sectionSeparator);
   RcppParallel::parallelFor(
     0,
     indexedKMers.size(),
@@ -164,7 +164,7 @@ Rcpp::StringVector parallelComputeKMerStrings(
     const Rcpp::IntegerVector& gaps,
     bool isPositionalKMer,
     std::string itemSeparator = default_item_separator,
-    std::string positionSeparator = default_position_separator);
+    std::string sectionSeparator = default_section_separator);
 
 Rcpp::StringVector parallelComputeKMerStrings(
     const std::vector<KMerPositionInfo>& indexedKMers,
@@ -172,7 +172,7 @@ Rcpp::StringVector parallelComputeKMerStrings(
     const Rcpp::IntegerVector& gaps,
     bool isPositionalKMer,
     std::string itemSeparator = default_item_separator,
-    std::string positionSeparator = default_position_separator);
+    std::string sectionSeparator = default_section_separator);
 
 Rcpp::StringVector parallelComputeKMerStrings(
     const std::vector<KMerPositionInfo>& indexedKMers,
@@ -180,6 +180,6 @@ Rcpp::StringVector parallelComputeKMerStrings(
     const Rcpp::IntegerVector& gaps,
     bool isPositionalKMer,
     std::string itemSeparator = default_item_separator,
-    std::string positionSeparator = default_position_separator);
+    std::string sectionSeparator = default_section_separator);
 
 #endif

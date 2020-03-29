@@ -15,7 +15,7 @@
 #include <functional>
 
 extern const std::string default_item_separator;
-extern const std::string default_position_separator;
+extern const std::string default_section_separator;
 
 template <class input_vector_t>
 using CountingKMersProc_t = std::function<KMerCountsManager(input_vector_t&)>;
@@ -101,7 +101,7 @@ Rcpp::IntegerMatrix getKMerCountsMatrix(
   const Rcpp::IntegerVector& gaps,
   bool positionalKMers,
   std::function<std::vector<KMerCountsManager>()> parallelKMerCountingProc) {
-  
+
   auto kmerCountsManagers = std::move(parallelKMerCountingProc());
   auto [hashIndexer, uniqueKMers] = indexKMerHashes(kmerCountsManagers);
   Rcpp::StringVector uniqueKMerStrings = std::move(
@@ -111,7 +111,7 @@ Rcpp::IntegerMatrix getKMerCountsMatrix(
       gaps,
       positionalKMers,
       default_item_separator,
-      default_position_separator
+      default_section_separator
     )
   );
   KMerMatrixCreatorWorker worker(
