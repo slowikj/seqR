@@ -17,10 +17,10 @@
 extern const std::string default_item_separator;
 extern const std::string default_position_separator;
 
-template<class input_vector_t>
+template <class input_vector_t>
 using CountingKMersProc_t = std::function<KMerCountsManager(input_vector_t&)>;
 
-template<class input_vector_t>
+template <class input_vector_t>
 using RowGetter_t = std::function<input_vector_t(int)>;
 
 template <class input_vector_t>
@@ -36,7 +36,7 @@ public:
   
   void operator()(size_t begin, size_t end) {
     for(int rowNum=begin; rowNum < end; ++rowNum) {
-      auto row = rowGetter(rowNum);
+      auto row = std::move(rowGetter(rowNum));
       kmerCounts[rowNum] = std::move(countingKMersProc(row));
     }
   }
