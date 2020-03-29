@@ -8,8 +8,8 @@
 // [[Rcpp::depends(RcppParallel)]]
 //' @importFrom  RcppParallel RcppParallelLibs
 #include <RcppParallel.h>
-#include<functional>
-#include<algorithm>
+#include <functional>
+#include <algorithm>
 #include "dictionary.h"
 #include "hash/complex_hasher.h"
 #include "kmer_hash_indexer.h"
@@ -150,11 +150,7 @@ Rcpp::StringVector parallelComputeKMerStrings(
       inputItemToStringConverter,
       itemSeparator,
       sectionSeparator);
-  RcppParallel::parallelFor(
-    0,
-    indexedKMers.size(),
-    worker
-  );
+  RcppParallel::parallelFor(0,indexedKMers.size(), worker);
   return std::move(worker.outputKMerStrings);
 }
 
