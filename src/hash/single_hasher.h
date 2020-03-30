@@ -12,11 +12,11 @@ public:
   
   virtual void removeFirst(const int &elem) = 0;
   
-  [[nodiscard]] virtual int getHash() const {
+  virtual int getHash() const {
     return currentHash;
   }
   
-  [[nodiscard]] virtual int getHash(int position) const = 0;
+  virtual int getHash(int position) const = 0;
   
   virtual void clear() {
     this->currentHash = 0;

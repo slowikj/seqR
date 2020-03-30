@@ -75,19 +75,19 @@ private:
   int nextPowerP;
   int currentPowerP;
   
-  [[nodiscard]] int computeHash(int currentHash, const int &elem) const {
+  int computeHash(int currentHash, const int &elem) const {
     return static_cast<int>(
       (static_cast<long long>(this->currentHash) * config.P + elem) % config.M
     );
   }
   
-  [[nodiscard]] int computeNextPowerP(int currentPowerP) const {
+  int computeNextPowerP(int currentPowerP) const {
     return static_cast<int>(
       (static_cast<long long>(currentPowerP) * config.P) % config.M
     );
   }
   
-  [[nodiscard]] int computePreviousPowerP(int currentPowerP) const {
+  int computePreviousPowerP(int currentPowerP) const {
     return static_cast<int>(
       (static_cast<long long>(currentPowerP) * this->P_M_2) % config.M
     );
