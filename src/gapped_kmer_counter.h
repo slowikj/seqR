@@ -6,6 +6,7 @@
 #include "hash/polynomial_single_hasher.h"
 #include "kmer_counting_common.h"
 #include "kmer_counts_manager.h"
+#include "sequence_getter.h"
 #include <vector>
 #include <memory>
 #include <utility>
@@ -206,7 +207,7 @@ std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
   const Rcpp::IntegerVector& gaps,
   bool isPositionalKMer,
   int rowsNum,
-  RowGetter_t<input_vector_t> rowGetter,
+  SequenceGetter_t<input_vector_t> sequenceGetter,
   AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
   std::size_t totalKMerSize = getTotalKMerSize(gaps);
   return std::move(parallelComputeKMerCounts<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
@@ -222,7 +223,7 @@ std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
           std::move(getHasherConfigs())
       );
     },
-    rowGetter
+    sequenceGetter
   ));
 }
 

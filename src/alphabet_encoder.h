@@ -3,15 +3,15 @@
 
 // [[Rcpp::plugins("c++17")]]
 #include <Rcpp.h>
-
 #include <functional>
 #include <memory>
 #include "dictionary.h"
+#include "input_to_internal_item_converter.h"
 
 template<class input_elem_t, class internal_elem_t, class encoded_elem_t>
 class AlphabetEncoding {
 public:
-  AlphabetEncoding(std::function<internal_elem_t(const input_elem_t&)> inputToInternalItemConverter,
+  AlphabetEncoding(InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter,
                    Dictionary<internal_elem_t, encoded_elem_t>&& internalToEncoded,
                    encoded_elem_t notAllowedEncodingNum):
     internalToEncoded(std::move(internalToEncoded)),
@@ -47,14 +47,14 @@ public:
   
 private:
   Dictionary<internal_elem_t, encoded_elem_t> internalToEncoded;
-  std::function<internal_elem_t(const input_elem_t&)> inputToInternalItemConverter;
+  InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter;
   encoded_elem_t notAllowedEncodingNum;
 };
 
 template<class input_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t> getAlphabetEncoding(
     input_t& input,
-    std::function<internal_elem_t(const input_elem_t&)> inputToInternalItemConverter) {
+    InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter) {
   encoded_elem_t currentNum = 2;
   Dictionary<internal_elem_t, encoded_elem_t> internalToEncoded;
   for(const auto& inputElem: input) {

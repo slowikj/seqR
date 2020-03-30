@@ -1,9 +1,11 @@
-#include "gapped_kmer_counter.h"
-#include "kmer_counts_manager.h"
-#include "kmer_counting_common.h"
-#include "rcpp_utils.h"
 #include <Rcpp.h>
 #include <memory>
+#include "gapped_kmer_counter.h"
+#include "kmer_counting_common.h"
+#include "input_to_string_item_converter.h"
+#include "input_to_internal_item_converter.h"
+#include "sequence_getter.h"
+#include "app_conf.h"
 
 //' @export
 // [[Rcpp::export]]
@@ -17,38 +19,43 @@ Rcpp::IntegerMatrix get_contiguous_intervals_matrix(const Rcpp::IntegerVector& g
   return res;
 }
 
-template <class input_matrix_t,
+template <class alphabet_t,
           class input_vector_t,
-          class input_view_vector_t,
           class input_elem_t,
           class internal_elem_t,
           class encoded_elem_t>
-Rcpp::IntegerMatrix count_gapped_kmers(input_vector_t& alphabet,
-                                       input_matrix_t& sequenceMatrix,
+Rcpp::IntegerMatrix count_gapped_kmers(alphabet_t& alphabet,
+                                       int sequencesNum,
+                                       SequenceGetter_t<input_vector_t> sequenceGetter,
                                        Rcpp::IntegerVector& gaps,
-                                       bool positionalKMers) {
-  auto alphabetEncoding = std::move(getEncoding(alphabet));
-  RowGetter_t<input_view_vector_t> rowGetter = getRcppMatrixRowGetter<input_matrix_t,
-                                                                      input_view_vector_t>(sequenceMatrix);
-  std::function<std::vector<KMerCountsManager>()> parallelKMerCountingProc =
-    [&gaps, &alphabetEncoding, &positionalKMers, rowsNum = sequenceMatrix.nrow(), &rowGetter]
-    () -> std::vector<KMerCountsManager> {
+                                       bool positionalKMers,
+                                       InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter,
+                                       InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter) {
+  auto parallelKMerCountingProc =
+    [&gaps, &positionalKMers, &sequencesNum](
+        AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& encoding,
+        SequenceGetter_t<input_vector_t> seqGetter
+    ) -> std::vector<KMerCountsManager> {
       return std::move(
-        parallelComputeGappedKMersCounts<input_view_vector_t,
+        parallelComputeGappedKMersCounts<input_vector_t,
                                          input_elem_t,
                                          internal_elem_t,
                                          encoded_elem_t>(
                                            gaps,
                                            positionalKMers,
-                                           rowsNum,
-                                           rowGetter,
-                                           alphabetEncoding));
+                                           sequencesNum,
+                                           seqGetter,
+                                           encoding));
     };
-  return std::move(getKMerCountsMatrix<input_matrix_t>(
-      sequenceMatrix,
+  return std::move(getKMerCountsMatrix<alphabet_t, input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+      alphabet,
+      sequencesNum,
+      sequenceGetter,
       gaps,
       positionalKMers,
-      parallelKMerCountingProc
+      parallelKMerCountingProc,
+      inputToInternalItemConverter,
+      inputToStringItemConverter
   ));
 }
 
@@ -58,15 +65,19 @@ Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringVector& alphabet,
                                               Rcpp::StringMatrix& sequenceMatrix,
                                               Rcpp::IntegerVector& gaps,
                                               bool positionalKMers) {
-  return std::move(count_gapped_kmers<Rcpp::StringMatrix,
-                                      Rcpp::StringVector,
-                                      Rcpp::StringMatrix::Row,
-                                      Rcpp::String::StringProxy,
-                                      std::string,
-                                      ENCODED_ELEM_T>(alphabet,
-                                                      sequenceMatrix,
-                                                      gaps,
-                                                      positionalKMers));
+  return std::move(
+    count_gapped_kmers<Rcpp::StringVector,
+                       Rcpp::StringMatrix::Row,
+                       Rcpp::String::StringProxy,
+                       std::string,
+                       ENCODED_ELEM_T>(alphabet,
+                                       sequenceMatrix.nrow(),
+                                       getRcppMatrixRowGetter<Rcpp::StringMatrix, Rcpp::StringMatrix::Row>(sequenceMatrix),
+                                       gaps,
+                                       positionalKMers,
+                                       getRcppStringToStringConverter(),
+                                       getRcppStringProxyToStringConverter())
+  );
 }
 
 //' @export
@@ -75,15 +86,19 @@ Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerVector& alphabet,
                                                Rcpp::IntegerMatrix& sequenceMatrix,
                                                Rcpp::IntegerVector& gaps,
                                                bool positionalKMers) {
-  return std::move(count_gapped_kmers<Rcpp::IntegerMatrix,
-                                      Rcpp::IntegerVector,
-                                      Rcpp::IntegerMatrix::Row,
-                                      int,
-                                      int,
-                                      ENCODED_ELEM_T>(alphabet,
-                                                      sequenceMatrix,
-                                                      gaps,
-                                                      positionalKMers));
+  return std::move(
+    count_gapped_kmers<Rcpp::IntegerVector,
+                       Rcpp::IntegerMatrix::Row,
+                       int,
+                       int,
+                       ENCODED_ELEM_T>(alphabet,
+                                       sequenceMatrix.nrow(),
+                                       getRcppMatrixRowGetter<Rcpp::IntegerMatrix, Rcpp::IntegerMatrix::Row>(sequenceMatrix),
+                                       gaps,
+                                       positionalKMers,
+                                       getIntToIntConverter(),
+                                       getIntToStringConverter())
+  );
 }
 
 //' @export
@@ -92,13 +107,17 @@ Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericVector& alphabet,
                                                Rcpp::NumericMatrix& sequenceMatrix,
                                                Rcpp::IntegerVector& gaps,
                                                bool positionalKMers) {
-  return std::move(count_gapped_kmers<Rcpp::NumericMatrix,
-                                      Rcpp::NumericVector,
-                                      Rcpp::NumericMatrix::Row,
-                                      double,
-                                      double,
-                                      ENCODED_ELEM_T>(alphabet,
-                                                      sequenceMatrix,
-                                                      gaps,
-                                                      positionalKMers));
+  return std::move(
+    count_gapped_kmers<Rcpp::NumericVector,
+                       Rcpp::NumericMatrix::Row,
+                       double,
+                       double,
+                       ENCODED_ELEM_T>(alphabet,
+                                       sequenceMatrix.nrow(),
+                                       getRcppMatrixRowGetter<Rcpp::NumericMatrix, Rcpp::NumericMatrix::Row>(sequenceMatrix),
+                                       gaps,
+                                       positionalKMers,
+                                       getDoubleToDoubleConverter(),
+                                       getDoubleToStringConverter(3))
+  );
 }

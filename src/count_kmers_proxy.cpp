@@ -4,41 +4,48 @@
 #include <functional>
 #include <vector>
 #include "kmer_counting_common.h"
-#include "rcpp_utils.h"
+#include "input_to_string_item_converter.h"
+#include "input_to_internal_item_converter.h"
+#include "sequence_getter.h"
+#include "app_conf.h"
 
-template <class input_matrix_t,
+template <class alphabet_t,
           class input_vector_t,
-          class input_view_vector_t,
           class input_elem_t,
           class internal_elem_t,
           class encoded_elem_t>
-Rcpp::IntegerMatrix count_kmers(input_vector_t& alphabet,
-                                input_matrix_t& sequenceMatrix,
+Rcpp::IntegerMatrix count_kmers(alphabet_t& alphabet,
+                                int sequencesNum,
+                                SequenceGetter_t<input_vector_t> sequenceGetter,
                                 int k,
-                                bool positionalKMers) {
+                                bool positionalKMers,
+                                InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter,
+                                InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter) {
   Rcpp::IntegerVector gaps(k-1);
-  auto alphabetEncoding = getEncoding(alphabet);
-  RowGetter_t<input_view_vector_t> rowGetter = getRcppMatrixRowGetter<input_matrix_t,
-                                                                      input_view_vector_t>(sequenceMatrix);
-  std::function<std::vector<KMerCountsManager>()> parallelKMerCountingProc =
-    [&k, &positionalKMers, rowsNum=sequenceMatrix.nrow(), &alphabetEncoding, &rowGetter]
-    () -> std::vector<KMerCountsManager> {
+  auto parallelKMerCountingProc = [&k, &positionalKMers, &sequencesNum](
+    AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& encoding,
+    SequenceGetter_t<input_vector_t> seqGetter
+    ) -> std::vector<KMerCountsManager> {
       return std::move(
-        parallelComputeKMerCounts<input_view_vector_t,
+        parallelComputeKMerCounts<input_vector_t,
                                   input_elem_t,
                                   internal_elem_t,
                                   ENCODED_ELEM_T>(
                                     k,
                                     positionalKMers,
-                                    rowsNum,
-                                    rowGetter,
-                                    alphabetEncoding));
+                                    sequencesNum,
+                                    seqGetter,
+                                    encoding));
     };
-  return std::move(getKMerCountsMatrix<input_matrix_t>(
-      sequenceMatrix,
+  return std::move(getKMerCountsMatrix<alphabet_t, input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+      alphabet,
+      sequencesNum,
+      sequenceGetter,
       gaps,
       positionalKMers,
-      parallelKMerCountingProc
+      parallelKMerCountingProc,
+      inputToInternalItemConverter,
+      inputToStringItemConverter
   ));
 }
 
@@ -48,15 +55,18 @@ Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringVector& alphabet,
                                        Rcpp::StringMatrix& sequenceMatrix,
                                        int k,
                                        bool positionalKMers) {
-  return std::move(count_kmers<Rcpp::StringMatrix,
-                               Rcpp::StringVector,
-                               Rcpp::StringMatrix::Row,
-                               Rcpp::String::StringProxy,
-                               std::string,
-                               ENCODED_ELEM_T>(alphabet,
-                                               sequenceMatrix,
-                                               k,
-                                               positionalKMers)
+  return std::move(
+    count_kmers<Rcpp::StringVector,
+                Rcpp::StringMatrix::Row,
+                Rcpp::String::StringProxy,
+                std::string,
+                ENCODED_ELEM_T>(alphabet,
+                                sequenceMatrix.nrow(),
+                                getRcppMatrixRowGetter<Rcpp::StringMatrix, Rcpp::StringMatrix::Row>(sequenceMatrix),
+                                k,
+                                positionalKMers,
+                                getRcppStringToStringConverter(),
+                                getRcppStringProxyToStringConverter())
   );
 }
 
@@ -66,15 +76,18 @@ Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerVector& alphabet,
                                         Rcpp::IntegerMatrix& sequenceMatrix,
                                         int k,
                                         bool positionalKMers) {
-  return std::move(count_kmers<Rcpp::IntegerMatrix,
-                               Rcpp::IntegerVector,
-                               Rcpp::IntegerMatrix::Row,
-                               int,
-                               int,
-                               ENCODED_ELEM_T>(alphabet,
-                                               sequenceMatrix,
-                                               k,
-                                               positionalKMers)
+  return std::move(
+    count_kmers<Rcpp::IntegerVector,
+                Rcpp::IntegerMatrix::Row,
+                int,
+                int,
+                ENCODED_ELEM_T>(alphabet,
+                                sequenceMatrix.nrow(),
+                                getRcppMatrixRowGetter<Rcpp::IntegerMatrix, Rcpp::IntegerMatrix::Row>(sequenceMatrix),
+                                k,
+                                positionalKMers,
+                                getIntToIntConverter(),
+                                getIntToStringConverter())
   );
 }
 
@@ -84,14 +97,17 @@ Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericVector& alphabet,
                                         Rcpp::NumericMatrix& sequenceMatrix,
                                         int k,
                                         bool positionalKMers) {
-  return std::move(count_kmers<Rcpp::NumericMatrix,
-                               Rcpp::NumericVector,
-                               Rcpp::NumericMatrix::Row,
-                               double,
-                               double,
-                               ENCODED_ELEM_T>(alphabet,
-                                               sequenceMatrix,
-                                               k,
-                                               positionalKMers)
+  return std::move(
+    count_kmers<Rcpp::NumericVector,
+                Rcpp::NumericMatrix::Row,
+                double,
+                double,
+                ENCODED_ELEM_T>(alphabet,
+                                sequenceMatrix.nrow(),
+                                getRcppMatrixRowGetter<Rcpp::NumericMatrix, Rcpp::NumericMatrix::Row>(sequenceMatrix),
+                                k,
+                                positionalKMers,
+                                getDoubleToDoubleConverter(),
+                                getDoubleToStringConverter(3))
   );
 }

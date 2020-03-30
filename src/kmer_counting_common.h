@@ -7,10 +7,13 @@
 //' @importFrom  RcppParallel RcppParallelLibs
 #include <RcppParallel.h>
 #include <vector>
+#include "sequence_getter.h"
 #include "kmer_counts_manager.h"
 #include "kmer_hash_indexer.h"
-#include "concrete_encoders.h"
+#include "alphabet_encoder.h"
 #include "kmer_strings_creator.h"
+#include "input_to_string_item_converter.h"
+#include "input_to_internal_item_converter.h"
 #include <memory>
 #include <functional>
 
@@ -21,29 +24,26 @@ template <class input_vector_t>
 using CountingKMersProc_t = std::function<KMerCountsManager(input_vector_t&)>;
 
 template <class input_vector_t>
-using RowGetter_t = std::function<input_vector_t(int)>;
-
-template <class input_vector_t>
 class KMerCounterWorker : public RcppParallel::Worker {
 public:
   KMerCounterWorker(int rowsNum,
                     CountingKMersProc_t<input_vector_t> countingKMersProc,
-                    RowGetter_t<input_vector_t> rowGetter):
+                    SequenceGetter_t<input_vector_t> sequenceGetter):
     countingKMersProc(countingKMersProc),
-    rowGetter(rowGetter) {
+    sequenceGetter(sequenceGetter) {
     kmerCounts.resize(rowsNum);
   }
   
   void operator()(size_t begin, size_t end) {
     for(int rowNum=begin; rowNum < end; ++rowNum) {
-      auto row = std::move(rowGetter(rowNum));
+      auto row = std::move(sequenceGetter(rowNum));
       kmerCounts[rowNum] = std::move(countingKMersProc(row));
     }
   }
   
 private:
   CountingKMersProc_t<input_vector_t> countingKMersProc;
-  RowGetter_t<input_vector_t> rowGetter;
+  SequenceGetter_t<input_vector_t> sequenceGetter;
   
 public:
   std::vector<KMerCountsManager> kmerCounts;
@@ -53,11 +53,11 @@ template <class input_vector_t, class input_elem_t, class internal_elem_t, class
 std::vector<KMerCountsManager> parallelComputeKMerCounts(
     int rowsNum,
     CountingKMersProc_t<input_vector_t> countingProc,
-    RowGetter_t<input_vector_t> rowGetter) {
+    SequenceGetter_t<input_vector_t> sequenceGetter) {
   KMerCounterWorker<input_vector_t> worker(
       rowsNum,
       countingProc,
-      rowGetter
+      sequenceGetter
   );
   RcppParallel::parallelFor(0, rowsNum, worker);
   return std::move(worker.kmerCounts);
@@ -95,34 +95,53 @@ private:
   
 };
 
-template <class input_matrix_t>
+template <class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+using ParallelKMerCountingProc_t = std::function<std::vector<KMerCountsManager>(
+  AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&,
+  SequenceGetter_t<input_vector_t>)>;
+
+template <class alphabet_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 Rcpp::IntegerMatrix getKMerCountsMatrix(
-  input_matrix_t& sequenceMatrix,
+  alphabet_t& alphabet,
+  int sequencesNum,
+  SequenceGetter_t<input_vector_t> sequenceGetter,
   const Rcpp::IntegerVector& gaps,
   bool positionalKMers,
-  std::function<std::vector<KMerCountsManager>()> parallelKMerCountingProc) {
-
-  auto kmerCountsManagers = std::move(parallelKMerCountingProc());
+  ParallelKMerCountingProc_t<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t> parallelKMerCountingProc,
+  InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter,
+  InputToStringItemConverter_t<input_elem_t> inputToStringConverter) {
+  
+  auto alphabetEncoding = std::move(
+    getAlphabetEncoding<alphabet_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+        alphabet,
+        inputToInternalItemConverter
+  ));
+  auto kmerCountsManagers = std::move(parallelKMerCountingProc(alphabetEncoding, sequenceGetter));
+  
   auto [hashIndexer, uniqueKMers] = indexKMerHashes(kmerCountsManagers);
   Rcpp::StringVector uniqueKMerStrings = std::move(
-    parallelComputeKMerStrings(
+    parallelComputeKMerStrings<input_vector_t, input_elem_t>(
       uniqueKMers,
-      sequenceMatrix,
+      inputToStringConverter,
+      sequencesNum,
+      sequenceGetter,
       gaps,
       positionalKMers,
       default_item_separator,
       default_section_separator
     )
   );
-  KMerMatrixCreatorWorker worker(
-      sequenceMatrix.nrow(),
+  
+  KMerMatrixCreatorWorker matrixCreatorWorker(
+      sequencesNum,
       uniqueKMerStrings.size(),
       kmerCountsManagers,
       hashIndexer,
       uniqueKMerStrings
   );
-  RcppParallel::parallelFor(0, sequenceMatrix.nrow(), worker);
-  return worker.outputKMerCounts;
+  RcppParallel::parallelFor(0, sequencesNum, matrixCreatorWorker);
+  
+  return matrixCreatorWorker.outputKMerCounts;
 }
 
 #endif
