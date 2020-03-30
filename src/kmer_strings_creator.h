@@ -15,11 +15,10 @@
 #include "input_to_string_item_converter.h"
 #include "sequence_getter.h"
 #include "kmer_hash_indexer.h"
+#include "utils.h"
 
 const std::string default_item_separator = ".";
 const std::string default_section_separator = "_";
-
-Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector& gaps);
 
 template <class input_vector_t, class input_elem_t>
 class KMerStringCreatorForSequence {

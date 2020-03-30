@@ -15,3 +15,6 @@ int compute_power_fast(unsigned int base, unsigned int power, unsigned int modul
   return static_cast<int>(res);
 }
 
+Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector& gaps) {
+  return static_cast<Rcpp::IntegerVector>(Rcpp::cumsum(gaps + 1));
+}
