@@ -19,6 +19,13 @@ Rcpp::IntegerMatrix get_contiguous_intervals_matrix(const Rcpp::IntegerVector& g
   return res;
 }
 
+inline std::vector<PolynomialSingleHasherConfig> getGappedKMerHasherConfigs() {
+  std::vector<PolynomialSingleHasherConfig> res;
+  res.emplace_back(101, 1e9 + 7);
+  res.emplace_back(97, 1e9 + 33);
+  return std::move(res);
+}
+
 template <class alphabet_t,
           class input_vector_t,
           class input_elem_t,
@@ -31,8 +38,9 @@ Rcpp::IntegerMatrix count_gapped_kmers(alphabet_t& alphabet,
                                        bool positionalKMers,
                                        InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter,
                                        InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter) {
+  auto hasherConfigs = std::move(getGappedKMerHasherConfigs());
   auto parallelKMerCountingProc =
-    [&gaps, &positionalKMers, &sequencesNum](
+    [&gaps, &positionalKMers, &sequencesNum, &hasherConfigs](
         AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& encoding,
         SequenceGetter_t<input_vector_t> seqGetter
     ) -> std::vector<KMerCountsManager> {
@@ -45,7 +53,8 @@ Rcpp::IntegerMatrix count_gapped_kmers(alphabet_t& alphabet,
                                            positionalKMers,
                                            sequencesNum,
                                            seqGetter,
-                                           encoding));
+                                           encoding,
+                                           hasherConfigs));
     };
   return std::move(getKMerCountsMatrix<alphabet_t, input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
       alphabet,

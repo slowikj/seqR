@@ -9,6 +9,14 @@
 #include "sequence_getter.h"
 #include "app_conf.h"
 
+inline ComplexHasher createKMerComplexHasher() {
+  std::vector<std::unique_ptr<SingleHasher>> singleHashers;
+  singleHashers.emplace_back(new PolynomialSingleHasher(PolynomialSingleHasherConfig(101, 1e9 + 33)));
+  singleHashers.emplace_back(new PolynomialSingleHasher(PolynomialSingleHasherConfig(97, 1e9 + 7)));
+  ComplexHasher complexHasher(std::move(singleHashers));
+  return complexHasher;
+}
+
 template <class alphabet_t,
           class input_vector_t,
           class input_elem_t,
@@ -35,7 +43,8 @@ Rcpp::IntegerMatrix count_kmers(alphabet_t& alphabet,
                                     positionalKMers,
                                     sequencesNum,
                                     seqGetter,
-                                    encoding));
+                                    encoding,
+                                    []() -> ComplexHasher { return createKMerComplexHasher(); }));
     };
   return std::move(getKMerCountsMatrix<alphabet_t, input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
       alphabet,

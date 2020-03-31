@@ -36,8 +36,8 @@ class PrefixSequencePolynomialHasher {
 public:
   PrefixSequencePolynomialHasher(input_vector_t& sequence,
                                  AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
-                                 std::vector<PolynomialSingleHasherConfig>&& polynomialHasherConfigs):
-    polynomialHasherConfigs(std::move(polynomialHasherConfigs)) {
+                                 const std::vector<PolynomialSingleHasherConfig>& polynomialHasherConfigs):
+    polynomialHasherConfigs(polynomialHasherConfigs) {
     computePrefixValues(sequence, alphabetEncoding);
   }
   
@@ -64,7 +64,7 @@ public:
   }
   
 private:
-  std::vector<PolynomialSingleHasherConfig> polynomialHasherConfigs;
+  const std::vector<PolynomialSingleHasherConfig>& polynomialHasherConfigs;
   std::vector<std::vector<int>> prefixP;
   std::vector<std::vector<int>> prefixComplexHashes;
   
@@ -176,10 +176,10 @@ KMerCountsManager countGappedKMers(const Rcpp::IntegerVector& gaps,
                                    input_vector_t& sequence,
                                    AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
                                    bool isPositionalKMer,
-                                   std::vector<PolynomialSingleHasherConfig>&& hasherConfigs) {
+                                   const std::vector<PolynomialSingleHasherConfig>& hasherConfigs) {
   std::vector<std::pair<int,int>> contiguousIntervals = getContiguousIntervals(gaps);
   PrefixSequencePolynomialHasher<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t> sequenceHasher(
-      sequence, alphabetEncoding, std::move(hasherConfigs)
+      sequence, alphabetEncoding, hasherConfigs
   );
   
   std::vector<int> notAllowedItemsPrefixCount = std::move(
@@ -200,19 +200,18 @@ KMerCountsManager countGappedKMers(const Rcpp::IntegerVector& gaps,
   return std::move(kmerCountsManager);
 }
 
-std::vector<PolynomialSingleHasherConfig> getHasherConfigs();
-
 template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
   const Rcpp::IntegerVector& gaps,
   bool isPositionalKMer,
   int rowsNum,
   SequenceGetter_t<input_vector_t> sequenceGetter,
-  AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
+  AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
+  const std::vector<PolynomialSingleHasherConfig>& hasherConfigs) {
   std::size_t totalKMerSize = getTotalKMerSize(gaps);
   return std::move(parallelComputeKMerCounts<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
     rowsNum,
-    [&gapsVector = std::as_const(gaps), isPositionalKMer, &alphabetEncoding, &totalKMerSize]
+    [&gapsVector = std::as_const(gaps), isPositionalKMer, &alphabetEncoding, &totalKMerSize, &hconf = std::as_const(hasherConfigs)]
     (input_vector_t& v) -> KMerCountsManager {
       return countGappedKMers<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
           gapsVector,
@@ -220,7 +219,7 @@ std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
           v,
           alphabetEncoding,
           isPositionalKMer,
-          std::move(getHasherConfigs())
+          hconf
       );
     },
     sequenceGetter

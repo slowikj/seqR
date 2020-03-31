@@ -48,14 +48,6 @@ inline void countKMersForContiguousSeq(
   updateKMerCounts(rollingWindow, kmerCountsManager, isPositionalKMer);
 }
 
-inline ComplexHasher createComplexHasher() {
-  std::vector<std::unique_ptr<SingleHasher>> singleHashers;
-  singleHashers.emplace_back(new PolynomialSingleHasher(PolynomialSingleHasherConfig(101, 1e9 + 33)));
-  singleHashers.emplace_back(new PolynomialSingleHasher(PolynomialSingleHasherConfig(97, 1e9 + 7)));
-  ComplexHasher complexHasher(std::move(singleHashers));
-  return complexHasher;
-}
-
 template<class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
 inline std::vector<int> computeNotAllowedPositions(
     AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
@@ -76,10 +68,11 @@ inline KMerCountsManager countKMers(
     int k,
     input_vector_t& sequence,
     AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
-    bool isPositionalKMer) {
+    bool isPositionalKMer,
+    ComplexHasher&& complexHasher) {
   KMerCountsManager kmerCountsManager;
   RollingWindow<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t> rollingWindow(
-      sequence, std::move(createComplexHasher()), alphabetEncoding
+      sequence, std::move(complexHasher), alphabetEncoding
   );
   auto notAllowedSequencePositions = computeNotAllowedPositions(alphabetEncoding, sequence);
   for(int i = 0; i < notAllowedSequencePositions.size() - 1; ++i) {
@@ -101,15 +94,18 @@ std::vector<KMerCountsManager> parallelComputeKMerCounts(
     bool positionalKMer,
     int sequencesNum,
     SequenceGetter_t<input_vector_t> sequenceGetter,
-    AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding) {
+    AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& alphabetEncoding,
+    std::function<ComplexHasher()> complexHasherFactory) {
   return std::move(parallelComputeKMerCounts<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
       sequencesNum,
-      [k, positionalKMer, &alphabetEncoding](input_vector_t& v) -> KMerCountsManager {
+      [k, positionalKMer, &alphabetEncoding, &complexHasherFactory]
+      (input_vector_t& v) -> KMerCountsManager {
         return countKMers<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
             k,
             v,
             alphabetEncoding,
-            positionalKMer
+            positionalKMer,
+            std::move(complexHasherFactory())
         );
       },
       sequenceGetter
