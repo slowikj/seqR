@@ -4,13 +4,14 @@
 #include <Rcpp.h>
 #include <functional>
 
-// we assume that a given StringVector stores only single characters
 struct string_proxy_hasher {
   
   std::size_t operator()(const Rcpp::StringVector::stored_type& v) const {
-    // TODO: improve the function
-    return std::hash<std::string>()(std::move(Rcpp::as<std::string>(v)));
+    return rcppStringHasher(v);
   }
+  
+private:
+  std::hash<Rcpp::String> rcppStringHasher;
 };
 
 struct vector_int_hasher {
