@@ -1,6 +1,6 @@
 #include "sequence_getter.h"
-// [[Rcpp::depends(tidysq)]]
-#include <tidysq.h>
+// // [[Rcpp::depends(tidysq)]]
+// #include <tidysq.h>
 
 // SequenceGetter_t<Rcpp::StringVector> getTidySqRowGetter(Rcpp::List& sq) {
 //   int alphabetSize = tidysq::get_alph_size(sq.attr("alphabet"));
