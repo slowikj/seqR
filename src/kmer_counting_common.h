@@ -13,7 +13,6 @@
 #include "alphabet_encoder.h"
 #include "kmer_strings_creator.h"
 #include "input_to_string_item_converter.h"
-#include "input_to_internal_item_converter.h"
 #include <memory>
 #include <functional>
 
@@ -49,7 +48,7 @@ public:
   std::vector<KMerCountsManager> kmerCounts;
 };
 
-template <class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+template <class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
 std::vector<KMerCountsManager> parallelComputeKMerCounts(
     int rowsNum,
     CountingKMersProc_t<input_vector_t> countingProc,
@@ -95,27 +94,24 @@ private:
   
 };
 
-template <class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+template <class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
 using ParallelKMerCountingProc_t = std::function<std::vector<KMerCountsManager>(
-  AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&,
+  AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t>&,
   SequenceGetter_t<input_vector_t>)>;
 
-template <class alphabet_t, class input_vector_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
+template <class alphabet_t, class input_vector_t, class input_elem_t,  class encoded_elem_t, class alphabet_hasher_t>
 Rcpp::IntegerMatrix getKMerCountsMatrix(
   alphabet_t& alphabet,
   int sequencesNum,
   SequenceGetter_t<input_vector_t> sequenceGetter,
   const Rcpp::IntegerVector& gaps,
   bool positionalKMers,
-  ParallelKMerCountingProc_t<input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t> parallelKMerCountingProc,
-  InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter,
+  ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t> parallelKMerCountingProc,
   InputToStringItemConverter_t<input_elem_t> inputToStringConverter) {
   
   auto alphabetEncoding = std::move(
-    getAlphabetEncoding<alphabet_t, input_elem_t, internal_elem_t, encoded_elem_t>(
-        alphabet,
-        inputToInternalItemConverter
-  ));
+    getAlphabetEncoding<alphabet_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(alphabet)
+  );
   auto kmerCountsManagers = std::move(parallelKMerCountingProc(alphabetEncoding, sequenceGetter));
   
   auto [hashIndexer, uniqueKMers] = indexKMerHashes(kmerCountsManagers);

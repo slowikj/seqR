@@ -3,8 +3,8 @@
 #include <iomanip>
 #include <sstream>
 
-InputToStringItemConverter_t<Rcpp::String::StringProxy> getRcppStringProxyToStringConverter() {
-  return [](const Rcpp::String::StringProxy& elem) -> std::string {
+InputToStringItemConverter_t<Rcpp::StringVector::stored_type> getRcppStringProxyToStringConverter() {
+  return [](const Rcpp::StringVector::stored_type& elem) -> std::string {
     return Rcpp::as<std::string>(elem);
   };
 }
@@ -21,5 +21,11 @@ InputToStringItemConverter_t<double> getDoubleToStringConverter(int decimalPreci
     stream << std::fixed << std::setprecision(decimalPrecision);
     stream << elem;
     return stream.str();
+  };
+}
+
+InputToStringItemConverter_t<char> getCharToStringConverter() {
+  return [](const char& c) -> std::string {
+    return std::to_string(c);
   };
 }

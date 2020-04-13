@@ -27,4 +27,4 @@ protected:
   
 };
 
-#endif //SECOND_SINGLE_HASHER_H
+#endif

@@ -1,11 +1,11 @@
 #include <Rcpp.h>
 #include <memory>
-#include "kmer_counter.h"
 #include <functional>
 #include <vector>
+#include <string_view>
 #include "kmer_counting_common.h"
+#include "kmer_counter.h"
 #include "input_to_string_item_converter.h"
-#include "input_to_internal_item_converter.h"
 #include "sequence_getter.h"
 #include "app_conf.h"
 
@@ -20,25 +20,24 @@ inline ComplexHasher createKMerComplexHasher() {
 template <class alphabet_t,
           class input_vector_t,
           class input_elem_t,
-          class internal_elem_t,
-          class encoded_elem_t>
+          class encoded_elem_t,
+          class alphabet_hasher_t>
 Rcpp::IntegerMatrix count_kmers(alphabet_t& alphabet,
                                 int sequencesNum,
                                 SequenceGetter_t<input_vector_t> sequenceGetter,
                                 int k,
                                 bool positionalKMers,
-                                InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter,
                                 InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter) {
   Rcpp::IntegerVector gaps(k-1);
   auto parallelKMerCountingProc = [&k, &positionalKMers, &sequencesNum](
-    AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>& encoding,
+    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t>& encoding,
     SequenceGetter_t<input_vector_t> seqGetter
     ) -> std::vector<KMerCountsManager> {
       return std::move(
         parallelComputeKMerCounts<input_vector_t,
                                   input_elem_t,
-                                  internal_elem_t,
-                                  ENCODED_ELEM_T>(
+                                  ENCODED_ELEM_T,
+                                  alphabet_hasher_t>(
                                     k,
                                     positionalKMers,
                                     sequencesNum,
@@ -46,14 +45,13 @@ Rcpp::IntegerMatrix count_kmers(alphabet_t& alphabet,
                                     encoding,
                                     []() -> ComplexHasher { return createKMerComplexHasher(); }));
     };
-  return std::move(getKMerCountsMatrix<alphabet_t, input_vector_t, input_elem_t, internal_elem_t, encoded_elem_t>(
+  return std::move(getKMerCountsMatrix<alphabet_t, input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(
       alphabet,
       sequencesNum,
       sequenceGetter,
       gaps,
       positionalKMers,
       parallelKMerCountingProc,
-      inputToInternalItemConverter,
       inputToStringItemConverter
   ));
 }
@@ -67,14 +65,14 @@ Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringVector& alphabet,
   return std::move(
     count_kmers<Rcpp::StringVector,
                 Rcpp::StringMatrix::Row,
-                Rcpp::String::StringProxy,
-                std::string,
-                ENCODED_ELEM_T>(alphabet,
+                Rcpp::StringVector::stored_type,
+                ENCODED_ELEM_T,
+                string_proxy_hasher>(
+                                alphabet,
                                 sequenceMatrix.nrow(),
                                 getRcppMatrixRowGetter<Rcpp::StringMatrix, Rcpp::StringMatrix::Row>(sequenceMatrix),
                                 k,
                                 positionalKMers,
-                                getRcppStringToStringConverter(),
                                 getRcppStringProxyToStringConverter())
   );
 }
@@ -89,13 +87,12 @@ Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerVector& alphabet,
     count_kmers<Rcpp::IntegerVector,
                 Rcpp::IntegerMatrix::Row,
                 int,
-                int,
-                ENCODED_ELEM_T>(alphabet,
+                ENCODED_ELEM_T,
+                std::hash<int>>(alphabet,
                                 sequenceMatrix.nrow(),
                                 getRcppMatrixRowGetter<Rcpp::IntegerMatrix, Rcpp::IntegerMatrix::Row>(sequenceMatrix),
                                 k,
                                 positionalKMers,
-                                getIntToIntConverter(),
                                 getIntToStringConverter())
   );
 }
@@ -110,13 +107,12 @@ Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericVector& alphabet,
     count_kmers<Rcpp::NumericVector,
                 Rcpp::NumericMatrix::Row,
                 double,
-                double,
-                ENCODED_ELEM_T>(alphabet,
+                ENCODED_ELEM_T,
+                std::hash<double>>(alphabet,
                                 sequenceMatrix.nrow(),
                                 getRcppMatrixRowGetter<Rcpp::NumericMatrix, Rcpp::NumericMatrix::Row>(sequenceMatrix),
                                 k,
                                 positionalKMers,
-                                getDoubleToDoubleConverter(),
                                 getDoubleToStringConverter(3))
   );
 }

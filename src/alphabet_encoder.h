@@ -6,35 +6,32 @@
 #include <functional>
 #include <memory>
 #include "dictionary.h"
-#include "input_to_internal_item_converter.h"
 
-template<class input_elem_t, class internal_elem_t, class encoded_elem_t>
+template<class input_elem_t, class encoded_elem_t, class hasher_t>
 class AlphabetEncoding {
 public:
-  AlphabetEncoding(InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter,
-                   Dictionary<internal_elem_t, encoded_elem_t>&& internalToEncoded,
+  AlphabetEncoding(Dictionary<input_elem_t, encoded_elem_t, hasher_t>&& encoder,
                    encoded_elem_t notAllowedEncodingNum):
-    internalToEncoded(std::move(internalToEncoded)),
-    inputToInternalItemConverter(inputToInternalItemConverter),
+    encoder(std::move(encoder)),
     notAllowedEncodingNum(notAllowedEncodingNum) {
   }
   
   AlphabetEncoding() = default;
   
-  AlphabetEncoding(AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&& other) noexcept = default;
+  AlphabetEncoding(AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t>&& other) noexcept = default;
   
-  AlphabetEncoding(const AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&) = delete;
+  AlphabetEncoding(const AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t>&) = delete;
   
-  AlphabetEncoding& operator=(const AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&) = delete;
+  AlphabetEncoding& operator=(const AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t>&) = delete;
   
-  AlphabetEncoding& operator=(AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>&& other) noexcept = default;
+  AlphabetEncoding& operator=(AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t>&& other) noexcept = default;
   
   encoded_elem_t encode(const input_elem_t& inputElem) {
-    return internalToEncoded[inputToInternalItemConverter(inputElem)];
+    return this->encoder[inputElem];
   }
   
   bool isAllowed(const input_elem_t& inputElem) const {
-    return internalToEncoded.isPresent(inputToInternalItemConverter(inputElem));
+    return this->encoder.isPresent(inputElem);
   }
   
   encoded_elem_t getNotAllowedEncodingNum() const {
@@ -42,31 +39,27 @@ public:
   }
   
   std::size_t alphabetSize() const {
-    return internalToEncoded.size();
+    return this->encoder.size();
   }
   
 private:
-  Dictionary<internal_elem_t, encoded_elem_t> internalToEncoded;
-  InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter;
+  Dictionary<input_elem_t, encoded_elem_t, hasher_t> encoder;
   encoded_elem_t notAllowedEncodingNum;
 };
 
-template<class input_t, class input_elem_t, class internal_elem_t, class encoded_elem_t>
-AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t> getAlphabetEncoding(
-    input_t& input,
-    InputToInternalItemConverter_t<input_elem_t, internal_elem_t> inputToInternalItemConverter) {
+template<class input_t, class input_elem_t, class encoded_elem_t, class hasher_t>
+AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t> getAlphabetEncoding(input_t& input) {
   encoded_elem_t currentNum = 2;
-  Dictionary<internal_elem_t, encoded_elem_t> internalToEncoded;
+  Dictionary<input_elem_t, encoded_elem_t, hasher_t> encoder;
   for(const auto& inputElem: input) {
-    internal_elem_t internalElem = inputToInternalItemConverter(inputElem);
-    if(!internalToEncoded.isPresent(internalElem)) {
-      internalToEncoded[internalElem] = currentNum++;
+    if(!encoder.isPresent(inputElem)) {
+      encoder[inputElem] = currentNum++;
     }
   }
-  return AlphabetEncoding<input_elem_t, internal_elem_t, encoded_elem_t>(
-      inputToInternalItemConverter,
-      std::move(internalToEncoded),
-      1);
+  return AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t>(
+      std::move(encoder),
+      1
+  );
 }
 
-#endif //ALPHABET_ENCODER_H
+#endif

@@ -5,7 +5,6 @@
 #include "../utils.h"
 
 struct PolynomialSingleHasherConfig {
-  
   int P;
   int M;
   

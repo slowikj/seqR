@@ -3,7 +3,7 @@
 
 #include "dictionary.h"
 #include "kmer_counts_manager.h"
-#include "hash/complex_hasher.h"
+#include "hash/custom_hashers.h"
 #include <vector>
 #include <tuple>
 #include <memory>

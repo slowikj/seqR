@@ -54,7 +54,6 @@ private:
 
 template<class K, class V, class Hash=std::hash<K>>
 class Dictionary {
-
 public:
   
   using iterator = iterator_t<std::pair<const K&, V>, typename std::unordered_map<K, V, Hash>::iterator>;
@@ -147,4 +146,4 @@ inline
     return this->inner_map_.size();
   }
 
-#endif //CUSTOM_DICTIONARY_H
+#endif
