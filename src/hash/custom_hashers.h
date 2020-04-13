@@ -2,22 +2,14 @@
 #define CUSTOM_HASHERS_H
 
 #include <Rcpp.h>
+#include <functional>
 
 // we assume that a given StringVector stores only single characters
 struct string_proxy_hasher {
   
-  const int P = 107;
-  
-  const int M = 1e9 + 9; 
-  
   std::size_t operator()(const Rcpp::StringVector::stored_type& v) const {
     // TODO: improve the function
-    std::string str = Rcpp::as<std::string>(v);
-    long long res = 0;
-    for(const auto& elem: str) {
-      res = ((res * P) + elem) % M;
-    }
-    return static_cast<std::size_t>(res);
+    return std::hash<std::string>()(std::move(Rcpp::as<std::string>(v)));
   }
 };
 
