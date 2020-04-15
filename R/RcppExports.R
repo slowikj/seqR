@@ -52,6 +52,11 @@ count_kmers_numeric <- function(alphabet, sequenceMatrix, k, positionalKMers) {
 }
 
 #' @export
+count_kmers_tidysq <- function(alphabet, sq, k, positionalKMers) {
+    .Call('_seqR_count_kmers_tidysq', PACKAGE = 'seqR', alphabet, sq, k, positionalKMers)
+}
+
+#' @export
 compute_polynomial_hash <- function(P, M, items, begin, position) {
     .Call('_seqR_compute_polynomial_hash', PACKAGE = 'seqR', P, M, items, begin, position)
 }

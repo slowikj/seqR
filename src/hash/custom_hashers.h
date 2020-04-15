@@ -5,7 +5,6 @@
 #include <functional>
 
 struct string_proxy_hasher {
-  
   std::size_t operator()(const Rcpp::StringVector::stored_type& v) const {
     return rcppStringHasher(v);
   }

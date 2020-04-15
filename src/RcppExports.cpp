@@ -133,6 +133,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// count_kmers_tidysq
+Rcpp::IntegerMatrix count_kmers_tidysq(Rcpp::StringVector& alphabet, Rcpp::List& sq, int k, bool positionalKMers);
+RcppExport SEXP _seqR_count_kmers_tidysq(SEXP alphabetSEXP, SEXP sqSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List& >::type sq(sqSEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
+    rcpp_result_gen = Rcpp::wrap(count_kmers_tidysq(alphabet, sq, k, positionalKMers));
+    return rcpp_result_gen;
+END_RCPP
+}
 // compute_polynomial_hash
 int compute_polynomial_hash(int P, int M, Rcpp::IntegerVector items, int begin, int position);
 RcppExport SEXP _seqR_compute_polynomial_hash(SEXP PSEXP, SEXP MSEXP, SEXP itemsSEXP, SEXP beginSEXP, SEXP positionSEXP) {
@@ -175,6 +189,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_seqR_count_kmers_string", (DL_FUNC) &_seqR_count_kmers_string, 4},
     {"_seqR_count_kmers_integer", (DL_FUNC) &_seqR_count_kmers_integer, 4},
     {"_seqR_count_kmers_numeric", (DL_FUNC) &_seqR_count_kmers_numeric, 4},
+    {"_seqR_count_kmers_tidysq", (DL_FUNC) &_seqR_count_kmers_tidysq, 4},
     {"_seqR_compute_polynomial_hash", (DL_FUNC) &_seqR_compute_polynomial_hash, 5},
     {"_seqR_compute_polynomial_multihash", (DL_FUNC) &_seqR_compute_polynomial_multihash, 5},
     {NULL, NULL, 0}

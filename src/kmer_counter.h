@@ -94,7 +94,7 @@ std::vector<KMerCountsManager> parallelComputeKMerCounts(
     bool positionalKMer,
     int sequencesNum,
     SequenceGetter_t<input_vector_t> sequenceGetter,
-    AlphabetEncoding<input_elem_t,  encoded_elem_t, alphabet_hasher_t>& alphabetEncoding,
+    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t>& alphabetEncoding,
     std::function<ComplexHasher()> complexHasherFactory) {
   return std::move(parallelComputeKMerCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(
       sequencesNum,

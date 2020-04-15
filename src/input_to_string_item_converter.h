@@ -14,6 +14,6 @@ InputToStringItemConverter_t<int> getIntToStringConverter();
 
 InputToStringItemConverter_t<double> getDoubleToStringConverter(int decimalPrecision);
 
-InputToStringItemConverter_t<char> getCharToStringConverter();
+InputToStringItemConverter_t<unsigned char> getEncodedTidySqItemToStringConverter(Rcpp::StringVector& decoder);
 
 #endif

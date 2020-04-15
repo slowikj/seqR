@@ -24,8 +24,8 @@ InputToStringItemConverter_t<double> getDoubleToStringConverter(int decimalPreci
   };
 }
 
-InputToStringItemConverter_t<char> getCharToStringConverter() {
-  return [](const char& c) -> std::string {
-    return std::to_string(c);
+InputToStringItemConverter_t<unsigned char> getEncodedTidySqItemToStringConverter(Rcpp::StringVector& decoder) {
+  return [&decoder](const unsigned char& elem) -> std::string {
+    return Rcpp::as<std::string>(decoder[elem - 1]);
   };
 }

@@ -99,9 +99,9 @@ using ParallelKMerCountingProc_t = std::function<std::vector<KMerCountsManager>(
   AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t>&,
   SequenceGetter_t<input_vector_t>)>;
 
-template <class alphabet_t, class input_vector_t, class input_elem_t,  class encoded_elem_t, class alphabet_hasher_t>
+template <class input_vector_t, class input_elem_t,  class encoded_elem_t, class alphabet_hasher_t>
 Rcpp::IntegerMatrix getKMerCountsMatrix(
-  alphabet_t& alphabet,
+  AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t>& alphabetEncoding,
   int sequencesNum,
   SequenceGetter_t<input_vector_t> sequenceGetter,
   const Rcpp::IntegerVector& gaps,
@@ -109,9 +109,6 @@ Rcpp::IntegerMatrix getKMerCountsMatrix(
   ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t> parallelKMerCountingProc,
   InputToStringItemConverter_t<input_elem_t> inputToStringConverter) {
   
-  auto alphabetEncoding = std::move(
-    getAlphabetEncoding<alphabet_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(alphabet)
-  );
   auto kmerCountsManagers = std::move(parallelKMerCountingProc(alphabetEncoding, sequenceGetter));
   
   auto [hashIndexer, uniqueKMers] = indexKMerHashes(kmerCountsManagers);

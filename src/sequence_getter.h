@@ -4,9 +4,13 @@
 #include <Rcpp.h>
 #include <functional>
 #include <memory>
+#include <vector>
+#include "tidysq_encoded_sequence.h"
 
 template <class input_vector_t>
 using SequenceGetter_t = std::function<input_vector_t(int)>;
+
+SequenceGetter_t<TidysqEncodedSequence> getTidysqRowGetter(std::vector<TidysqEncodedSequence>& encodedSequences);
 
 template <class input_matrix_t, class input_vector_t>
 SequenceGetter_t<input_vector_t> getRcppMatrixRowGetter(input_matrix_t& sequenceMatrix) {
@@ -14,7 +18,5 @@ SequenceGetter_t<input_vector_t> getRcppMatrixRowGetter(input_matrix_t& sequence
     return std::move(sequenceMatrix(rowNum, Rcpp::_));
   };
 }
-
-// SequenceGetter_t<Rcpp::StringVector> getTidySqRowGetter(Rcpp::List& sq);
 
 #endif
