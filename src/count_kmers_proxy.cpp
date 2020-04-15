@@ -2,7 +2,6 @@
 #include <memory>
 #include <functional>
 #include <vector>
-#include <string_view>
 #include "kmer_counting_common.h"
 #include "kmer_counter.h"
 #include "input_to_string_item_converter.h"
