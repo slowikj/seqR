@@ -156,7 +156,7 @@ Rcpp::IntegerMatrix count_kmers_tidysq(Rcpp::StringVector& alphabet,
   auto encodedSequences = getEncodedTidysqSequences(sq);
 
   return std::move(
-    count_kmers<TidysqEncodedSequence,
+    count_kmers<Rcpp::RawVector,
                 unsigned char,
                 unsigned char,
                 std::hash<unsigned char>>(alphabetEncoding,

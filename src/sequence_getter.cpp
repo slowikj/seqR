@@ -1,7 +1,7 @@
 #include "sequence_getter.h"
 
-SequenceGetter_t<TidysqEncodedSequence> getTidysqRowGetter(std::vector<TidysqEncodedSequence>& encodedSequences) {
-  return [&encodedSequences](int rowNum) -> TidysqEncodedSequence {
-    return encodedSequences[rowNum];
+SequenceGetter_t<Rcpp::RawVector> getTidysqRowGetter(std::vector<Rcpp::RawVector>& encodedSequences) {
+  return [&encodedSequences](int rowNum) -> Rcpp::RawVector {
+    return std::move(encodedSequences[rowNum]);
   };
 }

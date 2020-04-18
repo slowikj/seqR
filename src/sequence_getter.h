@@ -5,12 +5,11 @@
 #include <functional>
 #include <memory>
 #include <vector>
-#include "tidysq_encoded_sequence.h"
 
 template <class input_vector_t>
 using SequenceGetter_t = std::function<input_vector_t(int)>;
 
-SequenceGetter_t<TidysqEncodedSequence> getTidysqRowGetter(std::vector<TidysqEncodedSequence>& encodedSequences);
+SequenceGetter_t<Rcpp::RawVector> getTidysqRowGetter(std::vector<Rcpp::RawVector>& encodedSequences);
 
 template <class input_matrix_t, class input_vector_t>
 SequenceGetter_t<input_vector_t> getRcppMatrixRowGetter(input_matrix_t& sequenceMatrix) {
