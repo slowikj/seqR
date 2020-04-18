@@ -1,7 +1,9 @@
 #ifndef CUSTOM_HASHERS_H
 #define CUSTOM_HASHERS_H
 
+// [[Rcpp::depends(BH)]]
 #include <Rcpp.h>
+#include <boost/functional/hash/hash.hpp>
 #include <functional>
 
 struct string_proxy_hasher {
@@ -20,12 +22,7 @@ struct vector_int_hasher {
   const static int M = 1e9 + 7;
   
   std::size_t operator()(const std::vector<int> &c) const {
-    // TODO: try to use boost::hash_range(c.begin(), c.end());
-    return std::accumulate(std::begin(c), std::end(c),
-                           0,
-                           [](size_t prev, int elem) -> int {
-                             return static_cast<int>((static_cast<long long>(prev) * P + elem) % M);
-                           });
+    return boost::hash_range(c.begin(), c.end());
   }
 };
 
