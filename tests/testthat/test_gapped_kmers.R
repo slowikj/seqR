@@ -18,6 +18,10 @@ invoke_test_numeric <- function(...) {
   invoke_test(seqR::count_gapped_kmers_numeric, ...)
 }
 
+invoke_test_tidysq <- function(...) {
+  invoke_test(seqR::count_gapped_kmers_tidysq, ...)
+}
+
 # STRING
 
 test_that("(string)test one sequence with gaps (1) not positional", {
@@ -108,3 +112,20 @@ test_that("(numeric) test 2 sequences with gaps (1,1) non positional; some items
                       gaps=c(1,1),
                       positionalKMers=FALSE)
 })
+
+# TIDYSQ
+
+test_that("(tidysq) count non positional k-mers (0, 1)", {
+  sq <- tidysq::construct_sq(c("AAAAAC", "AAA", "AAAC"), type="ami")
+  expected_res <- matrix(c(
+    2, 1,
+    0, 0,
+    0, 1), nrow = 3, byrow=TRUE)
+  colnames(expected_res) <- c("A.A.A", "A.A.C")
+  invoke_test_tidysq(expected_res = expected_res,
+                      alphabet=c("A", "C"),
+                      sq = sq,
+                      gaps = c(0,1),
+                      positionalKMers = FALSE)
+})
+
