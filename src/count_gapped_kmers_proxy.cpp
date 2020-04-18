@@ -7,6 +7,7 @@
 #include "hash/custom_hashers.h"
 #include "sequence_getter.h"
 #include "app_conf.h"
+#include "tidysq_encoded_sequence.h"
 
 //' @export
 // [[Rcpp::export]]
@@ -147,5 +148,32 @@ Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericVector& alphabet,
                                           gaps,
                                           positionalKMers,
                                           getDoubleToStringConverter(3))
+  );
+}
+
+
+//' @export
+// [[Rcpp::export]]
+Rcpp::IntegerMatrix count_gapped_kmers_tidysq(Rcpp::StringVector& alphabet,
+                                              Rcpp::List& sq,
+                                              Rcpp::IntegerVector& gaps,
+                                              bool positionalKMers) {
+  Rcpp::StringVector elementsEncoding = sq.attr("alphabet");
+  auto alphabetEncoding = std::move(prepareAlphabetEncodingForTidysq<unsigned char, std::hash<unsigned char>>(
+    alphabet,
+    elementsEncoding 
+  ));
+  auto encodedSequences = getEncodedTidysqSequences(sq);
+  
+  return std::move(
+    count_gapped_kmers<Rcpp::RawVector,
+                       unsigned char,
+                       unsigned char,
+                       std::hash<unsigned char>>(alphabetEncoding,
+                                                 sq.size(),
+                                                 getTidysqRowGetter(encodedSequences),
+                                                 gaps,
+                                                 positionalKMers,
+                                                 getEncodedTidySqItemToStringConverter(elementsEncoding))
   );
 }

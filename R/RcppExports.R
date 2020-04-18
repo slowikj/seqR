@@ -37,6 +37,11 @@ count_gapped_kmers_numeric <- function(alphabet, sequenceMatrix, gaps, positiona
 }
 
 #' @export
+count_gapped_kmers_tidysq <- function(alphabet, sq, gaps, positionalKMers) {
+    .Call('_seqR_count_gapped_kmers_tidysq', PACKAGE = 'seqR', alphabet, sq, gaps, positionalKMers)
+}
+
+#' @export
 count_kmers_string <- function(alphabet, sequenceMatrix, k, positionalKMers) {
     .Call('_seqR_count_kmers_string', PACKAGE = 'seqR', alphabet, sequenceMatrix, k, positionalKMers)
 }
