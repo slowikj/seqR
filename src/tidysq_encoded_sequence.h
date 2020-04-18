@@ -4,9 +4,19 @@
 #include <vector>
 #include <Rcpp.h>
 
-class TidysqEncodedSequence {
+class TidysqEncodedSequenceProxy {
 public:
-  TidysqEncodedSequence(unsigned char* encodedSequence);
+  TidysqEncodedSequenceProxy();
+  
+  TidysqEncodedSequenceProxy(unsigned char* encodedSequence);
+  
+  TidysqEncodedSequenceProxy(const TidysqEncodedSequenceProxy&);
+  
+  TidysqEncodedSequenceProxy(TidysqEncodedSequenceProxy&&) noexcept;
+  
+  TidysqEncodedSequenceProxy& operator=(const TidysqEncodedSequenceProxy&);
+  
+  TidysqEncodedSequenceProxy& operator=(TidysqEncodedSequenceProxy&&) noexcept;
   
   unsigned char operator[](int index) const;
   
@@ -16,11 +26,14 @@ public:
   
 private:
   unsigned char* encodedSequence;
+  
   std::size_t size_;
   
   std::size_t computeSize(unsigned char* encodedSequence);
+  
+  void setFields(const TidysqEncodedSequenceProxy& other) noexcept;
 };
 
-std::vector<TidysqEncodedSequence> getEncodedTidysqSequences(Rcpp::List& sq);
+std::vector<TidysqEncodedSequenceProxy> getEncodedTidysqSequences(Rcpp::List& sq);
 
 #endif

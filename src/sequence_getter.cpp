@@ -1,7 +1,8 @@
 #include "sequence_getter.h"
 
-SequenceGetter_t<TidysqEncodedSequence> getTidysqRowGetter(std::vector<TidysqEncodedSequence>& encodedSequences) {
-  return [&encodedSequences](int rowNum) -> TidysqEncodedSequence {
+SequenceGetter_t<TidysqEncodedSequenceProxy> getTidysqRowGetter(
+    std::vector<TidysqEncodedSequenceProxy>& encodedSequences) {
+  return [&encodedSequences](int rowNum) -> TidysqEncodedSequenceProxy {
     return encodedSequences[rowNum];
   };
 }
