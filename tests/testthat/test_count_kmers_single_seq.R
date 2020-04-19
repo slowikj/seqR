@@ -28,7 +28,7 @@ invoke_test_numeric <- function(...) {
 # STRING
 
 test_that("(string) count non positional 2-mers", {
-  invoke_test_string(expected_res = c("a.a"=1, "a.b"=2, "b.a"=2),
+  invoke_test_string(expected_res = c("a.a_0"=1, "a.b_0"=2, "b.a_0"=2),
                      alphabet=c("a", "b"),
                      sequence=c("a", "b", "a", "b", "a", "a"),
                      k=2,
@@ -36,7 +36,7 @@ test_that("(string) count non positional 2-mers", {
 })
 
 test_that("(string) count positional 2-mers", {
-  invoke_test_string(expected_res = c("1_a.b"=1, "2_b.a"=1, "3_a.b"=1, "4_b.a"=1, "5_a.a"=1),
+  invoke_test_string(expected_res = c("1_a.b_0"=1, "2_b.a_0"=1, "3_a.b_0"=1, "4_b.a_0"=1, "5_a.a_0"=1),
                      alphabet=c("a", "b"),
                      sequence=c("a", "b", "a", "b", "a", "a"),
                      k=2,
@@ -76,7 +76,7 @@ test_that("(string) count positional 1-mers if some sequence items are not allow
 })
 
 test_that("(string) count non positional 3-mers", {
-  invoke_test_string(expected_res=c("a.a.b"=2, "a.b.c"=2, "b.c.a"=2, "c.a.a"=1),
+  invoke_test_string(expected_res=c("a.a.b_0.0"=2, "a.b.c_0.0"=2, "b.c.a_0.0"=2, "c.a.a_0.0"=1),
                      alphabet=c("a", "b", "c"),
                      sequence=c("a", "a", "b", "c", "a", "a", "b", "c", "a"),
                      k=3,
@@ -84,7 +84,7 @@ test_that("(string) count non positional 3-mers", {
 })
 
 test_that("(string) count positional 3-mers", {
-  invoke_test_string(expected_res=c("1_a.a.a"=1, "2_a.a.b"=1, "3_a.b.a"=1, "4_b.a.a"=1, "5_a.a.a"=1),
+  invoke_test_string(expected_res=c("1_a.a.a_0.0"=1, "2_a.a.b_0.0"=1, "3_a.b.a_0.0"=1, "4_b.a.a_0.0"=1, "5_a.a.a_0.0"=1),
                      alphabet=c("a", "b"),
                      sequence=c("a", "a", "a", "b", "a", "a", "a"),
                      k=3,
@@ -100,7 +100,7 @@ test_that("(string) count non positional 1-mers", {
 })
 
 test_that("(string) count 2-mers: long (ab){1000} sequence", {
-  invoke_test_string(expected_res=c("a.b"=1000, "b.a"=999),
+  invoke_test_string(expected_res=c("a.b_0"=1000, "b.a_0"=999),
                      alphabet=c("a", "b"),
                      sequence=rep(c("a", "b"), 1000),
                      k=2,
@@ -109,7 +109,7 @@ test_that("(string) count 2-mers: long (ab){1000} sequence", {
 
 # INTEGER
 test_that("(integer) count non positional 2-mers with not allowed item", {
-  invoke_test_integer(expected_res=c("1.0"=2, "1.1"=3, "0.1"=2),
+  invoke_test_integer(expected_res=c("1.0_0"=2, "1.1_0"=3, "0.1_0"=2),
                       alphabet=c(0, 1),
                       sequence=c(1,0,1,1,0,1,1,2,1,1),
                       k=2,
@@ -118,7 +118,7 @@ test_that("(integer) count non positional 2-mers with not allowed item", {
 
 # NUMERIC
 test_that("(numeric) count non positional 2-mers with not allowed item", {
-  invoke_test_numeric(expected_res=c("0.000.1.000"=2, "1.000.1.000"=3, "1.000.0.000"=2),
+  invoke_test_numeric(expected_res=c("0.000.1.000_0"=2, "1.000.1.000_0"=3, "1.000.0.000_0"=2),
                      alphabet=c(0, 1),
                      sequence=as.numeric(c(1,0,1,1,0,1,1,2,1,1)),
                      k=2,

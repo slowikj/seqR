@@ -19,7 +19,7 @@ test_that("count non-positional 2-mers for 2 sequences", {
     byrow=TRUE,
     nrow=2
   )
-  colnames(expectedRes) <- c("a.a", "a.b", "b.a", "b.b")
+  colnames(expectedRes) <- c("a.a_0", "a.b_0", "b.a_0", "b.b_0")
   invoke_test_string(expectedRes=expectedRes,
                      alphabet=c("a", "b"),
                      sequenceMatrix=sequenceMatrix,

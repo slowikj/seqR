@@ -24,13 +24,17 @@ template <class input_vector_t, class input_elem_t>
 class KMerStringCreatorForSequence {
 public:
   KMerStringCreatorForSequence(input_vector_t&& sequence,
+                               const Rcpp::IntegerVector& gaps,
                                const Rcpp::IntegerVector& gapsAccumulated,
                                const std::string& itemSeparator,
+                               const std::string& sectionSeparator,
                                InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter):
     sequence(std::move(sequence)),
     gapsAccumulated(gapsAccumulated),
     itemSeparator(itemSeparator),
+    sectionSeparator(sectionSeparator),
     inputToStringItemConverter(inputToStringItemConverter) {
+      this->kmerInfoSuffix = prepareKMerInfoSuffix(gaps);
   }
   
   std::string get(int begin) const {
@@ -41,11 +45,12 @@ public:
     for(const int& accGap: this->gapsAccumulated) {
       res += itemSeparator + inputToStringItemConverter(sequence[begin + accGap]);
     }
-    return res;
+    return kmerInfoSuffix.size() > 0
+      ? res + sectionSeparator + kmerInfoSuffix
+      : res;
   }
   
-  std::string getPositional(int begin,
-                            std::string sectionSeparator) const {
+  std::string getPositional(int begin) const {
     std::string withoutPositionString = this->get(begin);
     return std::to_string(begin + 1) + sectionSeparator + withoutPositionString;
   }
@@ -53,7 +58,9 @@ public:
 private:
   input_vector_t sequence;
   std::string itemSeparator;
-  Rcpp::IntegerVector gapsAccumulated;
+  std::string sectionSeparator;
+  std::string kmerInfoSuffix;
+  const Rcpp::IntegerVector& gapsAccumulated;
   InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter;
   
   std::size_t getTotalSize(int begin, int separatorLength) const {
@@ -68,6 +75,21 @@ private:
           return r + toStrConverter(seq[begin + accGap]).size() + separatorLength;
         }
     );
+  }
+  
+  std::string prepareKMerInfoSuffix(const Rcpp::IntegerVector& gaps) const {
+    if(gaps.size() == 0) {
+      return "";
+    }
+    std::string res;
+    int approximateResSize = gaps.size() + (gaps.size() - 1) * itemSeparator.size(); 
+    res.reserve(approximateResSize);
+    res += std::to_string(gaps[0]);
+    for(int gaps_i = 1; gaps_i < gaps.size(); ++gaps_i) {
+      res += itemSeparator;
+      res += std::to_string(gaps[gaps_i]);
+    }
+    return res;
   }
   
 };
@@ -88,9 +110,10 @@ public:
     indexedKMers(indexedKMers),
     itemSeparator(itemSeparator),
     sectionSeparator(sectionSeparator),
-    outputKMerStrings(std::move(Rcpp::StringVector(indexedKMers.size()))) {
-    Rcpp::IntegerVector gapsAccumulated = std::move(getGapsAccumulated(gaps));
-    prepareKMerStringsCreators(sequencesNum, gapsAccumulated, inputToStringItemConverter, sequenceGetter, itemSeparator);
+    outputKMerStrings(std::move(Rcpp::StringVector(indexedKMers.size()))),
+    gapsAccumulated(getGapsAccumulated(gaps)) {
+    prepareKMerStringsCreators(
+      sequencesNum, gaps, gapsAccumulated, inputToStringItemConverter, sequenceGetter, itemSeparator, sectionSeparator);
     prepareCreateKMerFunc(isPositionalKMer);
   }
   
@@ -108,16 +131,20 @@ private:
   const std::string& sectionSeparator;
   std::vector<KMerStringCreatorForSequence<input_vector_t, input_elem_t>> kmerStringCreators;
   std::function<std::string(int, int)> createKMerFunc;
+  Rcpp::IntegerVector gapsAccumulated;
   
   void prepareKMerStringsCreators(int sequencesNum,
+                                  const Rcpp::IntegerVector& gaps,
                                   const Rcpp::IntegerVector& gapsAccumulated,
                                   InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter,
                                   SequenceGetter_t<input_vector_t> sequenceGetter,
-                                  std::string itemSeparator) {
+                                  std::string itemSeparator,
+                                  std::string sectionSeparator) {
     this->kmerStringCreators.reserve(sequencesNum);
     for(int i = 0; i < sequencesNum; ++i) {
       auto seq = std::move(sequenceGetter(i));
-      this->kmerStringCreators.emplace_back(std::move(seq), gapsAccumulated, itemSeparator, inputToStringItemConverter);
+      this->kmerStringCreators.emplace_back(
+          std::move(seq), gaps, gapsAccumulated, itemSeparator, sectionSeparator, inputToStringItemConverter);
     }
   }
   
@@ -125,7 +152,7 @@ private:
     this->createKMerFunc = isPositionalKMer ?
       static_cast<std::function<std::string(int, int)>>(
           [this](int seqNum, int pos) {
-            return kmerStringCreators[seqNum].getPositional(pos, sectionSeparator);
+            return kmerStringCreators[seqNum].getPositional(pos);
       }) :
       static_cast<std::function<std::string(int, int)>>(
           [this](int seqNum, int pos) {

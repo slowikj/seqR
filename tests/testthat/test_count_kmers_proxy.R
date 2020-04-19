@@ -82,7 +82,7 @@ test_that("test tidysq for gapped k-mers", {
   expected_res <- matrix(c(
     2, 0,
     2, 1), byrow=TRUE, nrow=2)
-  colnames(expected_res) <- c("A.A", "A.C")
+  colnames(expected_res) <- c("A.A_1", "A.C_1")
   
   res <- seqR::count_kmers(sequences=sq,
                            k=2,

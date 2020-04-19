@@ -13,7 +13,7 @@ test_that("count 3-mers for tidysq sequences A+", {
     0,
     5
   ), nrow=3)
-  colnames(expected_res) <- c("A.A.A")
+  colnames(expected_res) <- c("A.A.A_0.0")
   invoke_test(expected_res=expected_res,
               alphabet=c("A"),
               sq=sq,
@@ -28,7 +28,7 @@ test_that("count 3-mers for tidysq sequences A+ longer", {
     998,
     98
   ), nrow=3)
-  colnames(expected_res) <- c("A.A.A")
+  colnames(expected_res) <- c("A.A.A_0.0")
   invoke_test(expected_res=expected_res,
               alphabet=c("A"),
               sq=sq,
