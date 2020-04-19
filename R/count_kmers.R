@@ -5,7 +5,7 @@ count_kmers <- function(sequences,
                         k,
                         alphabet,
                         positional = FALSE,
-                        kmer_gaps = 0) {
+                        kmer_gaps = c()) {
   if (is_empty(alphabet)) {
     stop("alphabet param is empty")
   }
@@ -20,7 +20,7 @@ count_kmers <- function(sequences,
   
   alphabet <- unique(alphabet)
   
-  if(length(kmer_gaps) == 1 && kmer_gaps == 0) {
+  if(length(kmer_gaps) == 0) {
     invoke_contiguous_kmer_function(
       sequences=sequences, alphabet=alphabet, k=k, positionalKMers=positional)
   } else {
