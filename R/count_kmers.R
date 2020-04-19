@@ -20,7 +20,7 @@ count_kmers <- function(sequences,
   
   alphabet <- unique(alphabet)
   
-  if(kmer_gaps == 0) {
+  if(length(kmer_gaps) == 1 && kmer_gaps == 0) {
     invoke_contiguous_kmer_function(
       sequences=sequences, alphabet=alphabet, k=k, positionalKMers=positional)
   } else {
