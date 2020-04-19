@@ -166,7 +166,7 @@ Rcpp::IntegerMatrix count_gapped_kmers_tidysq(Rcpp::List& sq,
   auto encodedSequences = getEncodedTidysqSequences(sq);
   
   return std::move(
-    count_gapped_kmers<Rcpp::RawVector,
+    count_gapped_kmers<Rcpp::Fast<Rcpp::RawVector>,
                        unsigned char,
                        unsigned char,
                        std::hash<unsigned char>>(alphabetEncoding,
