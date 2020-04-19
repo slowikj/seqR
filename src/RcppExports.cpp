@@ -50,114 +50,114 @@ BEGIN_RCPP
 END_RCPP
 }
 // count_gapped_kmers_string
-Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringVector& alphabet, Rcpp::StringMatrix& sequenceMatrix, Rcpp::IntegerVector& gaps, bool positionalKMers);
-RcppExport SEXP _seqR_count_gapped_kmers_string(SEXP alphabetSEXP, SEXP sequenceMatrixSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP) {
+Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringMatrix& sequenceMatrix, Rcpp::StringVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers);
+RcppExport SEXP _seqR_count_gapped_kmers_string(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers_string(alphabet, sequenceMatrix, gaps, positionalKMers));
+    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers_string(sequenceMatrix, alphabet, gaps, positionalKMers));
     return rcpp_result_gen;
 END_RCPP
 }
 // count_gapped_kmers_integer
-Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerVector& alphabet, Rcpp::IntegerMatrix& sequenceMatrix, Rcpp::IntegerVector& gaps, bool positionalKMers);
-RcppExport SEXP _seqR_count_gapped_kmers_integer(SEXP alphabetSEXP, SEXP sequenceMatrixSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP) {
+Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix, Rcpp::IntegerVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers);
+RcppExport SEXP _seqR_count_gapped_kmers_integer(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers_integer(alphabet, sequenceMatrix, gaps, positionalKMers));
+    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers_integer(sequenceMatrix, alphabet, gaps, positionalKMers));
     return rcpp_result_gen;
 END_RCPP
 }
 // count_gapped_kmers_numeric
-Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericVector& alphabet, Rcpp::NumericMatrix& sequenceMatrix, Rcpp::IntegerVector& gaps, bool positionalKMers);
-RcppExport SEXP _seqR_count_gapped_kmers_numeric(SEXP alphabetSEXP, SEXP sequenceMatrixSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP) {
+Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix, Rcpp::NumericVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers);
+RcppExport SEXP _seqR_count_gapped_kmers_numeric(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers_numeric(alphabet, sequenceMatrix, gaps, positionalKMers));
+    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers_numeric(sequenceMatrix, alphabet, gaps, positionalKMers));
     return rcpp_result_gen;
 END_RCPP
 }
 // count_gapped_kmers_tidysq
-Rcpp::IntegerMatrix count_gapped_kmers_tidysq(Rcpp::StringVector& alphabet, Rcpp::List& sq, Rcpp::IntegerVector& gaps, bool positionalKMers);
-RcppExport SEXP _seqR_count_gapped_kmers_tidysq(SEXP alphabetSEXP, SEXP sqSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP) {
+Rcpp::IntegerMatrix count_gapped_kmers_tidysq(Rcpp::List& sq, Rcpp::StringVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers);
+RcppExport SEXP _seqR_count_gapped_kmers_tidysq(SEXP sqSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::List& >::type sq(sqSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers_tidysq(alphabet, sq, gaps, positionalKMers));
+    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers_tidysq(sq, alphabet, gaps, positionalKMers));
     return rcpp_result_gen;
 END_RCPP
 }
 // count_kmers_string
-Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringVector& alphabet, Rcpp::StringMatrix& sequenceMatrix, int k, bool positionalKMers);
-RcppExport SEXP _seqR_count_kmers_string(SEXP alphabetSEXP, SEXP sequenceMatrixSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
+Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringMatrix& sequenceMatrix, Rcpp::StringVector& alphabet, int k, bool positionalKMers);
+RcppExport SEXP _seqR_count_kmers_string(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_kmers_string(alphabet, sequenceMatrix, k, positionalKMers));
+    rcpp_result_gen = Rcpp::wrap(count_kmers_string(sequenceMatrix, alphabet, k, positionalKMers));
     return rcpp_result_gen;
 END_RCPP
 }
 // count_kmers_integer
-Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerVector& alphabet, Rcpp::IntegerMatrix& sequenceMatrix, int k, bool positionalKMers);
-RcppExport SEXP _seqR_count_kmers_integer(SEXP alphabetSEXP, SEXP sequenceMatrixSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
+Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix, Rcpp::IntegerVector& alphabet, int k, bool positionalKMers);
+RcppExport SEXP _seqR_count_kmers_integer(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_kmers_integer(alphabet, sequenceMatrix, k, positionalKMers));
+    rcpp_result_gen = Rcpp::wrap(count_kmers_integer(sequenceMatrix, alphabet, k, positionalKMers));
     return rcpp_result_gen;
 END_RCPP
 }
 // count_kmers_numeric
-Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericVector& alphabet, Rcpp::NumericMatrix& sequenceMatrix, int k, bool positionalKMers);
-RcppExport SEXP _seqR_count_kmers_numeric(SEXP alphabetSEXP, SEXP sequenceMatrixSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
+Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix, Rcpp::NumericVector& alphabet, int k, bool positionalKMers);
+RcppExport SEXP _seqR_count_kmers_numeric(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_kmers_numeric(alphabet, sequenceMatrix, k, positionalKMers));
+    rcpp_result_gen = Rcpp::wrap(count_kmers_numeric(sequenceMatrix, alphabet, k, positionalKMers));
     return rcpp_result_gen;
 END_RCPP
 }
 // count_kmers_tidysq
-Rcpp::IntegerMatrix count_kmers_tidysq(Rcpp::StringVector& alphabet, Rcpp::List& sq, int k, bool positionalKMers);
-RcppExport SEXP _seqR_count_kmers_tidysq(SEXP alphabetSEXP, SEXP sqSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
+Rcpp::IntegerMatrix count_kmers_tidysq(Rcpp::List& sq, Rcpp::StringVector& alphabet, int k, bool positionalKMers);
+RcppExport SEXP _seqR_count_kmers_tidysq(SEXP sqSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::List& >::type sq(sqSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_kmers_tidysq(alphabet, sq, k, positionalKMers));
+    rcpp_result_gen = Rcpp::wrap(count_kmers_tidysq(sq, alphabet, k, positionalKMers));
     return rcpp_result_gen;
 END_RCPP
 }

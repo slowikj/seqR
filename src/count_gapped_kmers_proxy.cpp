@@ -93,8 +93,8 @@ Rcpp::IntegerMatrix count_gapped_kmers(alphabet_t& alphabet,
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringVector& alphabet,
-                                              Rcpp::StringMatrix& sequenceMatrix,
+Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringMatrix& sequenceMatrix,
+                                              Rcpp::StringVector& alphabet,
                                               Rcpp::IntegerVector& gaps,
                                               bool positionalKMers) {
   return std::move(
@@ -113,8 +113,8 @@ Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringVector& alphabet,
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerVector& alphabet,
-                                               Rcpp::IntegerMatrix& sequenceMatrix,
+Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix,
+                                               Rcpp::IntegerVector& alphabet,
                                                Rcpp::IntegerVector& gaps,
                                                bool positionalKMers) {
   return std::move(
@@ -133,8 +133,8 @@ Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerVector& alphabet,
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericVector& alphabet,
-                                               Rcpp::NumericMatrix& sequenceMatrix,
+Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix,
+                                               Rcpp::NumericVector& alphabet,
                                                Rcpp::IntegerVector& gaps,
                                                bool positionalKMers) {
   return std::move(
@@ -154,8 +154,8 @@ Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericVector& alphabet,
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_gapped_kmers_tidysq(Rcpp::StringVector& alphabet,
-                                              Rcpp::List& sq,
+Rcpp::IntegerMatrix count_gapped_kmers_tidysq(Rcpp::List& sq,
+                                              Rcpp::StringVector& alphabet,
                                               Rcpp::IntegerVector& gaps,
                                               bool positionalKMers) {
   Rcpp::StringVector elementsEncoding = sq.attr("alphabet");

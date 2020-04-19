@@ -22,43 +22,43 @@ get_contiguous_intervals_matrix <- function(gaps) {
 }
 
 #' @export
-count_gapped_kmers_string <- function(alphabet, sequenceMatrix, gaps, positionalKMers) {
-    .Call('_seqR_count_gapped_kmers_string', PACKAGE = 'seqR', alphabet, sequenceMatrix, gaps, positionalKMers)
+count_gapped_kmers_string <- function(sequenceMatrix, alphabet, gaps, positionalKMers) {
+    .Call('_seqR_count_gapped_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers)
 }
 
 #' @export
-count_gapped_kmers_integer <- function(alphabet, sequenceMatrix, gaps, positionalKMers) {
-    .Call('_seqR_count_gapped_kmers_integer', PACKAGE = 'seqR', alphabet, sequenceMatrix, gaps, positionalKMers)
+count_gapped_kmers_integer <- function(sequenceMatrix, alphabet, gaps, positionalKMers) {
+    .Call('_seqR_count_gapped_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers)
 }
 
 #' @export
-count_gapped_kmers_numeric <- function(alphabet, sequenceMatrix, gaps, positionalKMers) {
-    .Call('_seqR_count_gapped_kmers_numeric', PACKAGE = 'seqR', alphabet, sequenceMatrix, gaps, positionalKMers)
+count_gapped_kmers_numeric <- function(sequenceMatrix, alphabet, gaps, positionalKMers) {
+    .Call('_seqR_count_gapped_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers)
 }
 
 #' @export
-count_gapped_kmers_tidysq <- function(alphabet, sq, gaps, positionalKMers) {
-    .Call('_seqR_count_gapped_kmers_tidysq', PACKAGE = 'seqR', alphabet, sq, gaps, positionalKMers)
+count_gapped_kmers_tidysq <- function(sq, alphabet, gaps, positionalKMers) {
+    .Call('_seqR_count_gapped_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, gaps, positionalKMers)
 }
 
 #' @export
-count_kmers_string <- function(alphabet, sequenceMatrix, k, positionalKMers) {
-    .Call('_seqR_count_kmers_string', PACKAGE = 'seqR', alphabet, sequenceMatrix, k, positionalKMers)
+count_kmers_string <- function(sequenceMatrix, alphabet, k, positionalKMers) {
+    .Call('_seqR_count_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers)
 }
 
 #' @export
-count_kmers_integer <- function(alphabet, sequenceMatrix, k, positionalKMers) {
-    .Call('_seqR_count_kmers_integer', PACKAGE = 'seqR', alphabet, sequenceMatrix, k, positionalKMers)
+count_kmers_integer <- function(sequenceMatrix, alphabet, k, positionalKMers) {
+    .Call('_seqR_count_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers)
 }
 
 #' @export
-count_kmers_numeric <- function(alphabet, sequenceMatrix, k, positionalKMers) {
-    .Call('_seqR_count_kmers_numeric', PACKAGE = 'seqR', alphabet, sequenceMatrix, k, positionalKMers)
+count_kmers_numeric <- function(sequenceMatrix, alphabet, k, positionalKMers) {
+    .Call('_seqR_count_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers)
 }
 
 #' @export
-count_kmers_tidysq <- function(alphabet, sq, k, positionalKMers) {
-    .Call('_seqR_count_kmers_tidysq', PACKAGE = 'seqR', alphabet, sq, k, positionalKMers)
+count_kmers_tidysq <- function(sq, alphabet, k, positionalKMers) {
+    .Call('_seqR_count_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, k, positionalKMers)
 }
 
 #' @export

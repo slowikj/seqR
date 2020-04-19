@@ -30,3 +30,10 @@ Suggests:
     ggplot2
 VignetteBuilder: knitr
 Language: en-US
+Collate: 
+    'RcppExports.R'
+    'validators.R'
+    'kmer_typed_functions.R'
+    'kmer_functions_provider.R'
+    'count_kmers.R'
+    'package.R'

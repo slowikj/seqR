@@ -1,7 +1,7 @@
 library(testthat)
 
-is_integer_vector <- function(v) {
-  all(v == as.integer(v))
+is_integer_vector <- function(v, tol=1e-9) {
+  all(abs(v - as.integer(v)) < tol)
 }
 
 validate_encoding <- function(encoding_fun, input) {
