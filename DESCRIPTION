@@ -1,19 +1,20 @@
 Package: seqR
 Type: Package
-Title: kmer counting package
-Version: 1.1
-Date: 2019-11-03
+Title: k-mer counting package
+Version: 2.0
+Date: 2020-04-19
 Authors@R: c(
+    person(given = "Jadwiga",
+           family = "Słowik",
+           role = c("aut")),
     person(given = "Piotr",
            family = "Olesiejuk",
            role = c("aut", "cre"),
-           email = "piotrek.olesiejuk@gmail.com"),
-    person(given = "Jadwiga", family = "Słowik", role = c("aut"))
+           email = "piotrek.olesiejuk@gmail.com")
     )
-Maintainer: Piotr Olesiejuk <piotrek.olesiejuk@gmail.com>
-Description: kmer is a package providing fast counting of k-mers in sequences. It allows user to specify
-  lengths of the k-mers and gaps between amino acids in the sequence. It's written with Rcpp to provide fast code
-  execution.
+Maintainer: Jadwiga Słowik <slowikj@student.mini.pw.edu.pl>
+Description: seqR is a package providing fast counting of k-mers in sequences. It allows user to specify
+  lengths of the k-mers and gaps between elements in the sequence.
 License: MIT + file LICENSE
 Imports: Rcpp (>= 1.0.4), RcppParallel
 Depends: R(>= 3.6)
