@@ -1,4 +1,4 @@
-// [[Rcpp::plugins("c++17")]]
+// [[Rcpp::plugins("cpp17")]]
 #include "utils.h"
 #include <queue>
 

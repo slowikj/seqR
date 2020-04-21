@@ -1,3 +1,4 @@
+// [[Rcpp::plugins("cpp17")]]
 #include <Rcpp.h>
 #include <memory>
 #include <functional>
