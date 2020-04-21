@@ -25,7 +25,7 @@ invoke_test_numeric <- function(...) {
   invoke_test(seqR::count_kmers_numeric, ...)
 }
 
-# STRING
+# STRING MATRIX TESTS ----
 
 test_that("(string) count non positional 2-mers", {
   invoke_test_string(expected_res = c("a.a_0"=1, "a.b_0"=2, "b.a_0"=2),
@@ -107,7 +107,8 @@ test_that("(string) count 2-mers: long (ab){1000} sequence", {
                      positionalKMers=FALSE)
 })
 
-# INTEGER
+# INTEGER MATRIX TESTS ----
+
 test_that("(integer) count non positional 2-mers with not allowed item", {
   invoke_test_integer(expected_res=c("1.0_0"=2, "1.1_0"=3, "0.1_0"=2),
                       alphabet=c(0, 1),
@@ -116,7 +117,8 @@ test_that("(integer) count non positional 2-mers with not allowed item", {
                       positionalKMers=FALSE)
 })
 
-# NUMERIC
+# NUMERIC MATRIX TESTS ----
+
 test_that("(numeric) count non positional 2-mers with not allowed item", {
   invoke_test_numeric(expected_res=c("0.000.1.000_0"=2, "1.000.1.000_0"=3, "1.000.0.000_0"=2),
                      alphabet=c(0, 1),

@@ -22,7 +22,7 @@ invoke_test_tidysq <- function(...) {
   invoke_test(seqR::count_gapped_kmers_tidysq, ...)
 }
 
-# STRING
+# STRING MATRIX TESTS ----
 
 test_that("(string)test one sequence with gaps (1) not positional", {
   m <- matrix(c("a", "a", "a", "b", "a", "b", "a" ),
@@ -75,7 +75,7 @@ test_that("(string)test 2 sequences with gaps (1,1) positional; some items are n
                       positionalKMers=TRUE)
 })
 
-# INTEGER
+# INTEGER MATRIX TESTS ----
 
 test_that("(integer) test 2 sequences with gaps (1,1) non positional; some items are not from alphabet", {
   seqMatrix <- matrix(c(
@@ -94,7 +94,7 @@ test_that("(integer) test 2 sequences with gaps (1,1) non positional; some items
                       positionalKMers=FALSE)
 })
 
-# NUMERIC
+# NUMERIC MATRIX TESTS ----
 
 test_that("(numeric) test 2 sequences with gaps (1,1) non positional; some items are not from alphabet", {
   seqMatrix <- matrix(as.numeric(c(
@@ -113,7 +113,7 @@ test_that("(numeric) test 2 sequences with gaps (1,1) non positional; some items
                       positionalKMers=FALSE)
 })
 
-# TIDYSQ
+# TIDYSQ TESTS ----
 
 test_that("(tidysq) count non positional k-mers (0, 1)", {
   sq <- tidysq::construct_sq(c("AAAAAC", "AAA", "AAAC"), type="ami")
