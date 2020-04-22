@@ -1,4 +1,3 @@
-// [[Rcpp::plugins("cpp17")]]
 #include "input_to_string_item_converter.h"
 #include <utility>
 #include <iomanip>

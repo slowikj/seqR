@@ -14,4 +14,4 @@ void clear(std::queue<T>& q) {
 
 Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector& gaps);
 
-#endif
+#endif //UTILS_H

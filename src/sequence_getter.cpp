@@ -1,4 +1,3 @@
-// [[Rcpp::plugins("cpp17")]]
 #include "sequence_getter.h"
 
 SequenceGetter_t<Rcpp::Fast<Rcpp::RawVector>> getTidysqRowGetter(std::vector<Rcpp::RawVector>& encodedSequences) {

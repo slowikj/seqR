@@ -1,4 +1,3 @@
-// [[Rcpp::plugins("cpp17")]]
 #include "gapped_kmer_counter.h"
 #include <Rcpp.h>
 

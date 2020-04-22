@@ -1,6 +1,7 @@
 #ifndef KMER_COUNTING_COMMON_H
 #define KMER_COUNTING_COMMON_H
 
+// [[Rcpp::plugins("c++17")]]
 #include<Rcpp.h>
 // [[Rcpp::depends(RcppParallel)]]
 //' @importFrom  RcppParallel RcppParallelLibs

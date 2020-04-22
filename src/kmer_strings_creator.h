@@ -3,6 +3,7 @@
 
 #include<string>
 #include<memory>
+// [[Rcpp::plugins("c++17")]]
 #include<Rcpp.h>
 // [[Rcpp::depends(RcppParallel)]]
 //' @importFrom  RcppParallel RcppParallelLibs
