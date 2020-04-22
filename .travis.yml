@@ -3,7 +3,9 @@
 language: R
 compiler: gcc
 cache: packages
-sudo: require 
+sudo: require
+
+dist: bionic
 
 addons:
   apt:
