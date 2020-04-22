@@ -4,7 +4,7 @@
 #include <queue>
 #include <Rcpp.h>
 
-int compute_power_fast(unsigned int base, unsigned int power, unsigned int modulo);
+int computePowerFast(unsigned int base, unsigned int power, unsigned int modulo);
 
 template<class T>
 void clear(std::queue<T>& q) {

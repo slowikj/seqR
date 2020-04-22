@@ -23,8 +23,8 @@ struct PolynomialSingleHasherConfig {
 class PolynomialSingleHasher : public SingleHasher {
 public:
   PolynomialSingleHasher(PolynomialSingleHasherConfig&& config) :
-    config(std::move(config)) {
-    this->P_M_2 = compute_power_fast(config.P, config.M - 2, config.M);
+    config(config) {
+    this->P_M_2 = computePowerFast(config.P, config.M - 2, config.M);
     this->initPowersP();
   }
   

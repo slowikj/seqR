@@ -2,7 +2,7 @@
 #include "utils.h"
 #include <queue>
 
-int compute_power_fast(unsigned int base, unsigned int power, unsigned int modulo) {
+int computePowerFast(unsigned int base, unsigned int power, unsigned int modulo) {
   long long res = 1;
   long long current_base_power = base;
   while (power > 0) {
