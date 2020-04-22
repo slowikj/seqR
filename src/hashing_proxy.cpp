@@ -1,4 +1,4 @@
-// [[Rcpp::plugins("cpp17")]]
+// [[Rcpp::plugins("c++17")]]
 #include<Rcpp.h>
 #include<vector>
 #include "hash/polynomial_single_hasher.h"
