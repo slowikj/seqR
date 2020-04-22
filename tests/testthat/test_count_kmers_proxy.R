@@ -77,6 +77,29 @@ test_that("sequences of unsupported type generate an error", {
                "sequences param has unsupported type")
 })
 
+test_that("k = 0 generate an error", {
+  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAAA"),
+                                 alphabet=c("A"),
+                                 k=0),
+               "k should be a positive integer")
+})
+
+test_that("non integer gaps vector generates an error", {
+  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAAA"),
+                                 alphabet=c("A"),
+                                 k=1,
+                                 kmer_gaps=c("A")),
+               "gaps should be an integer vector")
+})
+
+test_that("kmer gaps length larger than k-1 generates an error", {
+  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAA"),
+                                 alphabet=c("A"),
+                                 k=1,
+                                 kmer_gaps=c(1,2)),
+               "the length of kmer_gaps vector should be at most k-1")
+})
+
 test_that("test tidysq for gapped k-mers", {
   sq <- tidysq::as.sq(c("AAAA", "AAACA"))
   expected_res <- matrix(c(
