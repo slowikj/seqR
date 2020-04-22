@@ -1,6 +1,7 @@
 #ifndef ALPHABET_ENCODER_H
 #define ALPHABET_ENCODER_H
 
+// [[Rcpp::plugins("c++17")]]
 #include <Rcpp.h>
 #include <functional>
 #include <memory>
