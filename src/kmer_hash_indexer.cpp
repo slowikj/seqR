@@ -1,3 +1,4 @@
+// [[Rcpp::plugins("cpp17")]]
 #include "kmer_hash_indexer.h"
 
 std::tuple<Dictionary<std::vector<int>, int, vector_int_hasher>,
