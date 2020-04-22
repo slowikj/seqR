@@ -17,7 +17,7 @@ validate_numeric <- function(alphabet) {
 }
 
 is_empty <- function(elem) {
-  is.na(elem) || is.null(elem)
+  (length(elem) == 1 && is.na(elem)) || is.null(elem)
 }
 
 has_integers_only <- function(v, tol=1e-9) {

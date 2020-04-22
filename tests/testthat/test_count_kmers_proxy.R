@@ -20,7 +20,6 @@ test_that("alphabet has incompatible element (integer) type with sequences' elem
                "alphabet should contain strings")
 })
 
-
 test_that("alphabet has incompatible element (string) type with sequences' elements (integer)", {
   expect_error(seqR::count_kmers(sequences=c(1,2),
                                  alphabet=c("a", "b"),
