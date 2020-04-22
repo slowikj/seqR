@@ -21,8 +21,8 @@ r_github_packages: michbur/tidysq
 
 before_install:
   - sudo mkdir -p ~/.R
-  - sudo echo "CXX17FLAGS=-O3 -mtune=native -march=native -Wno-unused-variable -Wno-unused-function  -Wno-macro-redefined" >> ~/.R/Makevars
-  - sudo echo "CXX17=g++-7 -std=c++17 -fPIC" >> ~/.R/Makevars
+  - echo "CXX17FLAGS=-O3 -mtune=native -march=native -Wno-unused-variable -Wno-unused-function  -Wno-macro-redefined" >> ~/.R/Makevars
+  - echo "CXX17=g++-7 -std=c++17 -fPIC" >> ~/.R/Makevars
       
 script:
   # Link gcc-7 and g++-7 to their standard commands

@@ -115,6 +115,30 @@ test_that("(string) count non positional 2-mers which contains only 'a' characte
                      positionalKMers=FALSE)
 })
 
+test_that("(string) count positional 2-mers which contains only 'a' character", {
+  invoke_test_string(expected_res=c("4_a.a_0"=1, "7_a.a_0"=1, "8_a.a_0"=1, "9_a.a_0"=1),
+                     alphabet=c("a"),
+                     sequence=c("a", "b", "c", "a", "a", "b", "a", "a", "a", "a", "b"),
+                     k=2,
+                     positionalKMers=TRUE)
+})
+
+test_that("(string) count non positional 2-mers which contains only 'a' or 'b' characters", {
+  invoke_test_string(expected_res=c("a.a_0"=1, "a.b_0"=2, "b.a_0"=1),
+                     alphabet=c("a", "b"),
+                     sequence=c("x", "x", "a", "x", "b", "x", "x", "a", "a", "b", "a", "aa", "a", "b", "x", "a"),
+                     k=2,
+                     positionalKMers=FALSE)
+})
+
+test_that("(string) count non positional 2-mers which contains only 'a', 'b', 'x' characters", {
+  invoke_test_string(expected_res=c("a.a_0"=1, "a.b_0"=2, "b.a_0"=1, "x.x_0"=2, "x.a_0"=3, "a.x_0"=1, "b.x_0"=2, "x.b_0"=1),
+                     alphabet=c("a", "b", "x"),
+                     sequence=c("x", "x", "a", "x", "b", "x", "x", "a", "a", "b", "a", "aa", "a", "b", "x", "a"),
+                     k=2,
+                     positionalKMers=FALSE)
+})
+
 # INTEGER MATRIX TESTS ----
 
 test_that("(integer) count non positional 2-mers with not allowed item", {
