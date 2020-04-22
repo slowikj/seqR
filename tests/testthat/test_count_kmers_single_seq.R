@@ -107,6 +107,14 @@ test_that("(string) count 2-mers: long (ab){1000} sequence", {
                      positionalKMers=FALSE)
 })
 
+test_that("(string) count non positional 2-mers which contains only 'a' character", {
+  invoke_test_string(expected_res=c("a.a_0"=4),
+                     alphabet=c("a"),
+                     sequence=c("a", "b", "c", "a", "a", "b", "a", "a", "a", "a", "b"),
+                     k=2,
+                     positionalKMers=FALSE)
+})
+
 # INTEGER MATRIX TESTS ----
 
 test_that("(integer) count non positional 2-mers with not allowed item", {

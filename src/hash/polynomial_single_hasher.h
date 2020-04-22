@@ -25,8 +25,7 @@ public:
   PolynomialSingleHasher(PolynomialSingleHasherConfig&& config) :
     config(std::move(config)) {
     this->P_M_2 = compute_power_fast(config.P, config.M - 2, config.M);
-    this->nextPowerP = 1;
-    this->currentPowerP = 0;
+    this->initPowersP();
   }
   
   void append(const int &elem) override {
@@ -38,22 +37,23 @@ public:
   void removeFirst(const int &elem) override {
     this->currentHash = static_cast<int>(
       (this->currentHash -
-        (static_cast<long long>(elem) * this->computePreviousPowerP(this->nextPowerP)) + config.M) % config.M
+        (static_cast<long long>(elem) * this->currentPowerP) + config.M) % config.M
     );
-    this->nextPowerP = this->computePreviousPowerP(nextPowerP);
-    this->currentPowerP = this->computePreviousPowerP(nextPowerP);
+    this->nextPowerP = this->computePreviousPowerP(this->nextPowerP);
+    this->currentPowerP = this->computePreviousPowerP(this->currentPowerP);
   }
   
-  [[nodiscard]] int getHash() const override {
+  int getHash() const override {
     return SingleHasher::getHash();
   }
   
-  [[nodiscard]] int getHash(int position) const override {
+  int getHash(int position) const override {
     return this->computeHash(currentHash, position);
   }
   
   void clear() override {
     SingleHasher::clear();
+    this->initPowersP();
   }
   
   int getP() const {
@@ -87,10 +87,18 @@ private:
   }
   
   int computePreviousPowerP(int currentPowerP) const {
+    if(currentPowerP == 1) {
+      return 0;
+    }
     return static_cast<int>(
       (static_cast<long long>(currentPowerP) * this->P_M_2) % config.M
     );
   }
+  
+  void initPowersP() {
+    this->nextPowerP = 1;
+    this->currentPowerP = 0;
+  }
 };
 
-#endif //SECOND_POLYNOMIAL_SINGLE_HASHER_H
+#endif
