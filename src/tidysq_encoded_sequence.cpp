@@ -1,4 +1,4 @@
-// [[Rcpp::plugins("c++17")]]
+// [[Rcpp::plugins("cpp17")]]
 #include "tidysq_encoded_sequence.h"
 // [[Rcpp::depends(tidysq)]]
 #include <tidysq.h>

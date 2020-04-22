@@ -1,4 +1,4 @@
-// [[Rcpp::plugins("c++17")]]
+// [[Rcpp::plugins("cpp17")]]
 #include <Rcpp.h>
 #include "alphabet_encoder.h"
 #include "app_conf.h"
