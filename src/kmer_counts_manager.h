@@ -16,6 +16,10 @@ struct KMerHashInfo {
     cnt(0), seqStartPosition(seqStartPosition) {
   }
   
+  KMerHashInfo(int seqStartPosition, int cnt):
+    seqStartPosition(seqStartPosition), cnt(cnt) {
+  }
+  
   KMerHashInfo() = default;
 
   KMerHashInfo& operator=(const KMerHashInfo&) = default;
@@ -38,9 +42,10 @@ public:
   
   void add(std::vector<int>&& hash, int position) {
     if(!this->dictionary.isPresent(hash)) {
-      this->dictionary[hash] = KMerHashInfo(position);
+      this->dictionary[std::move(hash)] = KMerHashInfo(position, 1);
+    } else {
+      this->dictionary[hash].cnt++;
     }
-    this->dictionary[std::move(hash)].cnt++; 
   }
   
   const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher>& getDictionary() const {
