@@ -129,3 +129,18 @@ test_that("(tidysq) count non positional k-mers (0, 1)", {
                       positionalKMers = FALSE)
 })
 
+test_that("(tidysq) count non positional k-mers (0, 1); some items are not allowed", {
+  sq <- tidysq::construct_sq(c("AAAACAAAAC", "AACTAAAA", "AACTAAAAC"), type="nuc")
+  expected_res <- matrix(c(
+    3, 0, 0,
+    1, 1, 1,
+    1, 1, 1
+  ), nrow = 3, byrow=TRUE)
+  colnames(expected_res) <- c("A.A.A_0.1", "A.A.T_0.1", "T.A.A_0.1")
+  invoke_test_tidysq(expected_res = expected_res,
+                     alphabet=c("A", "T"),
+                     sq = sq,
+                     gaps = c(0, 1),
+                     positionalKMers = FALSE)
+})
+
