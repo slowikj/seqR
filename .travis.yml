@@ -22,6 +22,7 @@ r_github_packages: michbur/tidysq
 before_install:
   - mkdir -p ~/.R
   - echo "CXX17=g++-7 -std=c++17 -fPIC" >> ~/.R/Makevars
+  - echo "USE_CXX17 = yes" >> ~/.R/build.Renviron
       
 script:
   # Link gcc-7 and g++-7 to their standard commands
