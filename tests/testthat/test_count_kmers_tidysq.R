@@ -35,3 +35,20 @@ test_that("count 3-mers for tidysq sequences A+ longer", {
               k=3,
               positionalKMers=FALSE)
 })
+
+test_that("count non positional 10-mers for tidysq sequences A+ longer", {
+  sq <- tidysq::construct_sq(c(strrep("A", 1000000), strrep("A", 100)))
+  expected_res <- matrix(c(
+    999991,
+    91
+  ), nrow=2)
+  colnames(expected_res) <- paste0(
+    paste0(rep("A", 10), collapse="."),
+    "_",
+    paste0(rep("0", 9), collapse="."), collapse="")
+  invoke_test(expected_res=expected_res,
+              alphabet=c("A"),
+              sq=sq,
+              k=10,
+              positionalKMers=FALSE)
+})
