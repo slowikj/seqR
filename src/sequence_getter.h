@@ -67,24 +67,28 @@ inline double convert(const double& source) {
     return source;
 }
 
-template<class matrix_t, class cell_t>
+template<class cell_t>
 class SafeMatrixSequenceWrapper : public SafeSequencesWrapper<cell_t> {
 public:
+
+    template <class matrix_t>
     explicit SafeMatrixSequenceWrapper(const matrix_t &matrix) {
         initSequences(matrix);
     }
 
-    SafeMatrixSequenceWrapper(SafeMatrixSequenceWrapper<matrix_t, cell_t> &&) = default;
+    SafeMatrixSequenceWrapper(SafeMatrixSequenceWrapper<cell_t> &&) = default;
 
-    SafeMatrixSequenceWrapper(const SafeMatrixSequenceWrapper<matrix_t, cell_t> &) = delete;
+    SafeMatrixSequenceWrapper(const SafeMatrixSequenceWrapper<cell_t> &) = delete;
 
-    SafeMatrixSequenceWrapper &operator=(SafeMatrixSequenceWrapper<matrix_t, cell_t> &&) = delete;
+    SafeMatrixSequenceWrapper &operator=(SafeMatrixSequenceWrapper<cell_t> &&) = delete;
 
-    SafeMatrixSequenceWrapper &operator=(const SafeMatrixSequenceWrapper<matrix_t, cell_t> &) = delete;
+    SafeMatrixSequenceWrapper &operator=(const SafeMatrixSequenceWrapper<cell_t> &) = delete;
 
     SafeMatrixSequenceWrapper() = delete;
 
 private:
+
+    template <class matrix_t>
     inline void initSequences(const matrix_t &matrix) {
         this->sequences_.resize(matrix.nrow());
         for (int row = 0; row < matrix.nrow(); ++row) {
@@ -92,6 +96,7 @@ private:
         }
     }
 
+    template <class matrix_t>
     inline void setSequenceRow(const matrix_t &matrix, int row) {
         this->sequences_[row].resize(matrix.ncol());
         for (int column = 0; column < matrix.ncol(); ++column) {
@@ -139,7 +144,7 @@ using SequenceGetter_t = std::function<input_vector_t(int)>;
 SequenceGetter_t<SafeTidysqSequencesWrapper::Row> getTidysqRowGetter(SafeTidysqSequencesWrapper& safeWrapper);
 
 template<class matrix_t, class elem_t>
-SequenceGetter_t<typename SafeSequencesWrapper<elem_t>::Row> getRcppMatrixRowGetter(SafeMatrixSequenceWrapper<matrix_t, elem_t>& sequenceWrapper) {
+SequenceGetter_t<typename SafeSequencesWrapper<elem_t>::Row> getRcppMatrixRowGetter(SafeMatrixSequenceWrapper<elem_t>& sequenceWrapper) {
     return [&sequenceWrapper](int rowNum) -> typename SafeSequencesWrapper<elem_t>::Row {
         return std::move(sequenceWrapper.row(rowNum));
     };

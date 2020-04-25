@@ -88,13 +88,13 @@ Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
                                        Rcpp::StringVector &alphabet,
                                        int k,
                                        bool positionalKMers) {
-    SafeMatrixSequenceWrapper<Rcpp::StringMatrix, std::string> safeMatrixWrapper(sequenceMatrix);
+    SafeMatrixSequenceWrapper<std::string> safeMatrixWrapper(sequenceMatrix);
     std::vector<std::string> alphabetVector;
     std::transform(std::begin(alphabet), std::end(alphabet), std::back_inserter(alphabetVector),
             [](auto& elem) -> std::string { return Rcpp::as<std::string>(elem); });
     return count_kmers<
             std::vector<std::string>,
-            SafeMatrixSequenceWrapper<Rcpp::StringMatrix, std::string>::Row,
+            SafeMatrixSequenceWrapper<std::string>::Row,
             std::string,
             ENCODED_ELEM_T,
             std::hash<std::string>>(alphabetVector,
@@ -111,13 +111,13 @@ Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
                                         Rcpp::IntegerVector &alphabet,
                                         int k,
                                         bool positionalKMers) {
-    SafeMatrixSequenceWrapper<Rcpp::IntegerMatrix, int> safeMatrixWrapper(sequenceMatrix);
+    SafeMatrixSequenceWrapper<int> safeMatrixWrapper(sequenceMatrix);
     std::vector<int> alphabetVector;
     std::transform(std::begin(alphabet), std::end(alphabet), std::back_inserter(alphabetVector),
             [](int elem) -> int { return elem; });
     return count_kmers<
             std::vector<int>,
-            SafeMatrixSequenceWrapper<Rcpp::IntegerMatrix, int>::Row,
+            SafeMatrixSequenceWrapper<int>::Row,
             int,
             ENCODED_ELEM_T,
             std::hash<int>>(alphabetVector,
@@ -134,13 +134,13 @@ Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
                                         Rcpp::NumericVector &alphabet,
                                         int k,
                                         bool positionalKMers) {
-    SafeMatrixSequenceWrapper<Rcpp::NumericMatrix, double> safeMatrixWrapper(sequenceMatrix);
+    SafeMatrixSequenceWrapper<double> safeMatrixWrapper(sequenceMatrix);
     std::vector<double> alphabetVector;
     std::transform(std::begin(alphabet), std::end(alphabet), std::back_inserter(alphabetVector),
             [](double elem) -> double { return elem; });
     return count_kmers<
             std::vector<double>,
-            SafeMatrixSequenceWrapper<Rcpp::NumericMatrix, double>::Row,
+            SafeMatrixSequenceWrapper<double>::Row,
             double,
             ENCODED_ELEM_T,
             std::hash<double>>(alphabetVector,
