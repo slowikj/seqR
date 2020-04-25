@@ -143,7 +143,7 @@ using SequenceGetter_t = std::function<input_vector_t(int)>;
 
 SequenceGetter_t<SafeTidysqSequencesWrapper::Row> getTidysqRowGetter(SafeTidysqSequencesWrapper& safeWrapper);
 
-template<class matrix_t, class elem_t>
+template<class elem_t>
 SequenceGetter_t<typename SafeSequencesWrapper<elem_t>::Row> getRcppMatrixRowGetter(SafeMatrixSequenceWrapper<elem_t>& sequenceWrapper) {
     return [&sequenceWrapper](int rowNum) -> typename SafeSequencesWrapper<elem_t>::Row {
         return std::move(sequenceWrapper.row(rowNum));
