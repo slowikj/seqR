@@ -4,9 +4,9 @@
 #include <iomanip>
 #include <sstream>
 
-InputToStringItemConverter_t<Rcpp::StringVector::stored_type> getRcppStringProxyToStringConverter() {
-    return [](const Rcpp::StringVector::stored_type &elem) -> std::string {
-        return Rcpp::as<std::string>(elem);
+InputToStringItemConverter_t<std::string> getStringToStringConverter() {
+    return [](const std::string& str) -> std::string {
+        return str;
     };
 }
 

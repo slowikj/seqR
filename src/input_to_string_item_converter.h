@@ -8,7 +8,7 @@
 template<class input_elem_t>
 using InputToStringItemConverter_t = std::function<std::string(const input_elem_t &)>;
 
-InputToStringItemConverter_t<Rcpp::StringVector::stored_type> getRcppStringProxyToStringConverter();
+InputToStringItemConverter_t<std::string> getStringToStringConverter();
 
 InputToStringItemConverter_t<int> getIntToStringConverter();
 
