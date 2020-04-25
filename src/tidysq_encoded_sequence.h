@@ -4,6 +4,6 @@
 #include <vector>
 #include <Rcpp.h>
 
-std::vector<Rcpp::RawVector> getEncodedTidysqSequences(Rcpp::List& sq);
+std::vector<Rcpp::RawVector> getEncodedTidysqSequences(Rcpp::List &sq);
 
 #endif

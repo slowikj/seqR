@@ -7,11 +7,11 @@
 int computePowerFast(unsigned int base, unsigned int power, unsigned int modulo);
 
 template<class T>
-void clear(std::queue<T>& q) {
-  std::queue<T> empty;
-  std::swap(q, empty);
+void clear(std::queue<T> &q) {
+    std::queue<T> empty;
+    std::swap(q, empty);
 }
 
-Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector& gaps);
+Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector &gaps);
 
 #endif

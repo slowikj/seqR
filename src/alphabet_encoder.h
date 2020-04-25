@@ -9,75 +9,75 @@
 template<class input_elem_t, class encoded_elem_t, class hasher_t>
 class AlphabetEncoding {
 public:
-  AlphabetEncoding(Dictionary<input_elem_t, encoded_elem_t, hasher_t>&& encoder,
-                   encoded_elem_t notAllowedEncodingNum):
-    encoder(std::move(encoder)),
-    notAllowedEncodingNum(notAllowedEncodingNum) {
-  }
-  
-  AlphabetEncoding() = default;
-  
-  AlphabetEncoding(AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t>&& other) noexcept = default;
-  
-  AlphabetEncoding(const AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t>&) = delete;
-  
-  AlphabetEncoding& operator=(const AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t>&) = delete;
-  
-  AlphabetEncoding& operator=(AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t>&& other) noexcept = default;
-  
-  encoded_elem_t encode(const input_elem_t& inputElem) {
-    return this->encoder[inputElem];
-  }
-  
-  bool isAllowed(const input_elem_t& inputElem) const {
-    return this->encoder.isPresent(inputElem);
-  }
-  
-  encoded_elem_t getNotAllowedEncodingNum() const {
-    return this->notAllowedEncodingNum;
-  }
-  
-  std::size_t alphabetSize() const {
-    return this->encoder.size();
-  }
-  
+    AlphabetEncoding(Dictionary<input_elem_t, encoded_elem_t, hasher_t> &&encoder,
+                     encoded_elem_t notAllowedEncodingNum) :
+            encoder(std::move(encoder)),
+            notAllowedEncodingNum(notAllowedEncodingNum) {
+    }
+
+    AlphabetEncoding() = default;
+
+    AlphabetEncoding(AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t> &&other) noexcept = default;
+
+    AlphabetEncoding(const AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t> &) = delete;
+
+    AlphabetEncoding &operator=(const AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t> &) = delete;
+
+    AlphabetEncoding &operator=(AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t> &&other) noexcept = default;
+
+    encoded_elem_t encode(const input_elem_t &inputElem) {
+        return this->encoder[inputElem];
+    }
+
+    bool isAllowed(const input_elem_t &inputElem) const {
+        return this->encoder.isPresent(inputElem);
+    }
+
+    encoded_elem_t getNotAllowedEncodingNum() const {
+        return this->notAllowedEncodingNum;
+    }
+
+    std::size_t alphabetSize() const {
+        return this->encoder.size();
+    }
+
 private:
-  Dictionary<input_elem_t, encoded_elem_t, hasher_t> encoder;
-  encoded_elem_t notAllowedEncodingNum;
+    Dictionary<input_elem_t, encoded_elem_t, hasher_t> encoder;
+    encoded_elem_t notAllowedEncodingNum;
 };
 
-template <class input_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
-AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> getAlphabetEncoding(input_t& input) {
-  encoded_elem_t currentNum = 2;
-  Dictionary<input_elem_t, encoded_elem_t, alphabet_hasher_t> encoder;
-  for(const auto& inputElem: input) {
-    if(!encoder.isPresent(inputElem)) {
-      encoder[inputElem] = currentNum++;
+template<class input_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> getAlphabetEncoding(input_t &input) {
+    encoded_elem_t currentNum = 2;
+    Dictionary<input_elem_t, encoded_elem_t, alphabet_hasher_t> encoder;
+    for (const auto &inputElem: input) {
+        if (!encoder.isPresent(inputElem)) {
+            encoder[inputElem] = currentNum++;
+        }
     }
-  }
-  return AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t>(
-      std::move(encoder),
-      1
-  );
+    return AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t>(
+            std::move(encoder),
+            1
+    );
 }
 
-template <class encoded_elem_t, class alphabet_hasher_t>
+template<class encoded_elem_t, class alphabet_hasher_t>
 AlphabetEncoding<encoded_elem_t, encoded_elem_t, alphabet_hasher_t> prepareAlphabetEncodingForTidysq(
-    Rcpp::StringVector& alphabet,
-    Rcpp::StringVector& elementsEncoding) {
-  Dictionary<encoded_elem_t, encoded_elem_t, alphabet_hasher_t> encoder;
-  for(const auto& alphabetElem: alphabet) {
-    for(int encoding_i = 0; encoding_i < elementsEncoding.size(); ++encoding_i) {
-      if(alphabetElem == elementsEncoding[encoding_i]) {
-        encoded_elem_t index = static_cast<encoded_elem_t>(encoding_i + 1);
-        encoder[index] = index;
-      }
+        Rcpp::StringVector &alphabet,
+        Rcpp::StringVector &elementsEncoding) {
+    Dictionary<encoded_elem_t, encoded_elem_t, alphabet_hasher_t> encoder;
+    for (const auto &alphabetElem: alphabet) {
+        for (int encoding_i = 0; encoding_i < elementsEncoding.size(); ++encoding_i) {
+            if (alphabetElem == elementsEncoding[encoding_i]) {
+                encoded_elem_t index = static_cast<encoded_elem_t>(encoding_i + 1);
+                encoder[index] = index;
+            }
+        }
     }
-  }
-  return AlphabetEncoding<encoded_elem_t, encoded_elem_t, alphabet_hasher_t>(
-    std::move(encoder),
-    elementsEncoding.size() + 1
-  );
+    return AlphabetEncoding<encoded_elem_t, encoded_elem_t, alphabet_hasher_t>(
+            std::move(encoder),
+            elementsEncoding.size() + 1
+    );
 }
 
 #endif

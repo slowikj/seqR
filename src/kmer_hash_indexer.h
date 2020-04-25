@@ -10,22 +10,22 @@
 
 class KMerPositionInfo {
 public:
-  int seqNum;
-  
-  int position;
-  
-  KMerPositionInfo(int seqNum, int position):
-    seqNum(seqNum), position(position) {
-  }
-  
-  KMerPositionInfo(const KMerPositionInfo&) = default;
-  
-  KMerPositionInfo& operator=(const KMerPositionInfo&) = default;
-  
+    int seqNum;
+
+    int position;
+
+    KMerPositionInfo(int seqNum, int position) :
+            seqNum(seqNum), position(position) {
+    }
+
+    KMerPositionInfo(const KMerPositionInfo &) = default;
+
+    KMerPositionInfo &operator=(const KMerPositionInfo &) = default;
+
 };
 
 std::tuple<Dictionary<std::vector<int>, int, vector_int_hasher>,
-           std::vector<KMerPositionInfo>>
-indexKMerHashes(const std::vector<KMerCountsManager>& kmerCounts);
+        std::vector<KMerPositionInfo>>
+indexKMerHashes(const std::vector<KMerCountsManager> &kmerCounts);
 
 #endif
