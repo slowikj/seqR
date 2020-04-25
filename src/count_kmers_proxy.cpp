@@ -88,19 +88,17 @@ Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
                                        Rcpp::StringVector &alphabet,
                                        int k,
                                        bool positionalKMers) {
-    return std::move(
-            count_kmers<Rcpp::StringVector,
-                    Rcpp::StringMatrix::Row,
-                    Rcpp::StringVector::stored_type,
-                    ENCODED_ELEM_T,
-                    string_proxy_hasher>(
-                    alphabet,
-                    sequenceMatrix.nrow(),
-                    getRcppMatrixRowGetter<Rcpp::StringMatrix, Rcpp::StringMatrix::Row>(sequenceMatrix),
-                    k,
-                    positionalKMers,
-                    getRcppStringProxyToStringConverter())
-    );
+    return count_kmers<
+            Rcpp::StringVector,
+            Rcpp::StringMatrix::Row,
+            Rcpp::StringVector::stored_type,
+            ENCODED_ELEM_T,
+            string_proxy_hasher>(alphabet,
+                                 sequenceMatrix.nrow(),
+                                 getRcppMatrixRowGetter<Rcpp::StringMatrix, Rcpp::StringMatrix::Row>(sequenceMatrix),
+                                 k,
+                                 positionalKMers,
+                                 getRcppStringProxyToStringConverter());
 }
 
 //' @export
@@ -109,19 +107,18 @@ Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
                                         Rcpp::IntegerVector &alphabet,
                                         int k,
                                         bool positionalKMers) {
-    return std::move(
-            count_kmers<Rcpp::IntegerVector,
-                    Rcpp::IntegerMatrix::Row,
-                    int,
-                    ENCODED_ELEM_T,
-                    std::hash<int>>(alphabet,
-                                    sequenceMatrix.nrow(),
-                                    getRcppMatrixRowGetter<Rcpp::IntegerMatrix, Rcpp::IntegerMatrix::Row>(
-                                            sequenceMatrix),
-                                    k,
-                                    positionalKMers,
-                                    getIntToStringConverter())
-    );
+    return count_kmers<
+            Rcpp::IntegerVector,
+            Rcpp::IntegerMatrix::Row,
+            int,
+            ENCODED_ELEM_T,
+            std::hash<int>>(alphabet,
+                            sequenceMatrix.nrow(),
+                            getRcppMatrixRowGetter<Rcpp::IntegerMatrix, Rcpp::IntegerMatrix::Row>(
+                                    sequenceMatrix),
+                            k,
+                            positionalKMers,
+                            getIntToStringConverter());
 }
 
 //' @export
@@ -130,19 +127,18 @@ Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
                                         Rcpp::NumericVector &alphabet,
                                         int k,
                                         bool positionalKMers) {
-    return std::move(
-            count_kmers<Rcpp::NumericVector,
-                    Rcpp::NumericMatrix::Row,
-                    double,
-                    ENCODED_ELEM_T,
-                    std::hash<double>>(alphabet,
-                                       sequenceMatrix.nrow(),
-                                       getRcppMatrixRowGetter<Rcpp::NumericMatrix, Rcpp::NumericMatrix::Row>(
-                                               sequenceMatrix),
-                                       k,
-                                       positionalKMers,
-                                       getDoubleToStringConverter(3))
-    );
+    return count_kmers<
+            Rcpp::NumericVector,
+            Rcpp::NumericMatrix::Row,
+            double,
+            ENCODED_ELEM_T,
+            std::hash<double>>(alphabet,
+                               sequenceMatrix.nrow(),
+                               getRcppMatrixRowGetter<Rcpp::NumericMatrix, Rcpp::NumericMatrix::Row>(
+                                       sequenceMatrix),
+                               k,
+                               positionalKMers,
+                               getDoubleToStringConverter(3));
 }
 
 //' @export
@@ -158,15 +154,14 @@ Rcpp::IntegerMatrix count_kmers_tidysq(Rcpp::List &sq,
     ));
     auto encodedSequences = getEncodedTidysqSequences(sq);
 
-    return std::move(
-            count_kmers<Rcpp::Fast<Rcpp::RawVector>,
-                    unsigned char,
-                    unsigned char,
-                    std::hash<unsigned char>>(alphabetEncoding,
-                                              sq.size(),
-                                              getTidysqRowGetter(encodedSequences),
-                                              k,
-                                              positionalKMers,
-                                              getEncodedTidySqItemToStringConverter(elementsEncoding))
-    );
+    return count_kmers<
+            Rcpp::Fast<Rcpp::RawVector>,
+            unsigned char,
+            unsigned char,
+            std::hash<unsigned char>>(alphabetEncoding,
+                                      sq.size(),
+                                      getTidysqRowGetter(encodedSequences),
+                                      k,
+                                      positionalKMers,
+                                      getEncodedTidySqItemToStringConverter(elementsEncoding));
 }
