@@ -98,11 +98,11 @@ Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
             std::string,
             ENCODED_ELEM_T,
             std::hash<std::string>>(alphabetVector,
-                                 sequenceMatrix.nrow(),
-                                 getRcppMatrixRowGetter<std::string>(safeMatrixWrapper),
-                                 k,
-                                 positionalKMers,
-                                 getStringToStringConverter());
+                                    sequenceMatrix.nrow(),
+                                    getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
+                                    k,
+                                    positionalKMers,
+                                    getStringToStringConverter());
 }
 
 //' @export
@@ -122,7 +122,7 @@ Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
             ENCODED_ELEM_T,
             std::hash<int>>(alphabetVector,
                             sequenceMatrix.nrow(),
-                            getRcppMatrixRowGetter<int>(safeMatrixWrapper),
+                            getSafeMatrixRowGetter<int>(safeMatrixWrapper),
                             k,
                             positionalKMers,
                             getIntToStringConverter());
@@ -145,7 +145,7 @@ Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
             ENCODED_ELEM_T,
             std::hash<double>>(alphabetVector,
                                sequenceMatrix.nrow(),
-                               getRcppMatrixRowGetter<double>(safeMatrixWrapper),
+                               getSafeMatrixRowGetter<double>(safeMatrixWrapper),
                                k,
                                positionalKMers,
                                getDoubleToStringConverter(3));

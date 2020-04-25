@@ -109,11 +109,11 @@ Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix
             std::string,
             ENCODED_ELEM_T,
             std::hash<std::string>>(alphabetVector,
-                                 sequenceMatrix.nrow(),
-                                 getRcppMatrixRowGetter<std::string>(safeMatrixWrapper),
-                                 gaps,
-                                 positionalKMers,
-                                 getStringToStringConverter());
+                                    sequenceMatrix.nrow(),
+                                    getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
+                                    gaps,
+                                    positionalKMers,
+                                    getStringToStringConverter());
 }
 
 //' @export
@@ -133,7 +133,7 @@ Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatr
             ENCODED_ELEM_T,
             std::hash<int>>(alphabetVector,
                             sequenceMatrix.nrow(),
-                            getRcppMatrixRowGetter<int>(safeMatrixWrapper),
+                            getSafeMatrixRowGetter<int>(safeMatrixWrapper),
                             gaps,
                             positionalKMers,
                             getIntToStringConverter());
@@ -156,7 +156,7 @@ Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatr
             ENCODED_ELEM_T,
             std::hash<double>>(alphabetVector,
                                sequenceMatrix.nrow(),
-                               getRcppMatrixRowGetter<double>(safeMatrixWrapper),
+                               getSafeMatrixRowGetter<double>(safeMatrixWrapper),
                                gaps,
                                positionalKMers,
                                getDoubleToStringConverter(3));
