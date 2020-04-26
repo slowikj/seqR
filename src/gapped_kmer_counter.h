@@ -12,7 +12,8 @@
 #include <utility>
 #include <algorithm>
 
-inline std::vector<std::pair<int, int>> getContiguousIntervals(const Rcpp::IntegerVector &gaps) {
+template <class vector_t>
+inline std::vector<std::pair<int, int>> getContiguousIntervals(const vector_t &gaps) {
     std::vector<std::pair<int, int>> res;
     int currentKMerIndex = 0;
     for (int gapIndex = 0; gapIndex < gaps.size(); ++gapIndex) {
@@ -34,8 +35,8 @@ inline std::vector<std::pair<int, int>> getContiguousIntervals(const Rcpp::Integ
     return res;
 }
 
-inline std::size_t getTotalKMerSize(const Rcpp::IntegerVector &gaps) {
-    return Rcpp::sum(gaps + 1) + 1;
+inline std::size_t getTotalKMerSize(const std::vector<int> &gaps) {
+    return getSum(gaps) + gaps.size() + 1; // Rcpp::sum(gaps + 1) + 1
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
@@ -211,7 +212,7 @@ std::vector<int> getGappedKMerHash(
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
 inline
-KMerCountsManager countGappedKMers(const Rcpp::IntegerVector &gaps,
+KMerCountsManager countGappedKMers(const std::vector<int> &gaps,
                                    std::size_t totalKMerSize,
                                    input_vector_t &sequence,
                                    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding,
@@ -243,7 +244,7 @@ KMerCountsManager countGappedKMers(const Rcpp::IntegerVector &gaps,
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
 inline
 std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
-        const Rcpp::IntegerVector &gaps,
+        const std::vector<int> &gaps,
         bool isPositionalKMer,
         int rowsNum,
         SequenceGetter_t<input_vector_t> sequenceGetter,

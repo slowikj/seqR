@@ -70,7 +70,7 @@ Rcpp::IntegerMatrix getKMerCountsMatrix(
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding,
         int sequencesNum,
         SequenceGetter_t<input_vector_t> sequenceGetter,
-        const Rcpp::IntegerVector &gaps,
+        const std::vector<int> &gaps,
         bool positionalKMers,
         ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t> parallelKMerCountingProc,
         InputToStringItemConverter_t<input_elem_t> inputToStringConverter) {

@@ -30,7 +30,7 @@ Rcpp::IntegerMatrix count_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, a
                                 int k,
                                 bool positionalKMers,
                                 InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter) {
-    Rcpp::IntegerVector gaps(k - 1);
+    std::vector<int> gaps(k - 1);
     auto parallelKMerCountingProc = [&k, &positionalKMers, &sequencesNum](
             AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &encoding,
             SequenceGetter_t<input_vector_t> seqGetter

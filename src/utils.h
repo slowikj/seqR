@@ -2,7 +2,8 @@
 #define UTILS_H
 
 #include <queue>
-#include <Rcpp.h>
+#include <vector>
+#include <algorithm>
 
 template<class T>
 inline void clear(std::queue<T> &q) {
@@ -23,8 +24,20 @@ inline int computePowerFast(unsigned int base, unsigned int power, unsigned int 
     return static_cast<int>(res);
 }
 
-inline Rcpp::IntegerVector getGapsAccumulated(const Rcpp::IntegerVector &gaps) {
-    return static_cast<Rcpp::IntegerVector>(Rcpp::cumsum(gaps + 1));
+inline std::vector<int> getGapsAccumulated(const std::vector<int> &v) {
+    std::vector<int> res(v.size());
+    if (v.size() > 0) {
+        res[0] = v[0] + 1;
+        for (int v_i = 1; v_i < v.size(); ++v_i) {
+            res[v_i] = res[v_i - 1] + v[v_i] + 1;
+        }
+    }
+    return std::move(res);
+}
+
+
+inline int getSum(const std::vector<int> &v) {
+    return std::accumulate(std::begin(v), std::end(v), 0);
 }
 
 #endif

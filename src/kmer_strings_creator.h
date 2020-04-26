@@ -23,8 +23,8 @@ template<class input_vector_t, class input_elem_t>
 class KMerStringCreatorForSequence {
 public:
     KMerStringCreatorForSequence(input_vector_t &&sequence,
-                                 const Rcpp::IntegerVector &gaps,
-                                 const Rcpp::IntegerVector &gapsAccumulated,
+                                 const std::vector<int> &gaps,
+                                 const std::vector<int> &gapsAccumulated,
                                  const std::string &itemSeparator,
                                  const std::string &sectionSeparator,
                                  InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter) :
@@ -59,7 +59,7 @@ private:
     std::string itemSeparator;
     std::string sectionSeparator;
     std::string kmerInfoSuffix;
-    const Rcpp::IntegerVector &gapsAccumulated;
+    const std::vector<int> &gapsAccumulated;
     InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter;
 
     inline std::size_t getTotalSize(int begin, int separatorLength) const {
@@ -76,7 +76,7 @@ private:
         );
     }
 
-    inline std::string prepareKMerInfoSuffix(const Rcpp::IntegerVector &gaps) const {
+    inline std::string prepareKMerInfoSuffix(const std::vector<int> &gaps) const {
         if (gaps.size() == 0) {
             return "";
         }
@@ -96,12 +96,12 @@ private:
 template<class input_vector_t, class input_elem_t>
 class KMerStringsCreatorWorker : public RcppParallel::Worker {
 public:
-    Rcpp::StringVector outputKMerStrings;
+    std::vector<std::string> outputKMerStrings;
 
     KMerStringsCreatorWorker(const std::vector<KMerPositionInfo> &indexedKMers,
                              int sequencesNum,
                              SequenceGetter_t<input_vector_t> sequenceGetter,
-                             const Rcpp::IntegerVector &gaps,
+                             const std::vector<int> &gaps,
                              bool isPositionalKMer,
                              InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter,
                              const std::string &itemSeparator,
@@ -109,8 +109,8 @@ public:
             indexedKMers(indexedKMers),
             itemSeparator(itemSeparator),
             sectionSeparator(sectionSeparator),
-            outputKMerStrings(Rcpp::StringVector(indexedKMers.size())),
-            gapsAccumulated(getGapsAccumulated(gaps)) {
+            outputKMerStrings(indexedKMers.size()),
+            gapsAccumulated(std::move(getGapsAccumulated(gaps))) {
         prepareKMerStringsCreators(
                 sequencesNum, gaps, gapsAccumulated, inputToStringItemConverter, sequenceGetter, itemSeparator,
                 sectionSeparator);
@@ -131,11 +131,11 @@ private:
     const std::string &sectionSeparator;
     std::vector<KMerStringCreatorForSequence<input_vector_t, input_elem_t>> kmerStringCreators;
     std::function<std::string(int, int)> createKMerFunc;
-    Rcpp::IntegerVector gapsAccumulated;
+    std::vector<int> gapsAccumulated;
 
     inline void prepareKMerStringsCreators(int sequencesNum,
-                                           const Rcpp::IntegerVector &gaps,
-                                           const Rcpp::IntegerVector &gapsAccumulated,
+                                           const std::vector<int> &gaps,
+                                           const std::vector<int> &gapsAccumulated,
                                            InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter,
                                            SequenceGetter_t<input_vector_t> sequenceGetter,
                                            const std::string &itemSeparator,
@@ -169,7 +169,7 @@ Rcpp::StringVector parallelComputeKMerStrings(
         InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter,
         int sequencesNum,
         SequenceGetter_t<input_vector_t> sequenceGetter,
-        const Rcpp::IntegerVector &gaps,
+        const std::vector<int> &gaps,
         bool isPositionalKMer,
         const std::string &itemSeparator = default_item_separator,
         const std::string &sectionSeparator = default_section_separator) {
@@ -184,7 +184,7 @@ Rcpp::StringVector parallelComputeKMerStrings(
             itemSeparator,
             sectionSeparator);
     RcppParallel::parallelFor(0, indexedKMers.size(), worker);
-    return std::move(worker.outputKMerStrings);
+    return Rcpp::wrap(worker.outputKMerStrings);
 }
 
 #endif
