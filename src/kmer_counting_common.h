@@ -53,11 +53,7 @@ std::vector<KMerCountsManager> parallelComputeKMerCounts(
         int rowsNum,
         CountingKMersProc_t<input_vector_t> countingProc,
         SequenceGetter_t<input_vector_t> sequenceGetter) {
-    KMerCounterWorker<input_vector_t> worker(
-            rowsNum,
-            countingProc,
-            sequenceGetter
-    );
+    KMerCounterWorker<input_vector_t> worker(rowsNum, countingProc, sequenceGetter);
     RcppParallel::parallelFor(0, rowsNum, worker);
     return std::move(worker.kmerCounts);
 }
@@ -66,12 +62,15 @@ class KMerMatrixCreatorWorker : public RcppParallel::Worker {
 public:
     Rcpp::IntegerMatrix outputKMerCounts;
 
+    RcppParallel::RMatrix<int> outputKMerCountsWrapper;
+
     KMerMatrixCreatorWorker(int nrow,
                             int ncol,
                             std::vector<KMerCountsManager> &kmerCountsManagers,
                             Dictionary<std::vector<int>, int, vector_int_hasher> &hashIndexer,
                             Rcpp::StringVector &uniqueKMerStrings) :
-            outputKMerCounts(std::move(Rcpp::IntegerMatrix(nrow, ncol))),
+            outputKMerCounts(Rcpp::IntegerMatrix(nrow, ncol)),
+            outputKMerCountsWrapper(outputKMerCounts),
             kmerCountsManagers(kmerCountsManagers),
             hashIndexer(hashIndexer),
             uniqueKMerStrings(uniqueKMerStrings) {
@@ -82,7 +81,7 @@ public:
         for (int r = beginRow; r < endRow; ++r) {
             for (const auto &kmerHashPair: kmerCountsManagers[r].getDictionary()) {
                 int c = hashIndexer[kmerHashPair.first];
-                outputKMerCounts(r, c) = kmerHashPair.second.cnt;
+                outputKMerCountsWrapper(r, c) = kmerHashPair.second.cnt;
             }
         }
     }
