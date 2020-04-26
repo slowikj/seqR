@@ -25,19 +25,19 @@ public:
 
     AlphabetEncoding &operator=(AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t> &&other) noexcept = default;
 
-    encoded_elem_t encode(const input_elem_t &inputElem) {
+    inline encoded_elem_t encode(const input_elem_t &inputElem) {
         return this->encoder[inputElem];
     }
 
-    bool isAllowed(const input_elem_t &inputElem) const {
+    inline bool isAllowed(const input_elem_t &inputElem) const {
         return this->encoder.isPresent(inputElem);
     }
 
-    encoded_elem_t getNotAllowedEncodingNum() const {
+    inline encoded_elem_t getNotAllowedEncodingNum() const {
         return this->notAllowedEncodingNum;
     }
 
-    std::size_t alphabetSize() const {
+    inline std::size_t alphabetSize() const {
         return this->encoder.size();
     }
 
@@ -47,6 +47,7 @@ private:
 };
 
 template<class input_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+inline
 AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> getAlphabetEncoding(input_t &input) {
     encoded_elem_t currentNum = 2;
     Dictionary<input_elem_t, encoded_elem_t, alphabet_hasher_t> encoder;
@@ -62,6 +63,7 @@ AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> getAlphabetEnc
 }
 
 template<class encoded_elem_t, class alphabet_hasher_t>
+inline
 AlphabetEncoding<encoded_elem_t, encoded_elem_t, alphabet_hasher_t> prepareAlphabetEncodingForTidysq(
         Rcpp::StringVector &alphabet,
         Rcpp::StringVector &elementsEncoding) {

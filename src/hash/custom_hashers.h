@@ -7,7 +7,7 @@
 #include <functional>
 
 struct string_proxy_hasher {
-    std::size_t operator()(const Rcpp::StringVector::stored_type &v) const {
+    inline std::size_t operator()(const Rcpp::StringVector::stored_type &v) const {
         return rcppStringHasher(v);
     }
 
@@ -21,7 +21,7 @@ struct vector_int_hasher {
 
     const static int M = 1e9 + 7;
 
-    std::size_t operator()(const std::vector<int> &c) const {
+    inline std::size_t operator()(const std::vector<int> &c) const {
         return boost::hash_range(c.begin(), c.end());
     }
 };

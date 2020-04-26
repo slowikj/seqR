@@ -40,7 +40,7 @@ public:
 
     KMerCountsManager &operator=(KMerCountsManager &&) noexcept = default;
 
-    void add(std::vector<int> &&hash, int position) {
+    inline void add(std::vector<int> &&hash, int position) {
         if (!this->dictionary.isPresent(hash)) {
             this->dictionary[std::move(hash)] = KMerHashInfo(position, 1);
         } else {
@@ -48,7 +48,7 @@ public:
         }
     }
 
-    const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher> &getDictionary() const {
+    inline const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher> &getDictionary() const {
         return this->dictionary;
     }
 

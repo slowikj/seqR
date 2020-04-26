@@ -100,7 +100,8 @@ Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix
                                               Rcpp::IntegerVector &gaps,
                                               bool positionalKMers) {
     SafeMatrixSequenceWrapper<std::string> safeMatrixWrapper(sequenceMatrix);
-    std::vector<std::string> convertedAlphabet = std::move(convertRcppVector<std::string, Rcpp::StringVector>(alphabet));
+    std::vector<std::string> convertedAlphabet = std::move(
+            convertRcppVector<std::string, Rcpp::StringVector>(alphabet));
     return count_gapped_kmers<
             std::vector<std::string>,
             SafeMatrixSequenceWrapper<std::string>::Row,

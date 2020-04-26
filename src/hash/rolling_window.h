@@ -21,13 +21,13 @@ public:
 
     RollingWindow() = delete;
 
-    void resetIndex(int nextElementIndex) {
+    inline void resetIndex(int nextElementIndex) {
         this->nextElementIndex = nextElementIndex;
         clear<encoded_elem_t>(this->window);
         this->hasher.clear();
     }
 
-    void append() {
+    inline void append() {
         encoded_elem_t encodedElem = this->alphabetEncoding.encode(
                 this->sequence[this->nextElementIndex]
         );
@@ -36,29 +36,29 @@ public:
         ++this->nextElementIndex;
     }
 
-    void moveWindowRight() {
+    inline void moveWindowRight() {
         removeFirst();
         append();
     }
 
-    void removeFirst() {
+    inline void removeFirst() {
         this->hasher.removeFirst(this->window.front());
         this->window.pop();
     }
 
-    std::size_t sequenceSize() const {
+    inline std::size_t sequenceSize() const {
         return this->sequence.size();
     }
 
-    std::vector<int> getWindowedHashes() const {
+    inline std::vector<int> getWindowedHashes() const {
         return this->hasher.getHashes();
     }
 
-    std::vector<int> getWindowedPositionedHashes() const {
+    inline std::vector<int> getWindowedPositionedHashes() const {
         return this->hasher.getHashes(this->nextElementIndex);
     }
 
-    int currentBeginIndex() const {
+    inline int currentBeginIndex() const {
         return this->nextElementIndex - this->window.size();
     }
 

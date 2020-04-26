@@ -88,6 +88,7 @@ inline KMerCountsManager countKMers(
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+inline
 std::vector<KMerCountsManager> parallelComputeKMerCounts(
         int k,
         bool positionalKMer,

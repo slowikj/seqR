@@ -28,13 +28,13 @@ public:
         this->initPowersP();
     }
 
-    void append(const int &elem) override {
+    inline void append(const int &elem) override {
         this->currentHash = this->computeHash(this->currentHash, elem);
         this->currentPowerP = this->nextPowerP;
         this->nextPowerP = this->computeNextPowerP(this->nextPowerP);
     }
 
-    void removeFirst(const int &elem) override {
+    inline void removeFirst(const int &elem) override {
         this->currentHash = static_cast<int>(
                 (this->currentHash -
                  (static_cast<long long>(elem) * this->currentPowerP) + config.M) % config.M
@@ -43,28 +43,20 @@ public:
         this->currentPowerP = this->computePreviousPowerP(this->currentPowerP);
     }
 
-    int getHash() const override {
+    inline int getHash() const override {
         return SingleHasher::getHash();
     }
 
-    int getHash(int position) const override {
+    inline int getHash(int position) const override {
         return this->computeHash(currentHash, position);
     }
 
-    void clear() override {
+    inline void clear() override {
         SingleHasher::clear();
         this->initPowersP();
     }
 
-    int getP() const {
-        return this->config.P;
-    }
-
-    int getM() const {
-        return this->config.M;
-    }
-
-    int getCurrentPowerP() const {
+    inline int getCurrentPowerP() const {
         return this->currentPowerP;
     }
 
@@ -74,19 +66,19 @@ private:
     int nextPowerP;
     int currentPowerP;
 
-    int computeHash(int currentHash, const int &elem) const {
+    inline int computeHash(int currentHash, const int &elem) const {
         return static_cast<int>(
                 (static_cast<long long>(this->currentHash) * config.P + elem) % config.M
         );
     }
 
-    int computeNextPowerP(int currentPowerP) const {
+    inline int computeNextPowerP(int currentPowerP) const {
         return static_cast<int>(
                 (static_cast<long long>(currentPowerP) * config.P) % config.M
         );
     }
 
-    int computePreviousPowerP(int currentPowerP) const {
+    inline int computePreviousPowerP(int currentPowerP) const {
         if (currentPowerP == 1) {
             return 0;
         }
@@ -95,7 +87,7 @@ private:
         );
     }
 
-    void initPowersP() {
+    inline void initPowersP() {
         this->nextPowerP = 1;
         this->currentPowerP = 0;
     }

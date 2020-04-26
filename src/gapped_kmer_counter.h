@@ -12,11 +12,34 @@
 #include <utility>
 #include <algorithm>
 
-std::vector<std::pair<int, int>> getContiguousIntervals(const Rcpp::IntegerVector &gaps);
+inline std::vector<std::pair<int, int>> getContiguousIntervals(const Rcpp::IntegerVector &gaps) {
+    std::vector<std::pair<int, int>> res;
+    int currentKMerIndex = 0;
+    for (int gapIndex = 0; gapIndex < gaps.size(); ++gapIndex) {
+        int beginGapIndex = gapIndex;
+        while (gapIndex < gaps.size() && gaps[gapIndex] == 0) {
+            ++gapIndex;
+        }
+        res.emplace_back(currentKMerIndex,
+                         currentKMerIndex + (gapIndex - beginGapIndex));
 
-std::size_t getTotalKMerSize(const Rcpp::IntegerVector &gaps);
+        if (gapIndex < gaps.size()) {
+            currentKMerIndex += gaps[gapIndex] + (gapIndex - beginGapIndex) + 1;
+        }
+
+        if (gapIndex == gaps.size() - 1) {
+            res.emplace_back(currentKMerIndex, currentKMerIndex);
+        }
+    }
+    return res;
+}
+
+inline std::size_t getTotalKMerSize(const Rcpp::IntegerVector &gaps) {
+    return Rcpp::sum(gaps + 1) + 1;
+}
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+inline
 std::vector<int> prepareNotAllowedItemsPrefixCount(
         input_vector_t &sequence,
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding) {
@@ -41,7 +64,7 @@ public:
         computePrefixValues(sequence, alphabetEncoding);
     }
 
-    std::vector<int> getHash(int begin, int end) const {
+    inline std::vector<int> getHash(int begin, int end) const {
         std::vector<int> res(polynomialHasherConfigs.size());
         for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
             int M = polynomialHasherConfigs[hasherInd].M;
@@ -52,15 +75,15 @@ public:
         return std::move(res);
     }
 
-    int getHasherP(int hasherIndex, int power = 1) const {
+    inline int getHasherP(int hasherIndex, int power = 1) const {
         return this->prefixP[power][hasherIndex];
     }
 
-    int getHasherM(int hasherIndex) const {
+    inline int getHasherM(int hasherIndex) const {
         return this->polynomialHasherConfigs[hasherIndex].M;
     }
 
-    int getHashersNum() const {
+    inline int getHashersNum() const {
         return this->polynomialHasherConfigs.size();
     }
 
@@ -69,8 +92,8 @@ private:
     std::vector<std::vector<int>> prefixP;
     std::vector<std::vector<int>> prefixComplexHashes;
 
-    void computePrefixValues(input_vector_t &sequence,
-                             AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding) {
+    inline void computePrefixValues(input_vector_t &sequence,
+                                    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding) {
         initPrefixP(sequence.size(), polynomialHasherConfigs.size());
         initPrefixComplexHashes(sequence.size(), polynomialHasherConfigs.size());
         for (int seqInd = 0; seqInd < sequence.size(); ++seqInd) {
@@ -78,21 +101,21 @@ private:
         }
     }
 
-    void initPrefixP(int sequenceLength, int hashersNum) {
+    inline void initPrefixP(int sequenceLength, int hashersNum) {
         prefixP.reserve(sequenceLength);
         prefixP.push_back(std::move(std::vector<int>(hashersNum, 1)));
     }
 
-    void initPrefixComplexHashes(int sequenceLength, int hashersNum) {
+    inline void initPrefixComplexHashes(int sequenceLength, int hashersNum) {
         prefixComplexHashes.reserve(sequenceLength);
         prefixComplexHashes.push_back(
                 std::move(std::vector<int>(hashersNum))
         );
     }
 
-    void appendPrefixValues(input_vector_t &sequence,
-                            AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding,
-                            int seqInd) {
+    inline void appendPrefixValues(input_vector_t &sequence,
+                                   AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding,
+                                   int seqInd) {
         encoded_elem_t encodedElem = alphabetEncoding.isAllowed(sequence[seqInd]) ?
                                      alphabetEncoding.encode(sequence[seqInd]) :
                                      alphabetEncoding.getNotAllowedEncodingNum();
@@ -101,7 +124,7 @@ private:
         appendCurrentPowerP();
     }
 
-    void appendCurrentComplexHash(const encoded_elem_t &encodedElem) {
+    inline void appendCurrentComplexHash(const encoded_elem_t &encodedElem) {
         std::vector<int> prefixHash(polynomialHasherConfigs.size());
         for (int hasherInd = 0; hasherInd < prefixHash.size(); ++hasherInd) {
             int P = polynomialHasherConfigs[hasherInd].P;
@@ -112,7 +135,7 @@ private:
         prefixComplexHashes.push_back(std::move(prefixHash));
     }
 
-    void appendCurrentPowerP() {
+    inline void appendCurrentPowerP() {
         std::vector<int> powersP(polynomialHasherConfigs.size());
         for (int hasherInd = 0; hasherInd < powersP.size(); ++hasherInd) {
             int P = polynomialHasherConfigs[hasherInd].P;
@@ -124,13 +147,27 @@ private:
     }
 };
 
-bool isGappedKMerAllowed(int seqBegin,
-                         const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
-                         const std::vector<int> &notAllowedItemsPrefixCount);
+inline bool isGappedKMerAllowed(int seqBegin,
+                                const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
+                                const std::vector<int> &notAllowedItemsPrefixCount) {
+    return std::all_of(
+            std::begin(contiguousKMerIntervals),
+            std::end(contiguousKMerIntervals),
+            [&notAllowedItemsPrefixCount, &seqBegin](const std::pair<int, int> &interval) -> bool {
+                return (notAllowedItemsPrefixCount[seqBegin + interval.second]
+                        - (seqBegin + interval.first == 0 ?
+                           0 :
+                           notAllowedItemsPrefixCount[seqBegin + interval.first - 1])) == 0;
+            }
+    );
+}
 
-int getIntervalLength(const std::pair<int, int> &interval);
+inline int getIntervalLength(const std::pair<int, int> &interval) {
+    return interval.second - interval.first + 1;
+}
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+inline
 std::vector<int> getGappedKMerHashNotPositional(
         int beginPosition,
         const PrefixSequencePolynomialHasher<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t> &seqHasher,
@@ -152,6 +189,7 @@ std::vector<int> getGappedKMerHashNotPositional(
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+inline
 std::vector<int> getGappedKMerHash(
         int beginPosition,
         const PrefixSequencePolynomialHasher<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t> &seqHasher,
@@ -172,6 +210,7 @@ std::vector<int> getGappedKMerHash(
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+inline
 KMerCountsManager countGappedKMers(const Rcpp::IntegerVector &gaps,
                                    std::size_t totalKMerSize,
                                    input_vector_t &sequence,
@@ -202,6 +241,7 @@ KMerCountsManager countGappedKMers(const Rcpp::IntegerVector &gaps,
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+inline
 std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
         const Rcpp::IntegerVector &gaps,
         bool isPositionalKMer,

@@ -28,7 +28,7 @@ inline std::vector<target_elem_t> convertRcppVector(const source_rcpp_vector_t &
             std::begin(sourceVector),
             std::end(sourceVector),
             std::back_inserter(res),
-            [](const typename source_rcpp_vector_t::stored_type& sourceElem) -> target_elem_t {
+            [](const typename source_rcpp_vector_t::stored_type &sourceElem) -> target_elem_t {
                 return convert<typename source_rcpp_vector_t::stored_type, target_elem_t>(sourceElem);
             });
     return std::move(res);

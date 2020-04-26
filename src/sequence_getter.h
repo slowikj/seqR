@@ -11,7 +11,7 @@ template<class input_vector_t>
 using SequenceGetter_t = std::function<input_vector_t(int)>;
 
 inline SequenceGetter_t<SafeTidysqSequencesWrapper::Row>
-getTidysqRowGetter(SafeTidysqSequencesWrapper& safeWrapper) {
+getTidysqRowGetter(SafeTidysqSequencesWrapper &safeWrapper) {
     return [&safeWrapper](int rowNum) -> SafeTidysqSequencesWrapper::Row {
         return std::move(safeWrapper.row(rowNum));
     };
@@ -19,7 +19,7 @@ getTidysqRowGetter(SafeTidysqSequencesWrapper& safeWrapper) {
 
 template<class elem_t>
 inline SequenceGetter_t<typename SafeSequencesWrapper<elem_t>::Row>
-getSafeMatrixRowGetter(SafeMatrixSequenceWrapper<elem_t>& sequenceWrapper) {
+getSafeMatrixRowGetter(SafeMatrixSequenceWrapper<elem_t> &sequenceWrapper) {
     return [&sequenceWrapper](int rowNum) -> typename SafeSequencesWrapper<elem_t>::Row {
         return std::move(sequenceWrapper.row(rowNum));
     };

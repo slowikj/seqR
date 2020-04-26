@@ -32,7 +32,7 @@ public:
         kmerCounts.resize(rowsNum);
     }
 
-    void operator()(size_t begin, size_t end) {
+    inline void operator()(size_t begin, size_t end) override {
         for (int rowNum = begin; rowNum < end; ++rowNum) {
             auto row = std::move(sequenceGetter(rowNum));
             kmerCounts[rowNum] = std::move(countingKMersProc(row));
@@ -48,6 +48,7 @@ public:
 };
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+inline
 std::vector<KMerCountsManager> parallelComputeKMerCounts(
         int rowsNum,
         CountingKMersProc_t<input_vector_t> countingProc,
@@ -77,7 +78,7 @@ public:
         Rcpp::colnames(this->outputKMerCounts) = Rcpp::wrap(uniqueKMerStrings);
     }
 
-    void operator()(std::size_t beginRow, std::size_t endRow) {
+    inline void operator()(std::size_t beginRow, std::size_t endRow) override {
         for (int r = beginRow; r < endRow; ++r) {
             for (const auto &kmerHashPair: kmerCountsManagers[r].getDictionary()) {
                 int c = hashIndexer[kmerHashPair.first];
@@ -99,6 +100,7 @@ using ParallelKMerCountingProc_t = std::function<std::vector<KMerCountsManager>(
         SequenceGetter_t<input_vector_t>)>;
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+inline
 Rcpp::IntegerMatrix getKMerCountsMatrix(
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding,
         int sequencesNum,

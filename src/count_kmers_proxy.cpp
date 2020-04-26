@@ -90,7 +90,8 @@ Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
                                        int k,
                                        bool positionalKMers) {
     SafeMatrixSequenceWrapper<std::string> safeMatrixWrapper(sequenceMatrix);
-    std::vector<std::string> convertedAlphabet = std::move(convertRcppVector<std::string, Rcpp::StringVector>(alphabet));
+    std::vector<std::string> convertedAlphabet = std::move(
+            convertRcppVector<std::string, Rcpp::StringVector>(alphabet));
     return count_kmers<
             std::vector<std::string>,
             SafeMatrixSequenceWrapper<std::string>::Row,

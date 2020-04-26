@@ -53,7 +53,7 @@ template<class cell_t>
 class SafeMatrixSequenceWrapper : public SafeSequencesWrapper<cell_t> {
 public:
 
-    template <class matrix_t>
+    template<class matrix_t>
     explicit SafeMatrixSequenceWrapper(const matrix_t &matrix) {
         initSequences(matrix);
     }
@@ -70,7 +70,7 @@ public:
 
 private:
 
-    template <class matrix_t>
+    template<class matrix_t>
     inline void initSequences(const matrix_t &matrix) {
         this->sequences_.resize(matrix.nrow());
         for (int row = 0; row < matrix.nrow(); ++row) {
@@ -78,7 +78,7 @@ private:
         }
     }
 
-    template <class matrix_t>
+    template<class matrix_t>
     inline void setSequenceRow(const matrix_t &matrix, int row) {
         this->sequences_[row].resize(matrix.ncol());
         for (int column = 0; column < matrix.ncol(); ++column) {
