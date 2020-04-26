@@ -28,10 +28,9 @@ add_library(seqR
         src/kmer_hash_indexer.cpp
         src/kmer_strings_creator.h
         src/sequence_getter.h
-        src/sequence_getter.cpp
         src/tidysq_encoded_sequence.h
         src/tidysq_encoded_sequence.cpp
         src/gapped_kmer_counter.cpp
         src/alphabet_encoder_proxy.cpp
         src/count_gapped_kmers_proxy.cpp
-        src/count_kmers_proxy.cpp)
+        src/count_kmers_proxy.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h)
