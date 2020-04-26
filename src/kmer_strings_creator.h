@@ -104,12 +104,12 @@ public:
                              const Rcpp::IntegerVector &gaps,
                              bool isPositionalKMer,
                              InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter,
-                             std::string itemSeparator,
-                             std::string sectionSeparator) :
+                             const std::string &itemSeparator,
+                             const std::string &sectionSeparator) :
             indexedKMers(indexedKMers),
             itemSeparator(itemSeparator),
             sectionSeparator(sectionSeparator),
-            outputKMerStrings(std::move(Rcpp::StringVector(indexedKMers.size()))),
+            outputKMerStrings(Rcpp::StringVector(indexedKMers.size())),
             gapsAccumulated(getGapsAccumulated(gaps)) {
         prepareKMerStringsCreators(
                 sequencesNum, gaps, gapsAccumulated, inputToStringItemConverter, sequenceGetter, itemSeparator,
@@ -138,8 +138,8 @@ private:
                                            const Rcpp::IntegerVector &gapsAccumulated,
                                            InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter,
                                            SequenceGetter_t<input_vector_t> sequenceGetter,
-                                           std::string itemSeparator,
-                                           std::string sectionSeparator) {
+                                           const std::string &itemSeparator,
+                                           const std::string &sectionSeparator) {
         this->kmerStringCreators.reserve(sequencesNum);
         for (int i = 0; i < sequencesNum; ++i) {
             auto seq = std::move(sequenceGetter(i));
@@ -171,8 +171,8 @@ Rcpp::StringVector parallelComputeKMerStrings(
         SequenceGetter_t<input_vector_t> sequenceGetter,
         const Rcpp::IntegerVector &gaps,
         bool isPositionalKMer,
-        std::string itemSeparator = default_item_separator,
-        std::string sectionSeparator = default_section_separator) {
+        const std::string &itemSeparator = default_item_separator,
+        const std::string &sectionSeparator = default_section_separator) {
 
     KMerStringsCreatorWorker<input_vector_t, input_elem_t> worker(
             indexedKMers,
