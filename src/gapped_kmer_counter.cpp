@@ -10,15 +10,15 @@ std::vector<std::pair<int, int>> getContiguousIntervals(const Rcpp::IntegerVecto
         while (gapIndex < gaps.size() && gaps[gapIndex] == 0) {
             ++gapIndex;
         }
-        res.push_back(std::make_pair(currentKMerIndex,
-                                     currentKMerIndex + (gapIndex - beginGapIndex)));
+        res.emplace_back(currentKMerIndex,
+                         currentKMerIndex + (gapIndex - beginGapIndex));
 
         if (gapIndex < gaps.size()) {
             currentKMerIndex += gaps[gapIndex] + (gapIndex - beginGapIndex) + 1;
         }
 
         if (gapIndex == gaps.size() - 1) {
-            res.push_back(std::make_pair(currentKMerIndex, currentKMerIndex));
+            res.emplace_back(currentKMerIndex, currentKMerIndex);
         }
     }
     return res;
