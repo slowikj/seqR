@@ -1,9 +1,21 @@
 library(testthat)
 source("utils.R")
 
-invoke_test_string <- function(expectedRes, ...) {
-  res <- seqR::count_kmers_string(...)
+invoke_test <- function(test_fun, expectedRes, ...) {
+  res <- test_fun(...)
   expect_matrices_equal(res, expectedRes)
+}
+
+invoke_test_string <- function(expectedRes, ...) {
+  invoke_test(test_fun=seqR::count_kmers_string,
+              expectedRes=expectedRes,
+              ...)
+}
+
+invoke_test_integer <- function(expectedRes, ...) {
+  invoke_test(test_fun=seqR::count_kmers_integer,
+              expectedRes=expectedRes,
+              ...)
 }
 
 test_that("count non-positional 2-mers for 2 sequences", {
@@ -45,4 +57,19 @@ test_that("count positional 2-mers for 2 sequences", {
                      sequenceMatrix=sequenceMatrix,
                      k=2,
                      positionalKMers=TRUE)
+})
+
+test_that("count non positional 5-mers for 100 sequences (10^6 each)", {
+  nrow <- 100
+  ncol <- 1000000
+  sequenceMatrix <- matrix(rep(rep(5, ncol), nrow), byrow=TRUE, nrow=nrow)
+  
+  expectedRes <- matrix(rep(999996, nrow),
+                        nrow=nrow)
+  colnames(expectedRes) <- c("5.5.5.5.5_0.0.0.0")
+  invoke_test_integer(expectedRes=expectedRes,
+                      alphabet=c(5),
+                      sequenceMatrix=sequenceMatrix,
+                      k=5,
+                      positionalKMers=FALSE)
 })

@@ -111,16 +111,15 @@ Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
                                         Rcpp::IntegerVector &alphabet,
                                         int k,
                                         bool positionalKMers) {
-    SafeMatrixSequenceWrapper<int> safeMatrixWrapper(sequenceMatrix);
     std::vector<int> convertedAlphabet = std::move(convertRcppVector<int, Rcpp::IntegerVector>(alphabet));
     return count_kmers<
             std::vector<int>,
-            SafeMatrixSequenceWrapper<int>::Row,
+            RcppParallel::RMatrix<int>::Row,
             int,
             ENCODED_ELEM_T,
             std::hash<int>>(convertedAlphabet,
                             sequenceMatrix.nrow(),
-                            getSafeMatrixRowGetter<int>(safeMatrixWrapper),
+                            getRMatrixRowGetter<Rcpp::IntegerMatrix, int>(sequenceMatrix),
                             k,
                             positionalKMers,
                             getIntToStringConverter());
@@ -132,16 +131,15 @@ Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
                                         Rcpp::NumericVector &alphabet,
                                         int k,
                                         bool positionalKMers) {
-    SafeMatrixSequenceWrapper<double> safeMatrixWrapper(sequenceMatrix);
     std::vector<double> convertedAlphabet = std::move(convertRcppVector<double, Rcpp::NumericVector>(alphabet));
     return count_kmers<
             std::vector<double>,
-            SafeMatrixSequenceWrapper<double>::Row,
+            RcppParallel::RMatrix<double>::Row,
             double,
             ENCODED_ELEM_T,
             std::hash<double>>(convertedAlphabet,
                                sequenceMatrix.nrow(),
-                               getSafeMatrixRowGetter<double>(safeMatrixWrapper),
+                               getRMatrixRowGetter<Rcpp::NumericMatrix, double>(sequenceMatrix),
                                k,
                                positionalKMers,
                                getDoubleToStringConverter(3));
@@ -159,15 +157,13 @@ Rcpp::IntegerMatrix count_kmers_tidysq(Rcpp::List &sq,
             elementsEncoding
     ));
     auto encodedSequences = getEncodedTidysqSequences(sq);
-    SafeTidysqSequencesWrapper safeSequencesWrapper(encodedSequences);
-
     return count_kmers<
-            SafeTidysqSequencesWrapper::Row,
+            RcppParallel::RVector<unsigned char>,
             unsigned char,
             unsigned char,
             std::hash<unsigned char>>(alphabetEncoding,
                                       sq.size(),
-                                      getTidysqRowGetter(safeSequencesWrapper),
+                                      getTidysqRVectorGetter(encodedSequences),
                                       k,
                                       positionalKMers,
                                       getEncodedTidySqItemToStringConverter(elementsEncoding));

@@ -90,7 +90,7 @@ private:
 
 class SafeTidysqSequencesWrapper : public SafeSequencesWrapper<unsigned char> {
 public:
-    explicit SafeTidysqSequencesWrapper(const std::vector<Rcpp::RawVector> &unpackedSequences) {
+    explicit SafeTidysqSequencesWrapper(const Rcpp::List &unpackedSequences) {
         initSequences(unpackedSequences);
     }
 
@@ -105,7 +105,7 @@ public:
     SafeTidysqSequencesWrapper() = delete;
 
 private:
-    inline void initSequences(const std::vector<Rcpp::RawVector> &unpackedSequences) {
+    inline void initSequences(const Rcpp::List &unpackedSequences) {
         this->sequences_.resize(unpackedSequences.size());
         for (int seqNum = 0; seqNum < unpackedSequences.size(); ++seqNum) {
             setSequenceRow(unpackedSequences[seqNum], seqNum);

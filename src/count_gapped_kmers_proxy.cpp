@@ -122,17 +122,16 @@ Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatr
                                                Rcpp::IntegerVector &alphabet,
                                                Rcpp::IntegerVector &gaps,
                                                bool positionalKMers) {
-    SafeMatrixSequenceWrapper<int> safeMatrixWrapper(sequenceMatrix);
     std::vector<int> convertedAlphabet = std::move(convertRcppVector<int, Rcpp::IntegerVector>(alphabet));
     auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
     return count_gapped_kmers<
             std::vector<int>,
-            SafeMatrixSequenceWrapper<int>::Row,
+            RcppParallel::RMatrix<int>::Row,
             int,
             ENCODED_ELEM_T,
             std::hash<int>>(convertedAlphabet,
                             sequenceMatrix.nrow(),
-                            getSafeMatrixRowGetter<int>(safeMatrixWrapper),
+                            getRMatrixRowGetter<Rcpp::IntegerMatrix, int>(sequenceMatrix),
                             gapsConverted,
                             positionalKMers,
                             getIntToStringConverter());
@@ -144,17 +143,16 @@ Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatr
                                                Rcpp::NumericVector &alphabet,
                                                Rcpp::IntegerVector &gaps,
                                                bool positionalKMers) {
-    SafeMatrixSequenceWrapper<double> safeMatrixWrapper(sequenceMatrix);
     std::vector<double> convertedAlphabet = std::move(convertRcppVector<double, Rcpp::NumericVector>(alphabet));
     auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
     return count_gapped_kmers<
             std::vector<double>,
-            SafeMatrixSequenceWrapper<double>::Row,
+            RcppParallel::RMatrix<double>::Row,
             double,
             ENCODED_ELEM_T,
             std::hash<double>>(convertedAlphabet,
                                sequenceMatrix.nrow(),
-                               getSafeMatrixRowGetter<double>(safeMatrixWrapper),
+                               getRMatrixRowGetter<Rcpp::NumericMatrix, double>(sequenceMatrix),
                                gapsConverted,
                                positionalKMers,
                                getDoubleToStringConverter(3));
@@ -173,15 +171,14 @@ Rcpp::IntegerMatrix count_gapped_kmers_tidysq(Rcpp::List &sq,
             elementsEncoding
     ));
     auto encodedSequences = getEncodedTidysqSequences(sq);
-    SafeTidysqSequencesWrapper safeSequencesWrapper(encodedSequences);
     auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
     return count_gapped_kmers<
-            SafeTidysqSequencesWrapper::Row,
+            RcppParallel::RVector<unsigned char>,
             unsigned char,
             unsigned char,
             std::hash<unsigned char>>(alphabetEncoding,
                                       sq.size(),
-                                      getTidysqRowGetter(safeSequencesWrapper),
+                                      getTidysqRVectorGetter(encodedSequences),
                                       gapsConverted,
                                       positionalKMers,
                                       getEncodedTidySqItemToStringConverter(elementsEncoding));
