@@ -14,6 +14,7 @@
 #include "input_to_string_item_converter.h"
 #include <memory>
 #include <functional>
+#include "result_creator.h"
 
 extern const std::string default_item_separator;
 extern const std::string default_section_separator;
@@ -57,41 +58,6 @@ std::vector<KMerCountsManager> parallelComputeKMerCounts(
     RcppParallel::parallelFor(0, rowsNum, worker);
     return std::move(worker.kmerCounts);
 }
-
-class KMerMatrixCreatorWorker : public RcppParallel::Worker {
-public:
-    Rcpp::IntegerMatrix outputKMerCounts;
-
-    RcppParallel::RMatrix<int> outputKMerCountsWrapper;
-
-    KMerMatrixCreatorWorker(int nrow,
-                            int ncol,
-                            std::vector<KMerCountsManager> &kmerCountsManagers,
-                            Dictionary<std::vector<int>, int, vector_int_hasher> &hashIndexer,
-                            Rcpp::StringVector &uniqueKMerStrings) :
-            outputKMerCounts(Rcpp::IntegerMatrix(nrow, ncol)),
-            outputKMerCountsWrapper(outputKMerCounts),
-            kmerCountsManagers(kmerCountsManagers),
-            hashIndexer(hashIndexer),
-            uniqueKMerStrings(uniqueKMerStrings) {
-        Rcpp::colnames(this->outputKMerCounts) = Rcpp::wrap(uniqueKMerStrings);
-    }
-
-    inline void operator()(std::size_t beginRow, std::size_t endRow) override {
-        for (int r = beginRow; r < endRow; ++r) {
-            for (const auto &kmerHashPair: kmerCountsManagers[r].getDictionary()) {
-                int c = hashIndexer[kmerHashPair.first];
-                outputKMerCountsWrapper(r, c) = kmerHashPair.second.cnt;
-            }
-        }
-    }
-
-private:
-    std::vector<KMerCountsManager> &kmerCountsManagers;
-    Dictionary<std::vector<int>, int, vector_int_hasher> &hashIndexer;
-    Rcpp::StringVector &uniqueKMerStrings;
-
-};
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
 using ParallelKMerCountingProc_t = std::function<std::vector<KMerCountsManager>(

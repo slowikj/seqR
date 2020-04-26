@@ -29,4 +29,4 @@ add_library(seqR
         src/tidysq_encoded_sequence.cpp
         src/alphabet_encoder_proxy.cpp
         src/count_gapped_kmers_proxy.cpp
-        src/count_kmers_proxy.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h)
+        src/count_kmers_proxy.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h src/result_creator.h)

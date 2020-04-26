@@ -80,3 +80,6 @@ NULL
 #' @importFrom  RcppParallel RcppParallelLibs
 NULL
 
+#' @importFrom  RcppParallel RcppParallelLibs
+NULL
+
