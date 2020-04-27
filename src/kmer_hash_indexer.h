@@ -1,9 +1,7 @@
 #ifndef KMER_HASH_INDEXER_H
 #define KMER_HASH_INDEXER_H
 
-#include "dictionary.h"
 #include "kmer_counts_manager.h"
-#include "hash/custom_hashers.h"
 #include <vector>
 #include <tuple>
 #include <memory>
@@ -26,10 +24,11 @@ public:
 
 template<template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
-std::tuple<UnorderedMapWrapper<std::vector<int>, int>,
+std::tuple<
+        kmer_dictionary_t<std::vector<int>, int>,
         std::vector<KMerPositionInfo>>
 indexKMerHashes(const std::vector<KMerCountsManager<kmer_dictionary_t>> &kmerCounts) {
-    UnorderedMapWrapper<std::vector<int>, int> hashIndexer;
+    kmer_dictionary_t<std::vector<int>, int> hashIndexer;
     std::vector<KMerPositionInfo> uniqueKMers;
     int currentIndex = 0;
     for (int seqNum = 0; seqNum < kmerCounts.size(); ++seqNum) {

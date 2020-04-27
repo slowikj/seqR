@@ -18,7 +18,7 @@ public:
     KMerMatrixCreatorWorker(int nrow,
                             int ncol,
                             std::vector<KMerCountsManager<kmer_dictionary_t>> &kmerCountsManagers,
-                            UnorderedMapWrapper<std::vector<int>, int> &hashIndexer,
+                            kmer_dictionary_t<std::vector<int>, int> &hashIndexer,
                             Rcpp::StringVector &uniqueKMerStrings) :
             outputKMerCounts(Rcpp::IntegerMatrix(nrow, ncol)),
             outputKMerCountsWrapper(outputKMerCounts),
@@ -39,7 +39,7 @@ public:
 
 private:
     std::vector<KMerCountsManager<kmer_dictionary_t>> &kmerCountsManagers;
-    UnorderedMapWrapper<std::vector<int>, int> &hashIndexer;
+    kmer_dictionary_t<std::vector<int>, int> &hashIndexer;
     Rcpp::StringVector &uniqueKMerStrings;
 
 };

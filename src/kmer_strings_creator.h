@@ -9,7 +9,6 @@
 #include <RcppParallel.h>
 #include <functional>
 #include <algorithm>
-#include "dictionary.h"
 #include "hash/complex_hasher.h"
 #include "input_to_string_item_converter.h"
 #include "sequence_getter.h"
