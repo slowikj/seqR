@@ -10,7 +10,6 @@ include_directories(${R_LIBRARY}/RcppParallel/include)
 include_directories(${R_INCLUDE})
 
 add_library(seqR
-        src/app_conf.h
         src/utils.h
         src/hash/single_hasher.h
         src/hash/polynomial_single_hasher.h

@@ -1,7 +1,6 @@
 // [[Rcpp::plugins("cpp17")]]
 #include <Rcpp.h>
 #include "alphabet_encoder.h"
-#include "app_conf.h"
 #include "hash/custom_hashers.h"
 #include <utility>
 #include <functional>
@@ -25,7 +24,7 @@ Rcpp::IntegerVector prepareOutputVector(
 Rcpp::IntegerVector encode_integer_alphabet(Rcpp::IntegerVector &input) {
     return prepareOutputVector<Rcpp::IntegerVector,
             int,
-            ENCODED_ELEM_T,
+            short,
             std::hash<int>>(input);
 }
 
@@ -34,7 +33,7 @@ Rcpp::IntegerVector encode_integer_alphabet(Rcpp::IntegerVector &input) {
 Rcpp::IntegerVector encode_numeric_alphabet(Rcpp::NumericVector & input) {
     return prepareOutputVector<Rcpp::NumericVector,
             double,
-            ENCODED_ELEM_T,
+            short,
             std::hash<double>>(input);
 }
 
@@ -43,6 +42,6 @@ Rcpp::IntegerVector encode_numeric_alphabet(Rcpp::NumericVector & input) {
 Rcpp::IntegerVector encode_string_alphabet(Rcpp::StringVector &input) {
     return prepareOutputVector<Rcpp::StringVector,
             Rcpp::StringVector::stored_type,
-            ENCODED_ELEM_T,
+            short,
             string_proxy_hasher>(input);
 }

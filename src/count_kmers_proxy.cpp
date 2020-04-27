@@ -8,7 +8,6 @@
 #include "input_to_string_item_converter.h"
 #include "sequence_getter.h"
 #include "tidysq_encoded_sequence.h"
-#include "app_conf.h"
 #include "rcpp_to_cpp_converters.h"
 
 inline ComplexHasher createKMerComplexHasher() {
@@ -96,7 +95,7 @@ Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
             std::vector<std::string>,
             SafeMatrixSequenceWrapper<std::string>::Row,
             std::string,
-            ENCODED_ELEM_T,
+            short,
             std::hash<std::string>>(convertedAlphabet,
                                     sequenceMatrix.nrow(),
                                     getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
@@ -116,7 +115,7 @@ Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
             std::vector<int>,
             RcppParallel::RMatrix<int>::Row,
             int,
-            ENCODED_ELEM_T,
+            short,
             std::hash<int>>(convertedAlphabet,
                             sequenceMatrix.nrow(),
                             getRMatrixRowGetter<Rcpp::IntegerMatrix, int>(sequenceMatrix),
@@ -136,7 +135,7 @@ Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
             std::vector<double>,
             RcppParallel::RMatrix<double>::Row,
             double,
-            ENCODED_ELEM_T,
+            short,
             std::hash<double>>(convertedAlphabet,
                                sequenceMatrix.nrow(),
                                getRMatrixRowGetter<Rcpp::NumericMatrix, double>(sequenceMatrix),
