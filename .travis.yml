@@ -4,7 +4,13 @@ language: R
 cache: packages
 sudo: required
 
+dist: bionic
+
 warnings_are_errors: false
+
+branches:
+  only:
+    - master
 
 addons:
   apt:
