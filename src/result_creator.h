@@ -8,6 +8,7 @@
 #include "kmer_counts_manager.h"
 #include "hash/custom_hashers.h"
 
+template<template<typename key, typename value, typename...> class kmer_dictionary_t>
 class KMerMatrixCreatorWorker : public RcppParallel::Worker {
 public:
     Rcpp::IntegerMatrix outputKMerCounts;
@@ -16,8 +17,8 @@ public:
 
     KMerMatrixCreatorWorker(int nrow,
                             int ncol,
-                            std::vector<KMerCountsManager> &kmerCountsManagers,
-                            Dictionary<std::vector<int>, int, vector_int_hasher> &hashIndexer,
+                            std::vector<KMerCountsManager<kmer_dictionary_t>> &kmerCountsManagers,
+                            kmer_dictionary_t<std::vector<int>, int> &hashIndexer,
                             Rcpp::StringVector &uniqueKMerStrings) :
             outputKMerCounts(Rcpp::IntegerMatrix(nrow, ncol)),
             outputKMerCountsWrapper(outputKMerCounts),
@@ -37,8 +38,8 @@ public:
     }
 
 private:
-    std::vector<KMerCountsManager> &kmerCountsManagers;
-    Dictionary<std::vector<int>, int, vector_int_hasher> &hashIndexer;
+    std::vector<KMerCountsManager<kmer_dictionary_t>> &kmerCountsManagers;
+    kmer_dictionary_t<std::vector<int>, int> &hashIndexer;
     Rcpp::StringVector &uniqueKMerStrings;
 
 };

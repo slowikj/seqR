@@ -5,10 +5,11 @@
 #include <utility>
 #include <functional>
 
-template<class rcpp_input_t, class input_elem_t, class encoded_elem_t, class hasher_t>
+template<class rcpp_input_t, class input_elem_t, class encoded_elem_t,
+        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t>
 Rcpp::IntegerVector prepareOutputVector(
         rcpp_input_t &input) {
-    auto alphabetEncoding = getAlphabetEncoding<rcpp_input_t, input_elem_t, encoded_elem_t, hasher_t>(
+    auto alphabetEncoding = getAlphabetEncoding<rcpp_input_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
             input
     );
     auto res = Rcpp::IntegerVector(input.size());
@@ -25,7 +26,7 @@ Rcpp::IntegerVector encode_integer_alphabet(Rcpp::IntegerVector &input) {
     return prepareOutputVector<Rcpp::IntegerVector,
             int,
             short,
-            std::hash<int>>(input);
+            UnorderedMapWrapper>(input);
 }
 
 //' @export
@@ -34,7 +35,7 @@ Rcpp::IntegerVector encode_numeric_alphabet(Rcpp::NumericVector & input) {
     return prepareOutputVector<Rcpp::NumericVector,
             double,
             short,
-            std::hash<double>>(input);
+            UnorderedMapWrapper>(input);
 }
 
 //' @export
@@ -43,5 +44,5 @@ Rcpp::IntegerVector encode_string_alphabet(Rcpp::StringVector &input) {
     return prepareOutputVector<Rcpp::StringVector,
             Rcpp::StringVector::stored_type,
             short,
-            string_proxy_hasher>(input);
+            UnorderedMapWrapper>(input);
 }

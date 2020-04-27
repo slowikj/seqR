@@ -4,12 +4,13 @@
 #include <Rcpp.h>
 #include <functional>
 #include <memory>
-#include "dictionary.h"
+#include "dictionary/unordered_map_wrapper.h"
 
-template<class input_elem_t, class encoded_elem_t, class hasher_t>
+template<class input_elem_t, class encoded_elem_t,
+        template<typename input_t, typename encoded_t, typename...> class dictionary_t>
 class AlphabetEncoding {
 public:
-    AlphabetEncoding(Dictionary<input_elem_t, encoded_elem_t, hasher_t> &&encoder,
+    AlphabetEncoding(dictionary_t<input_elem_t, encoded_elem_t> &&encoder,
                      encoded_elem_t notAllowedEncodingNum) :
             encoder(std::move(encoder)),
             notAllowedEncodingNum(notAllowedEncodingNum) {
@@ -17,13 +18,14 @@ public:
 
     AlphabetEncoding() = default;
 
-    AlphabetEncoding(AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t> &&other) noexcept = default;
+    AlphabetEncoding(AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> &&other) noexcept = default;
 
-    AlphabetEncoding(const AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t> &) = delete;
+    AlphabetEncoding(const AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> &) = delete;
 
-    AlphabetEncoding &operator=(const AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t> &) = delete;
+    AlphabetEncoding &operator=(const AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> &) = delete;
 
-    AlphabetEncoding &operator=(AlphabetEncoding<input_elem_t, encoded_elem_t, hasher_t> &&other) noexcept = default;
+    AlphabetEncoding &
+    operator=(AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> &&other) noexcept = default;
 
     inline encoded_elem_t encode(const input_elem_t &inputElem) {
         return this->encoder[inputElem];
@@ -42,32 +44,34 @@ public:
     }
 
 private:
-    Dictionary<input_elem_t, encoded_elem_t, hasher_t> encoder;
+    dictionary_t<input_elem_t, encoded_elem_t> encoder;
     encoded_elem_t notAllowedEncodingNum;
 };
 
-template<class input_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+template<class input_t, class input_elem_t, class encoded_elem_t,
+        template<typename key, typename value, typename...> class dictionary_t>
 inline
-AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> getAlphabetEncoding(input_t &input) {
+AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> getAlphabetEncoding(input_t &input) {
     encoded_elem_t currentNum = 2;
-    Dictionary<input_elem_t, encoded_elem_t, alphabet_hasher_t> encoder;
+    dictionary_t<input_elem_t, encoded_elem_t> encoder;
     for (const auto &inputElem: input) {
         if (!encoder.isPresent(inputElem)) {
             encoder[inputElem] = currentNum++;
         }
     }
-    return AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t>(
+    return AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t>(
             std::move(encoder),
             1
     );
 }
 
-template<class encoded_elem_t, class alphabet_hasher_t>
+template<class encoded_elem_t,
+        template<typename input_t, typename encoded_t, typename...> class dictionary_t>
 inline
-AlphabetEncoding<encoded_elem_t, encoded_elem_t, alphabet_hasher_t> prepareAlphabetEncodingForTidysq(
+AlphabetEncoding<encoded_elem_t, encoded_elem_t, dictionary_t> prepareAlphabetEncodingForTidysq(
         Rcpp::StringVector &alphabet,
         Rcpp::StringVector &elementsEncoding) {
-    Dictionary<encoded_elem_t, encoded_elem_t, alphabet_hasher_t> encoder;
+    dictionary_t<encoded_elem_t, encoded_elem_t> encoder;
     for (const auto &alphabetElem: alphabet) {
         for (int encoding_i = 0; encoding_i < elementsEncoding.size(); ++encoding_i) {
             if (alphabetElem == elementsEncoding[encoding_i]) {
@@ -76,7 +80,7 @@ AlphabetEncoding<encoded_elem_t, encoded_elem_t, alphabet_hasher_t> prepareAlpha
             }
         }
     }
-    return AlphabetEncoding<encoded_elem_t, encoded_elem_t, alphabet_hasher_t>(
+    return AlphabetEncoding<encoded_elem_t, encoded_elem_t, dictionary_t>(
             std::move(encoder),
             elementsEncoding.size() + 1
     );

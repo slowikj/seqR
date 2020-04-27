@@ -1,7 +1,6 @@
 #ifndef KMER_COUNTS_MANAGER_H
 #define KMER_COUNTS_MANAGER_H
 
-#include "dictionary.h"
 #include "hash/custom_hashers.h"
 #include <vector>
 #include <memory>
@@ -12,7 +11,7 @@ struct KMerHashInfo {
 
     int seqStartPosition;
 
-    KMerHashInfo(int seqStartPosition) :
+    explicit KMerHashInfo(int seqStartPosition) :
             cnt(0), seqStartPosition(seqStartPosition) {
     }
 
@@ -27,18 +26,23 @@ struct KMerHashInfo {
     ~KMerHashInfo() = default;
 };
 
+template<
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 class KMerCountsManager {
 public:
+    using dict_t = kmer_dictionary_t<std::vector<int>, KMerHashInfo>;
 
     KMerCountsManager() = default;
 
-    KMerCountsManager(const KMerCountsManager &) = default;
+    KMerCountsManager(const KMerCountsManager<kmer_dictionary_t> &) = default;
 
-    KMerCountsManager(KMerCountsManager &&) noexcept = default;
+    KMerCountsManager(KMerCountsManager<kmer_dictionary_t> &&) noexcept = default;
 
-    KMerCountsManager &operator=(const KMerCountsManager &) = default;
+    KMerCountsManager<kmer_dictionary_t> &
+    operator=(const KMerCountsManager<kmer_dictionary_t> &) = default;
 
-    KMerCountsManager &operator=(KMerCountsManager &&) noexcept = default;
+    KMerCountsManager<kmer_dictionary_t> &
+    operator=(KMerCountsManager<kmer_dictionary_t> &&) noexcept = default;
 
     inline void add(std::vector<int> &&hash, int position) {
         if (!this->dictionary.isPresent(hash)) {
@@ -48,12 +52,12 @@ public:
         }
     }
 
-    inline const Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher> &getDictionary() const {
+    inline const dict_t &getDictionary() const {
         return this->dictionary;
     }
 
 private:
-    Dictionary<std::vector<int>, KMerHashInfo, vector_int_hasher> dictionary;
+    dict_t dictionary;
 
 };
 

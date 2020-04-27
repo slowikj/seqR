@@ -5,8 +5,10 @@
 #include <Rcpp.h>
 #include <boost/functional/hash/hash.hpp>
 #include <functional>
+#include <algorithm>
 
-struct string_proxy_hasher {
+template<>
+struct std::hash<Rcpp::StringVector::stored_type> {
     inline std::size_t operator()(const Rcpp::StringVector::stored_type &v) const {
         return rcppStringHasher(v);
     }
@@ -15,7 +17,8 @@ private:
     std::hash<Rcpp::String> rcppStringHasher;
 };
 
-struct vector_int_hasher {
+template<>
+struct std::hash<std::vector<int>> {
 
     const static int P = 47;
 

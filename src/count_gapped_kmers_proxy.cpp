@@ -31,10 +31,11 @@ inline std::vector<PolynomialSingleHasherConfig> getGappedKMerHasherConfigs() {
 template<class input_vector_t,
         class input_elem_t,
         class encoded_elem_t,
-        class alphabet_hasher_t>
+        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 Rcpp::IntegerMatrix
-count_gapped_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding,
+count_gapped_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
                    int sequencesNum,
                    SequenceGetter_t<input_vector_t> sequenceGetter,
                    const std::vector<int> &gaps,
@@ -43,11 +44,11 @@ count_gapped_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hashe
     auto hasherConfigs = std::move(getGappedKMerHasherConfigs());
     auto parallelKMerCountingProc =
             [&gaps, &positionalKMers, &sequencesNum, &hasherConfigs](
-                    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &encoding,
+                    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &encoding,
                     SequenceGetter_t<input_vector_t> seqGetter
-            ) -> std::vector<KMerCountsManager> {
+            ) -> std::vector<KMerCountsManager<kmer_dictionary_t>> {
                 return std::move(
-                        parallelComputeGappedKMersCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(
+                        parallelComputeGappedKMersCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
                                 gaps,
                                 positionalKMers,
                                 sequencesNum,
@@ -56,22 +57,24 @@ count_gapped_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hashe
                                 hasherConfigs
                         ));
             };
-    return std::move(getKMerCountsMatrix<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(
-            alphabetEncoding,
-            sequencesNum,
-            sequenceGetter,
-            gaps,
-            positionalKMers,
-            parallelKMerCountingProc,
-            inputToStringItemConverter
-    ));
+    return std::move(
+            getKMerCountsMatrix<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
+                    alphabetEncoding,
+                    sequencesNum,
+                    sequenceGetter,
+                    gaps,
+                    positionalKMers,
+                    parallelKMerCountingProc,
+                    inputToStringItemConverter
+            ));
 }
 
 template<class alphabet_t,
         class input_vector_t,
         class input_elem_t,
         class encoded_elem_t,
-        class alphabet_hasher_t>
+        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 Rcpp::IntegerMatrix count_gapped_kmers(alphabet_t &alphabet,
                                        int sequencesNum,
@@ -79,17 +82,19 @@ Rcpp::IntegerMatrix count_gapped_kmers(alphabet_t &alphabet,
                                        const std::vector<int> &gaps,
                                        bool positionalKMers,
                                        InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter) {
-    auto alphabetEncoding = std::move(getAlphabetEncoding<alphabet_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(
-            alphabet
-    ));
-    return std::move(count_gapped_kmers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(
-            alphabetEncoding,
-            sequencesNum,
-            sequenceGetter,
-            gaps,
-            positionalKMers,
-            inputToStringItemConverter
-    ));
+    auto alphabetEncoding = std::move(
+            getAlphabetEncoding<alphabet_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
+                    alphabet
+            ));
+    return std::move(
+            count_gapped_kmers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
+                    alphabetEncoding,
+                    sequencesNum,
+                    sequenceGetter,
+                    gaps,
+                    positionalKMers,
+                    inputToStringItemConverter
+            ));
 }
 
 //' @export
@@ -107,12 +112,13 @@ Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix
             SafeMatrixSequenceWrapper<std::string>::Row,
             std::string,
             short,
-            std::hash<std::string>>(convertedAlphabet,
-                                    sequenceMatrix.nrow(),
-                                    getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
-                                    gapsConverted,
-                                    positionalKMers,
-                                    getStringToStringConverter());
+            UnorderedMapWrapper,
+            UnorderedMapWrapper>(convertedAlphabet,
+                                 sequenceMatrix.nrow(),
+                                 getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
+                                 gapsConverted,
+                                 positionalKMers,
+                                 getStringToStringConverter());
 }
 
 //' @export
@@ -128,12 +134,13 @@ Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatr
             RcppParallel::RMatrix<int>::Row,
             int,
             short,
-            std::hash<int>>(convertedAlphabet,
-                            sequenceMatrix.nrow(),
-                            getRMatrixRowGetter<Rcpp::IntegerMatrix, int>(sequenceMatrix),
-                            gapsConverted,
-                            positionalKMers,
-                            getIntToStringConverter());
+            UnorderedMapWrapper,
+            UnorderedMapWrapper>(convertedAlphabet,
+                                 sequenceMatrix.nrow(),
+                                 getRMatrixRowGetter<Rcpp::IntegerMatrix, int>(sequenceMatrix),
+                                 gapsConverted,
+                                 positionalKMers,
+                                 getIntToStringConverter());
 }
 
 //' @export
@@ -149,12 +156,13 @@ Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatr
             RcppParallel::RMatrix<double>::Row,
             double,
             short,
-            std::hash<double>>(convertedAlphabet,
-                               sequenceMatrix.nrow(),
-                               getRMatrixRowGetter<Rcpp::NumericMatrix, double>(sequenceMatrix),
-                               gapsConverted,
-                               positionalKMers,
-                               getDoubleToStringConverter(3));
+            UnorderedMapWrapper,
+            UnorderedMapWrapper>(convertedAlphabet,
+                                 sequenceMatrix.nrow(),
+                                 getRMatrixRowGetter<Rcpp::NumericMatrix, double>(sequenceMatrix),
+                                 gapsConverted,
+                                 positionalKMers,
+                                 getDoubleToStringConverter(3));
 }
 
 
@@ -165,7 +173,7 @@ Rcpp::IntegerMatrix count_gapped_kmers_tidysq(Rcpp::List &sq,
                                               Rcpp::IntegerVector &gaps,
                                               bool positionalKMers) {
     Rcpp::StringVector elementsEncoding = sq.attr("alphabet");
-    auto alphabetEncoding = std::move(prepareAlphabetEncodingForTidysq<unsigned char, std::hash<unsigned char>>(
+    auto alphabetEncoding = std::move(prepareAlphabetEncodingForTidysq<unsigned char, UnorderedMapWrapper>(
             alphabet,
             elementsEncoding
     ));
@@ -175,10 +183,11 @@ Rcpp::IntegerMatrix count_gapped_kmers_tidysq(Rcpp::List &sq,
             RcppParallel::RVector<unsigned char>,
             unsigned char,
             unsigned char,
-            std::hash<unsigned char>>(alphabetEncoding,
-                                      sq.size(),
-                                      getTidysqRVectorGetter(encodedSequences),
-                                      gapsConverted,
-                                      positionalKMers,
-                                      getEncodedTidySqItemToStringConverter(elementsEncoding));
+            UnorderedMapWrapper,
+            UnorderedMapWrapper>(alphabetEncoding,
+                                 sq.size(),
+                                 getTidysqRVectorGetter(encodedSequences),
+                                 gapsConverted,
+                                 positionalKMers,
+                                 getEncodedTidySqItemToStringConverter(elementsEncoding));
 }

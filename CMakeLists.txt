@@ -14,7 +14,7 @@ add_library(seqR
         src/hash/single_hasher.h
         src/hash/polynomial_single_hasher.h
         src/hash/complex_hasher.h src/hash/custom_hashers.h
-        src/hash/rolling_window.h src/dictionary.h src/alphabet_encoder.h
+        src/hash/rolling_window.h src/dictionary/unordered_map_wrapper.h src/alphabet_encoder.h
         src/hashing_proxy.cpp
         src/input_to_string_item_converter.h
         src/kmer_counts_manager.h
@@ -28,4 +28,4 @@ add_library(seqR
         src/tidysq_encoded_sequence.cpp
         src/alphabet_encoder_proxy.cpp
         src/count_gapped_kmers_proxy.cpp
-        src/count_kmers_proxy.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h src/result_creator.h)
+        src/count_kmers_proxy.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h src/result_creator.h src/dictionary/iterator.h)
