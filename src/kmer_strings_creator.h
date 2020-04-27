@@ -67,11 +67,8 @@ private:
                 std::begin(this->gapsAccumulated),
                 std::end(this->gapsAccumulated),
                 inputToStringItemConverter(sequence[begin]).size(),
-                [&toStrConverter = std::as_const(this->inputToStringItemConverter),
-                        &begin,
-                        &separatorLength,
-                        &seq = std::as_const(this->sequence)](int r, int accGap) {
-                    return r + toStrConverter(seq[begin + accGap]).size() + separatorLength;
+                [this, &begin, &separatorLength](int r, int accGap) {
+                    return r + inputToStringItemConverter(sequence[begin + accGap]).size() + separatorLength;
                 }
         );
     }

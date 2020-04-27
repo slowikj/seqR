@@ -12,7 +12,7 @@
 #include <utility>
 #include <algorithm>
 
-template <class vector_t>
+template<class vector_t>
 inline std::vector<std::pair<int, int>> getContiguousIntervals(const vector_t &gaps) {
     std::vector<std::pair<int, int>> res;
     int currentKMerIndex = 0;
@@ -253,16 +253,15 @@ std::vector<KMerCountsManager> parallelComputeGappedKMersCounts(
     std::size_t totalKMerSize = getTotalKMerSize(gaps);
     return std::move(parallelComputeKMerCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(
             rowsNum,
-            [&gapsVector = std::as_const(
-                    gaps), isPositionalKMer, &alphabetEncoding, &totalKMerSize, &hconf = std::as_const(hasherConfigs)]
+            [&gaps, isPositionalKMer, &alphabetEncoding, &totalKMerSize, &hasherConfigs]
                     (input_vector_t &v) -> KMerCountsManager {
                 return countGappedKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(
-                        gapsVector,
+                        gaps,
                         totalKMerSize,
                         v,
                         alphabetEncoding,
                         isPositionalKMer,
-                        hconf
+                        hasherConfigs
                 );
             },
             sequenceGetter
