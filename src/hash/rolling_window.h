@@ -6,13 +6,13 @@
 #include "../hash/complex_hasher.h"
 #include "../utils.h"
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t>
+template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t>
 class RollingWindow {
 public:
 
     RollingWindow(input_vector_t &sequence,
                   ComplexHasher &&hasher,
-                  AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding) :
+                  AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding) :
             sequence(sequence),
             hasher(std::move(hasher)),
             alphabetEncoding(alphabetEncoding) {
@@ -65,7 +65,7 @@ public:
 private:
     input_vector_t &sequence;
 
-    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding;
+    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding;
 
     ComplexHasher hasher;
 

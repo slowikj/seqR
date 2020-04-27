@@ -21,10 +21,10 @@ inline ComplexHasher createKMerComplexHasher() {
 template<class input_vector_t,
         class input_elem_t,
         class encoded_elem_t,
-        class alphabet_hasher_t,
+        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
-Rcpp::IntegerMatrix count_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding,
+Rcpp::IntegerMatrix count_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
                                 int sequencesNum,
                                 SequenceGetter_t<input_vector_t> sequenceGetter,
                                 int k,
@@ -32,11 +32,11 @@ Rcpp::IntegerMatrix count_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, a
                                 InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter) {
     std::vector<int> gaps(k - 1);
     auto parallelKMerCountingProc = [&k, &positionalKMers, &sequencesNum](
-            AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &encoding,
+            AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &encoding,
             SequenceGetter_t<input_vector_t> seqGetter
     ) -> std::vector<KMerCountsManager<kmer_dictionary_t>> {
         return std::move(
-                parallelComputeKMerCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t, kmer_dictionary_t>(
+                parallelComputeKMerCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
                         k,
                         positionalKMers,
                         sequencesNum,
@@ -45,7 +45,7 @@ Rcpp::IntegerMatrix count_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, a
                         []() -> ComplexHasher { return createKMerComplexHasher(); }));
     };
     return std::move(
-            getKMerCountsMatrix<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t, kmer_dictionary_t>(
+            getKMerCountsMatrix<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
                     alphabetEncoding,
                     sequencesNum,
                     sequenceGetter,
@@ -60,7 +60,7 @@ template<class alphabet_t,
         class input_vector_t,
         class input_elem_t,
         class encoded_elem_t,
-        class alphabet_hasher_t,
+        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 Rcpp::IntegerMatrix count_kmers(alphabet_t &alphabet,
@@ -69,17 +69,19 @@ Rcpp::IntegerMatrix count_kmers(alphabet_t &alphabet,
                                 int k,
                                 bool positionalKMers,
                                 InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter) {
-    auto alphabetEncoding = std::move(getAlphabetEncoding<alphabet_t, input_elem_t, encoded_elem_t, alphabet_hasher_t>(
-            alphabet
-    ));
-    return std::move(count_kmers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t, kmer_dictionary_t>(
-            alphabetEncoding,
-            sequencesNum,
-            sequenceGetter,
-            k,
-            positionalKMers,
-            inputToStringItemConverter
-    ));
+    auto alphabetEncoding = std::move(
+            getAlphabetEncoding<alphabet_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
+                    alphabet
+            ));
+    return std::move(
+            count_kmers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
+                    alphabetEncoding,
+                    sequencesNum,
+                    sequenceGetter,
+                    k,
+                    positionalKMers,
+                    inputToStringItemConverter
+            ));
 }
 
 //' @export
@@ -96,7 +98,7 @@ Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
             SafeMatrixSequenceWrapper<std::string>::Row,
             std::string,
             short,
-            std::hash<std::string>,
+            UnorderedMapWrapper,
             UnorderedMapWrapper>(convertedAlphabet,
                                  sequenceMatrix.nrow(),
                                  getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
@@ -117,7 +119,7 @@ Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
             RcppParallel::RMatrix<int>::Row,
             int,
             short,
-            std::hash<int>,
+            UnorderedMapWrapper,
             UnorderedMapWrapper>(convertedAlphabet,
                                  sequenceMatrix.nrow(),
                                  getRMatrixRowGetter<Rcpp::IntegerMatrix, int>(sequenceMatrix),
@@ -138,7 +140,7 @@ Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
             RcppParallel::RMatrix<double>::Row,
             double,
             short,
-            std::hash<double>,
+            UnorderedMapWrapper,
             UnorderedMapWrapper>(convertedAlphabet,
                                  sequenceMatrix.nrow(),
                                  getRMatrixRowGetter<Rcpp::NumericMatrix, double>(sequenceMatrix),
@@ -154,7 +156,7 @@ Rcpp::IntegerMatrix count_kmers_tidysq(Rcpp::List &sq,
                                        int k,
                                        bool positionalKMers) {
     Rcpp::StringVector elementsEncoding = sq.attr("alphabet");
-    auto alphabetEncoding = std::move(prepareAlphabetEncodingForTidysq<unsigned char, std::hash<unsigned char>>(
+    auto alphabetEncoding = std::move(prepareAlphabetEncodingForTidysq<unsigned char, UnorderedMapWrapper>(
             alphabet,
             elementsEncoding
     ));
@@ -163,7 +165,7 @@ Rcpp::IntegerMatrix count_kmers_tidysq(Rcpp::List &sq,
             RcppParallel::RVector<unsigned char>,
             unsigned char,
             unsigned char,
-            std::hash<unsigned char>,
+            UnorderedMapWrapper,
             UnorderedMapWrapper>(alphabetEncoding,
                                  sq.size(),
                                  getTidysqRVectorGetter(encodedSequences),

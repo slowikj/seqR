@@ -50,7 +50,7 @@ public:
     std::vector<KMerCountsManager<kmer_dictionary_t>> kmerCounts;
 };
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t,
+template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerCountsManager<kmer_dictionary_t>> parallelComputeKMerCounts(
@@ -62,22 +62,22 @@ std::vector<KMerCountsManager<kmer_dictionary_t>> parallelComputeKMerCounts(
     return std::move(worker.kmerCounts);
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t,
+template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 using ParallelKMerCountingProc_t = std::function<std::vector<KMerCountsManager<kmer_dictionary_t>>(
-        AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &,
+        AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &,
         SequenceGetter_t<input_vector_t>)>;
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t,
+template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 Rcpp::IntegerMatrix getKMerCountsMatrix(
-        AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding,
+        AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
         int sequencesNum,
         SequenceGetter_t<input_vector_t> sequenceGetter,
         const std::vector<int> &gaps,
         bool positionalKMers,
-        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t, kmer_dictionary_t> parallelKMerCountingProc,
+        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> parallelKMerCountingProc,
         InputToStringItemConverter_t<input_elem_t> inputToStringConverter) {
 
     auto kmerCountsManagers = std::move(parallelKMerCountingProc(alphabetEncoding, sequenceGetter));

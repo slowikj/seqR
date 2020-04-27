@@ -7,7 +7,8 @@
 #include <functional>
 #include <algorithm>
 
-struct string_proxy_hasher {
+template<>
+struct std::hash<Rcpp::StringVector::stored_type> {
     inline std::size_t operator()(const Rcpp::StringVector::stored_type &v) const {
         return rcppStringHasher(v);
     }
