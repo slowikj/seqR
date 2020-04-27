@@ -54,7 +54,7 @@ private:
 };
 
 template<class K, class V, class Hash=std::hash<K>>
-class Dictionary {
+class UnorderedMapWrapper {
 public:
 
     using iterator = iterator_t<std::pair<const K &, V>, typename std::unordered_map<K, V, Hash>::iterator>;
@@ -92,17 +92,17 @@ public:
         return const_iterator(this->inner_map_.end());
     }
 
-    Dictionary() = default;
+    UnorderedMapWrapper() = default;
 
-    Dictionary(const Dictionary<K, V, Hash> &) = default;
+    UnorderedMapWrapper(const UnorderedMapWrapper<K, V, Hash> &) = default;
 
-    Dictionary<K, V, Hash> &operator=(const Dictionary<K, V, Hash> &) = default;
+    UnorderedMapWrapper<K, V, Hash> &operator=(const UnorderedMapWrapper<K, V, Hash> &) = default;
 
-    Dictionary(Dictionary<K, V, Hash> &&) noexcept = default;
+    UnorderedMapWrapper(UnorderedMapWrapper<K, V, Hash> &&) noexcept = default;
 
-    Dictionary<K, V, Hash> &operator=(Dictionary<K, V, Hash> &&) noexcept = default;
+    UnorderedMapWrapper<K, V, Hash> &operator=(UnorderedMapWrapper<K, V, Hash> &&) noexcept = default;
 
-    ~Dictionary() = default;
+    ~UnorderedMapWrapper() = default;
 
 private:
     std::unordered_map<K, V, Hash> inner_map_;

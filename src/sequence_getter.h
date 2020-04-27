@@ -20,7 +20,7 @@ getSafeMatrixRowGetter(SafeMatrixSequenceWrapper<elem_t> &sequenceWrapper) {
 
 template<class rcpp_matrix_t, class elem_t>
 inline SequenceGetter_t<typename RcppParallel::RMatrix<elem_t>::Row>
-getRMatrixRowGetter(rcpp_matrix_t& rcppMatrix) {
+getRMatrixRowGetter(rcpp_matrix_t &rcppMatrix) {
     RcppParallel::RMatrix<elem_t> wrappedMatrix(rcppMatrix);
     return [wrappedMatrix](int rowNum) -> typename RcppParallel::RMatrix<elem_t>::Row {
         return wrappedMatrix.row(rowNum);
@@ -35,7 +35,7 @@ getTidysqRowGetter(SafeTidysqSequencesWrapper &safeWrapper) {
 }
 
 inline SequenceGetter_t<RcppParallel::RVector<unsigned char>>
-getTidysqRVectorGetter(Rcpp::List& unpackedSequences) {
+getTidysqRVectorGetter(Rcpp::List &unpackedSequences) {
     return [&unpackedSequences](int rowNum) -> RcppParallel::RVector<unsigned char> {
         Rcpp::RawVector sequence = unpackedSequences[rowNum];
         return RcppParallel::RVector<unsigned char>(sequence);

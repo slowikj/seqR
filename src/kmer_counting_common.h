@@ -20,11 +20,11 @@ extern const std::string default_item_separator;
 extern const std::string default_section_separator;
 
 template<class input_vector_t,
-        template <typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 using CountingKMersProc_t = std::function<KMerCountsManager<kmer_dictionary_t>(input_vector_t &)>;
 
 template<class input_vector_t,
-        template <typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 class KMerCounterWorker : public RcppParallel::Worker {
 public:
     KMerCounterWorker(int rowsNum,
@@ -51,7 +51,7 @@ public:
 };
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t,
-        template <typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerCountsManager<kmer_dictionary_t>> parallelComputeKMerCounts(
         int rowsNum,
@@ -63,13 +63,13 @@ std::vector<KMerCountsManager<kmer_dictionary_t>> parallelComputeKMerCounts(
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t,
-        template <typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 using ParallelKMerCountingProc_t = std::function<std::vector<KMerCountsManager<kmer_dictionary_t>>(
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &,
         SequenceGetter_t<input_vector_t>)>;
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t,
-        template <typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 Rcpp::IntegerMatrix getKMerCountsMatrix(
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding,

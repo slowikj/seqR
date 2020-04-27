@@ -243,7 +243,7 @@ KMerCountsManager<kmer_dictionary_t> countGappedKMers(const std::vector<int> &ga
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_hasher_t,
-        template <typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerCountsManager<kmer_dictionary_t>> parallelComputeGappedKMersCounts(
         const std::vector<int> &gaps,
@@ -253,21 +253,22 @@ std::vector<KMerCountsManager<kmer_dictionary_t>> parallelComputeGappedKMersCoun
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_hasher_t> &alphabetEncoding,
         const std::vector<PolynomialSingleHasherConfig> &hasherConfigs) {
     std::size_t totalKMerSize = getTotalKMerSize(gaps);
-    return std::move(parallelComputeKMerCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t, kmer_dictionary_t>(
-            rowsNum,
-            [&gaps, isPositionalKMer, &alphabetEncoding, &totalKMerSize, &hasherConfigs]
-                    (input_vector_t &v) -> KMerCountsManager<kmer_dictionary_t> {
-                return countGappedKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t, kmer_dictionary_t>(
-                        gaps,
-                        totalKMerSize,
-                        v,
-                        alphabetEncoding,
-                        isPositionalKMer,
-                        hasherConfigs
-                );
-            },
-            sequenceGetter
-    ));
+    return std::move(
+            parallelComputeKMerCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t, kmer_dictionary_t>(
+                    rowsNum,
+                    [&gaps, isPositionalKMer, &alphabetEncoding, &totalKMerSize, &hasherConfigs]
+                            (input_vector_t &v) -> KMerCountsManager<kmer_dictionary_t> {
+                        return countGappedKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_hasher_t, kmer_dictionary_t>(
+                                gaps,
+                                totalKMerSize,
+                                v,
+                                alphabetEncoding,
+                                isPositionalKMer,
+                                hasherConfigs
+                        );
+                    },
+                    sequenceGetter
+            ));
 }
 
 #endif
