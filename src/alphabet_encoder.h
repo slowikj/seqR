@@ -37,7 +37,7 @@ public:
         return this->notAllowedEncodingNum;
     }
 
-    inline std::size_t alphabetSize() const {
+    inline std::size_t size() const {
         return this->encoder.size();
     }
 
@@ -71,7 +71,7 @@ AlphabetEncoding<encoded_elem_t, encoded_elem_t, alphabet_hasher_t> prepareAlpha
     for (const auto &alphabetElem: alphabet) {
         for (int encoding_i = 0; encoding_i < elementsEncoding.size(); ++encoding_i) {
             if (alphabetElem == elementsEncoding[encoding_i]) {
-                encoded_elem_t index = static_cast<encoded_elem_t>(encoding_i + 1);
+                auto index = static_cast<encoded_elem_t>(encoding_i + 1);
                 encoder[index] = index;
             }
         }
