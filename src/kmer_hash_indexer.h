@@ -24,11 +24,12 @@ public:
 
 };
 
+template<template <typename key, typename value, typename...> class kmer_dictionary_t>
 inline
-std::tuple<Dictionary<std::vector<int>, int, vector_int_hasher>,
+std::tuple<Dictionary<std::vector<int>, int>,
         std::vector<KMerPositionInfo>>
-indexKMerHashes(const std::vector<KMerCountsManager> &kmerCounts) {
-    Dictionary<std::vector<int>, int, vector_int_hasher> hashIndexer;
+indexKMerHashes(const std::vector<KMerCountsManager<kmer_dictionary_t>> &kmerCounts) {
+    Dictionary<std::vector<int>, int> hashIndexer;
     std::vector<KMerPositionInfo> uniqueKMers;
     int currentIndex = 0;
     for (int seqNum = 0; seqNum < kmerCounts.size(); ++seqNum) {
