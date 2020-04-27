@@ -6,19 +6,27 @@ Date: 2020-04-19
 Authors@R: c(
     person(given = "Jadwiga",
            family = "Słowik",
-           role = c("aut")),
+           role = c("aut", "cre"),
+           email = "jadwis.slowik@gmail.com"),
     person(given = "Piotr",
            family = "Olesiejuk",
-           role = c("aut", "cre"),
+           role = c("ctb"),
            email = "piotrek.olesiejuk@gmail.com")
     )
 Maintainer: Jadwiga Słowik <slowikj@student.mini.pw.edu.pl>
 Description: seqR is a package providing fast counting of k-mers in sequences. It allows user to specify
   lengths of the k-mers and gaps between elements in the sequence.
 License: MIT + file LICENSE
-Imports: Rcpp (>= 1.0.4), RcppParallel
-Depends: R(>= 3.6)
-LinkingTo: Rcpp, RcppParallel, tidysq, BH
+Imports:
+    Rcpp (>= 1.0.4),
+    RcppParallel
+Depends:
+    R(>= 3.6)
+LinkingTo:
+    Rcpp,
+    RcppParallel,
+    tidysq,
+    BH
 SystemRequirements: c++17
 RoxygenNote: 7.0.2
 Encoding: UTF-8
@@ -28,7 +36,8 @@ Suggests:
     knitr,
     rmarkdown,
     spelling,
-    ggplot2
+    ggplot2,
+    tidysq
 VignetteBuilder: knitr
 Language: en-US
 Collate: 
