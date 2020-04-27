@@ -1,36 +1,57 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
 language: R
-compiler: gcc
 cache: packages
-sudo: require
+sudo: required
+
+dist: bionic
+
+warnings_are_errors: false
+
+branches:
+  only:
+    - master
 
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - gcc-7
-      - g++-7
+      - gcc-8
+      - g++-8
+      - gfortran-8
+
+env:
+  global:
+    - MAKEFLAGS="-j 2"
+    - COMPILER=g++-8
+    - CC=gcc-8
+    - CXX=g++-8
+    - CXX17=g++-8 -std=c++17 -fPIC
 
 r_packages:
   - covr
   - devtools
-  
+
 r_github_packages: michbur/tidysq
 
 before_install:
-  - mkdir -p ~/.R
-  - echo "CXX17=g++-7 -std=c++17 -fPIC" >> ~/.R/Makevars
-  - echo "USE_CXX17 = yes" >> ~/.R/build.Renviron
-      
-script:
-  # Link gcc-7 and g++-7 to their standard commands
-  - sudo ln -s /usr/bin/gcc-7 /usr/local/bin/gcc
-  - sudo ln -s /usr/bin/g++-7 /usr/local/bin/g++
-  # Check versions of gcc, g++ and cmake
-  - gcc -v && g++ -v
+  - mkdir -p ~/.R && touch ~/.R/Makevars
+  - VER=-8
+  - echo "CC=gcc${VER}"    >> ~/.R/Makevars
+  - echo "CXX=g++${VER}"   >> ~/.R/Makevars
+  - echo "CXX1X=g++${VER}" >> ~/.R/Makevars
+  - echo "CXX17=g++-8 -std=c++17 -fPIC" >> ~/.R/Makevars
+  - echo "FC=gfortran${VER}"       >> ~/.R/Makevars
+  - echo "F77=gfortran${VER}"      >> ~/.R/Makevars
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+  - sudo update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-8 60
 
 after_success:
+  - echo "USE_CXX17 = yes" >> ~/.R/build.Renviron
+  - echo "CXX17=g++-8 -std=c++17 -fPIC" >> ~/.R/build.Renviron
+  - echo "CC=gcc${VER}"    >> ~/.R/build.Renviron
+  - echo "CXX=g++${VER}"   >> ~/.R/build.Renviron
+  - echo "CXX1X=g++${VER}" >> ~/.R/build.Renviron
   - Rscript -e 'covr::codecov(quiet=FALSE)'
   
