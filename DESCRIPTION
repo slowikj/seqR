@@ -13,7 +13,7 @@ Authors@R: c(
            role = c("ctb"),
            email = "piotrek.olesiejuk@gmail.com")
     )
-Maintainer: Jadwiga Słowik <slowikj@student.mini.pw.edu.pl>
+Maintainer: Jadwiga Słowik <jadwis.slowik@gmail.com>
 Description: seqR is a package providing fast counting of k-mers in sequences. It allows user to specify
   lengths of the k-mers and gaps between elements in the sequence.
 License: MIT + file LICENSE
