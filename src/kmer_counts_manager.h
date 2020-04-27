@@ -12,7 +12,7 @@ struct KMerHashInfo {
 
     int seqStartPosition;
 
-    KMerHashInfo(int seqStartPosition) :
+    explicit KMerHashInfo(int seqStartPosition) :
             cnt(0), seqStartPosition(seqStartPosition) {
     }
 
