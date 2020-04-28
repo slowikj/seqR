@@ -48,10 +48,10 @@ before_install:
   - sudo update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-8 60
 
 after_success:
-  - echo "USE_CXX17 = yes" >> ~/.R/build.Renviron
-  - echo "CXX17=g++-8 -std=c++17 -fPIC" >> ~/.R/build.Renviron
-  - echo "CC=gcc${VER}"    >> ~/.R/build.Renviron
-  - echo "CXX=g++${VER}"   >> ~/.R/build.Renviron
-  - echo "CXX1X=g++${VER}" >> ~/.R/build.Renviron
+  - echo "USE_CXX17 = yes" >> ~/.R/.Renviron
+  - echo "CXX17=g++-8 -std=c++17 -fPIC" >> ~/.R/.Renviron
+  - echo "CC=gcc${VER}"    >> ~/.R/.Renviron
+  - echo "CXX=g++${VER}"   >> ~/.R/.Renviron
+  - echo "CXX1X=g++${VER}" >> ~/.R/.Renviron
   - Rscript -e 'covr::codecov(quiet=FALSE)'
   

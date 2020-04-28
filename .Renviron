@@ -1,0 +1,3 @@
+CC=gcc
+CXX=g++
+CXX17=g++ -std=c++17 -fPIC
