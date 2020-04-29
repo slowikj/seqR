@@ -21,7 +21,7 @@ extern const std::string default_section_separator;
 
 template<class input_vector_t,
         template<typename key, typename value> class kmer_dictionary_t>
-using CountingKMersProc_t = std::function<KMerCountsManager<kmer_dictionary_t>(input_vector_t &)>;
+using CountingKMersProc_t = std::function<KMerManager<kmer_dictionary_t>(input_vector_t &)>;
 
 template<class input_vector_t,
         template<typename key, typename value> class kmer_dictionary_t>
@@ -32,13 +32,13 @@ public:
                       SequenceGetter_t<input_vector_t> sequenceGetter) :
             countingKMersProc(countingKMersProc),
             sequenceGetter(sequenceGetter) {
-        kmerCounts.resize(rowsNum);
+        kmers.resize(rowsNum);
     }
 
     inline void operator()(size_t begin, size_t end) override {
         for (int rowNum = begin; rowNum < end; ++rowNum) {
             auto row = std::move(sequenceGetter(rowNum));
-            kmerCounts[rowNum] = std::move(countingKMersProc(row));
+            kmers[rowNum] = std::move(countingKMersProc(row));
         }
     }
 
@@ -47,28 +47,30 @@ private:
     SequenceGetter_t<input_vector_t> sequenceGetter;
 
 public:
-    std::vector<KMerCountsManager<kmer_dictionary_t>> kmerCounts;
+    std::vector<KMerManager<kmer_dictionary_t>> kmers;
 };
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
+template<class input_vector_t, class input_elem_t, class encoded_elem_t,
+        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value> class kmer_dictionary_t>
 inline
-std::vector<KMerCountsManager<kmer_dictionary_t>> parallelComputeKMerCounts(
+std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
         int rowsNum,
         CountingKMersProc_t<input_vector_t, kmer_dictionary_t> countingProc,
         SequenceGetter_t<input_vector_t> sequenceGetter) {
     KMerCounterWorker<input_vector_t, kmer_dictionary_t> worker(rowsNum, countingProc, sequenceGetter);
     RcppParallel::parallelFor(0, rowsNum, worker);
-    return std::move(worker.kmerCounts);
+    return std::move(worker.kmers);
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value> class kmer_dictionary_t>
-using ParallelKMerCountingProc_t = std::function<std::vector<KMerCountsManager<kmer_dictionary_t>>(
+using ParallelKMerCountingProc_t = std::function<std::vector<KMerManager<kmer_dictionary_t>>(
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &,
         SequenceGetter_t<input_vector_t>)>;
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
+template<class input_vector_t, class input_elem_t, class encoded_elem_t,
+        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value> class kmer_dictionary_t>
 inline
 Rcpp::IntegerMatrix getKMerCountsMatrix(
@@ -80,9 +82,9 @@ Rcpp::IntegerMatrix getKMerCountsMatrix(
         ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> parallelKMerCountingProc,
         InputToStringItemConverter_t<input_elem_t> inputToStringConverter) {
 
-    auto kmerCountsManagers = std::move(parallelKMerCountingProc(alphabetEncoding, sequenceGetter));
+    auto kMersManagers = std::move(parallelKMerCountingProc(alphabetEncoding, sequenceGetter));
 
-    auto[hashIndexer, uniqueKMers] = indexKMerHashes(kmerCountsManagers);
+    auto[hashIndexer, uniqueKMers] = indexKMerHashes(kMersManagers);
     Rcpp::StringVector uniqueKMerStrings = std::move(
             parallelComputeKMerStrings<input_vector_t, input_elem_t>(
                     uniqueKMers,
@@ -99,7 +101,7 @@ Rcpp::IntegerMatrix getKMerCountsMatrix(
     KMerMatrixCreatorWorker<kmer_dictionary_t> matrixCreatorWorker(
             sequencesNum,
             uniqueKMerStrings.size(),
-            kmerCountsManagers,
+            kMersManagers,
             hashIndexer,
             uniqueKMerStrings
     );

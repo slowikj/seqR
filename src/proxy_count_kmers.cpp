@@ -34,9 +34,9 @@ Rcpp::IntegerMatrix count_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, a
     auto parallelKMerCountingProc = [&k, &positionalKMers, &sequencesNum](
             AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &encoding,
             SequenceGetter_t<input_vector_t> seqGetter
-    ) -> std::vector<KMerCountsManager<kmer_dictionary_t>> {
+    ) -> std::vector<KMerManager<kmer_dictionary_t>> {
         return std::move(
-                parallelComputeKMerCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
+                parallelComputeKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
                         k,
                         positionalKMers,
                         sequencesNum,

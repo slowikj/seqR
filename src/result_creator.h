@@ -17,7 +17,7 @@ public:
 
     KMerMatrixCreatorWorker(int nrow,
                             int ncol,
-                            std::vector<KMerCountsManager<kmer_dictionary_t>> &kmerCountsManagers,
+                            std::vector<KMerManager<kmer_dictionary_t>> &kmerCountsManagers,
                             kmer_dictionary_t<std::vector<int>, int> &hashIndexer,
                             Rcpp::StringVector &uniqueKMerStrings) :
             outputKMerCounts(Rcpp::IntegerMatrix(nrow, ncol)),
@@ -38,7 +38,7 @@ public:
     }
 
 private:
-    std::vector<KMerCountsManager<kmer_dictionary_t>> &kmerCountsManagers;
+    std::vector<KMerManager<kmer_dictionary_t>> &kmerCountsManagers;
     kmer_dictionary_t<std::vector<int>, int> &hashIndexer;
     Rcpp::StringVector &uniqueKMerStrings;
 

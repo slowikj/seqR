@@ -28,21 +28,21 @@ struct KMerHashInfo {
 
 template<
         template<typename key, typename value> class kmer_dictionary_t>
-class KMerCountsManager {
+class KMerManager {
 public:
     using dict_t = kmer_dictionary_t<std::vector<int>, KMerHashInfo>;
 
-    KMerCountsManager() = default;
+    KMerManager() = default;
 
-    KMerCountsManager(const KMerCountsManager<kmer_dictionary_t> &) = default;
+    KMerManager(const KMerManager<kmer_dictionary_t> &) = default;
 
-    KMerCountsManager(KMerCountsManager<kmer_dictionary_t> &&) noexcept = default;
+    KMerManager(KMerManager<kmer_dictionary_t> &&) noexcept = default;
 
-    KMerCountsManager<kmer_dictionary_t> &
-    operator=(const KMerCountsManager<kmer_dictionary_t> &) = default;
+    KMerManager<kmer_dictionary_t> &
+    operator=(const KMerManager<kmer_dictionary_t> &) = default;
 
-    KMerCountsManager<kmer_dictionary_t> &
-    operator=(KMerCountsManager<kmer_dictionary_t> &&) noexcept = default;
+    KMerManager<kmer_dictionary_t> &
+    operator=(KMerManager<kmer_dictionary_t> &&) noexcept = default;
 
     inline void add(std::vector<int> &&hash, int position) {
         if (!this->dictionary.isPresent(hash)) {

@@ -27,12 +27,12 @@ inline
 std::tuple<
         kmer_dictionary_t<std::vector<int>, int>,
         std::vector<KMerPositionInfo>>
-indexKMerHashes(const std::vector<KMerCountsManager<kmer_dictionary_t>> &kmerCounts) {
+indexKMerHashes(const std::vector<KMerManager<kmer_dictionary_t>> &kMers) {
     kmer_dictionary_t<std::vector<int>, int> hashIndexer;
     std::vector<KMerPositionInfo> uniqueKMers;
     int currentIndex = 0;
-    for (int seqNum = 0; seqNum < kmerCounts.size(); ++seqNum) {
-        for (const auto &hashPair: kmerCounts[seqNum].getDictionary()) {
+    for (int seqNum = 0; seqNum < kMers.size(); ++seqNum) {
+        for (const auto &hashPair: kMers[seqNum].getDictionary()) {
             auto hash = hashPair.first;
             auto seqStartPosition = hashPair.second.seqStartPosition;
             if (!hashIndexer.isPresent(hash)) {
