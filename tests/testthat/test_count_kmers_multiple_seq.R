@@ -78,7 +78,7 @@ test_that("count non positional 5-mers for 10 sequences (10^6 each)", {
 })
 
 test_that("find non positional 5-mers for 10 sequences (10^6 each) (without k-mer counts)", {
-  nrow <- 500
+  nrow <- 100
   ncol <- 1000000
   sequenceMatrix <- matrix(rep(rep(5, ncol), nrow), byrow=TRUE, nrow=nrow)
 
