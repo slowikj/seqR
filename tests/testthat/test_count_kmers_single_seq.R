@@ -15,15 +15,15 @@ invoke_test <- function(fun, expected_res, alphabet, sequence, k, positionalKMer
 }
 
 invoke_test_string <- function(...) {
-  invoke_test(seqR::count_kmers_string, ...)
+  invoke_test(seqR::find_kmers_string, ...)
 }
 
 invoke_test_integer <- function(...) {
-  invoke_test(seqR::count_kmers_integer, ...)
+  invoke_test(seqR::find_kmers_integer, ...)
 }
 
 invoke_test_numeric <- function(...) {
-  invoke_test(seqR::count_kmers_numeric, ...)
+  invoke_test(seqR::find_kmers_numeric, ...)
 }
 
 # STRING MATRIX TESTS ----

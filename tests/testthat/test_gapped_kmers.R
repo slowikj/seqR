@@ -7,19 +7,19 @@ invoke_test <- function(fun, expected_res, ...) {
 }
 
 invoke_test_strings <- function(...) {
-  invoke_test(seqR::count_gapped_kmers_string, ...)
+  invoke_test(seqR::find_gapped_kmers_string, ...)
 }
 
 invoke_test_integer <- function(...) {
-  invoke_test(seqR::count_gapped_kmers_integer, ...)
+  invoke_test(seqR::find_gapped_kmers_integer, ...)
 }
 
 invoke_test_numeric <- function(...) {
-  invoke_test(seqR::count_gapped_kmers_numeric, ...)
+  invoke_test(seqR::find_gapped_kmers_numeric, ...)
 }
 
 invoke_test_tidysq <- function(...) {
-  invoke_test(seqR::count_gapped_kmers_tidysq, ...)
+  invoke_test(seqR::find_gapped_kmers_tidysq, ...)
 }
 
 # STRING MATRIX TESTS ----

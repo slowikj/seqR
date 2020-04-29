@@ -103,11 +103,11 @@ Rcpp::IntegerMatrix count_gapped_kmers(alphabet_t &alphabet,
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
-                                              Rcpp::StringVector &alphabet,
-                                              Rcpp::IntegerVector &gaps,
-                                              bool positionalKMers,
-                                              bool withKMerCounts) {
+Rcpp::IntegerMatrix find_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
+                                             Rcpp::StringVector &alphabet,
+                                             Rcpp::IntegerVector &gaps,
+                                             bool positionalKMers,
+                                             bool withKMerCounts) {
     SafeMatrixSequenceWrapper<std::string> safeMatrixWrapper(sequenceMatrix);
     std::vector<std::string> convertedAlphabet = std::move(
             convertRcppVector<std::string, Rcpp::StringVector>(alphabet));
@@ -129,11 +129,11 @@ Rcpp::IntegerMatrix count_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
-                                               Rcpp::IntegerVector &alphabet,
-                                               Rcpp::IntegerVector &gaps,
-                                               bool positionalKMers,
-                                               bool withKMerCounts) {
+Rcpp::IntegerMatrix find_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
+                                              Rcpp::IntegerVector &alphabet,
+                                              Rcpp::IntegerVector &gaps,
+                                              bool positionalKMers,
+                                              bool withKMerCounts) {
     std::vector<int> convertedAlphabet = std::move(convertRcppVector<int, Rcpp::IntegerVector>(alphabet));
     auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
     return count_gapped_kmers<
@@ -153,11 +153,11 @@ Rcpp::IntegerMatrix count_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatr
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
-                                               Rcpp::NumericVector &alphabet,
-                                               Rcpp::IntegerVector &gaps,
-                                               bool positionalKMers,
-                                               bool withKMerCounts) {
+Rcpp::IntegerMatrix find_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
+                                              Rcpp::NumericVector &alphabet,
+                                              Rcpp::IntegerVector &gaps,
+                                              bool positionalKMers,
+                                              bool withKMerCounts) {
     std::vector<double> convertedAlphabet = std::move(convertRcppVector<double, Rcpp::NumericVector>(alphabet));
     auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
     return count_gapped_kmers<
@@ -178,11 +178,11 @@ Rcpp::IntegerMatrix count_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatr
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_gapped_kmers_tidysq(Rcpp::List &sq,
-                                              Rcpp::StringVector &alphabet,
-                                              Rcpp::IntegerVector &gaps,
-                                              bool positionalKMers,
-                                              bool withKMerCounts) {
+Rcpp::IntegerMatrix find_gapped_kmers_tidysq(Rcpp::List &sq,
+                                             Rcpp::StringVector &alphabet,
+                                             Rcpp::IntegerVector &gaps,
+                                             bool positionalKMers,
+                                             bool withKMerCounts) {
     Rcpp::StringVector elementsEncoding = sq.attr("alphabet");
     auto alphabetEncoding = std::move(prepareAlphabetEncodingForTidysq<unsigned char, UnorderedMapWrapper>(
             alphabet,

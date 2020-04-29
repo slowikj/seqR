@@ -7,13 +7,13 @@ invoke_test <- function(test_fun, expectedRes, ...) {
 }
 
 invoke_test_string <- function(expectedRes, ...) {
-  invoke_test(test_fun=seqR::count_kmers_string,
+  invoke_test(test_fun=seqR::find_kmers_string,
               expectedRes=expectedRes,
               ...)
 }
 
 invoke_test_integer <- function(expectedRes, ...) {
-  invoke_test(test_fun=seqR::count_kmers_integer,
+  invoke_test(test_fun=seqR::find_kmers_integer,
               expectedRes=expectedRes,
               ...)
 }

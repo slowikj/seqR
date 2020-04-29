@@ -90,11 +90,11 @@ Rcpp::IntegerMatrix count_kmers(alphabet_t &alphabet,
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
-                                       Rcpp::StringVector &alphabet,
-                                       int k,
-                                       bool positionalKMers,
-                                       bool withKMerCounts) {
+Rcpp::IntegerMatrix find_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
+                                      Rcpp::StringVector &alphabet,
+                                      int k,
+                                      bool positionalKMers,
+                                      bool withKMerCounts) {
     SafeMatrixSequenceWrapper<std::string> safeMatrixWrapper(sequenceMatrix);
     std::vector<std::string> convertedAlphabet = std::move(
             convertRcppVector<std::string, Rcpp::StringVector>(alphabet));
@@ -115,11 +115,11 @@ Rcpp::IntegerMatrix count_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
-                                        Rcpp::IntegerVector &alphabet,
-                                        int k,
-                                        bool positionalKMers,
-                                        bool withKMerCounts) {
+Rcpp::IntegerMatrix find_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
+                                       Rcpp::IntegerVector &alphabet,
+                                       int k,
+                                       bool positionalKMers,
+                                       bool withKMerCounts) {
     std::vector<int> convertedAlphabet = std::move(convertRcppVector<int, Rcpp::IntegerVector>(alphabet));
     return count_kmers<
             std::vector<int>,
@@ -138,11 +138,11 @@ Rcpp::IntegerMatrix count_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
-                                        Rcpp::NumericVector &alphabet,
-                                        int k,
-                                        bool positionalKMers,
-                                        bool withKMerCounts) {
+Rcpp::IntegerMatrix find_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
+                                       Rcpp::NumericVector &alphabet,
+                                       int k,
+                                       bool positionalKMers,
+                                       bool withKMerCounts) {
     std::vector<double> convertedAlphabet = std::move(convertRcppVector<double, Rcpp::NumericVector>(alphabet));
     return count_kmers<
             std::vector<double>,
@@ -161,11 +161,11 @@ Rcpp::IntegerMatrix count_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerMatrix count_kmers_tidysq(Rcpp::List &sq,
-                                       Rcpp::StringVector &alphabet,
-                                       int k,
-                                       bool positionalKMers,
-                                       bool withKMerCounts) {
+Rcpp::IntegerMatrix find_kmers_tidysq(Rcpp::List &sq,
+                                      Rcpp::StringVector &alphabet,
+                                      int k,
+                                      bool positionalKMers,
+                                      bool withKMerCounts) {
     Rcpp::StringVector elementsEncoding = sq.attr("alphabet");
     auto alphabetEncoding = std::move(prepareAlphabetEncodingForTidysq<unsigned char, UnorderedMapWrapper>(
             alphabet,

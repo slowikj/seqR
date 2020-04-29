@@ -2,7 +2,7 @@ library(testthat)
 source("utils.R")
 
 invoke_test <- function(expected_res, ...) {
-  res <- seqR::count_kmers_tidysq(...)
+  res <- seqR::find_kmers_tidysq(...)
   expect_matrices_equal(res, expected_res)
 }
 
