@@ -1,14 +1,15 @@
 library(testthat)
 source("utils.R")
 
-invoke_test <- function(fun, expected_res, alphabet, sequence, k, positionalKMers) {
+invoke_test <- function(fun, expected_res, alphabet, sequence, k, positionalKMers, withKMerCounts) {
   sequenceMatrix <- to_matrix(sequence)
   expected_res <- to_matrix(expected_res)
   
   res <- fun(alphabet=alphabet,
              sequenceMatrix = sequenceMatrix,
              k=k,
-             positionalKMers = positionalKMers)
+             positionalKMers = positionalKMers,
+             withKMerCounts = withKMerCounts)
   
   expect_matrices_equal(res, expected_res)
 }
@@ -32,7 +33,8 @@ test_that("(string) count non positional 2-mers", {
                      alphabet=c("a", "b"),
                      sequence=c("a", "b", "a", "b", "a", "a"),
                      k=2,
-                     positionalKMers=FALSE)
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count positional 2-mers", {
@@ -40,7 +42,8 @@ test_that("(string) count positional 2-mers", {
                      alphabet=c("a", "b"),
                      sequence=c("a", "b", "a", "b", "a", "a"),
                      k=2,
-                     positionalKMers=TRUE)
+                     positionalKMers=TRUE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count non positional 1-mers", {
@@ -48,7 +51,8 @@ test_that("(string) count non positional 1-mers", {
                      alphabet=c("a", "b"),
                      sequence=c("a", "a", "b", "a", "b"),
                      k=1,
-                     positionalKMers=FALSE)
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count positional 1-mers", {
@@ -56,7 +60,8 @@ test_that("(string) count positional 1-mers", {
                      alphabet=c("a", "b"),
                      sequence=c("a", "a", "b", "a", "b"),
                      k=1,
-                     positionalKMers=TRUE)
+                     positionalKMers=TRUE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count non positional 1-mers if some sequence items are not allowed", {
@@ -64,7 +69,8 @@ test_that("(string) count non positional 1-mers if some sequence items are not a
                      alphabet=c("a"),
                      sequence=c("a", "a", "b", "a", "b"),
                      k=1,
-                     positionalKMers=FALSE)
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count positional 1-mers if some sequence items are not allowed", {
@@ -72,7 +78,8 @@ test_that("(string) count positional 1-mers if some sequence items are not allow
                      alphabet=c("a"),
                      sequence=c("a", "a", "b", "a", "b"),
                      k=1,
-                     positionalKMers=TRUE)
+                     positionalKMers=TRUE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count non positional 3-mers", {
@@ -80,7 +87,8 @@ test_that("(string) count non positional 3-mers", {
                      alphabet=c("a", "b", "c"),
                      sequence=c("a", "a", "b", "c", "a", "a", "b", "c", "a"),
                      k=3,
-                     positionalKMers=FALSE)
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count positional 3-mers", {
@@ -88,7 +96,8 @@ test_that("(string) count positional 3-mers", {
                      alphabet=c("a", "b"),
                      sequence=c("a", "a", "a", "b", "a", "a", "a"),
                      k=3,
-                     positionalKMers=TRUE)
+                     positionalKMers=TRUE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count non positional 1-mers", {
@@ -96,7 +105,8 @@ test_that("(string) count non positional 1-mers", {
                      alphabet=c("a", "b", "c"),
                      sequence=c("a", "a", "b", "b", "a", "a", "b", "c", "c", "a"),
                      k=1,
-                     positionalKMers=FALSE)
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count 2-mers: long (ab){1000} sequence", {
@@ -104,7 +114,8 @@ test_that("(string) count 2-mers: long (ab){1000} sequence", {
                      alphabet=c("a", "b"),
                      sequence=rep(c("a", "b"), 1000),
                      k=2,
-                     positionalKMers=FALSE)
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count non positional 2-mers which contains only 'a' character", {
@@ -112,7 +123,8 @@ test_that("(string) count non positional 2-mers which contains only 'a' characte
                      alphabet=c("a"),
                      sequence=c("a", "b", "c", "a", "a", "b", "a", "a", "a", "a", "b"),
                      k=2,
-                     positionalKMers=FALSE)
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count positional 2-mers which contains only 'a' character", {
@@ -120,7 +132,8 @@ test_that("(string) count positional 2-mers which contains only 'a' character", 
                      alphabet=c("a"),
                      sequence=c("a", "b", "c", "a", "a", "b", "a", "a", "a", "a", "b"),
                      k=2,
-                     positionalKMers=TRUE)
+                     positionalKMers=TRUE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count non positional 2-mers which contains only 'a' or 'b' characters", {
@@ -128,7 +141,8 @@ test_that("(string) count non positional 2-mers which contains only 'a' or 'b' c
                      alphabet=c("a", "b"),
                      sequence=c("x", "x", "a", "x", "b", "x", "x", "a", "a", "b", "a", "aa", "a", "b", "x", "a"),
                      k=2,
-                     positionalKMers=FALSE)
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(string) count non positional 2-mers which contains only 'a', 'b', 'x' characters", {
@@ -136,7 +150,8 @@ test_that("(string) count non positional 2-mers which contains only 'a', 'b', 'x
                      alphabet=c("a", "b", "x"),
                      sequence=c("x", "x", "a", "x", "b", "x", "x", "a", "a", "b", "a", "aa", "a", "b", "x", "a"),
                      k=2,
-                     positionalKMers=FALSE)
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE)
 })
 
 # INTEGER MATRIX TESTS ----
@@ -146,7 +161,8 @@ test_that("(integer) count non positional 2-mers with not allowed item", {
                       alphabet=c(0, 1),
                       sequence=c(1,0,1,1,0,1,1,2,1,1),
                       k=2,
-                      positionalKMers=FALSE)
+                      positionalKMers=FALSE,
+                      withKMerCounts=TRUE)
 })
 
 # NUMERIC MATRIX TESTS ----
@@ -156,5 +172,6 @@ test_that("(numeric) count non positional 2-mers with not allowed item", {
                      alphabet=c(0, 1),
                      sequence=as.numeric(c(1,0,1,1,0,1,1,2,1,1)),
                      k=2,
-                     positionalKMers=FALSE)
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE)
 })

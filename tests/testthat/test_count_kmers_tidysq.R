@@ -18,7 +18,8 @@ test_that("count 3-mers for tidysq sequences A+", {
               alphabet=c("A"),
               sq=sq,
               k=3,
-              positionalKMers=FALSE)
+              positionalKMers=FALSE,
+              withKMerCounts=TRUE)
 })
 
 test_that("count 3-mers for tidysq sequences A+ longer", {
@@ -33,7 +34,8 @@ test_that("count 3-mers for tidysq sequences A+ longer", {
               alphabet=c("A"),
               sq=sq,
               k=3,
-              positionalKMers=FALSE)
+              positionalKMers=FALSE,
+              withKMerCounts=TRUE)
 })
 
 test_that("count non positional 10-mers for tidysq sequences A+ longer", {
@@ -50,5 +52,22 @@ test_that("count non positional 10-mers for tidysq sequences A+ longer", {
               alphabet=c("A"),
               sq=sq,
               k=10,
-              positionalKMers=FALSE)
+              positionalKMers=FALSE,
+              withKMerCounts=TRUE)
+})
+
+test_that("find 3-mers for tidysq sequences A+ (without k-mer counts)", {
+  sq <- tidysq::construct_sq(c("AAAAA", "AA", "AAAAAAA"), type = 'ami')
+  expected_res <- matrix(c(
+    1,
+    0,
+    1
+  ), nrow=3)
+  colnames(expected_res) <- c("A.A.A_0.0")
+  invoke_test(expected_res=expected_res,
+              alphabet=c("A"),
+              sq=sq,
+              k=3,
+              positionalKMers=FALSE,
+              withKMerCounts=FALSE)
 })

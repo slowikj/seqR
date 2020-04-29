@@ -9,7 +9,7 @@
 #include "hash/complex_hasher.h"
 #include "hash/single_hasher.h"
 #include "hash/polynomial_single_hasher.h"
-#include "kmer_counts_manager.h"
+#include "kmer_manager.h"
 #include "kmer_counting_common.h"
 #include "sequence_getter.h"
 #include <vector>
@@ -18,7 +18,7 @@
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline void updateKMers(
         RollingWindow<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t> &rollingWindow,
         KMerManager<kmer_dictionary_t> &kMerManager,
@@ -32,7 +32,7 @@ inline void updateKMers(
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline void countKMersForContiguousSeq(
         int k,
         int begin,
@@ -69,14 +69,15 @@ inline std::vector<int> computeNotAllowedPositions(
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline KMerManager<kmer_dictionary_t> countKMers(
         int k,
         input_vector_t &sequence,
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
         bool isPositionalKMer,
+        bool withKMerCounts,
         ComplexHasher &&complexHasher) {
-    KMerManager<kmer_dictionary_t> kMerManager;
+    KMerManager<kmer_dictionary_t> kMerManager(withKMerCounts);
     RollingWindow<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t> rollingWindow(
             sequence, std::move(complexHasher), alphabetEncoding
     );
@@ -96,11 +97,12 @@ inline KMerManager<kmer_dictionary_t> countKMers(
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
         int k,
         bool positionalKMer,
+        bool withKMerCounts,
         int sequencesNum,
         SequenceGetter_t<input_vector_t> sequenceGetter,
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
@@ -108,13 +110,14 @@ std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
     return std::move(
             parallelComputeKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
                     sequencesNum,
-                    [k, positionalKMer, &alphabetEncoding, &complexHasherFactory]
+                    [k, positionalKMer, &alphabetEncoding, &complexHasherFactory, withKMerCounts]
                             (input_vector_t &v) -> KMerManager<kmer_dictionary_t> {
                         return countKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
                                 k,
                                 v,
                                 alphabetEncoding,
                                 positionalKMer,
+                                withKMerCounts,
                                 std::move(complexHasherFactory())
                         );
                     },

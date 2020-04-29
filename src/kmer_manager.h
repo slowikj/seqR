@@ -6,7 +6,6 @@
 #include <memory>
 
 struct KMerHashInfo {
-
     int cnt;
 
     int seqStartPosition;
@@ -27,14 +26,18 @@ struct KMerHashInfo {
 };
 
 template<
-        template<typename key, typename value> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 class KMerManager {
 public:
     using dict_t = kmer_dictionary_t<std::vector<int>, KMerHashInfo>;
 
-    KMerManager() = default;
+    explicit KMerManager(bool kmerWithCounts) :
+            kmerWithCounts(kmerWithCounts) {
+    }
 
     KMerManager(const KMerManager<kmer_dictionary_t> &) = default;
+
+    KMerManager() = default;
 
     KMerManager(KMerManager<kmer_dictionary_t> &&) noexcept = default;
 
@@ -45,10 +48,10 @@ public:
     operator=(KMerManager<kmer_dictionary_t> &&) noexcept = default;
 
     inline void add(std::vector<int> &&hash, int position) {
-        if (!this->dictionary.isPresent(hash)) {
-            this->dictionary[std::move(hash)] = KMerHashInfo(position, 1);
+        if (kmerWithCounts) {
+            handleWithCounts(std::move(hash), position);
         } else {
-            this->dictionary[hash].cnt++;
+            handleWithoutCounts(std::move(hash), position);
         }
     }
 
@@ -58,6 +61,19 @@ public:
 
 private:
     dict_t dictionary;
+    bool kmerWithCounts;
+
+    inline void handleWithCounts(std::vector<int> &&hash, int position) {
+        if (!dictionary.isPresent(hash)) {
+            dictionary[std::move(hash)] = KMerHashInfo(position, 1);
+        } else {
+            dictionary[hash].cnt++;
+        }
+    }
+
+    inline void handleWithoutCounts(std::vector<int> &&hash, int position) {
+        dictionary[std::move(hash)] = KMerHashInfo(position, 1);
+    }
 
 };
 

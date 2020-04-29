@@ -1,7 +1,7 @@
 #ifndef KMER_HASH_INDEXER_H
 #define KMER_HASH_INDEXER_H
 
-#include "kmer_counts_manager.h"
+#include "kmer_manager.h"
 #include <vector>
 #include <tuple>
 #include <memory>
@@ -22,7 +22,7 @@ public:
 
 };
 
-template<template<typename key, typename value> class kmer_dictionary_t>
+template<template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::tuple<
         kmer_dictionary_t<std::vector<int>, int>,

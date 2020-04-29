@@ -36,7 +36,8 @@ test_that("count non-positional 2-mers for 2 sequences", {
                      alphabet=c("a", "b"),
                      sequenceMatrix=sequenceMatrix,
                      k=2,
-                     positionalKMers=FALSE
+                     positionalKMers=FALSE,
+                     withKMerCounts=TRUE
   )
 })
 
@@ -56,11 +57,12 @@ test_that("count positional 2-mers for 2 sequences", {
                      alphabet=c("a", "b"),
                      sequenceMatrix=sequenceMatrix,
                      k=2,
-                     positionalKMers=TRUE)
+                     positionalKMers=TRUE,
+                     withKMerCounts=TRUE)
 })
 
-test_that("count non positional 5-mers for 100 sequences (10^6 each)", {
-  nrow <- 100
+test_that("count non positional 5-mers for 10 sequences (10^6 each)", {
+  nrow <- 10
   ncol <- 1000000
   sequenceMatrix <- matrix(rep(rep(5, ncol), nrow), byrow=TRUE, nrow=nrow)
   
@@ -71,5 +73,22 @@ test_that("count non positional 5-mers for 100 sequences (10^6 each)", {
                       alphabet=c(5),
                       sequenceMatrix=sequenceMatrix,
                       k=5,
-                      positionalKMers=FALSE)
+                      positionalKMers=FALSE,
+                      withKMerCounts=TRUE)
+})
+
+test_that("find non positional 5-mers for 10 sequences (10^6 each) (without k-mer counts)", {
+  nrow <- 10
+  ncol <- 1000000
+  sequenceMatrix <- matrix(rep(rep(5, ncol), nrow), byrow=TRUE, nrow=nrow)
+
+  expectedRes <- matrix(rep(1, nrow),
+                        nrow=nrow)
+  colnames(expectedRes) <- c("5.5.5.5.5_0.0.0.0")
+  invoke_test_integer(expectedRes=expectedRes,
+                      alphabet=c(5),
+                      sequenceMatrix=sequenceMatrix,
+                      k=5,
+                      positionalKMers=FALSE,
+                      withKMerCounts=FALSE)
 })

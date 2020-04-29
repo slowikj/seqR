@@ -32,7 +32,8 @@ test_that("(string)test one sequence with gaps (1) not positional", {
                       alphabet=c("a", "b"),
                       sequenceMatrix=to_matrix(c("a", "a", "a", "b", "a", "b", "a")),
                       gaps=c(1),
-                      positionalKMers=FALSE)
+                      positionalKMers=FALSE,
+                      withKMerCounts=TRUE)
 })
 
 test_that("(string)test one sequence with gaps (1) positional", {
@@ -43,7 +44,8 @@ test_that("(string)test one sequence with gaps (1) positional", {
                       alphabet=c("a", "b"),
                       sequenceMatrix=to_matrix(c("a", "a", "a", "b", "a", "b", "a")),
                       gaps=c(1),
-                      positionalKMers=TRUE)
+                      positionalKMers=TRUE,
+                      withKMerCounts=TRUE)
 })
 
 test_that("(string)test one sequence with gapps (1,0) not positional", {
@@ -54,7 +56,8 @@ test_that("(string)test one sequence with gapps (1,0) not positional", {
                       alphabet=c("a", "b"),
                       sequenceMatrix=to_matrix(c("a", "a", "a", "b", "a", "b", "a")),
                       gaps=c(1, 0),
-                      positionalKMers=FALSE)
+                      positionalKMers=FALSE,
+                      withKMerCounts=TRUE)
 })
 
 test_that("(string)test 2 sequences with gaps (1,1) positional; some items are not from alphabet", {
@@ -72,7 +75,8 @@ test_that("(string)test 2 sequences with gaps (1,1) positional; some items are n
                       alphabet=c("a", "b"),
                       sequenceMatrix=seqMatrix,
                       gaps=c(1,1),
-                      positionalKMers=TRUE)
+                      positionalKMers=TRUE,
+                      withKMerCounts=TRUE)
 })
 
 # INTEGER MATRIX TESTS ----
@@ -91,7 +95,8 @@ test_that("(integer) test 2 sequences with gaps (1,1) non positional; some items
                       alphabet=c(0,1),
                       sequenceMatrix=seqMatrix,
                       gaps=c(1,1),
-                      positionalKMers=FALSE)
+                      positionalKMers=FALSE,
+                      withKMerCounts=TRUE)
 })
 
 # NUMERIC MATRIX TESTS ----
@@ -110,7 +115,8 @@ test_that("(numeric) test 2 sequences with gaps (1,1) non positional; some items
                       alphabet=c(0,1),
                       sequenceMatrix=seqMatrix,
                       gaps=c(1,1),
-                      positionalKMers=FALSE)
+                      positionalKMers=FALSE,
+                      withKMerCounts=TRUE)
 })
 
 # TIDYSQ TESTS ----
@@ -126,7 +132,8 @@ test_that("(tidysq) count non positional k-mers (0, 1)", {
                       alphabet=c("A", "C"),
                       sq = sq,
                       gaps = c(0,1),
-                      positionalKMers = FALSE)
+                      positionalKMers = FALSE,
+                     withKMerCounts=TRUE)
 })
 
 test_that("(tidysq) count non positional k-mers (0, 1); some items are not allowed", {
@@ -141,6 +148,7 @@ test_that("(tidysq) count non positional k-mers (0, 1); some items are not allow
                      alphabet=c("A", "T"),
                      sq = sq,
                      gaps = c(0, 1),
-                     positionalKMers = FALSE)
+                     positionalKMers = FALSE,
+                     withKMerCounts=TRUE)
 })
 

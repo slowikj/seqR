@@ -17,7 +17,7 @@ add_library(seqR
         src/hash/rolling_window.h src/dictionary/unordered_map_wrapper.h src/alphabet_encoder.h
         src/proxy_hashing.cpp
         src/input_to_string_item_converter.h
-        src/kmer_counts_manager.h
+        src/kmer_manager.h
         src/kmer_counting_common.h
         src/kmer_counter.h
         src/gapped_kmer_counter.h

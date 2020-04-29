@@ -1,11 +1,12 @@
 #' @include validators.R
 #' @include kmer_functions_provider.R
 #' @export
-count_kmers <- function(sequences,
-                        k,
-                        alphabet,
-                        positional = FALSE,
-                        kmer_gaps = c()) {
+find_kmers <- function(sequences,
+                       k,
+                       alphabet,
+                       positional = FALSE,
+                       kmer_gaps = c(),
+                       with_kmer_counts = TRUE) {
   if (is_empty(alphabet)) {
     stop("alphabet param is empty")
   }
@@ -35,9 +36,9 @@ count_kmers <- function(sequences,
   
   if(length(kmer_gaps) == 0) {
     invoke_contiguous_kmer_function(
-      sequences=sequences, alphabet=alphabet, k=k, positionalKMers=positional)
+      sequences=sequences, alphabet=alphabet, k=k, positionalKMers=positional, withKMerCounts=with_kmer_counts)
   } else {
     invoke_gapped_kmer_function(
-      sequences=sequences, alphabet=alphabet, gaps=rep(kmer_gaps, length.out=k-1), positionalKMers=positional)
+      sequences=sequences, alphabet=alphabet, gaps=rep(kmer_gaps, length.out=k-1), positionalKMers=positional, withKMerCounts=with_kmer_counts)
   }
 }

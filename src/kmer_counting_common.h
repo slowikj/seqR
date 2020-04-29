@@ -7,7 +7,7 @@
 #include <RcppParallel.h>
 #include <vector>
 #include "sequence_getter.h"
-#include "kmer_counts_manager.h"
+#include "kmer_manager.h"
 #include "kmer_hash_indexer.h"
 #include "alphabet_encoder.h"
 #include "kmer_strings_creator.h"
@@ -20,11 +20,11 @@ extern const std::string default_item_separator;
 extern const std::string default_section_separator;
 
 template<class input_vector_t,
-        template<typename key, typename value> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 using CountingKMersProc_t = std::function<KMerManager<kmer_dictionary_t>(input_vector_t &)>;
 
 template<class input_vector_t,
-        template<typename key, typename value> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 class KMerCounterWorker : public RcppParallel::Worker {
 public:
     KMerCounterWorker(int rowsNum,
@@ -52,7 +52,7 @@ public:
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
         int rowsNum,
@@ -64,14 +64,14 @@ std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 using ParallelKMerCountingProc_t = std::function<std::vector<KMerManager<kmer_dictionary_t>>(
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &,
         SequenceGetter_t<input_vector_t>)>;
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value> class kmer_dictionary_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 Rcpp::IntegerMatrix getKMerCountsMatrix(
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
