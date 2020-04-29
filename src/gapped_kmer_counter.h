@@ -211,7 +211,7 @@ std::vector<int> getGappedKMerHash(
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value> class kmer_dictionary_t>
 inline
 KMerCountsManager<kmer_dictionary_t> countGappedKMers(const std::vector<int> &gaps,
                                                       std::size_t totalKMerSize,
@@ -243,7 +243,7 @@ KMerCountsManager<kmer_dictionary_t> countGappedKMers(const std::vector<int> &ga
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value> class kmer_dictionary_t>
 inline
 std::vector<KMerCountsManager<kmer_dictionary_t>> parallelComputeGappedKMersCounts(
         const std::vector<int> &gaps,

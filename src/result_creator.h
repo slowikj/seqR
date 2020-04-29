@@ -8,7 +8,7 @@
 #include "kmer_counts_manager.h"
 #include "hash/custom_hashers.h"
 
-template<template<typename key, typename value, typename...> class kmer_dictionary_t>
+template<template<typename key, typename value> class kmer_dictionary_t>
 class KMerMatrixCreatorWorker : public RcppParallel::Worker {
 public:
     Rcpp::IntegerMatrix outputKMerCounts;

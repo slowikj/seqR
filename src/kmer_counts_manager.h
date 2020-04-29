@@ -27,7 +27,7 @@ struct KMerHashInfo {
 };
 
 template<
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value> class kmer_dictionary_t>
 class KMerCountsManager {
 public:
     using dict_t = kmer_dictionary_t<std::vector<int>, KMerHashInfo>;

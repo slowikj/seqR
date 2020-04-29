@@ -22,7 +22,7 @@ public:
 
 };
 
-template<template<typename key, typename value, typename...> class kmer_dictionary_t>
+template<template<typename key, typename value> class kmer_dictionary_t>
 inline
 std::tuple<
         kmer_dictionary_t<std::vector<int>, int>,

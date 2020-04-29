@@ -22,7 +22,7 @@ template<class input_vector_t,
         class input_elem_t,
         class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value> class kmer_dictionary_t>
 inline
 Rcpp::IntegerMatrix count_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
                                 int sequencesNum,
@@ -61,7 +61,7 @@ template<class alphabet_t,
         class input_elem_t,
         class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
+        template<typename key, typename value> class kmer_dictionary_t>
 inline
 Rcpp::IntegerMatrix count_kmers(alphabet_t &alphabet,
                                 int sequencesNum,
