@@ -23,8 +23,7 @@ public:
             outputKMerCounts(Rcpp::IntegerMatrix(nrow, ncol)),
             outputKMerCountsWrapper(outputKMerCounts),
             kmerCountsManagers(kmerCountsManagers),
-            hashIndexer(hashIndexer),
-            uniqueKMerStrings(uniqueKMerStrings) {
+            hashIndexer(hashIndexer) {
         Rcpp::colnames(this->outputKMerCounts) = Rcpp::wrap(uniqueKMerStrings);
     }
 
@@ -40,7 +39,6 @@ public:
 private:
     std::vector<KMerManager<kmer_dictionary_t>> &kmerCountsManagers;
     kmer_dictionary_t<std::vector<int>, int> &hashIndexer;
-    Rcpp::StringVector &uniqueKMerStrings;
 
 };
 
