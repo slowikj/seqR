@@ -1,7 +1,6 @@
 #ifndef GAPPED_KMER_COUNTER_H
 #define GAPPED_KMER_COUNTER_H
 
-#include "Rcpp.h"
 #include "alphabet_encoder.h"
 #include "hash/polynomial_single_hasher.h"
 #include "kmer_counting_common.h"
