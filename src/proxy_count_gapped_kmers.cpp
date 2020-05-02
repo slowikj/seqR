@@ -188,6 +188,7 @@ Rcpp::IntegerMatrix find_gapped_kmers_tidysq(Rcpp::List &sq,
             alphabet,
             elementsEncoding
     ));
+    std::vector<std::string> safeElementsEncoding = convertRcppVector<std::string, Rcpp::StringVector>(elementsEncoding);
     auto encodedSequences = getEncodedTidysqSequences(sq);
     auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
     return count_gapped_kmers<
@@ -201,5 +202,5 @@ Rcpp::IntegerMatrix find_gapped_kmers_tidysq(Rcpp::List &sq,
                                  gapsConverted,
                                  positionalKMers,
                                  withKMerCounts,
-                                 getEncodedTidySqItemToStringConverter(elementsEncoding));
+                                 getEncodedTidySqItemToStringConverter(safeElementsEncoding));
 }

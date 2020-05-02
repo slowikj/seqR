@@ -171,6 +171,7 @@ Rcpp::IntegerMatrix find_kmers_tidysq(Rcpp::List &sq,
             alphabet,
             elementsEncoding
     ));
+    std::vector<std::string> safeElementsEncoding = convertRcppVector<std::string, Rcpp::StringVector>(elementsEncoding);
     auto encodedSequences = getEncodedTidysqSequences(sq);
     return count_kmers<
             RcppParallel::RVector<unsigned char>,
@@ -183,5 +184,5 @@ Rcpp::IntegerMatrix find_kmers_tidysq(Rcpp::List &sq,
                                  k,
                                  positionalKMers,
                                  withKMerCounts,
-                                 getEncodedTidySqItemToStringConverter(elementsEncoding));
+                                 getEncodedTidySqItemToStringConverter(safeElementsEncoding));
 }
