@@ -5,13 +5,15 @@
 #include <tidysq.h>
 #include <algorithm>
 #include <iterator>
+#include <vector>
 
-Rcpp::List getEncodedTidysqSequences(Rcpp::List &sq) {
+std::vector<RcppParallel::RVector<unsigned char>> getEncodedTidysqSequences(Rcpp::List &sq) {
     auto alphabetSize = tidysq::C_get_alph_size(sq.attr("alphabet"));
-    Rcpp::List res(sq.size());
-    for (int sq_i = 0; sq_i < sq.size(); ++sq_i) {
+    std::vector<RcppParallel::RVector<unsigned char>> res;
+    for(int sq_i = 0; sq_i < sq.size(); ++sq_i) {
         Rcpp::RawVector packedSequence = sq[sq_i];
-        res[sq_i] = tidysq::C_unpack_raws(packedSequence, alphabetSize);
+        Rcpp::RawVector unpackedSequence = tidysq::C_unpack_raws(packedSequence, alphabetSize);
+        res.emplace_back(unpackedSequence);
     }
-    return res;
+    return std::move(res);
 }

@@ -83,3 +83,9 @@ compute_polynomial_multihash <- function(P, M, items, begin, position) {
 #' @importFrom  RcppParallel RcppParallelLibs
 NULL
 
+#' @importFrom  RcppParallel RcppParallelLibs
+NULL
+
+#' @importFrom  RcppParallel RcppParallelLibs
+NULL
+

@@ -2,6 +2,9 @@
 #define SEQUENCE_GETTER_H
 
 #include <Rcpp.h>
+// [[Rcpp::depends(RcppParallel)]]
+//' @importFrom  RcppParallel RcppParallelLibs
+#include<RcppParallel.h>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -35,10 +38,9 @@ getTidysqRowGetter(SafeTidysqSequencesWrapper &safeWrapper) {
 }
 
 inline SequenceGetter_t<RcppParallel::RVector<unsigned char>>
-getTidysqRVectorGetter(Rcpp::List &unpackedSequences) {
-    return [&unpackedSequences](int rowNum) -> RcppParallel::RVector<unsigned char> {
-        Rcpp::RawVector sequence = unpackedSequences[rowNum];
-        return RcppParallel::RVector<unsigned char>(sequence);
+getTidysqRVectorGetter(std::vector<RcppParallel::RVector<unsigned char>>& unpackedSafeSequences) {
+    return [&unpackedSafeSequences](int rowNum) -> RcppParallel::RVector<unsigned char> {
+        return unpackedSafeSequences[rowNum];
     };
 }
 
