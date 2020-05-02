@@ -160,7 +160,7 @@ private:
 
 template<class input_vector_t, class input_elem_t>
 inline
-Rcpp::StringVector parallelComputeKMerStrings(
+std::vector<std::string> parallelComputeKMerStrings(
         const std::vector<KMerPositionInfo> &indexedKMers,
         InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter,
         int sequencesNum,
@@ -180,7 +180,7 @@ Rcpp::StringVector parallelComputeKMerStrings(
             itemSeparator,
             sectionSeparator);
     RcppParallel::parallelFor(0, indexedKMers.size(), worker);
-    return Rcpp::wrap(worker.outputKMerStrings);
+    return std::move(worker.outputKMerStrings);
 }
 
 #endif

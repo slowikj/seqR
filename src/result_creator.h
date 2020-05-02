@@ -19,7 +19,7 @@ public:
                             int ncol,
                             std::vector<KMerManager<kmer_dictionary_t>> &kmerCountsManagers,
                             kmer_dictionary_t<std::vector<int>, int> &hashIndexer,
-                            Rcpp::StringVector &uniqueKMerStrings) :
+                            std::vector<std::string> &uniqueKMerStrings) :
             outputKMerCounts(Rcpp::IntegerMatrix(nrow, ncol)),
             outputKMerCountsWrapper(outputKMerCounts),
             kmerCountsManagers(kmerCountsManagers),

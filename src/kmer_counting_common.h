@@ -85,7 +85,7 @@ Rcpp::IntegerMatrix getKMerCountsMatrix(
     auto kMersManagers = std::move(parallelKMerCountingProc(alphabetEncoding, sequenceGetter));
 
     auto[hashIndexer, uniqueKMers] = indexKMerHashes(kMersManagers);
-    Rcpp::StringVector uniqueKMerStrings = std::move(
+    std::vector<std::string> uniqueKMerStrings = std::move(
             parallelComputeKMerStrings<input_vector_t, input_elem_t>(
                     uniqueKMers,
                     inputToStringConverter,
