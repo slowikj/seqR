@@ -237,7 +237,8 @@ KMerManager<kmer_dictionary_t> countGappedKMers(const std::vector<int> &gaps,
     );
 
     KMerManager<kmer_dictionary_t> kMerManager(withKMerCounts);
-    for (int seqInd = 0; seqInd < sequence.size() - totalKMerSize + 1; ++seqInd) {
+    int limitSequenceIndex = static_cast<int>(sequence.size()) - totalKMerSize + 1;
+    for (int seqInd = 0; seqInd < limitSequenceIndex; ++seqInd) {
         if (isGappedKMerAllowed(seqInd, contiguousIntervals, notAllowedItemsPrefixCount)) {
             auto hash = std::move(getGappedKMerHash(seqInd, sequenceHasher, contiguousIntervals, isPositionalKMer));
             kMerManager.add(std::move(hash), seqInd);

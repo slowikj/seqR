@@ -79,6 +79,21 @@ test_that("(string)test 2 sequences with gaps (1,1) positional; some items are n
                       withKMerCounts=TRUE)
 })
 
+test_that("(string) the k-mer is longer than a sequence", {
+  seqMatrix <- matrix(c(
+    "a", "b", "a", "b", "a", "b", "a", "b", "a",
+    "a", "b", "a", "a", "a", "a", "b", "a", "a"
+  ), nrow=2, byrow=TRUE)
+  expectedRes <- matrix(nrow=2, ncol=0)
+  
+  invoke_test_strings(expected_res=expectedRes,
+                      alphabet=c("a", "b"),
+                      sequenceMatrix=seqMatrix,
+                      gaps=rep(1, 10000),
+                      positionalKMers=FALSE,
+                      withKMerCounts=TRUE)
+})
+
 # INTEGER MATRIX TESTS ----
 
 test_that("(integer) test 2 sequences with gaps (1,1) non positional; some items are not from alphabet", {
@@ -99,6 +114,20 @@ test_that("(integer) test 2 sequences with gaps (1,1) non positional; some items
                       withKMerCounts=TRUE)
 })
 
+test_that("(integer) the k-mer is longer than the sequence", {
+  seqMatrix <- matrix(c(
+    1,2,3,2,2,3,2,3,23,2,3,2,3,2,3,2,
+    1,2,2,2,3,2,3,2,2,22,2,2,2,2,2,2
+  ), nrow=2, byrow=TRUE)
+  expectedRes <- matrix(nrow=2, ncol=0)
+  invoke_test_integer(expected_res=expectedRes,
+                      alphabet=1:10,
+                      sequenceMatrix=seqMatrix,
+                      gaps=rep(1, 100),
+                      positionalKMers=FALSE,
+                      withKMerCounts=TRUE)
+})
+
 # NUMERIC MATRIX TESTS ----
 
 test_that("(numeric) test 2 sequences with gaps (1,1) non positional; some items are not from alphabet", {
@@ -115,6 +144,20 @@ test_that("(numeric) test 2 sequences with gaps (1,1) non positional; some items
                       alphabet=c(0,1),
                       sequenceMatrix=seqMatrix,
                       gaps=c(1,1),
+                      positionalKMers=FALSE,
+                      withKMerCounts=TRUE)
+})
+
+test_that("(numeric) the k-mer is longer than the sequence", {
+  seqMatrix <- matrix(as.numeric(c(
+    1,2,3,2,2,3,2,3,23,2,3,2,3,2,3,2,
+    1,2,2,2,3,2,3,2,2,22,2,2,2,2,2,2
+  )), nrow=2, byrow=TRUE)
+  expectedRes <- matrix(nrow=2, ncol=0)
+  invoke_test_numeric(expected_res=expectedRes,
+                      alphabet=as.numeric(1:10),
+                      sequenceMatrix=seqMatrix,
+                      gaps=rep(1, 100),
                       positionalKMers=FALSE,
                       withKMerCounts=TRUE)
 })
@@ -148,6 +191,17 @@ test_that("(tidysq) count non positional k-mers (0, 1); some items are not allow
                      alphabet=c("A", "T"),
                      sq = sq,
                      gaps = c(0, 1),
+                     positionalKMers = FALSE,
+                     withKMerCounts=TRUE)
+})
+
+test_that("(tidysq) the k-mer is longer than the sequence", {
+  sq <- tidysq::construct_sq(c("AAAACAAAAC", "AACTAAAA", "AACTAAAAC"), type="nuc")
+  expected_res <- matrix(nrow=3, ncol=0)
+  invoke_test_tidysq(expected_res = expected_res,
+                     alphabet=c("A", "T"),
+                     sq = sq,
+                     gaps = rep(1,100),
                      positionalKMers = FALSE,
                      withKMerCounts=TRUE)
 })
