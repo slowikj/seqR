@@ -49,6 +49,7 @@ find_kmers <- function(sequences,
       alphabet=alphabet,
       gaps=rep(kmer_gaps, length.out=k-1),
       positionalKMers=positional,
-      withKMerCounts=with_kmer_counts)
+      withKMerCounts=with_kmer_counts,
+      kmerDictionaryName=kmer_dictionary_name)
   }
 }

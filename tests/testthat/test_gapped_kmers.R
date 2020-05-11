@@ -33,7 +33,8 @@ test_that("(string)test one sequence with gaps (1) not positional", {
                       sequenceMatrix=to_matrix(c("a", "a", "a", "b", "a", "b", "a")),
                       gaps=c(1),
                       positionalKMers=FALSE,
-                      withKMerCounts=TRUE)
+                      withKMerCounts=TRUE,
+                      kmerDictionaryName = "unordered_map")
 })
 
 test_that("(string)test one sequence with gaps (1) positional", {
@@ -45,7 +46,8 @@ test_that("(string)test one sequence with gaps (1) positional", {
                       sequenceMatrix=to_matrix(c("a", "a", "a", "b", "a", "b", "a")),
                       gaps=c(1),
                       positionalKMers=TRUE,
-                      withKMerCounts=TRUE)
+                      withKMerCounts=TRUE,
+                      kmerDictionaryName = "unordered_map")
 })
 
 test_that("(string)test one sequence with gapps (1,0) not positional", {
@@ -57,7 +59,8 @@ test_that("(string)test one sequence with gapps (1,0) not positional", {
                       sequenceMatrix=to_matrix(c("a", "a", "a", "b", "a", "b", "a")),
                       gaps=c(1, 0),
                       positionalKMers=FALSE,
-                      withKMerCounts=TRUE)
+                      withKMerCounts=TRUE,
+                      kmerDictionaryName = "unordered_map")
 })
 
 test_that("(string)test 2 sequences with gaps (1,1) positional; some items are not from alphabet", {
@@ -76,7 +79,8 @@ test_that("(string)test 2 sequences with gaps (1,1) positional; some items are n
                       sequenceMatrix=seqMatrix,
                       gaps=c(1,1),
                       positionalKMers=TRUE,
-                      withKMerCounts=TRUE)
+                      withKMerCounts=TRUE,
+                      kmerDictionaryName = "unordered_map")
 })
 
 test_that("(string) the k-mer is longer than a sequence", {
@@ -91,7 +95,8 @@ test_that("(string) the k-mer is longer than a sequence", {
                       sequenceMatrix=seqMatrix,
                       gaps=rep(1, 10000),
                       positionalKMers=FALSE,
-                      withKMerCounts=TRUE)
+                      withKMerCounts=TRUE,
+                      kmerDictionaryName = "unordered_map")
 })
 
 # INTEGER MATRIX TESTS ----
@@ -111,7 +116,8 @@ test_that("(integer) test 2 sequences with gaps (1,1) non positional; some items
                       sequenceMatrix=seqMatrix,
                       gaps=c(1,1),
                       positionalKMers=FALSE,
-                      withKMerCounts=TRUE)
+                      withKMerCounts=TRUE,
+                      kmerDictionaryName = "unordered_map")
 })
 
 test_that("(integer) the k-mer is longer than the sequence", {
@@ -125,7 +131,8 @@ test_that("(integer) the k-mer is longer than the sequence", {
                       sequenceMatrix=seqMatrix,
                       gaps=rep(1, 100),
                       positionalKMers=FALSE,
-                      withKMerCounts=TRUE)
+                      withKMerCounts=TRUE,
+                      kmerDictionaryName = "unordered_map")
 })
 
 # NUMERIC MATRIX TESTS ----
@@ -145,7 +152,8 @@ test_that("(numeric) test 2 sequences with gaps (1,1) non positional; some items
                       sequenceMatrix=seqMatrix,
                       gaps=c(1,1),
                       positionalKMers=FALSE,
-                      withKMerCounts=TRUE)
+                      withKMerCounts=TRUE,
+                      kmerDictionaryName = "unordered_map")
 })
 
 test_that("(numeric) the k-mer is longer than the sequence", {
@@ -159,7 +167,8 @@ test_that("(numeric) the k-mer is longer than the sequence", {
                       sequenceMatrix=seqMatrix,
                       gaps=rep(1, 100),
                       positionalKMers=FALSE,
-                      withKMerCounts=TRUE)
+                      withKMerCounts=TRUE,
+                      kmerDictionaryName = "unordered_map")
 })
 
 # TIDYSQ TESTS ----
@@ -176,7 +185,8 @@ test_that("(tidysq) count non positional k-mers (0, 1)", {
                       sq = sq,
                       gaps = c(0,1),
                       positionalKMers = FALSE,
-                     withKMerCounts=TRUE)
+                     withKMerCounts=TRUE,
+                     kmerDictionaryName = "unordered_map")
 })
 
 test_that("(tidysq) count non positional k-mers (0, 1); some items are not allowed", {
@@ -192,7 +202,8 @@ test_that("(tidysq) count non positional k-mers (0, 1); some items are not allow
                      sq = sq,
                      gaps = c(0, 1),
                      positionalKMers = FALSE,
-                     withKMerCounts=TRUE)
+                     withKMerCounts=TRUE,
+                     kmerDictionaryName = "unordered_map")
 })
 
 test_that("(tidysq) the k-mer is longer than the sequence", {
@@ -203,6 +214,7 @@ test_that("(tidysq) the k-mer is longer than the sequence", {
                      sq = sq,
                      gaps = rep(1,100),
                      positionalKMers = FALSE,
-                     withKMerCounts=TRUE)
+                     withKMerCounts=TRUE,
+                     kmerDictionaryName = "unordered_map")
 })
 

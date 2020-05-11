@@ -31,23 +31,23 @@ get_contiguous_intervals_matrix <- function(gaps) {
 }
 
 #' @export
-find_gapped_kmers_string <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts) {
-    .Call('_seqR_find_gapped_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts)
+find_gapped_kmers_string <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName) {
+    .Call('_seqR_find_gapped_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName)
 }
 
 #' @export
-find_gapped_kmers_integer <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts) {
-    .Call('_seqR_find_gapped_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts)
+find_gapped_kmers_integer <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName) {
+    .Call('_seqR_find_gapped_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName)
 }
 
 #' @export
-find_gapped_kmers_numeric <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts) {
-    .Call('_seqR_find_gapped_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts)
+find_gapped_kmers_numeric <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName) {
+    .Call('_seqR_find_gapped_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName)
 }
 
 #' @export
-find_gapped_kmers_tidysq <- function(sq, alphabet, gaps, positionalKMers, withKMerCounts) {
-    .Call('_seqR_find_gapped_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, gaps, positionalKMers, withKMerCounts)
+find_gapped_kmers_tidysq <- function(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName) {
+    .Call('_seqR_find_gapped_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName)
 }
 
 #' @export

@@ -107,9 +107,10 @@ test_that("test tidysq for gapped k-mers", {
   colnames(expected_res) <- c("A.A_1", "A.C_1")
   
   res <- seqR::find_kmers(sequences=sq,
-                           k=2,
-                           alphabet=c("A", "C"),
-                           positional=FALSE,
-                           kmer_gaps=c(1))
+                          k=2,
+                          alphabet=c("A", "C"),
+                          positional=FALSE,
+                          kmer_gaps=c(1),
+                          kmer_dictionary_name = "unordered_map")
   expect_equal(expected_res, res)
 })
