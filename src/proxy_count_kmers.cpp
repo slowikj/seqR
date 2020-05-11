@@ -9,6 +9,7 @@
 #include "tidysq_encoded_sequence.h"
 #include "rcpp_to_cpp_converters.h"
 #include "dictionary/linear_list_dictionary.h"
+#include "dictionary/supported_dict_names.h"
 
 inline ComplexHasher createKMerComplexHasher() {
     std::vector<std::unique_ptr<SingleHasher>> singleHashers;
@@ -85,13 +86,13 @@ inline
 Rcpp::IntegerMatrix count_kmers(AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
                                 KMerTaskConf<input_vector_t, input_elem_t> &kMerTaskConf,
                                 const std::string &kmerDictionaryName) {
-    if (kmerDictionaryName == "unordered_map") {
+    if (kmerDictionaryName == UNORDERED_MAP_NAME) {
         return std::move(
                 count_kmers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, UnorderedMapWrapper>(
                         alphabetEncoding,
                         kMerTaskConf
                 ));
-    } else if (kmerDictionaryName == "linear_list") {
+    } else if (kmerDictionaryName == LINEAR_LIST_NAME) {
         return std::move(
                 count_kmers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, LinearListDictionary>(
                         alphabetEncoding,
