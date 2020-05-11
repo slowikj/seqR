@@ -50,8 +50,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_gapped_kmers_string
-Rcpp::IntegerMatrix find_gapped_kmers_string(Rcpp::StringMatrix& sequenceMatrix, Rcpp::StringVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers, bool withKMerCounts);
-RcppExport SEXP _seqR_find_gapped_kmers_string(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP) {
+Rcpp::IntegerMatrix find_gapped_kmers_string(Rcpp::StringMatrix& sequenceMatrix, Rcpp::StringVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName);
+RcppExport SEXP _seqR_find_gapped_kmers_string(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -60,13 +60,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_gapped_kmers_string(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts));
+    Rcpp::traits::input_parameter< const std::string& >::type kmerDictionaryName(kmerDictionaryNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_gapped_kmers_string(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName));
     return rcpp_result_gen;
 END_RCPP
 }
 // find_gapped_kmers_integer
-Rcpp::IntegerMatrix find_gapped_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix, Rcpp::IntegerVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers, bool withKMerCounts);
-RcppExport SEXP _seqR_find_gapped_kmers_integer(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP) {
+Rcpp::IntegerMatrix find_gapped_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix, Rcpp::IntegerVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName);
+RcppExport SEXP _seqR_find_gapped_kmers_integer(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -75,13 +76,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_gapped_kmers_integer(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts));
+    Rcpp::traits::input_parameter< const std::string& >::type kmerDictionaryName(kmerDictionaryNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_gapped_kmers_integer(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName));
     return rcpp_result_gen;
 END_RCPP
 }
 // find_gapped_kmers_numeric
-Rcpp::IntegerMatrix find_gapped_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix, Rcpp::NumericVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers, bool withKMerCounts);
-RcppExport SEXP _seqR_find_gapped_kmers_numeric(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP) {
+Rcpp::IntegerMatrix find_gapped_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix, Rcpp::NumericVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName);
+RcppExport SEXP _seqR_find_gapped_kmers_numeric(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -90,13 +92,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_gapped_kmers_numeric(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts));
+    Rcpp::traits::input_parameter< const std::string& >::type kmerDictionaryName(kmerDictionaryNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_gapped_kmers_numeric(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName));
     return rcpp_result_gen;
 END_RCPP
 }
 // find_gapped_kmers_tidysq
-Rcpp::IntegerMatrix find_gapped_kmers_tidysq(Rcpp::List& sq, Rcpp::StringVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers, bool withKMerCounts);
-RcppExport SEXP _seqR_find_gapped_kmers_tidysq(SEXP sqSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP) {
+Rcpp::IntegerMatrix find_gapped_kmers_tidysq(Rcpp::List& sq, Rcpp::StringVector& alphabet, Rcpp::IntegerVector& gaps, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName);
+RcppExport SEXP _seqR_find_gapped_kmers_tidysq(SEXP sqSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -105,13 +108,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_gapped_kmers_tidysq(sq, alphabet, gaps, positionalKMers, withKMerCounts));
+    Rcpp::traits::input_parameter< const std::string& >::type kmerDictionaryName(kmerDictionaryNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_gapped_kmers_tidysq(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName));
     return rcpp_result_gen;
 END_RCPP
 }
 // find_kmers_string
-Rcpp::IntegerMatrix find_kmers_string(Rcpp::StringMatrix& sequenceMatrix, Rcpp::StringVector& alphabet, int k, bool positionalKMers, bool withKMerCounts);
-RcppExport SEXP _seqR_find_kmers_string(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP) {
+Rcpp::IntegerMatrix find_kmers_string(Rcpp::StringMatrix& sequenceMatrix, Rcpp::StringVector& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName);
+RcppExport SEXP _seqR_find_kmers_string(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -120,13 +124,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_kmers_string(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts));
+    Rcpp::traits::input_parameter< const std::string& >::type kmerDictionaryName(kmerDictionaryNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_kmers_string(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName));
     return rcpp_result_gen;
 END_RCPP
 }
 // find_kmers_integer
-Rcpp::IntegerMatrix find_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix, Rcpp::IntegerVector& alphabet, int k, bool positionalKMers, bool withKMerCounts);
-RcppExport SEXP _seqR_find_kmers_integer(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP) {
+Rcpp::IntegerMatrix find_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix, Rcpp::IntegerVector& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName);
+RcppExport SEXP _seqR_find_kmers_integer(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -135,13 +140,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_kmers_integer(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts));
+    Rcpp::traits::input_parameter< const std::string& >::type kmerDictionaryName(kmerDictionaryNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_kmers_integer(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName));
     return rcpp_result_gen;
 END_RCPP
 }
 // find_kmers_numeric
-Rcpp::IntegerMatrix find_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix, Rcpp::NumericVector& alphabet, int k, bool positionalKMers, bool withKMerCounts);
-RcppExport SEXP _seqR_find_kmers_numeric(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP) {
+Rcpp::IntegerMatrix find_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix, Rcpp::NumericVector& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName);
+RcppExport SEXP _seqR_find_kmers_numeric(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -150,13 +156,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_kmers_numeric(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts));
+    Rcpp::traits::input_parameter< const std::string& >::type kmerDictionaryName(kmerDictionaryNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_kmers_numeric(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName));
     return rcpp_result_gen;
 END_RCPP
 }
 // find_kmers_tidysq
-Rcpp::IntegerMatrix find_kmers_tidysq(Rcpp::List& sq, Rcpp::StringVector& alphabet, int k, bool positionalKMers, bool withKMerCounts);
-RcppExport SEXP _seqR_find_kmers_tidysq(SEXP sqSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP) {
+Rcpp::IntegerMatrix find_kmers_tidysq(Rcpp::List& sq, Rcpp::StringVector& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName);
+RcppExport SEXP _seqR_find_kmers_tidysq(SEXP sqSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -165,7 +172,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
-    rcpp_result_gen = Rcpp::wrap(find_kmers_tidysq(sq, alphabet, k, positionalKMers, withKMerCounts));
+    Rcpp::traits::input_parameter< const std::string& >::type kmerDictionaryName(kmerDictionaryNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_kmers_tidysq(sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -205,14 +213,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_seqR_encode_numeric_alphabet", (DL_FUNC) &_seqR_encode_numeric_alphabet, 1},
     {"_seqR_encode_string_alphabet", (DL_FUNC) &_seqR_encode_string_alphabet, 1},
     {"_seqR_get_contiguous_intervals_matrix", (DL_FUNC) &_seqR_get_contiguous_intervals_matrix, 1},
-    {"_seqR_find_gapped_kmers_string", (DL_FUNC) &_seqR_find_gapped_kmers_string, 5},
-    {"_seqR_find_gapped_kmers_integer", (DL_FUNC) &_seqR_find_gapped_kmers_integer, 5},
-    {"_seqR_find_gapped_kmers_numeric", (DL_FUNC) &_seqR_find_gapped_kmers_numeric, 5},
-    {"_seqR_find_gapped_kmers_tidysq", (DL_FUNC) &_seqR_find_gapped_kmers_tidysq, 5},
-    {"_seqR_find_kmers_string", (DL_FUNC) &_seqR_find_kmers_string, 5},
-    {"_seqR_find_kmers_integer", (DL_FUNC) &_seqR_find_kmers_integer, 5},
-    {"_seqR_find_kmers_numeric", (DL_FUNC) &_seqR_find_kmers_numeric, 5},
-    {"_seqR_find_kmers_tidysq", (DL_FUNC) &_seqR_find_kmers_tidysq, 5},
+    {"_seqR_find_gapped_kmers_string", (DL_FUNC) &_seqR_find_gapped_kmers_string, 6},
+    {"_seqR_find_gapped_kmers_integer", (DL_FUNC) &_seqR_find_gapped_kmers_integer, 6},
+    {"_seqR_find_gapped_kmers_numeric", (DL_FUNC) &_seqR_find_gapped_kmers_numeric, 6},
+    {"_seqR_find_gapped_kmers_tidysq", (DL_FUNC) &_seqR_find_gapped_kmers_tidysq, 6},
+    {"_seqR_find_kmers_string", (DL_FUNC) &_seqR_find_kmers_string, 6},
+    {"_seqR_find_kmers_integer", (DL_FUNC) &_seqR_find_kmers_integer, 6},
+    {"_seqR_find_kmers_numeric", (DL_FUNC) &_seqR_find_kmers_numeric, 6},
+    {"_seqR_find_kmers_tidysq", (DL_FUNC) &_seqR_find_kmers_tidysq, 6},
     {"_seqR_compute_polynomial_hash", (DL_FUNC) &_seqR_compute_polynomial_hash, 5},
     {"_seqR_compute_polynomial_multihash", (DL_FUNC) &_seqR_compute_polynomial_multihash, 5},
     {NULL, NULL, 0}

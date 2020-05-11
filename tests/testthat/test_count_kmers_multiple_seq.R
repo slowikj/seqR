@@ -37,7 +37,8 @@ test_that("count non-positional 2-mers for 2 sequences", {
                      sequenceMatrix=sequenceMatrix,
                      k=2,
                      positionalKMers=FALSE,
-                     withKMerCounts=TRUE
+                     withKMerCounts=TRUE,
+                     kmerDictionaryName = "unordered_map"
   )
 })
 
@@ -58,7 +59,8 @@ test_that("count positional 2-mers for 2 sequences", {
                      sequenceMatrix=sequenceMatrix,
                      k=2,
                      positionalKMers=TRUE,
-                     withKMerCounts=TRUE)
+                     withKMerCounts=TRUE,
+                     kmerDictionaryName = "unordered_map")
 })
 
 test_that("count non positional 5-mers for 10 sequences (10^6 each)", {
@@ -74,7 +76,8 @@ test_that("count non positional 5-mers for 10 sequences (10^6 each)", {
                       sequenceMatrix=sequenceMatrix,
                       k=5,
                       positionalKMers=FALSE,
-                      withKMerCounts=TRUE)
+                      withKMerCounts=TRUE,
+                      kmerDictionaryName = "unordered_map")
 })
 
 test_that("find non positional 5-mers for 100 sequences (10^6 each) (without k-mer counts)", {
@@ -90,5 +93,6 @@ test_that("find non positional 5-mers for 100 sequences (10^6 each) (without k-m
                       sequenceMatrix=sequenceMatrix,
                       k=5,
                       positionalKMers=FALSE,
-                      withKMerCounts=FALSE)
+                      withKMerCounts=FALSE,
+                      kmerDictionaryName = "unordered_map")
 })

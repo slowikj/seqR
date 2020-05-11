@@ -19,7 +19,8 @@ test_that("count 3-mers for tidysq sequences A+", {
               sq=sq,
               k=3,
               positionalKMers=FALSE,
-              withKMerCounts=TRUE)
+              withKMerCounts=TRUE,
+              kmerDictionaryName="unordered_map")
 })
 
 test_that("count 3-mers for tidysq sequences A+ longer", {
@@ -35,7 +36,8 @@ test_that("count 3-mers for tidysq sequences A+ longer", {
               sq=sq,
               k=3,
               positionalKMers=FALSE,
-              withKMerCounts=TRUE)
+              withKMerCounts=TRUE,
+              kmerDictionaryName = "linear_list")
 })
 
 test_that("count non positional 10-mers for tidysq sequences A+ longer", {
@@ -53,7 +55,8 @@ test_that("count non positional 10-mers for tidysq sequences A+ longer", {
               sq=sq,
               k=10,
               positionalKMers=FALSE,
-              withKMerCounts=TRUE)
+              withKMerCounts=TRUE,
+              kmerDictionaryName="unordered_map")
 })
 
 test_that("find 3-mers for tidysq sequences A+ (without k-mer counts)", {
@@ -69,5 +72,6 @@ test_that("find 3-mers for tidysq sequences A+ (without k-mer counts)", {
               sq=sq,
               k=3,
               positionalKMers=FALSE,
-              withKMerCounts=FALSE)
+              withKMerCounts=FALSE,
+              kmerDictionaryName="linear_list")
 })
