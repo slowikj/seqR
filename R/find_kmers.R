@@ -6,7 +6,8 @@ find_kmers <- function(sequences,
                        alphabet,
                        positional = FALSE,
                        kmer_gaps = c(),
-                       with_kmer_counts = TRUE) {
+                       with_kmer_counts = TRUE,
+                       kmer_dictionary_name = "unordered_map") {
   if (is_empty(alphabet)) {
     stop("alphabet param is empty")
   }
@@ -36,9 +37,18 @@ find_kmers <- function(sequences,
   
   if(length(kmer_gaps) == 0) {
     invoke_contiguous_kmer_function(
-      sequences=sequences, alphabet=alphabet, k=k, positionalKMers=positional, withKMerCounts=with_kmer_counts)
+      sequences=sequences,
+      alphabet=alphabet,
+      k=k,
+      positionalKMers=positional,
+      withKMerCounts=with_kmer_counts,
+      kmerDictionaryName=kmer_dictionary_name)
   } else {
     invoke_gapped_kmer_function(
-      sequences=sequences, alphabet=alphabet, gaps=rep(kmer_gaps, length.out=k-1), positionalKMers=positional, withKMerCounts=with_kmer_counts)
+      sequences=sequences,
+      alphabet=alphabet,
+      gaps=rep(kmer_gaps, length.out=k-1),
+      positionalKMers=positional,
+      withKMerCounts=with_kmer_counts)
   }
 }

@@ -51,23 +51,23 @@ find_gapped_kmers_tidysq <- function(sq, alphabet, gaps, positionalKMers, withKM
 }
 
 #' @export
-find_kmers_string <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts) {
-    .Call('_seqR_find_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts)
+find_kmers_string <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName) {
+    .Call('_seqR_find_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName)
 }
 
 #' @export
-find_kmers_integer <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts) {
-    .Call('_seqR_find_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts)
+find_kmers_integer <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName) {
+    .Call('_seqR_find_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName)
 }
 
 #' @export
-find_kmers_numeric <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts) {
-    .Call('_seqR_find_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts)
+find_kmers_numeric <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName) {
+    .Call('_seqR_find_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName)
 }
 
 #' @export
-find_kmers_tidysq <- function(sq, alphabet, k, positionalKMers, withKMerCounts) {
-    .Call('_seqR_find_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, k, positionalKMers, withKMerCounts)
+find_kmers_tidysq <- function(sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName) {
+    .Call('_seqR_find_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName)
 }
 
 #' @export
