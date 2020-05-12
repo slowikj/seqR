@@ -20,7 +20,7 @@ template<class input_vector_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
-Rcpp::IntegerMatrix computeResult2(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
+Rcpp::IntegerMatrix computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
                                    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
                                    ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> &parallelKMerCountingProc) {
     return std::move(
@@ -36,7 +36,7 @@ template<class input_vector_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value> class kmer_dictionary_t>
 inline
-Rcpp::IntegerMatrix computeResult1(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
+Rcpp::IntegerMatrix computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
                                    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
                                    std::function<ComplexHasher()> &complexHasherFactory) {
     ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> countingProc = [&complexHasherFactory](
@@ -47,7 +47,7 @@ Rcpp::IntegerMatrix computeResult1(KMerTaskConfig<input_vector_t, input_elem_t> 
                         kMerTaskConfig, encoding, complexHasherFactory));
     };
     return std::move(
-            computeResult2<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
+            computeResult<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
                     kMerTaskConfig, alphabetEncoding, countingProc));
 }
 
@@ -57,7 +57,7 @@ template<class input_vector_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value> class kmer_dictionary_t>
 inline
-Rcpp::IntegerMatrix computeResult1(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
+Rcpp::IntegerMatrix computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
                                    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
                                    std::vector<PolynomialSingleHasherConfig> &hasherConfigs) {
     ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> countingProc = [&hasherConfigs](
@@ -68,7 +68,7 @@ Rcpp::IntegerMatrix computeResult1(KMerTaskConfig<input_vector_t, input_elem_t> 
                         kMerTaskConfig, encoding, hasherConfigs));
     };
     return std::move(
-            computeResult2<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
+            computeResult<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
                     kMerTaskConfig, alphabetEncoding, countingProc));
 }
 
@@ -86,12 +86,12 @@ computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
               &algorithmParams) {
     if (kmerDictionaryName == UNORDERED_MAP_NAME) {
         return std::move(
-                computeResult1<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, UnorderedMapWrapper>(
+                computeResult<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, UnorderedMapWrapper>(
                         kMerTaskConfig, alphabetEncoding, algorithmParams));
 
     } else if (kmerDictionaryName == LINEAR_LIST_NAME) {
         return std::move(
-                computeResult1<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, LinearListDictionary>(
+                computeResult<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, LinearListDictionary>(
                         kMerTaskConfig, alphabetEncoding, algorithmParams));
 
     } else {
