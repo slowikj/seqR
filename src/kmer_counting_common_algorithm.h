@@ -15,9 +15,7 @@
 #include <memory>
 #include <functional>
 #include "result_creator.h"
-
-extern const std::string default_item_separator;
-extern const std::string default_section_separator;
+#include "kmer_task_config.h"
 
 template<class input_vector_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
@@ -50,7 +48,7 @@ public:
     std::vector<KMerManager<kmer_dictionary_t>> kmers;
 };
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t,
+template<class input_vector_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
@@ -63,49 +61,36 @@ std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
     return std::move(worker.kmers);
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
+template<class input_vector_t, class input_elem_t, class encoded_elem_t,
+        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 using ParallelKMerCountingProc_t = std::function<std::vector<KMerManager<kmer_dictionary_t>>(
-        AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &,
-        SequenceGetter_t<input_vector_t>)>;
+        KMerTaskConfig<input_vector_t, input_elem_t> &,
+        AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &)>;
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 Rcpp::IntegerMatrix getKMerCountsMatrix(
+        KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConf,
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
-        int sequencesNum,
-        SequenceGetter_t<input_vector_t> sequenceGetter,
-        const std::vector<int> &gaps,
-        bool positionalKMers,
-        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> parallelKMerCountingProc,
-        InputToStringItemConverter_t<input_elem_t> inputToStringConverter) {
-
-    auto kMersManagers = std::move(parallelKMerCountingProc(alphabetEncoding, sequenceGetter));
+        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> parallelKMerCountingProc) {
+    auto kMersManagers = std::move(parallelKMerCountingProc(kMerTaskConf, alphabetEncoding));
 
     auto[hashIndexer, uniqueKMers] = indexKMerHashes(kMersManagers);
     std::vector<std::string> uniqueKMerStrings = std::move(
-            parallelComputeKMerStrings<input_vector_t, input_elem_t>(
-                    uniqueKMers,
-                    inputToStringConverter,
-                    sequencesNum,
-                    sequenceGetter,
-                    gaps,
-                    positionalKMers,
-                    default_item_separator,
-                    default_section_separator
-            )
+            parallelComputeKMerStrings<input_vector_t, input_elem_t>(uniqueKMers, kMerTaskConf)
     );
 
     KMerMatrixCreatorWorker<kmer_dictionary_t> matrixCreatorWorker(
-            sequencesNum,
+            kMerTaskConf.sequencesNum,
             uniqueKMerStrings.size(),
             kMersManagers,
             hashIndexer,
             uniqueKMerStrings
     );
-    RcppParallel::parallelFor(0, sequencesNum, matrixCreatorWorker);
+    RcppParallel::parallelFor(0, kMerTaskConf.sequencesNum, matrixCreatorWorker);
 
     return matrixCreatorWorker.outputKMerCounts;
 }

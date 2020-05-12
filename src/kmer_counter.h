@@ -10,7 +10,7 @@
 #include "hash/single_hasher.h"
 #include "hash/polynomial_single_hasher.h"
 #include "kmer_manager.h"
-#include "kmer_counting_common.h"
+#include "kmer_counting_common_algorithm.h"
 #include "sequence_getter.h"
 #include <vector>
 #include <memory>
@@ -100,28 +100,24 @@ template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
-        int k,
-        bool positionalKMer,
-        bool withKMerCounts,
-        int sequencesNum,
-        SequenceGetter_t<input_vector_t> sequenceGetter,
+        KMerTaskConfig<input_vector_t, input_elem_t>& kMerTaskConfig,
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
         std::function<ComplexHasher()> complexHasherFactory) {
     return std::move(
-            parallelComputeKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
-                    sequencesNum,
-                    [k, positionalKMer, &alphabetEncoding, &complexHasherFactory, withKMerCounts]
+            parallelComputeKMers<input_vector_t, alphabet_dictionary_t, kmer_dictionary_t>(
+                    kMerTaskConfig.sequencesNum,
+                    [&kMerTaskConfig, &alphabetEncoding, &complexHasherFactory]
                             (input_vector_t &v) -> KMerManager<kmer_dictionary_t> {
                         return countKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
-                                k,
+                                kMerTaskConfig.k,
                                 v,
                                 alphabetEncoding,
-                                positionalKMer,
-                                withKMerCounts,
+                                kMerTaskConfig.positionalKMers,
+                                kMerTaskConfig.withKMerCounts,
                                 std::move(complexHasherFactory())
                         );
                     },
-                    sequenceGetter
+                    kMerTaskConfig.sequenceGetter
             ));
 }
 

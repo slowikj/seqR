@@ -3,7 +3,7 @@
 
 #include "alphabet_encoder.h"
 #include "hash/polynomial_single_hasher.h"
-#include "kmer_counting_common.h"
+#include "kmer_counting_common_algorithm.h"
 #include "kmer_manager.h"
 #include "sequence_getter.h"
 #include <vector>
@@ -253,30 +253,26 @@ template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerManager<kmer_dictionary_t>> parallelComputeGappedKMersCounts(
-        const std::vector<int> &gaps,
-        bool isPositionalKMer,
-        bool withKMerCounts,
-        int rowsNum,
-        SequenceGetter_t<input_vector_t> sequenceGetter,
+        KMerTaskConfig<input_vector_t, input_elem_t>& kMerTaskConfig,
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
         const std::vector<PolynomialSingleHasherConfig> &hasherConfigs) {
-    std::size_t totalKMerSize = getTotalKMerSize(gaps);
+    std::size_t totalKMerSize = getTotalKMerSize(kMerTaskConfig.gaps);
     return std::move(
-            parallelComputeKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
-                    rowsNum,
-                    [&gaps, isPositionalKMer, &alphabetEncoding, &totalKMerSize, &hasherConfigs, withKMerCounts]
+            parallelComputeKMers<input_vector_t, alphabet_dictionary_t, kmer_dictionary_t>(
+                    kMerTaskConfig.sequencesNum,
+                    [&kMerTaskConfig, &alphabetEncoding, &totalKMerSize, &hasherConfigs]
                             (input_vector_t &v) -> KMerManager<kmer_dictionary_t> {
                         return countGappedKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
-                                gaps,
+                                kMerTaskConfig.gaps,
                                 totalKMerSize,
                                 v,
                                 alphabetEncoding,
-                                isPositionalKMer,
-                                withKMerCounts,
+                                kMerTaskConfig.positionalKMers,
+                                kMerTaskConfig.withKMerCounts,
                                 hasherConfigs
                         );
                     },
-                    sequenceGetter
+                    kMerTaskConfig.sequenceGetter
             ));
 }
 

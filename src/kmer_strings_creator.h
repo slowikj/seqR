@@ -14,9 +14,7 @@
 #include "sequence_getter.h"
 #include "kmer_hash_indexer.h"
 #include "utils.h"
-
-const std::string default_item_separator = ".";
-const std::string default_section_separator = "_";
+#include "kmer_task_config.h"
 
 template<class input_vector_t, class input_elem_t>
 class KMerStringCreatorForSequence {
@@ -73,7 +71,7 @@ private:
     }
 
     inline std::string prepareKMerInfoSuffix(const std::vector<int> &gaps) const {
-        if (gaps.size() == 0) {
+        if (gaps.empty()) {
             return "";
         }
         std::string res;
@@ -95,22 +93,13 @@ public:
     std::vector<std::string> outputKMerStrings;
 
     KMerStringsCreatorWorker(const std::vector<KMerPositionInfo> &indexedKMers,
-                             int sequencesNum,
-                             SequenceGetter_t<input_vector_t> sequenceGetter,
-                             const std::vector<int> &gaps,
-                             bool isPositionalKMer,
-                             InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter,
-                             const std::string &itemSeparator,
-                             const std::string &sectionSeparator) :
+                             KMerTaskConfig<input_vector_t, input_elem_t>& kMerTaskConfig) :
             indexedKMers(indexedKMers),
-            itemSeparator(itemSeparator),
-            sectionSeparator(sectionSeparator),
+            kMerTaskConfig(kMerTaskConfig),
             outputKMerStrings(indexedKMers.size()),
-            gapsAccumulated(std::move(getGapsAccumulated(gaps))) {
-        prepareKMerStringsCreators(
-                sequencesNum, gaps, gapsAccumulated, inputToStringItemConverter, sequenceGetter, itemSeparator,
-                sectionSeparator);
-        prepareCreateKMerFunc(isPositionalKMer);
+            gapsAccumulated(std::move(getGapsAccumulated(kMerTaskConfig.gaps))) {
+        prepareKMerStringsCreators();
+        prepareCreateKMerFunc();
     }
 
     inline void operator()(std::size_t begin, std::size_t end) override {
@@ -123,37 +112,33 @@ public:
 
 private:
     const std::vector<KMerPositionInfo> &indexedKMers;
-    const std::string &itemSeparator;
-    const std::string &sectionSeparator;
+    KMerTaskConfig<input_vector_t, input_elem_t>& kMerTaskConfig;
     std::vector<KMerStringCreatorForSequence<input_vector_t, input_elem_t>> kmerStringCreators;
     std::function<std::string(int, int)> createKMerFunc;
     std::vector<int> gapsAccumulated;
 
-    inline void prepareKMerStringsCreators(int sequencesNum,
-                                           const std::vector<int> &gaps,
-                                           const std::vector<int> &gapsAccumulated,
-                                           InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter,
-                                           SequenceGetter_t<input_vector_t> sequenceGetter,
-                                           const std::string &itemSeparator,
-                                           const std::string &sectionSeparator) {
-        this->kmerStringCreators.reserve(sequencesNum);
-        for (int i = 0; i < sequencesNum; ++i) {
-            auto seq = std::move(sequenceGetter(i));
+    inline void prepareKMerStringsCreators() {
+        this->kmerStringCreators.reserve(kMerTaskConfig.sequencesNum);
+        for (int i = 0; i < kMerTaskConfig.sequencesNum; ++i) {
+            auto seq = std::move(kMerTaskConfig.sequenceGetter(i));
             this->kmerStringCreators.emplace_back(
-                    std::move(seq), gaps, gapsAccumulated, itemSeparator, sectionSeparator, inputToStringItemConverter);
+                    std::move(seq),
+                    kMerTaskConfig.gaps, gapsAccumulated,
+                    kMerTaskConfig.kMerItemSeparator, kMerTaskConfig.kMerSectionSeparator,
+                    kMerTaskConfig.inputToStringItemConverter);
         }
     }
 
-    inline void prepareCreateKMerFunc(bool isPositionalKMer) {
-        this->createKMerFunc = isPositionalKMer ?
-                               static_cast<std::function<std::string(int, int)>>(
-                                       [this](int seqNum, int pos) {
-                                           return kmerStringCreators[seqNum].getPositional(pos);
-                                       }) :
-                               static_cast<std::function<std::string(int, int)>>(
-                                       [this](int seqNum, int pos) {
-                                           return kmerStringCreators[seqNum].get(pos);
-                                       });
+    inline void prepareCreateKMerFunc() {
+        this->createKMerFunc = kMerTaskConfig.positionalKMers ?
+                static_cast<std::function<std::string(int, int)>>(
+                        [this](int seqNum, int pos) {
+                            return kmerStringCreators[seqNum].getPositional(pos);
+                        }) :
+                static_cast<std::function<std::string(int, int)>>(
+                        [this](int seqNum, int pos) {
+                            return kmerStringCreators[seqNum].get(pos);
+                        });
     }
 
 };
@@ -162,23 +147,8 @@ template<class input_vector_t, class input_elem_t>
 inline
 std::vector<std::string> parallelComputeKMerStrings(
         const std::vector<KMerPositionInfo> &indexedKMers,
-        InputToStringItemConverter_t<input_elem_t> inputToStringItemConverter,
-        int sequencesNum,
-        SequenceGetter_t<input_vector_t> sequenceGetter,
-        const std::vector<int> &gaps,
-        bool isPositionalKMer,
-        const std::string &itemSeparator = default_item_separator,
-        const std::string &sectionSeparator = default_section_separator) {
-
-    KMerStringsCreatorWorker<input_vector_t, input_elem_t> worker(
-            indexedKMers,
-            sequencesNum,
-            sequenceGetter,
-            gaps,
-            isPositionalKMer,
-            inputToStringItemConverter,
-            itemSeparator,
-            sectionSeparator);
+        KMerTaskConfig<input_vector_t, input_elem_t>& kMerTaskConfig) {
+    KMerStringsCreatorWorker<input_vector_t, input_elem_t> worker(indexedKMers, kMerTaskConfig);
     RcppParallel::parallelFor(0, indexedKMers.size(), worker);
     return std::move(worker.outputKMerStrings);
 }

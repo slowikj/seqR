@@ -18,7 +18,7 @@ add_library(seqR
         src/proxy_hashing.cpp
         src/input_to_string_item_converter.h
         src/kmer_manager.h
-        src/kmer_counting_common.h
+        src/kmer_counting_common_algorithm.h
         src/kmer_counter.h
         src/gapped_kmer_counter.h
         src/kmer_hash_indexer.h
@@ -28,4 +28,4 @@ add_library(seqR
         src/tidysq_encoded_sequence.cpp
         src/proxy_alphabet_encoder.cpp
         src/proxy_count_gapped_kmers.cpp
-        src/proxy_count_kmers.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h src/result_creator.h src/dictionary/iterator.h src/dictionary/linear_list_dictionary.h src/dictionary/supported_dict_names.h)
+        src/proxy_count_kmers.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h src/result_creator.h src/dictionary/iterator.h src/dictionary/linear_list_dictionary.h src/dictionary/supported_dict_names.h src/kmer_task_config.h src/kmer_task_solver.h)
