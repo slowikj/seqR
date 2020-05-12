@@ -41,24 +41,6 @@ struct KMerTaskConfig {
             kMerSectionSeparator(std::move(kmerSectionSeparator)) {
     }
 
-    KMerTaskConfig(int sequencesNum,
-                   SequenceGetter_t<vector_t> sequenceGetter,
-                   int k,
-                   bool positionalKMers,
-                   bool withKMerCounts,
-                   InputToStringItemConverter_t<elem_t> inputToStringItemConverter,
-                   std::string kmerItemSeparator = DEFAULT_KMER_ITEM_SEPARATOR,
-                   std::string kmerSectionSeparator = DEFAULT_KMER_SECTION_SEPARATOR) :
-            sequencesNum(sequencesNum),
-            sequenceGetter(sequenceGetter),
-            k(k),
-            positionalKMers(positionalKMers),
-            withKMerCounts(withKMerCounts),
-            inputToStringItemConverter(inputToStringItemConverter),
-            gaps(k - 1),
-            kMerItemSeparator(std::move(kmerItemSeparator)),
-            kMerSectionSeparator(std::move(kmerSectionSeparator)) {
-    }
 };
 
 #endif //SEQR_KMER_TASK_CONFIG_H
