@@ -6,10 +6,6 @@
 #include <utility>
 #include <vector>
 
-const std::string DEFAULT_KMER_ITEM_SEPARATOR = ".";
-
-const std::string DEFAULT_KMER_SECTION_SEPARATOR = "_";
-
 template<class vector_t, class elem_t>
 struct KMerTaskConfig {
     int sequencesNum;
@@ -28,8 +24,8 @@ struct KMerTaskConfig {
                    bool positionalKMers,
                    bool withKMerCounts,
                    InputToStringItemConverter_t<elem_t> inputToStringItemConverter,
-                   std::string kmerItemSeparator = DEFAULT_KMER_ITEM_SEPARATOR,
-                   std::string kmerSectionSeparator = DEFAULT_KMER_SECTION_SEPARATOR) :
+                   std::string kmerItemSeparator,
+                   std::string kmerSectionSeparator) :
             sequencesNum(sequencesNum),
             sequenceGetter(sequenceGetter),
             k(static_cast<int>(gaps.size()) + 1),

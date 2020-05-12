@@ -14,6 +14,10 @@
 #include <functional>
 #include <vector>
 
+const std::string DEFAULT_KMER_ITEM_SEPARATOR = ".";
+
+const std::string DEFAULT_KMER_SECTION_SEPARATOR = "_";
+
 template<class input_vector_t,
         class input_elem_t,
         class encoded_elem_t,
@@ -140,7 +144,9 @@ Rcpp::IntegerMatrix findKMers(Rcpp::StringMatrix &sequenceMatrix,
             gaps,
             positionalKMers,
             withKMerCounts,
-            getStringToStringConverter());
+            getStringToStringConverter(),
+            DEFAULT_KMER_ITEM_SEPARATOR,
+            DEFAULT_KMER_SECTION_SEPARATOR);
     return std::move(
             computeResult<
                     std::vector<std::string>,
@@ -170,7 +176,9 @@ Rcpp::IntegerMatrix findKMers(Rcpp::IntegerMatrix &sequenceMatrix,
             gaps,
             positionalKMers,
             withKMerCounts,
-            getIntToStringConverter());
+            getIntToStringConverter(),
+            DEFAULT_KMER_ITEM_SEPARATOR,
+            DEFAULT_KMER_SECTION_SEPARATOR);
     return computeResult<
             std::vector<int>,
             RcppParallel::RMatrix<int>::Row,
@@ -199,7 +207,9 @@ Rcpp::IntegerMatrix findKMers(Rcpp::NumericMatrix &sequenceMatrix,
             gaps,
             positionalKMers,
             withKMerCounts,
-            getDoubleToStringConverter(3));
+            getDoubleToStringConverter(3),
+            DEFAULT_KMER_ITEM_SEPARATOR,
+            DEFAULT_KMER_SECTION_SEPARATOR);
     return computeResult<
             std::vector<double>,
             RcppParallel::RMatrix<double>::Row,
@@ -235,7 +245,9 @@ Rcpp::IntegerMatrix findKMers(Rcpp::List &sq,
             gaps,
             positionalKMers,
             withKMerCounts,
-            getEncodedTidySqItemToStringConverter(safeElementsEncoding));
+            getEncodedTidySqItemToStringConverter(safeElementsEncoding),
+            DEFAULT_KMER_ITEM_SEPARATOR,
+            DEFAULT_KMER_SECTION_SEPARATOR);
     return computeResult<
             RcppParallel::RVector<unsigned char>,
             unsigned char,
