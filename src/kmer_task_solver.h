@@ -28,7 +28,7 @@ Rcpp::IntegerMatrix computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &
                                   AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
                                   ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> &parallelKMerCountingProc) {
     return std::move(
-            getKMerCountsMatrix<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
+            parallelGetKMerCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
                     kMerTaskConfig,
                     alphabetEncoding,
                     parallelKMerCountingProc));

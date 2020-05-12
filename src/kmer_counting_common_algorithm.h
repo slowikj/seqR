@@ -72,7 +72,7 @@ template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
-Rcpp::IntegerMatrix getKMerCountsMatrix(
+Rcpp::IntegerMatrix parallelGetKMerCounts(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConf,
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
         ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> parallelKMerCountingProc) {
