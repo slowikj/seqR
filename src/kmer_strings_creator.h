@@ -93,7 +93,7 @@ public:
     std::vector<std::string> outputKMerStrings;
 
     KMerStringsCreatorWorker(const std::vector<KMerPositionInfo> &indexedKMers,
-                             KMerTaskConfig<input_vector_t, input_elem_t>& kMerTaskConfig) :
+                             KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig) :
             indexedKMers(indexedKMers),
             kMerTaskConfig(kMerTaskConfig),
             outputKMerStrings(indexedKMers.size()),
@@ -112,7 +112,7 @@ public:
 
 private:
     const std::vector<KMerPositionInfo> &indexedKMers;
-    KMerTaskConfig<input_vector_t, input_elem_t>& kMerTaskConfig;
+    KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig;
     std::vector<KMerStringCreatorForSequence<input_vector_t, input_elem_t>> kmerStringCreators;
     std::function<std::string(int, int)> createKMerFunc;
     std::vector<int> gapsAccumulated;
@@ -131,14 +131,14 @@ private:
 
     inline void prepareCreateKMerFunc() {
         this->createKMerFunc = kMerTaskConfig.positionalKMers ?
-                static_cast<std::function<std::string(int, int)>>(
-                        [this](int seqNum, int pos) {
-                            return kmerStringCreators[seqNum].getPositional(pos);
-                        }) :
-                static_cast<std::function<std::string(int, int)>>(
-                        [this](int seqNum, int pos) {
-                            return kmerStringCreators[seqNum].get(pos);
-                        });
+                               static_cast<std::function<std::string(int, int)>>(
+                                       [this](int seqNum, int pos) {
+                                           return kmerStringCreators[seqNum].getPositional(pos);
+                                       }) :
+                               static_cast<std::function<std::string(int, int)>>(
+                                       [this](int seqNum, int pos) {
+                                           return kmerStringCreators[seqNum].get(pos);
+                                       });
     }
 
 };
@@ -147,7 +147,7 @@ template<class input_vector_t, class input_elem_t>
 inline
 std::vector<std::string> parallelComputeKMerStrings(
         const std::vector<KMerPositionInfo> &indexedKMers,
-        KMerTaskConfig<input_vector_t, input_elem_t>& kMerTaskConfig) {
+        KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig) {
     KMerStringsCreatorWorker<input_vector_t, input_elem_t> worker(indexedKMers, kMerTaskConfig);
     RcppParallel::parallelFor(0, indexedKMers.size(), worker);
     return std::move(worker.outputKMerStrings);

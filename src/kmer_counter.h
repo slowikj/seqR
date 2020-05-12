@@ -100,7 +100,7 @@ template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
-        KMerTaskConfig<input_vector_t, input_elem_t>& kMerTaskConfig,
+        KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
         std::function<ComplexHasher()> complexHasherFactory) {
     return std::move(

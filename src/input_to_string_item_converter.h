@@ -31,7 +31,8 @@ inline InputToStringItemConverter_t<double> getDoubleToStringConverter(int decim
     };
 }
 
-inline InputToStringItemConverter_t<unsigned char> getEncodedTidySqItemToStringConverter(std::vector<std::string>& safeDecoder) {
+inline InputToStringItemConverter_t<unsigned char>
+getEncodedTidySqItemToStringConverter(std::vector<std::string> &safeDecoder) {
     return [&safeDecoder](const unsigned char &elem) -> std::string {
         return safeDecoder[elem - 1];
     };

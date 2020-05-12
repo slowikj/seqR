@@ -24,12 +24,12 @@ struct KMerTaskConfig {
 
     KMerTaskConfig(int sequencesNum,
                    SequenceGetter_t<vector_t> sequenceGetter,
-                   std::vector<int>& gaps,
+                   std::vector<int> &gaps,
                    bool positionalKMers,
                    bool withKMerCounts,
                    InputToStringItemConverter_t<elem_t> inputToStringItemConverter,
                    std::string kmerItemSeparator = DEFAULT_KMER_ITEM_SEPARATOR,
-                   std::string kmerSectionSeparator = DEFAULT_KMER_SECTION_SEPARATOR):
+                   std::string kmerSectionSeparator = DEFAULT_KMER_SECTION_SEPARATOR) :
             sequencesNum(sequencesNum),
             sequenceGetter(sequenceGetter),
             k(static_cast<int>(gaps.size()) + 1),

@@ -253,7 +253,7 @@ template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerManager<kmer_dictionary_t>> parallelComputeGappedKMersCounts(
-        KMerTaskConfig<input_vector_t, input_elem_t>& kMerTaskConfig,
+        KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
         const std::vector<PolynomialSingleHasherConfig> &hasherConfigs) {
     std::size_t totalKMerSize = getTotalKMerSize(kMerTaskConfig.gaps);

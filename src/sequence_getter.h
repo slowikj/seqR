@@ -38,7 +38,7 @@ getTidysqRowGetter(SafeTidysqSequencesWrapper &safeWrapper) {
 }
 
 inline SequenceGetter_t<RcppParallel::RVector<unsigned char>>
-getTidysqRVectorGetter(std::vector<RcppParallel::RVector<unsigned char>>& unpackedSafeSequences) {
+getTidysqRVectorGetter(std::vector<RcppParallel::RVector<unsigned char>> &unpackedSafeSequences) {
     return [&unpackedSafeSequences](int rowNum) -> RcppParallel::RVector<unsigned char> {
         return unpackedSafeSequences[rowNum];
     };

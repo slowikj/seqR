@@ -31,7 +31,7 @@ Rcpp::IntegerVector encode_integer_alphabet(Rcpp::IntegerVector &input) {
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::IntegerVector encode_numeric_alphabet(Rcpp::NumericVector & input) {
+Rcpp::IntegerVector encode_numeric_alphabet(Rcpp::NumericVector &input) {
     return prepareOutputVector<Rcpp::NumericVector,
             double,
             short,
