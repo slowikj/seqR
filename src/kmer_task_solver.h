@@ -68,7 +68,7 @@ Rcpp::IntegerMatrix computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &
             KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
             AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &encoding) -> std::vector<KMerManager<kmer_dictionary_t>> {
         return std::move(
-                parallelComputeGappedKMersCounts<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
+                parallelComputeGappedKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
                         kMerTaskConfig, encoding, hasherConfigs));
     };
     return std::move(
