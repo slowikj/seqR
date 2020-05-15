@@ -19,7 +19,8 @@ Description: seqR is a package providing fast counting of k-mers in sequences. I
 License: MIT + file LICENSE
 Imports:
     Rcpp (>= 1.0.4),
-    RcppParallel
+    RcppParallel,
+    methods
 Depends:
     R(>= 3.6)
 LinkingTo:
@@ -42,8 +43,9 @@ VignetteBuilder: knitr
 Language: en-US
 Collate: 
     'RcppExports.R'
+    'find_kmers.R'
     'validators.R'
     'kmer_typed_functions.R'
     'kmer_functions_provider.R'
-    'find_kmers.R'
     'package.R'
+    'zzz.R'

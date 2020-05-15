@@ -12,7 +12,7 @@
 #include "hash/complex_hasher.h"
 #include "input_to_string_item_converter.h"
 #include "sequence_getter.h"
-#include "kmer_hash_indexer.h"
+#include "kmer_position_info.h"
 #include "utils.h"
 #include "kmer_task_config.h"
 
@@ -90,32 +90,36 @@ private:
 template<class input_vector_t, class input_elem_t>
 class KMerStringsCreatorWorker : public RcppParallel::Worker {
 public:
-    std::vector<std::string> outputKMerStrings;
 
-    KMerStringsCreatorWorker(const std::vector<KMerPositionInfo> &indexedKMers,
-                             KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig) :
-            indexedKMers(indexedKMers),
+    KMerStringsCreatorWorker(const std::vector<KMerPositionInfo> &kMersToGenerate,
+                             KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
+                             std::vector<std::string> &result) :
+            kMersToGenerate(kMersToGenerate),
             kMerTaskConfig(kMerTaskConfig),
-            outputKMerStrings(indexedKMers.size()),
+            result(result),
+            resultOffset(result.size()),
             gapsAccumulated(std::move(getGapsAccumulated(kMerTaskConfig.gaps))) {
+        result.resize(resultOffset + kMersToGenerate.size());
         prepareKMerStringsCreators();
         prepareCreateKMerFunc();
     }
 
     inline void operator()(std::size_t begin, std::size_t end) override {
         for (int i = begin; i < end; ++i) {
-            this->outputKMerStrings[i] = std::move(createKMerFunc(
-                    this->indexedKMers[i].seqNum,
-                    this->indexedKMers[i].position));
+            this->result[i + resultOffset] = std::move(createKMerFunc(
+                    this->kMersToGenerate[i].seqNum,
+                    this->kMersToGenerate[i].position));
         }
     }
 
 private:
-    const std::vector<KMerPositionInfo> &indexedKMers;
+    const std::vector<KMerPositionInfo> &kMersToGenerate;
     KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig;
     std::vector<KMerStringCreatorForSequence<input_vector_t, input_elem_t>> kmerStringCreators;
     std::function<std::string(int, int)> createKMerFunc;
     std::vector<int> gapsAccumulated;
+    std::vector<std::string> &result;
+    int resultOffset;
 
     inline void prepareKMerStringsCreators() {
         this->kmerStringCreators.reserve(kMerTaskConfig.sequencesNum);
@@ -145,12 +149,12 @@ private:
 
 template<class input_vector_t, class input_elem_t>
 inline
-std::vector<std::string> parallelComputeKMerStrings(
-        const std::vector<KMerPositionInfo> &indexedKMers,
-        KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig) {
-    KMerStringsCreatorWorker<input_vector_t, input_elem_t> worker(indexedKMers, kMerTaskConfig);
-    RcppParallel::parallelFor(0, indexedKMers.size(), worker);
-    return std::move(worker.outputKMerStrings);
+void parallelComputeKMerStrings(
+        const std::vector<KMerPositionInfo> &kMersToCreate,
+        KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
+        std::vector<std::string> &result) {
+    KMerStringsCreatorWorker<input_vector_t, input_elem_t> worker(kMersToCreate, kMerTaskConfig, result);
+    RcppParallel::parallelFor(0, kMersToCreate.size(), worker);
 }
 
 #endif

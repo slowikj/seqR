@@ -11,15 +11,15 @@ find_kmers <- function(sequences,
   if (is_empty(alphabet)) {
     stop("alphabet param is empty")
   }
-  
+
   if(is_empty(sequences)) {
     stop("sequences param is empty")
   }
-  
+
   if(!has_integers_only(k) || k <= 0) {
     stop("k should be a positive integer")
   }
-  
+
   if(!is.null(kmer_gaps)) {
     if(!has_integers_only(kmer_gaps)) {
       stop("gaps should be an integer vector")
@@ -28,13 +28,13 @@ find_kmers <- function(sequences,
       stop("the length of kmer_gaps vector should be at most k-1")
     }
   }
-  
+
   if(is.vector(sequences)) {
     sequences <- matrix(data=sequences, nrow=1)
   }
-  
+
   alphabet <- unique(alphabet)
-  
+
   if(length(kmer_gaps) == 0) {
     invoke_contiguous_kmer_function(
       sequences=sequences,
