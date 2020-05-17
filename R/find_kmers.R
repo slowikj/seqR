@@ -4,6 +4,7 @@
 find_kmers <- function(sequences,
                        k,
                        alphabet,
+                       batch_size = 200,
                        positional = FALSE,
                        kmer_gaps = c(),
                        with_kmer_counts = TRUE,
@@ -15,7 +16,7 @@ find_kmers <- function(sequences,
   if(is_empty(sequences)) {
     stop("sequences param is empty")
   }
-
+  
   if(!has_integers_only(k) || k <= 0) {
     stop("k should be a positive integer")
   }
@@ -39,6 +40,7 @@ find_kmers <- function(sequences,
     invoke_contiguous_kmer_function(
       sequences=sequences,
       alphabet=alphabet,
+      batchSize=batch_size,
       k=k,
       positionalKMers=positional,
       withKMerCounts=with_kmer_counts,
@@ -47,6 +49,7 @@ find_kmers <- function(sequences,
     invoke_gapped_kmer_function(
       sequences=sequences,
       alphabet=alphabet,
+      batchSize=batch_size,
       gaps=rep(kmer_gaps, length.out=k-1),
       positionalKMers=positional,
       withKMerCounts=with_kmer_counts,

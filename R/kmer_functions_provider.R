@@ -1,9 +1,9 @@
-invoke_contiguous_kmer_function <- function(sequences, ...) {
-  get_kmer_function(sequences)[[1]](sequences=sequences, ...)
+invoke_contiguous_kmer_function <- function(sequences, alphabet, ...) {
+  get_kmer_function(sequences)[[1]](sequences=sequences, alphabet=alphabet, ...)
 }
 
-invoke_gapped_kmer_function <- function(sequences, ...) {
-  get_kmer_function(sequences)[[2]](sequences=sequences, ...)
+invoke_gapped_kmer_function <- function(sequences, alphabet, ...) {
+  get_kmer_function(sequences)[[2]](sequences=sequences, alphabet=alphabet, ...)
 }
 
 get_kmer_function <- function(sequences) {

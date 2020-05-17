@@ -2,7 +2,7 @@ library(testthat)
 source("utils.R")
 
 invoke_test <- function(fun, expected_res, ...) {
-  res <- fun(...)
+  res <- as.matrix(fun(...))
   expect_matrices_equal(expected_res, res)
 }
 

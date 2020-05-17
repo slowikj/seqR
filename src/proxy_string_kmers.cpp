@@ -24,10 +24,12 @@ public:
                   int k,
                   bool positionalKMers,
                   bool withKMerCounts,
-                  const std::string kmerDictionaryName) {
+                  const std::string kmerDictionaryName,
+                  int batchSize) {
         std::vector<int> gaps(k - 1);
         std::function<ComplexHasher()> algorithmParams = []() -> ComplexHasher { return createKMerComplexHasher(); };
         addKMersCommon(sequenceMatrix, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, algorithmParams,
+                       batchSize,
                        result);
     }
 
@@ -35,11 +37,12 @@ public:
                         Rcpp::IntegerVector gaps,
                         bool positionalKMers,
                         bool withKMerCounts,
-                        const std::string &kmerDictionaryName) {
+                        const std::string &kmerDictionaryName,
+                        int batchSize) {
         auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
         auto hasherConfigs = std::move(getGappedKMerHasherConfigs());
         addKMersCommon(sequenceMatrix, gapsConverted, positionalKMers, withKMerCounts, kmerDictionaryName,
-                       hasherConfigs, result);
+                       hasherConfigs, batchSize, result);
     }
 
     Rcpp::List toList() const {
@@ -64,11 +67,31 @@ private:
                         bool withKMerCounts,
                         const std::string &kmerDictionaryName,
                         algorithm_params_t &algorithmParams,
+                        int batchSize,
+                        KMerCountingResult &kMerCountingResult) {
+        for (int seqBegin = 0; seqBegin < sequenceMatrix.nrow(); seqBegin += batchSize) {
+            int seqEnd = std::min(seqBegin + batchSize, static_cast<int>(sequenceMatrix.nrow()));
+            addKMersCommon<algorithm_params_t>(sequenceMatrix, seqBegin, seqEnd,
+                                               gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
+                                               algorithmParams, kMerCountingResult);
+        }
+    }
+
+    template<class algorithm_params_t>
+    inline
+    void addKMersCommon(Rcpp::StringMatrix &sequenceMatrix,
+                        int rowBegin,
+                        int rowEnd,
+                        std::vector<int> &gaps,
+                        bool positionalKMers,
+                        bool withKMerCounts,
+                        const std::string &kmerDictionaryName,
+                        algorithm_params_t &algorithmParams,
                         KMerCountingResult &kMerCountingResult) {
         SafeMatrixSequenceWrapper<std::string> safeMatrixWrapper(sequenceMatrix);
         KMerTaskConfig<SafeMatrixSequenceWrapper<std::string>::Row, std::string> kMerTaskConfig(
-                sequenceMatrix.nrow(),
-                getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
+                (rowEnd - rowBegin),
+                getSafeMatrixRowGetter<std::string>(safeMatrixWrapper, rowBegin),
                 gaps,
                 positionalKMers,
                 withKMerCounts,
@@ -91,7 +114,7 @@ private:
 RCPP_MODULE(string_kmers_computer) {
     Rcpp::class_<StringKMersComputer>("StringKMersComputer")
             .constructor<Rcpp::StringVector>()
-            .method("countKMers", &StringKMersComputer::addKMers)
-            .method("countGappedKMers", &StringKMersComputer::addGappedKMers)
+            .method("addKMers", &StringKMersComputer::addKMers)
+            .method("addGappedKMers", &StringKMersComputer::addGappedKMers)
             .method("toList", &StringKMersComputer::toList);
 }

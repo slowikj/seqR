@@ -24,22 +24,24 @@ public:
                   int k,
                   bool positionalKMers,
                   bool withKMerCounts,
-                  const std::string kmerDictionaryName) {
+                  const std::string kmerDictionaryName,
+                  int batchSize) {
         std::vector<int> gaps(k - 1);
         std::function<ComplexHasher()> algorithmParams = []() -> ComplexHasher { return createKMerComplexHasher(); };
-        addKMersCommon(sq, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, algorithmParams,
+        addKMersCommon(sq, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, algorithmParams, batchSize,
                        result);
     }
 
     void addGappedKMers(Rcpp::List sq,
-                        Rcpp::IntegerVector &gaps,
+                        Rcpp::IntegerVector gaps,
                         bool positionalKMers,
                         bool withKMerCounts,
-                        const std::string kmerDictionaryName) {
+                        const std::string kmerDictionaryName,
+                        int batchSize) {
         auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
         auto hasherConfigs = std::move(getGappedKMerHasherConfigs());
         addKMersCommon(sq, gapsConverted, positionalKMers, withKMerCounts, kmerDictionaryName,
-                       hasherConfigs, result);
+                       hasherConfigs, batchSize, result);
     }
 
     Rcpp::List toList() const {
@@ -68,8 +70,27 @@ private:
                         bool withKMerCounts,
                         const std::string &kmerDictionaryName,
                         algorithm_params_t &algorithmParams,
+                        int batchSize,
                         KMerCountingResult &kMerCountingResult) {
-        auto encodedSequences = getEncodedTidysqSequences(sq);
+        for (int seqBegin = 0; seqBegin < sq.size(); seqBegin += batchSize) {
+            int seqEnd = std::min(seqBegin + batchSize, static_cast<int>(sq.size()));
+            addKMersCommon(sq, seqBegin, seqEnd, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
+                           algorithmParams, kMerCountingResult);
+        }
+    }
+
+    template<class algorithm_params_t>
+    inline
+    void addKMersCommon(Rcpp::List &sq,
+                        int seqBegin,
+                        int seqEnd,
+                        std::vector<int> &gaps,
+                        bool positionalKMers,
+                        bool withKMerCounts,
+                        const std::string &kmerDictionaryName,
+                        algorithm_params_t &algorithmParams,
+                        KMerCountingResult &kMerCountingResult) {
+        auto encodedSequences = getEncodedTidysqSequences(sq, seqBegin, seqEnd);
         KMerTaskConfig<RcppParallel::RVector<unsigned char>, unsigned char> kMerTaskConfig(
                 sq.size(),
                 getTidysqRVectorGetter(encodedSequences),
