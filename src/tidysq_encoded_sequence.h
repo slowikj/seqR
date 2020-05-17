@@ -7,6 +7,6 @@
 //' @importFrom  RcppParallel RcppParallelLibs
 #include<RcppParallel.h>
 
-std::vector<RcppParallel::RVector<unsigned char>> getEncodedTidysqSequences(Rcpp::List &sq);
+std::vector<RcppParallel::RVector<unsigned char>> getEncodedTidysqSequences(Rcpp::List &sq, int seqBegin, int seqEnd);
 
 #endif

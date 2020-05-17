@@ -6,15 +6,15 @@
 //' @importFrom  RcppParallel RcppParallelLibs
 #include <RcppParallel.h>
 #include <vector>
+#include <memory>
+#include <functional>
 #include "sequence_getter.h"
 #include "kmer_manager.h"
-#include "kmer_hash_indexer.h"
 #include "alphabet_encoder.h"
 #include "kmer_strings_creator.h"
 #include "input_to_string_item_converter.h"
-#include <memory>
-#include <functional>
-#include "result_creator.h"
+#include "kmer_counting_result.h"
+#include "kmer_position_info.h"
 #include "kmer_task_config.h"
 
 template<class input_vector_t,
@@ -72,27 +72,28 @@ template<class input_vector_t, class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
-Rcpp::IntegerMatrix parallelGetKMerCounts(
+void parallelGetKMerCounts(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConf,
         AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
-        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> parallelKMerCountingProc) {
+        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> parallelKMerCountingProc,
+        KMerCountingResult &kMerCountingResult) {
     auto kMersManagers = std::move(parallelKMerCountingProc(kMerTaskConf, alphabetEncoding));
 
-    auto[hashIndexer, uniqueKMers] = indexKMerHashes(kMersManagers);
-    std::vector<std::string> uniqueKMerStrings = std::move(
-            parallelComputeKMerStrings<input_vector_t, input_elem_t>(uniqueKMers, kMerTaskConf)
-    );
+    std::vector<KMerPositionInfo> kMersToCreate;
+    for (int seqNum = 0; seqNum < kMersManagers.size(); ++seqNum) {
+        for (const auto &kMerPair: kMersManagers[seqNum].getDictionary()) {
+            bool kMerStringNeedsCreation = kMerCountingResult.addKMer(kMerPair.first, seqNum, kMerPair.second.cnt);
+            if (kMerStringNeedsCreation) {
+                kMersToCreate.emplace_back(seqNum, kMerPair.second.seqStartPosition);
+            }
+        }
+    }
 
-    KMerMatrixCreatorWorker<kmer_dictionary_t> matrixCreatorWorker(
-            kMerTaskConf.sequencesNum,
-            uniqueKMerStrings.size(),
-            kMersManagers,
-            hashIndexer,
-            uniqueKMerStrings
-    );
-    RcppParallel::parallelFor(0, kMerTaskConf.sequencesNum, matrixCreatorWorker);
+    parallelComputeKMerStrings<input_vector_t, input_elem_t>(kMersToCreate,
+                                                             kMerTaskConf,
+                                                             kMerCountingResult.kMerStrings);
 
-    return matrixCreatorWorker.outputKMerCounts;
+    kMerCountingResult.processedSequences += kMerTaskConf.sequencesNum;
 }
 
 #endif

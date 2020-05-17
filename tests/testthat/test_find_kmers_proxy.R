@@ -112,5 +112,6 @@ test_that("test tidysq for gapped k-mers", {
                           positional=FALSE,
                           kmer_gaps=c(1),
                           kmer_dictionary_name = "unordered_map")
-  expect_equal(expected_res, res)
+  
+  expect_equal(expected_res, as.matrix(res))
 })
