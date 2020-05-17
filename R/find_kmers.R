@@ -31,7 +31,7 @@ find_kmers <- function(sequences,
   }
   
   if(!is_positive_integer(batch_size)) {
-    stop("batch size field must be an integer positive number")
+    stop("batch size field must be a positive integer number")
   }
   
   if(is.vector(sequences)) {

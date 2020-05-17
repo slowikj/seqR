@@ -13,6 +13,8 @@ test_that("null sequences throws an error", {
                "sequences param is empty")
 })
 
+# ALPHABET ----
+
 test_that("alphabet has incompatible element (integer) type with sequences' elements (string)", {
   expect_error(seqR::find_kmers(sequences=c("a", "b"),
                                  alphabet=c(1,2),
@@ -69,12 +71,16 @@ test_that("alphabet has incompatible element (integer) type with sequences from 
                "alphabet should contain strings")
 })
 
+# SEQUENCE TYPE ----
+
 test_that("sequences of unsupported type generate an error", {
   expect_error(seqR::find_kmers(sequences=list(1,2,3),
                                  alphabet=c(1,2,3),
                                  k=1),
                "sequences param has unsupported type")
 })
+
+# INVALID K-MER PARAMS ----
 
 test_that("k = 0 generate an error", {
   expect_error(seqR::find_kmers(sequences=tidysq::as.sq("AAAAA"),
@@ -98,6 +104,58 @@ test_that("kmer gaps length larger than k-1 generates an error", {
                                  kmer_gaps=c(1,2)),
                "the length of kmer_gaps vector should be at most k-1")
 })
+
+# BATCH SIZE ----
+
+test_that("provided batch size param is a negative integer", {
+  expect_error(seqR::find_kmers(sequences=tidysq::as.sq("AAAA"),
+                                alphabet=c("A"),
+                                k=1,
+                                batch_size = -2),
+               "batch size field must be a positive integer number")
+})
+
+test_that("provided batch size param is a positive non integer", {
+  expect_error(seqR::find_kmers(sequences=tidysq::as.sq("AAAA"),
+                                alphabet=c("A"),
+                                k=1,
+                                batch_size = 2.2),
+               "batch size field must be a positive integer number")
+})
+
+test_that("provided batch size param is zero", {
+  expect_error(seqR::find_kmers(sequences=tidysq::as.sq("AAAA"),
+                                alphabet=c("A"),
+                                k=1,
+                                batch_size = 0),
+               "batch size field must be a positive integer number")
+})
+
+test_that("provided batch size param is a string", {
+  expect_error(seqR::find_kmers(sequences=tidysq::as.sq("AAAA"),
+                                alphabet=c("A"),
+                                k=1,
+                                batch_size = "aaaa"),
+               "batch size field must be a positive integer number")
+})
+
+test_that("provided batch size param is an integer vector", {
+  expect_error(seqR::find_kmers(sequences=tidysq::as.sq("AAAA"),
+                                alphabet=c("A"),
+                                k=1,
+                                batch_size = c(1,2,3)),
+               "batch size field must be a positive integer number")
+})
+
+test_that("provided batch size param is NULL", {
+  expect_error(seqR::find_kmers(sequences=tidysq::as.sq("AAAA"),
+                                alphabet=c("A"),
+                                k=1,
+                                batch_size = NULL),
+               "batch size field must be a positive integer number")
+})
+
+# COUNTING ----
 
 test_that("test tidysq for gapped k-mers", {
   sq <- tidysq::as.sq(c("AAAA", "AAACA"))
