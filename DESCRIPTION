@@ -33,7 +33,7 @@ RoxygenNote: 7.0.2
 Encoding: UTF-8
 Suggests:
     testthat,
-    covr(>= 3.5.0),
+    covr,
     knitr,
     rmarkdown,
     spelling,
