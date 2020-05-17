@@ -1,16 +1,18 @@
 library(testthat)
 source("utils.R")
 
-invoke_test <- function(fun, expected_res, alphabet, sequence, k, positionalKMers, withKMerCounts, kmerDictionaryName) {
+invoke_test <- function(fun, expected_res, alphabet, sequence, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
   sequenceMatrix <- to_matrix(sequence)
   expected_res <- to_matrix(expected_res)
   
-  res <- fun(alphabet=alphabet,
-             sequenceMatrix = sequenceMatrix,
-             k=k,
-             positionalKMers = positionalKMers,
-             withKMerCounts = withKMerCounts,
-             kmerDictionaryName = kmerDictionaryName)
+  result_list <- fun(alphabet=alphabet,
+                     sequenceMatrix = sequenceMatrix,
+                     k=k,
+                     positionalKMers = positionalKMers,
+                     withKMerCounts = withKMerCounts,
+                     kmerDictionaryName = kmerDictionaryName,
+                     batchSize = batchSize)
+  res <- convert_seqR_list_to_matrix(result_list)
   
   expect_matrices_equal(res, expected_res)
 }
@@ -36,7 +38,8 @@ test_that("(string) count non positional 2-mers", {
                      k=2,
                      positionalKMers=FALSE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count positional 2-mers", {
@@ -46,7 +49,8 @@ test_that("(string) count positional 2-mers", {
                      k=2,
                      positionalKMers=TRUE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count non positional 1-mers", {
@@ -56,7 +60,8 @@ test_that("(string) count non positional 1-mers", {
                      k=1,
                      positionalKMers=FALSE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count positional 1-mers", {
@@ -66,7 +71,8 @@ test_that("(string) count positional 1-mers", {
                      k=1,
                      positionalKMers=TRUE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count non positional 1-mers if some sequence items are not allowed", {
@@ -76,7 +82,8 @@ test_that("(string) count non positional 1-mers if some sequence items are not a
                      k=1,
                      positionalKMers=FALSE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count positional 1-mers if some sequence items are not allowed", {
@@ -86,7 +93,8 @@ test_that("(string) count positional 1-mers if some sequence items are not allow
                      k=1,
                      positionalKMers=TRUE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count non positional 3-mers", {
@@ -96,7 +104,8 @@ test_that("(string) count non positional 3-mers", {
                      k=3,
                      positionalKMers=FALSE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count positional 3-mers", {
@@ -106,7 +115,8 @@ test_that("(string) count positional 3-mers", {
                      k=3,
                      positionalKMers=TRUE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count non positional 1-mers", {
@@ -116,7 +126,8 @@ test_that("(string) count non positional 1-mers", {
                      k=1,
                      positionalKMers=FALSE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count 2-mers: long (ab){1000} sequence", {
@@ -126,7 +137,8 @@ test_that("(string) count 2-mers: long (ab){1000} sequence", {
                      k=2,
                      positionalKMers=FALSE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count non positional 2-mers which contains only 'a' character", {
@@ -136,7 +148,8 @@ test_that("(string) count non positional 2-mers which contains only 'a' characte
                      k=2,
                      positionalKMers=FALSE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count positional 2-mers which contains only 'a' character", {
@@ -146,7 +159,8 @@ test_that("(string) count positional 2-mers which contains only 'a' character", 
                      k=2,
                      positionalKMers=TRUE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count non positional 2-mers which contains only 'a' or 'b' characters", {
@@ -156,7 +170,8 @@ test_that("(string) count non positional 2-mers which contains only 'a' or 'b' c
                      k=2,
                      positionalKMers=FALSE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 test_that("(string) count non positional 2-mers which contains only 'a', 'b', 'x' characters", {
@@ -166,7 +181,8 @@ test_that("(string) count non positional 2-mers which contains only 'a', 'b', 'x
                      k=2,
                      positionalKMers=FALSE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })
 
 # INTEGER MATRIX TESTS ----
@@ -178,7 +194,8 @@ test_that("(integer) count non positional 2-mers with not allowed item", {
                       k=2,
                       positionalKMers=FALSE,
                       withKMerCounts=TRUE,
-                      kmerDictionaryName = "unordered_map")
+                      kmerDictionaryName = "unordered_map",
+                      batchSize = 200)
 })
 
 # NUMERIC MATRIX TESTS ----
@@ -190,5 +207,6 @@ test_that("(numeric) count non positional 2-mers with not allowed item", {
                      k=2,
                      positionalKMers=FALSE,
                      withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map")
+                     kmerDictionaryName = "unordered_map",
+                     batchSize = 200)
 })

@@ -2,7 +2,8 @@ library(testthat)
 source("utils.R")
 
 invoke_test <- function(expected_res, ...) {
-  res <- seqR::find_kmers_tidysq(...)
+  result_list <- seqR::find_kmers_tidysq(...)
+  res <- convert_seqR_list_to_matrix(result_list)
   expect_matrices_equal(res, expected_res)
 }
 
@@ -20,7 +21,8 @@ test_that("count 3-mers for tidysq sequences A+", {
               k=3,
               positionalKMers=FALSE,
               withKMerCounts=TRUE,
-              kmerDictionaryName="unordered_map")
+              kmerDictionaryName="unordered_map",
+              batchSize = 200)
 })
 
 test_that("count 3-mers for tidysq sequences A+ longer", {
@@ -37,7 +39,8 @@ test_that("count 3-mers for tidysq sequences A+ longer", {
               k=3,
               positionalKMers=FALSE,
               withKMerCounts=TRUE,
-              kmerDictionaryName = "linear_list")
+              kmerDictionaryName = "linear_list",
+              batchSize = 200)
 })
 
 test_that("count non positional 10-mers for tidysq sequences A+ longer", {
@@ -56,7 +59,8 @@ test_that("count non positional 10-mers for tidysq sequences A+ longer", {
               k=10,
               positionalKMers=FALSE,
               withKMerCounts=TRUE,
-              kmerDictionaryName="unordered_map")
+              kmerDictionaryName="unordered_map",
+              batchSize = 200)
 })
 
 test_that("find 3-mers for tidysq sequences A+ (without k-mer counts)", {
@@ -73,5 +77,6 @@ test_that("find 3-mers for tidysq sequences A+ (without k-mer counts)", {
               k=3,
               positionalKMers=FALSE,
               withKMerCounts=FALSE,
-              kmerDictionaryName="linear_list")
+              kmerDictionaryName="linear_list",
+              batchSize = 200)
 })
