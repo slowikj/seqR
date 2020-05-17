@@ -80,3 +80,24 @@ test_that("find 3-mers for tidysq sequences A+ (without k-mer counts)", {
               kmerDictionaryName="linear_list",
               batchSize = 200)
 })
+
+test_that("find 15-mers for tidysq sequences (AC){1000000}", {
+  sq <- tidysq::as.sq(sapply(1:5, function(i) strrep("AC", 1000000)))
+  expected_res <- matrix(c(
+    999993, 999993,
+    999993, 999993,
+    999993, 999993,
+    999993, 999993,
+    999993, 999993
+  ), byrow=TRUE, nrow=5)
+  colnames(expected_res) <- c("A.C.A.C.A.C.A.C.A.C.A.C.A.C.A_0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+                              "C.A.C.A.C.A.C.A.C.A.C.A.C.A.C_0.0.0.0.0.0.0.0.0.0.0.0.0.0")
+  invoke_test(expected_res=expected_res,
+              alphabet=c("A", "C"),
+              sq=sq,
+              k=15,
+              positionalKMers=FALSE,
+              withKMerCounts=TRUE,
+              kmerDictionaryName="unordered_map",
+              batchSize = 10)
+})

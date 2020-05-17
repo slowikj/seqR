@@ -37,7 +37,7 @@ public:
     inline void removeFirst(const int &elem) override {
         this->currentHash = static_cast<int>(
                 (this->currentHash -
-                 (static_cast<long long>(elem) * this->currentPowerP) + config.M) % config.M
+                 ((static_cast<long long>(elem) * this->currentPowerP) % config.M) + config.M) % config.M
         );
         this->nextPowerP = this->computePreviousPowerP(this->nextPowerP);
         this->currentPowerP = this->computePreviousPowerP(this->currentPowerP);
