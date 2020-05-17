@@ -157,7 +157,7 @@ test_that("provided batch size param is NULL", {
 
 # COUNTING ----
 
-test_that("test tidysq for gapped k-mers", {
+test_that("test tidysq sequences for gapped k-mers", {
   sq <- tidysq::as.sq(c("AAAA", "AAACA"))
   expected_res <- matrix(c(
     2, 0,
@@ -184,4 +184,37 @@ test_that("test the case when there is 0 found k-mers", {
                           kmer_gaps=c(1),
                           kmer_dictionary_name="unordered_map")
   expect_equal(expected_res, as.matrix(res))
+})
+
+# DIFFERENT BATCHES SIZES ----
+
+run_batch_test <- function(batch_size) {
+  sq <- tidysq::construct_sq(c("AAAAA", "AA", "AAAAAAAB", "BBB"), type = 'ami')
+  expected_res <- matrix(c(
+    3, 0, 0,
+    0, 0, 0,
+    5, 1, 0,
+    0, 0, 1
+  ), nrow=4, byrow=TRUE)
+  colnames(expected_res) <- c("A.A.A_0.0", "A.A.B_0.0", "B.B.B_0.0")
+  res <- seqR::find_kmers(sequences = sq,
+                          alphabet=c("A", "B"),
+                          k=3,
+                          positional=FALSE,
+                          with_kmer_counts=TRUE,
+                          kmer_dictionary_name="linear_list",
+                          batch_size = batch_size)
+  expect_equal(expected_res, as.matrix(res))
+}
+
+test_that("test tidysq sequences that are processed in ONE batch iteration", {
+  run_batch_test(batch_size=3)
+})
+
+test_that("test tidysq sequences that are processed in TWO batch iterations", {
+  run_batch_test(batch_size=2)
+})
+
+test_that("test tidysq sequences that are processed in THREE batch iterations", {
+  run_batch_test(batch_size=1)
 })
