@@ -105,6 +105,14 @@ test_that("kmer gaps length larger than k-1 generates an error", {
                "the length of kmer_gaps vector should be at most k-1")
 })
 
+test_that("unsupported kmer dictionary type raises an error", {
+  expect_error(seqR::find_kmers(sequences=tidysq::as.sq("AAAA"),
+                                alphabet=c("A"),
+                                k=2,
+                                kmer_dictionary_name = "unknown"),
+               "unsupported k-mer dictionary name: unknown")
+})
+
 # BATCH SIZE ----
 
 test_that("provided batch size param is a negative integer", {
