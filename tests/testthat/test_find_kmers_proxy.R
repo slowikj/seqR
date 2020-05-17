@@ -115,3 +115,15 @@ test_that("test tidysq for gapped k-mers", {
   
   expect_equal(expected_res, as.matrix(res))
 })
+
+test_that("test the case when there is 0 found k-mers", {
+  sq <-tidysq::as.sq(c("AAAAAA", "AAACA"))
+  expected_res <- matrix(nrow=2, ncol=0)
+  res <- seqR::find_kmers(sequences=sq,
+                          k=100,
+                          alphabet=c("A"),
+                          positional=FALSE,
+                          kmer_gaps=c(1),
+                          kmer_dictionary_name="unordered_map")
+  expect_equal(expected_res, as.matrix(res))
+})

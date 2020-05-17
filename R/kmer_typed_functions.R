@@ -60,10 +60,18 @@ count_gapped_kmers_tidysq_proxy <- function(sequences, ...) {
   params <- list(...)
   alphabet_validator(params[["alphabet"]])
   result_list <- rcpp_counting_function(sequences, ...)
-  slam::simple_triplet_matrix(
-    i = result_list$i,
-    j = result_list$j,
-    v = result_list$v,
-    dimnames = list(NULL, result_list$names)
-  )
+  .prepare_final_result(result_list)
+}
+
+.prepare_final_result <- function(rcpp_result_list) {
+  if(length(rcpp_result_list$i) == 0) {
+    slam::as.simple_triplet_matrix(matrix(nrow=rcpp_result_list$processed_sequences, ncol=0))
+  } else {
+    slam::simple_triplet_matrix(
+      i = rcpp_result_list$i,
+      j = rcpp_result_list$j,
+      v = rcpp_result_list$v,
+      dimnames = list(NULL, rcpp_result_list$names)
+    )
+  }
 }
