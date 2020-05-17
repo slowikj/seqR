@@ -97,7 +97,8 @@ void computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
                 kMerTaskConfig, alphabetEncoding, algorithmParams, kMerCountingResult);
 
     } else {
-        throw std::runtime_error("unsupported k-mer dictionary name " + kmerDictionaryName);
+        std::string errorMessage = "unsupported k-mer dictionary name: " + kmerDictionaryName;
+        throw Rcpp::exception(errorMessage.c_str());
     }
 }
 
