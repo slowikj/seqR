@@ -33,58 +33,56 @@ Rcpp::List findKMers(sequences_t &sequences,
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
-                             Rcpp::StringVector &alphabet,
+                             std::vector<std::string> &alphabet,
                              int k,
                              bool positionalKMers,
                              bool withKMerCounts,
                              const std::string &kmerDictionaryName,
                              int batchSize) {
-    return findKMers<Rcpp::StringMatrix, Rcpp::StringVector>(
-            sequenceMatrix, sequenceMatrix.nrow(), alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName,
-            batchSize
+    return findKMers(sequenceMatrix, sequenceMatrix.nrow(), alphabet, k, positionalKMers, withKMerCounts,
+                     kmerDictionaryName,
+                     batchSize
     );
 }
 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
-                              Rcpp::IntegerVector &alphabet,
+                              std::vector<int> &alphabet,
                               int k,
                               bool positionalKMers,
                               bool withKMerCounts,
                               const std::string &kmerDictionaryName,
                               int batchSize) {
-    return findKMers<Rcpp::IntegerMatrix, Rcpp::IntegerVector>(
-            sequenceMatrix, sequenceMatrix.nrow(), alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName,
-            batchSize
+    return findKMers(sequenceMatrix, sequenceMatrix.nrow(), alphabet, k, positionalKMers, withKMerCounts,
+                     kmerDictionaryName,
+                     batchSize
     );
 }
 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
-                              Rcpp::NumericVector &alphabet,
+                              std::vector<double> &alphabet,
                               int k,
                               bool positionalKMers,
                               bool withKMerCounts,
                               const std::string &kmerDictionaryName,
                               int batchSize) {
-    return findKMers<Rcpp::NumericMatrix, Rcpp::NumericVector>(
-            sequenceMatrix, sequenceMatrix.nrow(), alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName,
-            batchSize
+    return findKMers(sequenceMatrix, sequenceMatrix.nrow(), alphabet, k, positionalKMers, withKMerCounts,
+                     kmerDictionaryName,
+                     batchSize
     );
 }
 
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_kmers_tidysq(Rcpp::List &sq,
-                             Rcpp::StringVector &alphabet,
+                             std::vector<std::string> &alphabet,
                              int k,
                              bool positionalKMers,
                              bool withKMerCounts,
                              const std::string &kmerDictionaryName,
                              int batchSize) {
-    return findKMers<Rcpp::List, Rcpp::StringVector>(
-            sq, sq.size(), alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize
-    );
+    return findKMers(sq, sq.size(), alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize);
 }

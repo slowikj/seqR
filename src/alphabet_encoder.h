@@ -65,12 +65,13 @@ AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> getAlphabetEncoding
     );
 }
 
-template<class encoded_elem_t,
+template<class alphabet_t,
+        class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class dictionary_t>
 inline
 AlphabetEncoding<encoded_elem_t, encoded_elem_t, dictionary_t> prepareAlphabetEncodingForTidysq(
-        Rcpp::StringVector &alphabet,
-        Rcpp::StringVector &elementsEncoding) {
+        alphabet_t &alphabet,
+        alphabet_t &elementsEncoding) {
     dictionary_t<encoded_elem_t, encoded_elem_t> encoder;
     for (const auto &alphabetElem: alphabet) {
         for (int encoding_i = 0; encoding_i < elementsEncoding.size(); ++encoding_i) {

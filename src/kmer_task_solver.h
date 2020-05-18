@@ -131,7 +131,7 @@ inline
 void findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                        int seqBegin,
                        int seqEnd,
-                       Rcpp::StringVector &alphabet,
+                       std::vector<std::string> &alphabet,
                        std::vector<int> &gaps,
                        bool positionalKMers,
                        bool withKMerCounts,
@@ -139,8 +139,6 @@ void findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                        algorithm_params_t &algorithmParams,
                        KMerCountingResult &kMerCountingResult) {
     SafeMatrixSequenceWrapper<std::string> safeMatrixWrapper(sequenceMatrix);
-    std::vector<std::string> convertedAlphabet = std::move(
-            convertRcppVector<std::string, Rcpp::StringVector>(alphabet));
     KMerTaskConfig<SafeMatrixSequenceWrapper<std::string>::Row, std::string> kMerTaskConfig(
             (seqEnd - seqBegin),
             getSafeMatrixRowGetter<std::string>(safeMatrixWrapper, seqBegin),
@@ -156,7 +154,7 @@ void findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
             std::string,
             short,
             UnorderedMapWrapper,
-            algorithm_params_t>(convertedAlphabet,
+            algorithm_params_t>(alphabet,
                                 kMerTaskConfig,
                                 kmerDictionaryName,
                                 algorithmParams,
@@ -168,14 +166,13 @@ inline
 void findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
                        int seqBegin,
                        int seqEnd,
-                       Rcpp::IntegerVector &alphabet,
+                       std::vector<int> &alphabet,
                        std::vector<int> &gaps,
                        bool positionalKMers,
                        bool withKMerCounts,
                        const std::string &kmerDictionaryName,
                        algorithm_params_t &algorithmParams,
                        KMerCountingResult &kMerCountingResult) {
-    std::vector<int> convertedAlphabet = std::move(convertRcppVector<int, Rcpp::IntegerVector>(alphabet));
     KMerTaskConfig<RcppParallel::RMatrix<int>::Row, int> kMerTaskConfig(
             (seqEnd - seqBegin),
             getRMatrixRowGetter<Rcpp::IntegerMatrix, int>(sequenceMatrix, seqBegin),
@@ -191,7 +188,7 @@ void findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
             int,
             short,
             UnorderedMapWrapper,
-            algorithm_params_t>(convertedAlphabet,
+            algorithm_params_t>(alphabet,
                                 kMerTaskConfig,
                                 kmerDictionaryName,
                                 algorithmParams,
@@ -203,14 +200,13 @@ inline
 void findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
                        int seqBegin,
                        int seqEnd,
-                       Rcpp::NumericVector &alphabet,
+                       std::vector<double> &alphabet,
                        std::vector<int> &gaps,
                        bool positionalKMers,
                        bool withKMerCounts,
                        const std::string &kmerDictionaryName,
                        algorithm_params_t &algorithmParams,
                        KMerCountingResult &kMerCountingResult) {
-    std::vector<double> convertedAlphabet = std::move(convertRcppVector<double, Rcpp::NumericVector>(alphabet));
     KMerTaskConfig<RcppParallel::RMatrix<double>::Row, double> kMerTaskConfig(
             (seqEnd - seqBegin),
             getRMatrixRowGetter<Rcpp::NumericMatrix, double>(sequenceMatrix, seqBegin),
@@ -226,7 +222,7 @@ void findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
             double,
             short,
             UnorderedMapWrapper,
-            algorithm_params_t>(convertedAlphabet,
+            algorithm_params_t>(alphabet,
                                 kMerTaskConfig,
                                 kmerDictionaryName,
                                 algorithmParams,
@@ -238,7 +234,7 @@ inline
 void findKMersSpecific(Rcpp::List &sq,
                        int seqBegin,
                        int seqEnd,
-                       Rcpp::StringVector &alphabet,
+                       std::vector<std::string> &alphabet,
                        std::vector<int> &gaps,
                        bool positionalKMers,
                        bool withKMerCounts,
@@ -246,12 +242,12 @@ void findKMersSpecific(Rcpp::List &sq,
                        algorithm_params_t &algorithmParams,
                        KMerCountingResult &kMerCountingResult) {
     Rcpp::StringVector elementsEncoding = sq.attr("alphabet");
-    auto alphabetEncoding = std::move(prepareAlphabetEncodingForTidysq<unsigned char, UnorderedMapWrapper>(
-            alphabet,
-            elementsEncoding
-    ));
     std::vector<std::string> safeElementsEncoding = convertRcppVector<std::string, Rcpp::StringVector>(
             elementsEncoding);
+    auto alphabetEncoding = std::move(prepareAlphabetEncodingForTidysq<std::vector<std::string>, unsigned char, UnorderedMapWrapper>(
+            alphabet,
+            safeElementsEncoding
+    ));
     auto encodedSequences = getEncodedTidysqSequences(sq, seqBegin, seqEnd);
     KMerTaskConfig<RcppParallel::RVector<unsigned char>, unsigned char> kMerTaskConfig(
             (seqEnd - seqBegin),

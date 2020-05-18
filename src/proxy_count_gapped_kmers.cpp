@@ -29,15 +29,14 @@ inline
 Rcpp::List findKMers(sequences_t &sequences,
                      int sequencesNum,
                      alphabet_t &alphabet,
-                     Rcpp::IntegerVector &gaps,
+                     std::vector<int> &gaps,
                      bool positionalKMers,
                      bool withKMerCounts,
                      const std::string &kmerDictionaryName,
                      int batchSize) {
-    auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
     auto hasherConfigs = std::move(getGappedKMerHasherConfigs());
     return findKMers<sequences_t, alphabet_t, decltype(hasherConfigs)>(
-            sequences, sequencesNum, alphabet, gapsConverted, positionalKMers, withKMerCounts, kmerDictionaryName,
+            sequences, sequencesNum, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
             hasherConfigs, batchSize);
 }
 
@@ -45,8 +44,8 @@ Rcpp::List findKMers(sequences_t &sequences,
 // [[Rcpp::export]]
 Rcpp::List
 find_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
-                         Rcpp::StringVector &alphabet,
-                         Rcpp::IntegerVector &gaps,
+                         std::vector<std::string> &alphabet,
+                         std::vector<int> &gaps,
                          bool positionalKMers,
                          bool withKMerCounts,
                          const std::string &kmerDictionaryName,
@@ -58,8 +57,8 @@ find_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
-                                     Rcpp::IntegerVector &alphabet,
-                                     Rcpp::IntegerVector &gaps,
+                                     std::vector<int> &alphabet,
+                                     std::vector<int> &gaps,
                                      bool positionalKMers,
                                      bool withKMerCounts,
                                      const std::string &kmerDictionaryName,
@@ -71,8 +70,8 @@ Rcpp::List find_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
-                                     Rcpp::NumericVector &alphabet,
-                                     Rcpp::IntegerVector &gaps,
+                                     std::vector<double> &alphabet,
+                                     std::vector<int> &gaps,
                                      bool positionalKMers,
                                      bool withKMerCounts,
                                      const std::string &kmerDictionaryName,
@@ -84,8 +83,8 @@ Rcpp::List find_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_gapped_kmers_tidysq(Rcpp::List &sq,
-                                    Rcpp::StringVector &alphabet,
-                                    Rcpp::IntegerVector &gaps,
+                                    std::vector<std::string> &alphabet,
+                                    std::vector<int> &gaps,
                                     bool positionalKMers,
                                     bool withKMerCounts,
                                     const std::string &kmerDictionaryName,
