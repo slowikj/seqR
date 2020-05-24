@@ -16,7 +16,7 @@ class StringKMersComputer {
 public:
     using ENCODED_ELEM_T = short;
 
-    explicit StringKMersComputer(Rcpp::StringVector alphabet) {
+    explicit StringKMersComputer(std::vector<std::string> alphabet) {
         initAlphabetEncoding(alphabet);
     }
 
@@ -34,14 +34,13 @@ public:
     }
 
     void addGappedKMers(Rcpp::StringMatrix sequenceMatrix,
-                        Rcpp::IntegerVector gaps,
+                        std::vector<int> &gaps,
                         bool positionalKMers,
                         bool withKMerCounts,
                         const std::string &kmerDictionaryName,
                         int batchSize) {
-        auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
         auto hasherConfigs = std::move(getGappedKMerHasherConfigs());
-        addKMersCommon(sequenceMatrix, gapsConverted, positionalKMers, withKMerCounts, kmerDictionaryName,
+        addKMersCommon(sequenceMatrix, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
                        hasherConfigs, batchSize, result);
     }
 
@@ -53,9 +52,9 @@ private:
     KMerCountingResult result;
     AlphabetEncoding<std::string, ENCODED_ELEM_T, UnorderedMapWrapper> alphabetEncoding;
 
-    inline void initAlphabetEncoding(Rcpp::StringVector &alphabet) {
+    inline void initAlphabetEncoding(std::vector<std::string> &alphabet) {
         this->alphabetEncoding = std::move(
-                prepareAlphabetEncodingFromRcpp<Rcpp::StringVector, std::string, ENCODED_ELEM_T, UnorderedMapWrapper>(
+                getAlphabetEncoding<std::vector<std::string>, std::string, ENCODED_ELEM_T, UnorderedMapWrapper>(
                         alphabet));
     }
 
@@ -113,7 +112,7 @@ private:
 
 RCPP_MODULE(string_kmers_computer) {
     Rcpp::class_<StringKMersComputer>("StringKMersComputer")
-            .constructor<Rcpp::StringVector>()
+            .constructor<std::vector<std::string>>()
             .method("addKMers", &StringKMersComputer::addKMers)
             .method("addGappedKMers", &StringKMersComputer::addGappedKMers)
             .method("toList", &StringKMersComputer::toList);

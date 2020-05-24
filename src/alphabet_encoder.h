@@ -87,15 +87,4 @@ AlphabetEncoding<encoded_elem_t, encoded_elem_t, dictionary_t> prepareAlphabetEn
     );
 }
 
-template<class rcpp_vector_t,
-        class input_elem_t, class encoded_elem_t,
-        template<typename key, typename value, typename...> class alphabet_dictionary_t>
-AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t>
-prepareAlphabetEncodingFromRcpp(rcpp_vector_t &rcppVector) {
-    auto convertedAlphabet = convertRcppVector<input_elem_t, rcpp_vector_t>(rcppVector);
-    return std::move(
-            getAlphabetEncoding<std::vector<input_elem_t>, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
-                    convertedAlphabet));
-}
-
 #endif

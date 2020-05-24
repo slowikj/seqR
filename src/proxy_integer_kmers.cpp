@@ -16,7 +16,7 @@ class IntegerKMersComputer {
 public:
     using ENCODED_ELEM_T = short;
 
-    explicit IntegerKMersComputer(Rcpp::IntegerVector alphabet) {
+    explicit IntegerKMersComputer(std::vector<int> alphabet) {
         initAlphabetEncoding(alphabet);
     }
 
@@ -34,14 +34,13 @@ public:
     }
 
     void addGappedKMers(Rcpp::IntegerMatrix sequenceMatrix,
-                        Rcpp::IntegerVector gaps,
+                        std::vector<int> gaps,
                         bool positionalKMers,
                         bool withKMerCounts,
                         const std::string kmerDictionaryName,
                         int batchSize) {
-        auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
         auto hasherConfigs = std::move(getGappedKMerHasherConfigs());
-        addKMersCommon(sequenceMatrix, gapsConverted, positionalKMers, withKMerCounts, kmerDictionaryName,
+        addKMersCommon(sequenceMatrix, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
                        hasherConfigs, batchSize, result);
     }
 
@@ -53,9 +52,9 @@ private:
     KMerCountingResult result;
     AlphabetEncoding<int, ENCODED_ELEM_T, UnorderedMapWrapper> alphabetEncoding;
 
-    inline void initAlphabetEncoding(Rcpp::IntegerVector &alphabet) {
+    inline void initAlphabetEncoding(std::vector<int> &alphabet) {
         this->alphabetEncoding = std::move(
-                prepareAlphabetEncodingFromRcpp<Rcpp::IntegerVector, int, ENCODED_ELEM_T, UnorderedMapWrapper>(
+                getAlphabetEncoding<std::vector<int>, int, ENCODED_ELEM_T, UnorderedMapWrapper>(
                         alphabet));
     }
 
@@ -113,7 +112,7 @@ private:
 
 RCPP_MODULE(integer_kmers_computer) {
     Rcpp::class_<IntegerKMersComputer>("IntegerKMersComputer")
-            .constructor<Rcpp::IntegerVector>()
+            .constructor<std::vector<int>>()
             .method("addKMers", &IntegerKMersComputer::addKMers)
             .method("addGappedKMers", &IntegerKMersComputer::addGappedKMers)
             .method("toList", &IntegerKMersComputer::toList);

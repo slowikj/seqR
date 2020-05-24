@@ -14,10 +14,10 @@
 
 class TidySqKMersComputer {
 public:
-    explicit TidySqKMersComputer(Rcpp::StringVector tidysqElementsEncoding,
-                                 Rcpp::StringVector alphabet) {
+    explicit TidySqKMersComputer(std::vector<std::string> tidysqElementsEncoding,
+                                 std::vector<std::string> alphabet) {
         initAlphabetEncoding(tidysqElementsEncoding, alphabet);
-        this->safeElementsEncoding = convertRcppVector<std::string, Rcpp::StringVector>(alphabet);
+        this->safeElementsEncoding = tidysqElementsEncoding;
     }
 
     void addKMers(Rcpp::List sq,
@@ -33,14 +33,13 @@ public:
     }
 
     void addGappedKMers(Rcpp::List sq,
-                        Rcpp::IntegerVector gaps,
+                        std::vector<int> &gaps,
                         bool positionalKMers,
                         bool withKMerCounts,
                         const std::string kmerDictionaryName,
                         int batchSize) {
-        auto gapsConverted = std::move(convertRcppVector<int, Rcpp::IntegerVector>(gaps));
         auto hasherConfigs = std::move(getGappedKMerHasherConfigs());
-        addKMersCommon(sq, gapsConverted, positionalKMers, withKMerCounts, kmerDictionaryName,
+        addKMersCommon(sq, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
                        hasherConfigs, batchSize, result);
     }
 
@@ -54,10 +53,10 @@ private:
     KMerCountingResult result;
 
     inline
-    void initAlphabetEncoding(Rcpp::StringVector &tidySqElementsEncoding,
-                              Rcpp::StringVector &alphabet) {
+    void initAlphabetEncoding(std::vector<std::string> &tidySqElementsEncoding,
+                              std::vector<std::string> &alphabet) {
         this->alphabetEncoding = std::move(
-                prepareAlphabetEncodingForTidysq<Rcpp::StringVector, unsigned char, UnorderedMapWrapper>(
+                prepareAlphabetEncodingForTidysq<std::vector<std::string>, unsigned char, UnorderedMapWrapper>(
                         alphabet,
                         tidySqElementsEncoding
                 ));
@@ -91,10 +90,11 @@ private:
                         const std::string &kmerDictionaryName,
                         algorithm_params_t &algorithmParams,
                         KMerCountingResult &kMerCountingResult) {
-        auto encodedSequences = getEncodedTidysqSequences(sq, seqBegin, seqEnd);
-        KMerTaskConfig<RcppParallel::RVector<unsigned char>, unsigned char> kMerTaskConfig(
-                sq.size(),
-                getTidysqRVectorGetter(encodedSequences),
+        SafeSequencesWrapper<unsigned char> sequenceWrapper(std::move(getEncodedTidysqSequences(sq, seqBegin, seqEnd)));
+        auto sequenceGetter = getSequenceGetter(sequenceWrapper);
+        KMerTaskConfig<SafeSequencesWrapper<unsigned char>::Row, unsigned char> kMerTaskConfig(
+                (seqEnd - seqBegin),
+                sequenceGetter,
                 gaps,
                 positionalKMers,
                 withKMerCounts,
@@ -102,7 +102,7 @@ private:
                 DEFAULT_KMER_ITEM_SEPARATOR,
                 DEFAULT_KMER_SECTION_SEPARATOR);
         computeResult<
-                RcppParallel::RVector<unsigned char>,
+                SafeSequencesWrapper<unsigned char>::Row,
                 unsigned char,
                 unsigned char,
                 UnorderedMapWrapper,
@@ -116,7 +116,7 @@ private:
 
 RCPP_MODULE(tidySq_kmers_computer) {
     Rcpp::class_<TidySqKMersComputer>("TidySqKMersComputer")
-            .constructor<Rcpp::StringVector, Rcpp::StringVector>()
+            .constructor<std::vector<std::string>, std::vector<std::string>>()
             .method("addKMers", &TidySqKMersComputer::addKMers)
             .method("addGappedKMers", &TidySqKMersComputer::addGappedKMers)
             .method("toList", &TidySqKMersComputer::toList);
