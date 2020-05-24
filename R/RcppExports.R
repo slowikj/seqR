@@ -31,46 +31,6 @@ get_contiguous_intervals_matrix <- function(gaps) {
 }
 
 #' @export
-find_gapped_kmers_string <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
-    .Call('_seqR_find_gapped_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
-}
-
-#' @export
-find_gapped_kmers_integer <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
-    .Call('_seqR_find_gapped_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
-}
-
-#' @export
-find_gapped_kmers_numeric <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
-    .Call('_seqR_find_gapped_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
-}
-
-#' @export
-find_gapped_kmers_tidysq <- function(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
-    .Call('_seqR_find_gapped_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
-}
-
-#' @export
-find_kmers_string <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
-    .Call('_seqR_find_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
-}
-
-#' @export
-find_kmers_integer <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
-    .Call('_seqR_find_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
-}
-
-#' @export
-find_kmers_numeric <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
-    .Call('_seqR_find_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
-}
-
-#' @export
-find_kmers_tidysq <- function(sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
-    .Call('_seqR_find_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
-}
-
-#' @export
 compute_polynomial_hash <- function(P, M, items, begin, position) {
     .Call('_seqR_compute_polynomial_hash', PACKAGE = 'seqR', P, M, items, begin, position)
 }

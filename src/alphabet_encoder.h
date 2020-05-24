@@ -4,7 +4,7 @@
 #include <Rcpp.h>
 #include <functional>
 #include <memory>
-#include "dictionary/unordered_map_wrapper.h"
+#include "rcpp_to_cpp_converters.h"
 
 template<class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class dictionary_t>
@@ -85,6 +85,17 @@ AlphabetEncoding<encoded_elem_t, encoded_elem_t, dictionary_t> prepareAlphabetEn
             std::move(encoder),
             elementsEncoding.size() + 1
     );
+}
+
+template<class rcpp_vector_t,
+        class input_elem_t, class encoded_elem_t,
+        template<typename key, typename value, typename...> class alphabet_dictionary_t>
+AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t>
+prepareAlphabetEncodingFromRcpp(rcpp_vector_t &rcppVector) {
+    auto convertedAlphabet = convertRcppVector<input_elem_t, rcpp_vector_t>(rcppVector);
+    return std::move(
+            getAlphabetEncoding<std::vector<input_elem_t>, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
+                    convertedAlphabet));
 }
 
 #endif

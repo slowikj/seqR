@@ -26,5 +26,4 @@ add_library(seqR
         src/tidysq_encoded_sequence.h
         src/tidysq_encoded_sequence.cpp
         src/proxy_alphabet_encoder.cpp
-        src/proxy_count_gapped_kmers.cpp
-        src/proxy_count_kmers.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h src/dictionary/iterator.h src/dictionary/linear_list_dictionary.h src/dictionary/supported_dict_names.h src/kmer_task_config.h src/kmer_task_solver.h src/kmer_counting_result.h src/kmer_position_info.h)
+        src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h src/dictionary/iterator.h src/dictionary/linear_list_dictionary.h src/dictionary/supported_dict_names.h src/kmer_task_config.h src/kmer_task_solver.h src/kmer_counting_result.h src/kmer_position_info.h src/config_common.h src/config_gapped_kmer_counting.h src/config_kmer_counting.h src/proxy_contiguous_intervals.cpp src/proxy_integer_kmers.cpp src/proxy_numeric_kmers.cpp src/proxy_string_kmers.cpp src/proxy_tidysq_kmers.cpp)

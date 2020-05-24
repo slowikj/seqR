@@ -1,3 +1,4 @@
 #' @useDynLib seqR
-#' @importFrom Rcpp sourceCpp
+#' @import methods Rcpp
+#' @exportPattern "^[[:alpha:]]+"
 NULL
