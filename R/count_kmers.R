@@ -1,7 +1,7 @@
 #' @include validators.R
 #' @include kmer_functions_provider.R
 #' @export
-find_kmers <- function(sequences,
+count_kmers <- function(sequences,
                        k,
                        alphabet,
                        positional = FALSE,

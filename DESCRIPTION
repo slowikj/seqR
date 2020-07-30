@@ -29,7 +29,7 @@ LinkingTo:
     tidysq,
     BH
 SystemRequirements: c++17
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Encoding: UTF-8
 Suggests:
     testthat,
@@ -46,5 +46,5 @@ Collate:
     'validators.R'
     'kmer_typed_functions.R'
     'kmer_functions_provider.R'
-    'find_kmers.R'
+    'count_kmers.R'
     'package.R'
