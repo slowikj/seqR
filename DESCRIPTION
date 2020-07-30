@@ -1,7 +1,7 @@
 Package: seqR
 Type: Package
 Title: k-mer counting package
-Version: 2.0
+Version: 0.3.0
 Date: 2020-04-19
 Authors@R: c(
     person(given = "Jadwiga",
