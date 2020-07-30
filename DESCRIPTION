@@ -47,4 +47,5 @@ Collate:
     'kmer_typed_functions.R'
     'kmer_functions_provider.R'
     'count_kmers.R'
+    'count_multimers.R'
     'package.R'
