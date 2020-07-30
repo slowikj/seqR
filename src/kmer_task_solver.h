@@ -244,14 +244,16 @@ void findKMersSpecific(Rcpp::List &sq,
     Rcpp::StringVector elementsEncoding = sq.attr("alphabet");
     std::vector<std::string> safeElementsEncoding = convertRcppVector<std::string, Rcpp::StringVector>(
             elementsEncoding);
-    auto alphabetEncoding = std::move(prepareAlphabetEncodingForTidysq<std::vector<std::string>, unsigned char, UnorderedMapWrapper>(
-            alphabet,
-            safeElementsEncoding
-    ));
-    auto encodedSequences = getEncodedTidysqSequences(sq, seqBegin, seqEnd);
-    KMerTaskConfig<RcppParallel::RVector<unsigned char>, unsigned char> kMerTaskConfig(
+    auto alphabetEncoding = std::move(
+            prepareAlphabetEncodingForTidysq<std::vector<std::string>, unsigned char, UnorderedMapWrapper>(
+                    alphabet,
+                    safeElementsEncoding
+            ));
+    SafeSequencesWrapper<unsigned char> sequencesWrapper(std::move(getEncodedTidysqSequences(sq, seqBegin, seqEnd)));
+    auto sequenceGetter = getSequenceGetter(sequencesWrapper);
+    KMerTaskConfig<SafeSequencesWrapper<unsigned char>::Row, unsigned char> kMerTaskConfig(
             (seqEnd - seqBegin),
-            getTidysqRVectorGetter(encodedSequences),
+            sequenceGetter,
             gaps,
             positionalKMers,
             withKMerCounts,
@@ -259,7 +261,7 @@ void findKMersSpecific(Rcpp::List &sq,
             DEFAULT_KMER_ITEM_SEPARATOR,
             DEFAULT_KMER_SECTION_SEPARATOR);
     computeResult<
-            RcppParallel::RVector<unsigned char>,
+            SafeSequencesWrapper<unsigned char>::Row,
             unsigned char,
             unsigned char,
             UnorderedMapWrapper,

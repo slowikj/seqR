@@ -3,10 +3,7 @@
 
 #include <vector>
 #include <Rcpp.h>
-// [[Rcpp::depends(RcppParallel)]]
-//' @importFrom  RcppParallel RcppParallelLibs
-#include<RcppParallel.h>
 
-std::vector<RcppParallel::RVector<unsigned char>> getEncodedTidysqSequences(Rcpp::List &sq, int seqBegin, int seqEnd);
+std::vector<std::vector<unsigned char>> getEncodedTidysqSequences(Rcpp::List &sq, int seqBegin, int seqEnd);
 
 #endif
