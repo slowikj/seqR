@@ -54,3 +54,16 @@ test_that("count 2-mers and 3-mers for 2 sequences: (AC){100}, (AD){10}", {
               batch_size=200
   )
 })
+
+test_that("count 2-mers for 2 sequences: (AC){100}, (AD){10} with defaults", {
+  expected_res <- matrix(c(
+    100, 99, 99, 99, 0, 0, 0, 0,
+    0,    0,  0,  0, 10, 9, 9, 9
+  ), nrow=2, byrow=TRUE)
+  colnames(expected_res) <- c("A.C_0", "C.A_0", "A.C.A_0.0", "C.A.C_0.0", "A.D_0", "D.A_0", "A.D.A_0.0", "D.A.D_0.0")
+  
+  sq <- tidysq::as.sq(c(strrep("AC", 100), strrep("AD", 10)))
+  
+  res <- seqR::count_multimers(sq, c(2,3), alphabet=c("A", "D", "C"))
+  expect_matrices_equal(expected_res, as.matrix(res))
+})
