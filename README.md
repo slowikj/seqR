@@ -1,9 +1,9 @@
 [![Build Status](https://travis-ci.com/slowikj/seqR.svg?branch=master)](https://travis-ci.com/slowikj/seqR)
 # seqR <img src = "man/images/logo.png" align = "right" width="120"/>
 
-`seqR` is an R package that facilitates feature extraction (`k-mer counting`) of biological sequences such as proteins and nucleic acids.
+`seqR` is an R package that implements feature extraction (`k-mer counting`) of biological sequences such as proteins and nucleic acids.
 It supports multiple types of sequences:
-* `tidysq` format
+* [tidysq](https://github.com/michbur/tidysq) format
 * a matrix of integers
 * a matrix of numbers
 * a matrix of strings
@@ -13,7 +13,7 @@ Addationally, several types of k-mers are supported:
 * gapped k-mers
 * position-specific (positional) k-mers
 
-The core algorithm is implemented in C++ and it takes advantage from parallel programming.
+The core algorithm is implemented in C++ and it takes advantage of parallel programming.
 
 # Package installation and loading
 
