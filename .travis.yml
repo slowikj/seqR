@@ -33,8 +33,6 @@ r_packages:
   - covr
   - devtools
 
-r_github_packages: michbur/tidysq
-
 before_install:
   - mkdir -p ~/.R && touch ~/.R/Makevars
   - VER=-8
