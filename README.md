@@ -26,9 +26,9 @@ library(seqR)
 # Usage
 
 ```{r, eval=FALSE}
-count_kmers(list("aaaaacbb", "aaaa"), 5, LETTERS)
+count_kmers(list("aaaaacbb", "aaaaa"), 5, letters)
 
-count_multimers(list("aaaaacb", "aaaa"), c(3, 5), LETTERS)
+count_multimers(list("aaaaacb", "aaaaa"), c(3, 5), letters)
 ```
 
 In order to improve memory usage, the `slam::simple_triplet_matrix` is used.
