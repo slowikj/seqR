@@ -17,41 +17,22 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - gcc-8
-      - g++-8
-      - gfortran-8
+      - gcc-7
+      - g++-7
+      - gfortran-7
 
 env:
   global:
     - MAKEFLAGS="-j 2"
-    - COMPILER=g++-8
-    - CC=gcc-8
-    - CXX=g++-8
-    - CXX17=g++-8 -std=c++17 -fPIC
+    - COMPILER=g++-7
+    - CC=gcc-7
+    - CXX=g++-7
+    - CXX17=g++-7 -std=c++17 -fPIC
 
 r_packages:
   - covr
   - devtools
 
-r_github_packages: michbur/tidysq
-
-before_install:
-  - mkdir -p ~/.R && touch ~/.R/Makevars
-  - VER=-8
-  - echo "CC=gcc${VER}"    >> ~/.R/Makevars
-  - echo "CXX=g++${VER}"   >> ~/.R/Makevars
-  - echo "CXX1X=g++${VER}" >> ~/.R/Makevars
-  - echo "CXX17=g++-8 -std=c++17 -fPIC" >> ~/.R/Makevars
-  - echo "FC=gfortran${VER}"       >> ~/.R/Makevars
-  - echo "F77=gfortran${VER}"      >> ~/.R/Makevars
-  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 60 --slave /usr/bin/g++ g++ /usr/bin/g++-8
-  - sudo update-alternatives --install /usr/bin/gfortran gfortran /usr/bin/gfortran-8 60
-
 after_success:
-  - echo "USE_CXX17 = yes" >> ~/.R/build.Renviron
-  - echo "CXX17=g++-8 -std=c++17 -fPIC" >> ~/.R/build.Renviron
-  - echo "CC=gcc${VER}"    >> ~/.R/build.Renviron
-  - echo "CXX=g++${VER}"   >> ~/.R/build.Renviron
-  - echo "CXX1X=g++${VER}" >> ~/.R/build.Renviron
   - Rscript -e 'covr::codecov(quiet=FALSE)'
   

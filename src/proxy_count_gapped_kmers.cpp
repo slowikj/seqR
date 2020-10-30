@@ -82,12 +82,12 @@ Rcpp::List find_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
 
 //' @export
 // [[Rcpp::export]]
-Rcpp::List find_gapped_kmers_tidysq(Rcpp::List &sq,
-                                    std::vector<std::string> &alphabet,
-                                    std::vector<int> &gaps,
-                                    bool positionalKMers,
-                                    bool withKMerCounts,
-                                    const std::string &kmerDictionaryName,
-                                    int batchSize) {
+Rcpp::List find_gapped_kmers_list(Rcpp::List &sq,
+                                  Rcpp::StringVector &alphabet,
+                                  std::vector<int> &gaps,
+                                  bool positionalKMers,
+                                  bool withKMerCounts,
+                                  const std::string &kmerDictionaryName,
+                                  int batchSize) {
     return findKMers(sq, sq.size(), alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize);
 }

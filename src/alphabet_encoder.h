@@ -64,27 +64,5 @@ AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> getAlphabetEncoding
             1
     );
 }
-
-template<class alphabet_t,
-        class encoded_elem_t,
-        template<typename input_t, typename encoded_t, typename...> class dictionary_t>
-inline
-AlphabetEncoding<encoded_elem_t, encoded_elem_t, dictionary_t> prepareAlphabetEncodingForTidysq(
-        alphabet_t &alphabet,
-        alphabet_t &elementsEncoding) {
-    dictionary_t<encoded_elem_t, encoded_elem_t> encoder;
-    for (const auto &alphabetElem: alphabet) {
-        for (int encoding_i = 0; encoding_i < elementsEncoding.size(); ++encoding_i) {
-            if (alphabetElem == elementsEncoding[encoding_i]) {
-                auto index = static_cast<encoded_elem_t>(encoding_i + 1);
-                encoder[index] = index;
-            }
-        }
-    }
-    return AlphabetEncoding<encoded_elem_t, encoded_elem_t, dictionary_t>(
-            std::move(encoder),
-            elementsEncoding.size() + 1
-    );
-}
-
+\
 #endif

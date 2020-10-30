@@ -23,8 +23,6 @@ add_library(seqR
         src/gapped_kmer_counter.h
         src/kmer_strings_creator.h
         src/sequence_getter.h
-        src/tidysq_encoded_sequence.h
-        src/tidysq_encoded_sequence.cpp
         src/proxy_alphabet_encoder.cpp
         src/proxy_count_gapped_kmers.cpp
         src/proxy_count_kmers.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h src/dictionary/iterator.h src/dictionary/linear_list_dictionary.h src/dictionary/supported_dict_names.h src/kmer_task_config.h src/kmer_task_solver.h src/kmer_counting_result.h src/kmer_position_info.h)

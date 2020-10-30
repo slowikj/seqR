@@ -21,8 +21,8 @@ count_kmers_numeric_proxy <- function(sequences, ...) {
                         ...)
 }
 
-count_kmers_tidysq_proxy <- function(sequences, ...) {
-  .invoke_kmer_function(rcpp_counting_function=find_kmers_tidysq,
+count_kmers_list_proxy <- function(sequences, ...) {
+  .invoke_kmer_function(rcpp_counting_function=find_kmers_list,
                         alphabet_validator=validate_string,
                         sequences=sequences,
                         ...)
@@ -49,8 +49,8 @@ count_gapped_kmers_numeric_proxy <- function(sequences, ...) {
                         ...)
 }
 
-count_gapped_kmers_tidysq_proxy <- function(sequences, ...) {
-  .invoke_kmer_function(rcpp_counting_function=find_gapped_kmers_tidysq,
+count_gapped_kmers_list_proxy <- function(sequences, ...) {
+  .invoke_kmer_function(rcpp_counting_function=find_gapped_kmers_list,
                         alphabet_validator=validate_string,
                         sequences=sequences,
                         ...)

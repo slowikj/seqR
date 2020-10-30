@@ -26,7 +26,6 @@ Depends:
 LinkingTo:
     Rcpp,
     RcppParallel,
-    tidysq,
     BH
 SystemRequirements: c++17
 RoxygenNote: 7.1.0
@@ -37,8 +36,7 @@ Suggests:
     knitr,
     rmarkdown,
     spelling,
-    ggplot2,
-    tidysq
+    ggplot2
 VignetteBuilder: knitr
 Language: en-US
 Collate: 

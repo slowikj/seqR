@@ -3,7 +3,7 @@
 
 `seqR` is an R package that implements feature extraction (`k-mer counting`) of biological sequences such as proteins and nucleic acids.
 It supports multiple types of sequences:
-* [tidysq](https://github.com/michbur/tidysq) format
+* a list of strings
 * a matrix of integers
 * a matrix of numbers
 * a matrix of strings
@@ -26,9 +26,9 @@ library(seqR)
 # Usage
 
 ```{r, eval=FALSE}
-count_kmers(tidysq::as.sq(c("aaaaacbb")), 5, LETTERS)
+count_kmers(list("aaaaacbb", "aaaa"), 5, LETTERS)
 
-count_multimers(tidysq::as.sq(c("aaaaacb")), c(3, 5), LETTERS)
+count_multimers(list("aaaaacb", "aaaa"), c(3, 5), LETTERS)
 ```
 
 In order to improve memory usage, the `slam::simple_triplet_matrix` is used.
