@@ -2,13 +2,13 @@ library(testthat)
 source("utils.R")
 
 invoke_test <- function(expected_res, ...) {
-  result_list <- seqR::find_kmers_tidysq(...)
+  result_list <- seqR::find_kmers_list(...)
   res <- convert_seqR_list_to_matrix(result_list)
   expect_matrices_equal(res, expected_res)
 }
 
-test_that("count 3-mers for tidysq sequences A+", {
-  sq <- tidysq::construct_sq(c("AAAAA", "AA", "AAAAAAA"), type = 'ami')
+test_that("count 3-mers for sequences A+ in a list", {
+  sq <- list("AAAAA", "AA", "AAAAAAA")
   expected_res <- matrix(c(
     3,
     0,
@@ -25,8 +25,8 @@ test_that("count 3-mers for tidysq sequences A+", {
               batchSize = 200)
 })
 
-test_that("count 3-mers for tidysq sequences A+ longer", {
-  sq <- tidysq::construct_sq(c(strrep("A", 1000000), strrep("A", 1000), strrep("A", 100)), type = 'ami')
+test_that("count 3-mers for sequences A+ longer in a list", {
+  sq <- list(strrep("A", 1000000), strrep("A", 1000), strrep("A", 100))
   expected_res <- matrix(c(
     999998,
     998,
@@ -43,8 +43,8 @@ test_that("count 3-mers for tidysq sequences A+ longer", {
               batchSize = 200)
 })
 
-test_that("count non positional 10-mers for tidysq sequences A+ longer", {
-  sq <- tidysq::construct_sq(c(strrep("A", 1000000), strrep("A", 100)))
+test_that("count non positional 10-mers sequences A+ longer in a list", {
+  sq <- list(strrep("A", 1000000), strrep("A", 100))
   expected_res <- matrix(c(
     999991,
     91
@@ -63,8 +63,8 @@ test_that("count non positional 10-mers for tidysq sequences A+ longer", {
               batchSize = 200)
 })
 
-test_that("find 3-mers for tidysq sequences A+ (without k-mer counts)", {
-  sq <- tidysq::construct_sq(c("AAAAA", "AA", "AAAAAAA"), type = 'ami')
+test_that("find 3-mers for sequences A+ (without k-mer counts) in a list", {
+  sq <- list("AAAAA", "AA", "AAAAAAA")
   expected_res <- matrix(c(
     1,
     0,
@@ -81,8 +81,8 @@ test_that("find 3-mers for tidysq sequences A+ (without k-mer counts)", {
               batchSize = 200)
 })
 
-test_that("find 15-mers for tidysq sequences (AC){1000000}", {
-  sq <- tidysq::as.sq(sapply(1:5, function(i) strrep("AC", 1000000)))
+test_that("find 15-mers for sequences (AC){1000000} in a list", {
+  sq <- lapply(1:5, function(i) strrep("AC", 1000000))
   expected_res <- matrix(c(
     999993, 999993,
     999993, 999993,

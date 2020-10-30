@@ -16,6 +16,13 @@ inline InputToStringItemConverter_t<std::string> getStringToStringConverter() {
     };
 }
 
+inline InputToStringItemConverter_t<char> getCharToStringConverter() {
+    return [](const char &elem) -> std::string {
+        return std::string(1, elem);
+    };
+}
+
+
 inline InputToStringItemConverter_t<int> getIntToStringConverter() {
     return [](const int &elem) -> std::string {
         return std::to_string(elem);
@@ -28,13 +35,6 @@ inline InputToStringItemConverter_t<double> getDoubleToStringConverter(int decim
         stream << std::fixed << std::setprecision(decimalPrecision);
         stream << elem;
         return stream.str();
-    };
-}
-
-inline InputToStringItemConverter_t<unsigned char>
-getEncodedTidySqItemToStringConverter(std::vector<std::string> &safeDecoder) {
-    return [&safeDecoder](const unsigned char &elem) -> std::string {
-        return safeDecoder[elem - 1];
     };
 }
 

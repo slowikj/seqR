@@ -10,7 +10,6 @@
 #include "dictionary/linear_list_dictionary.h"
 #include "gapped_kmer_counter.h"
 #include "kmer_counter.h"
-#include "tidysq_encoded_sequence.h"
 #include <functional>
 #include <vector>
 
@@ -117,6 +116,7 @@ void computeResult(alphabet_t &alphabet,
     auto alphabetEncoding = std::move(
             getAlphabetEncoding<alphabet_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
                     alphabet));
+
     computeResult<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, algorithm_params_t>(
             kMerTaskConfig,
             alphabetEncoding,
@@ -231,42 +231,39 @@ void findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
 
 template<class algorithm_params_t>
 inline
-void findKMersSpecific(Rcpp::List &sq,
+void findKMersSpecific(Rcpp::List &sequences,
                        int seqBegin,
                        int seqEnd,
-                       std::vector<std::string> &alphabet,
+                       Rcpp::StringVector &alphabet,
                        std::vector<int> &gaps,
                        bool positionalKMers,
                        bool withKMerCounts,
                        const std::string &kmerDictionaryName,
                        algorithm_params_t &algorithmParams,
                        KMerCountingResult &kMerCountingResult) {
-    Rcpp::StringVector elementsEncoding = sq.attr("alphabet");
-    std::vector<std::string> safeElementsEncoding = convertRcppVector<std::string, Rcpp::StringVector>(
-            elementsEncoding);
-    auto alphabetEncoding = std::move(
-            prepareAlphabetEncodingForTidysq<std::vector<std::string>, unsigned char, UnorderedMapWrapper>(
-                    alphabet,
-                    safeElementsEncoding
-            ));
-    SafeSequencesWrapper<unsigned char> sequencesWrapper(std::move(getEncodedTidysqSequences(sq, seqBegin, seqEnd)));
-    auto sequenceGetter = getSequenceGetter(sequencesWrapper);
-    KMerTaskConfig<SafeSequencesWrapper<unsigned char>::Row, unsigned char> kMerTaskConfig(
+    std::string alphabetStr("", alphabet.size());
+    for (int i = 0; i < alphabet.size(); ++i) {
+        alphabetStr[i] = Rcpp::as<char>(alphabet[i]);
+    }
+
+    SafeStringListSequenceWrapper sequenceWrapper(sequences);
+    KMerTaskConfig<SafeStringListSequenceWrapper::Row, char> kMerTaskConfig(
             (seqEnd - seqBegin),
-            sequenceGetter,
+            getStringSequenceGetter(sequenceWrapper, seqBegin),
             gaps,
             positionalKMers,
             withKMerCounts,
-            getEncodedTidySqItemToStringConverter(safeElementsEncoding),
+            getCharToStringConverter(),
             DEFAULT_KMER_ITEM_SEPARATOR,
             DEFAULT_KMER_SECTION_SEPARATOR);
     computeResult<
-            SafeSequencesWrapper<unsigned char>::Row,
-            unsigned char,
-            unsigned char,
+            std::string,
+            SafeStringListSequenceWrapper::Row,
+            char,
+            short,
             UnorderedMapWrapper,
-            algorithm_params_t>(kMerTaskConfig,
-                                alphabetEncoding,
+            algorithm_params_t>(alphabetStr,
+                                kMerTaskConfig,
                                 kmerDictionaryName,
                                 algorithmParams,
                                 kMerCountingResult);

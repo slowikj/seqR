@@ -3,13 +3,13 @@
 
 #include "rcpp_to_cpp_converters.h"
 
-template<class elem_t>
+template<class sequence_t, class elem_t>
 class BaseSafeSequencesWrapper {
 public:
 
     class Row {
     public:
-        explicit Row(const std::vector<elem_t> &row) :
+        explicit Row(const sequence_t &row) :
                 row(row) {
         }
 
@@ -32,7 +32,7 @@ public:
         }
 
     private:
-        const std::vector<elem_t> &row;
+        const sequence_t &row;
     };
 
     inline Row row(std::size_t index) const {
@@ -44,13 +44,13 @@ public:
     }
 
 protected:
-    std::vector<std::vector<elem_t>> sequences_;
+    std::vector<sequence_t> sequences_;
 
     BaseSafeSequencesWrapper() = default;
 };
 
 template<class elem_t>
-class SafeSequencesWrapper : public BaseSafeSequencesWrapper<elem_t> {
+class SafeSequencesWrapper : public BaseSafeSequencesWrapper<std::vector<elem_t>, elem_t> {
 public:
     explicit SafeSequencesWrapper(std::vector<std::vector<elem_t>> &&sequences) {
         this->sequences_ = std::move(sequences);
@@ -68,7 +68,7 @@ public:
 };
 
 template<class cell_t>
-class SafeMatrixSequenceWrapper : public BaseSafeSequencesWrapper<cell_t> {
+class SafeMatrixSequenceWrapper : public BaseSafeSequencesWrapper<std::vector<cell_t>, cell_t> {
 public:
 
     template<class matrix_t>
@@ -102,6 +102,24 @@ private:
         for (int column = 0; column < matrix.ncol(); ++column) {
             auto matrixCell = matrix(row, column);
             this->sequences_[row][column] = convert<decltype(matrixCell), cell_t>(matrix(row, column));
+        }
+    }
+};
+
+class SafeStringListSequenceWrapper : public BaseSafeSequencesWrapper<std::string, char> {
+public:
+
+    explicit SafeStringListSequenceWrapper(const Rcpp::List &inputVector) {
+        this->initSequences(inputVector);
+    }
+
+private:
+
+    void initSequences(const Rcpp::List &inputList) {
+        this->sequences_.resize(inputList.size());
+        for (int i = 0; i < inputList.size(); ++i) {
+            Rcpp::StringVector listElem = inputList[i];
+            this->sequences_[i] = std::move(Rcpp::as<std::string>(listElem[0]));
         }
     }
 };

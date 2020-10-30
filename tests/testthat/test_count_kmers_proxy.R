@@ -57,15 +57,15 @@ test_that("alphabet has incompatile element (string) type with sequences' elemen
                "alphabet should contain numerics")
 })
 
-test_that("alphabet has incompatible element (numeric) type with sequences from tidysq (string)", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("aaaaaaa"),
+test_that("alphabet has incompatible element (numeric) type with sequences from list input (string)", {
+  expect_error(seqR::count_kmers(sequences=list("aaaaaaa"),
                                  alphabet=c(1.1, 2.2),
                                  k=1),
                "alphabet should contain strings")
 })
 
-test_that("alphabet has incompatible element (integer) type with sequences from tidysq (string)", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("aaaaaa"),
+test_that("alphabet has incompatible element (integer) type with sequences from list input (string)", {
+  expect_error(seqR::count_kmers(sequences=list("aaaaaa"),
                                  alphabet=c(1,2),
                                  k=1),
                "alphabet should contain strings")
@@ -73,24 +73,17 @@ test_that("alphabet has incompatible element (integer) type with sequences from 
 
 # SEQUENCE TYPE ----
 
-test_that("sequences of unsupported type generate an error", {
-  expect_error(seqR::count_kmers(sequences=list(1,2,3),
-                                 alphabet=c(1,2,3),
-                                 k=1),
-               "sequences param has unsupported type")
-})
-
 # INVALID K-MER PARAMS ----
 
 test_that("k = 0 generate an error", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAAA"),
+  expect_error(seqR::count_kmers(sequences=list("AAAAA"),
                                  alphabet=c("A"),
                                  k=0),
                "k should be a positive integer")
 })
 
 test_that("non integer gaps vector generates an error", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAAA"),
+  expect_error(seqR::count_kmers(sequences=list("AAAAA"),
                                  alphabet=c("A"),
                                  k=1,
                                  kmer_gaps=c("A")),
@@ -98,7 +91,7 @@ test_that("non integer gaps vector generates an error", {
 })
 
 test_that("kmer gaps length larger than k-1 generates an error", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAA"),
+  expect_error(seqR::count_kmers(sequences=list("AAAA"),
                                  alphabet=c("A"),
                                  k=1,
                                  kmer_gaps=c(1,2)),
@@ -106,7 +99,7 @@ test_that("kmer gaps length larger than k-1 generates an error", {
 })
 
 test_that("unsupported kmer dictionary type raises an error", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAA"),
+  expect_error(seqR::count_kmers(sequences=list("AAAA"),
                                 alphabet=c("A"),
                                 k=2,
                                 kmer_dictionary_name = "unknown"),
@@ -116,7 +109,7 @@ test_that("unsupported kmer dictionary type raises an error", {
 # BATCH SIZE ----
 
 test_that("provided batch size param is a negative integer", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAA"),
+  expect_error(seqR::count_kmers(sequences=list("AAAA"),
                                 alphabet=c("A"),
                                 k=1,
                                 batch_size = -2),
@@ -124,7 +117,7 @@ test_that("provided batch size param is a negative integer", {
 })
 
 test_that("provided batch size param is a positive non integer", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAA"),
+  expect_error(seqR::count_kmers(sequences=list("AAAA"),
                                 alphabet=c("A"),
                                 k=1,
                                 batch_size = 2.2),
@@ -132,7 +125,7 @@ test_that("provided batch size param is a positive non integer", {
 })
 
 test_that("provided batch size param is zero", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAA"),
+  expect_error(seqR::count_kmers(sequences=list("AAAA"),
                                 alphabet=c("A"),
                                 k=1,
                                 batch_size = 0),
@@ -140,7 +133,7 @@ test_that("provided batch size param is zero", {
 })
 
 test_that("provided batch size param is a string", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAA"),
+  expect_error(seqR::count_kmers(sequences=list("AAAA"),
                                 alphabet=c("A"),
                                 k=1,
                                 batch_size = "aaaa"),
@@ -148,7 +141,7 @@ test_that("provided batch size param is a string", {
 })
 
 test_that("provided batch size param is an integer vector", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAA"),
+  expect_error(seqR::count_kmers(sequences=list("AAAA"),
                                 alphabet=c("A"),
                                 k=1,
                                 batch_size = c(1,2,3)),
@@ -156,7 +149,7 @@ test_that("provided batch size param is an integer vector", {
 })
 
 test_that("provided batch size param is NULL", {
-  expect_error(seqR::count_kmers(sequences=tidysq::as.sq("AAAA"),
+  expect_error(seqR::count_kmers(sequences=list("AAAA"),
                                 alphabet=c("A"),
                                 k=1,
                                 batch_size = NULL),
@@ -165,8 +158,8 @@ test_that("provided batch size param is NULL", {
 
 # COUNTING ----
 
-test_that("test tidysq sequences for gapped k-mers", {
-  sq <- tidysq::as.sq(c("AAAA", "AAACA"))
+test_that("test list input sequences for gapped k-mers", {
+  sq <- list("AAAA", "AAACA")
   expected_res <- matrix(c(
     2, 0,
     2, 1), byrow=TRUE, nrow=2)
@@ -183,7 +176,7 @@ test_that("test tidysq sequences for gapped k-mers", {
 })
 
 test_that("test the case when there is 0 found k-mers", {
-  sq <-tidysq::as.sq(c("AAAAAA", "AAACA"))
+  sq <-list("AAAAAA", "AAACA")
   expected_res <- matrix(nrow=2, ncol=0)
   res <- seqR::count_kmers(sequences=sq,
                           k=100,
@@ -197,7 +190,7 @@ test_that("test the case when there is 0 found k-mers", {
 # DIFFERENT BATCHES SIZES ----
 
 run_batch_test <- function(batch_size) {
-  sq <- tidysq::construct_sq(c("AAAAA", "AA", "AAAAAAAB", "BBB"), type = 'ami')
+  sq <- list("AAAAA", "AA", "AAAAAAAB", "BBB")
   expected_res <- matrix(c(
     3, 0, 0,
     0, 0, 0,
@@ -215,14 +208,14 @@ run_batch_test <- function(batch_size) {
   expect_equal(expected_res, as.matrix(res))
 }
 
-test_that("test tidysq sequences that are processed in ONE batch iteration", {
+test_that("test list input sequences that are processed in ONE batch iteration", {
   run_batch_test(batch_size=3)
 })
 
-test_that("test tidysq sequences that are processed in TWO batch iterations", {
+test_that("test list input sequences that are processed in TWO batch iterations", {
   run_batch_test(batch_size=2)
 })
 
-test_that("test tidysq sequences that are processed in THREE batch iterations", {
+test_that("test list input sequences that are processed in THREE batch iterations", {
   run_batch_test(batch_size=1)
 })

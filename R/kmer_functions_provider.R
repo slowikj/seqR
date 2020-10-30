@@ -7,14 +7,14 @@ invoke_gapped_kmer_function <- function(sequences, ...) {
 }
 
 get_kmer_function <- function(sequences) {
-  if (has_integers_only(sequences)) {
+  if (is.list(sequences)) {
+    .kmer_functions_map[["list"]]
+  } else if (has_integers_only(sequences)) {
     .kmer_functions_map[["integer"]]
   } else if (is.numeric(sequences)) {
     .kmer_functions_map[["numeric"]]
   } else if (is.character(sequences)) {
     .kmer_functions_map[["string"]]
-  } else if (tidysq::is.sq(sequences)) {
-    .kmer_functions_map[["tidysq"]]
   } else {
     stop("sequences param has unsupported type")
   }
@@ -25,5 +25,5 @@ get_kmer_function <- function(sequences) {
   "integer" = list(count_kmers_integer_proxy, count_gapped_kmers_integer_proxy),
   "string" = list(count_kmers_string_proxy, count_gapped_kmers_string_proxy),
   "numeric" = list(count_kmers_numeric_proxy, count_gapped_kmers_numeric_proxy),
-  "tidysq" = list(count_kmers_tidysq_proxy, count_gapped_kmers_tidysq_proxy)
+  "list" = list(count_kmers_list_proxy, count_gapped_kmers_list_proxy)
 )

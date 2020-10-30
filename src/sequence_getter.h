@@ -30,10 +30,9 @@ getRMatrixRowGetter(rcpp_matrix_t &rcppMatrix, int rowOffset = 0) {
     };
 }
 
-template<class elem_t>
-inline SequenceGetter_t<typename SafeSequencesWrapper<elem_t>::Row>
-getSequenceGetter(SafeSequencesWrapper<elem_t> &sequencesWrapper, int rowOffset = 0) {
-    return [&sequencesWrapper, rowOffset](int rowNum) -> typename SafeSequencesWrapper<elem_t>::Row {
+inline SequenceGetter_t<typename SafeStringListSequenceWrapper::Row>
+getStringSequenceGetter(SafeStringListSequenceWrapper &sequencesWrapper, int rowOffset = 0) {
+    return [&sequencesWrapper, rowOffset](int rowNum) -> typename SafeStringListSequenceWrapper::Row {
         return std::move(sequencesWrapper.row(rowNum + rowOffset));
     };
 }

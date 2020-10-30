@@ -46,8 +46,8 @@ find_gapped_kmers_numeric <- function(sequenceMatrix, alphabet, gaps, positional
 }
 
 #' @export
-find_gapped_kmers_tidysq <- function(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
-    .Call('_seqR_find_gapped_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
+find_gapped_kmers_list <- function(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
+    .Call('_seqR_find_gapped_kmers_list', PACKAGE = 'seqR', sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
 }
 
 #' @export
@@ -66,8 +66,8 @@ find_kmers_numeric <- function(sequenceMatrix, alphabet, k, positionalKMers, wit
 }
 
 #' @export
-find_kmers_tidysq <- function(sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
-    .Call('_seqR_find_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
+find_kmers_list <- function(sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize) {
+    .Call('_seqR_find_kmers_list', PACKAGE = 'seqR', sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize)
 }
 
 #' @export

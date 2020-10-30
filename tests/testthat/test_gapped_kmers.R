@@ -19,8 +19,8 @@ invoke_test_numeric <- function(...) {
   invoke_test(seqR::find_gapped_kmers_numeric, ...)
 }
 
-invoke_test_tidysq <- function(...) {
-  invoke_test(seqR::find_gapped_kmers_tidysq, ...)
+invoke_test_list <- function(...) {
+  invoke_test(seqR::find_gapped_kmers_list, ...)
 }
 
 # STRING MATRIX TESTS ----
@@ -181,16 +181,16 @@ test_that("(numeric) the k-mer is longer than the sequence", {
                       batchSize = 200)
 })
 
-# TIDYSQ TESTS ----
+# LIST INPUT TESTS ----
 
-test_that("(tidysq) count non positional k-mers (0, 1)", {
-  sq <- tidysq::construct_sq(c("AAAAAC", "AAA", "AAAC"), type="ami")
+test_that("(list input) count non positional k-mers (0, 1)", {
+  sq <- list("AAAAAC", "AAA", "AAAC")
   expected_res <- matrix(c(
     2, 1,
     0, 0,
     0, 1), nrow = 3, byrow=TRUE)
   colnames(expected_res) <- c("A.A.A_0.1", "A.A.C_0.1")
-  invoke_test_tidysq(expected_res = expected_res,
+  invoke_test_list(expected_res = expected_res,
                       alphabet=c("A", "C"),
                       sq = sq,
                       gaps = c(0,1),
@@ -200,15 +200,15 @@ test_that("(tidysq) count non positional k-mers (0, 1)", {
                      batchSize = 200)
 })
 
-test_that("(tidysq) count non positional k-mers (0, 1); some items are not allowed", {
-  sq <- tidysq::construct_sq(c("AAAACAAAAC", "AACTAAAA", "AACTAAAAC"), type="nuc")
+test_that("(list input) count non positional k-mers (0, 1); some items are not allowed", {
+  sq <- list("AAAACAAAAC", "AACTAAAA", "AACTAAAAC")
   expected_res <- matrix(c(
     3, 0, 0,
     1, 1, 1,
     1, 1, 1
   ), nrow = 3, byrow=TRUE)
   colnames(expected_res) <- c("A.A.A_0.1", "A.A.T_0.1", "T.A.A_0.1")
-  invoke_test_tidysq(expected_res = expected_res,
+  invoke_test_list(expected_res = expected_res,
                      alphabet=c("A", "T"),
                      sq = sq,
                      gaps = c(0, 1),
@@ -218,10 +218,10 @@ test_that("(tidysq) count non positional k-mers (0, 1); some items are not allow
                      batchSize = 200)
 })
 
-test_that("(tidysq) the k-mer is longer than the sequence", {
-  sq <- tidysq::construct_sq(c("AAAACAAAAC", "AACTAAAA", "AACTAAAAC"), type="nuc")
+test_that("(list input) the k-mer is longer than the sequence", {
+  sq <- list("AAAACAAAAC", "AACTAAAA", "AACTAAAAC")
   expected_res <- matrix(nrow=3, ncol=0)
-  invoke_test_tidysq(expected_res = expected_res,
+  invoke_test_list(expected_res = expected_res,
                      alphabet=c("A", "T"),
                      sq = sq,
                      gaps = rep(1,100),
