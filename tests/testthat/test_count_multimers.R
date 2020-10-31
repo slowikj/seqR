@@ -68,6 +68,11 @@ test_that("count 2-mers for 2 sequences: (AC){100}, (AD){10} with defaults", {
   expect_matrices_equal(expected_res, as.matrix(res))
 })
 
+test_that("the last sequence do not contain any k-mer", {
+  res <- count_multimers(list("aaaaacb", "aa"), c(3, 5), letters)
+  expect_equal(nrow(res), 2)
+})
+
 test_that("expect simple_triplet_matrix as an output", {
   sq <- list(strrep("AC", 100), strrep("AD", 10))
   res <- seqR::count_multimers(sq, c(2,3), alphabet=c("A", "D", "C"))
