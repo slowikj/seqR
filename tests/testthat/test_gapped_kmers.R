@@ -3,7 +3,7 @@ source("utils.R")
 
 invoke_test <- function(fun, expected_res, ...) {
   result_list <- fun(...)
-  res <- seqR::convert_seqR_list_to_matrix(result_list)
+  res <- convert_seqR_list_to_matrix(result_list)
   expect_matrices_equal(expected_res, res)
 }
 

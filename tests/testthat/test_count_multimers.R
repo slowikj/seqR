@@ -67,3 +67,10 @@ test_that("count 2-mers for 2 sequences: (AC){100}, (AD){10} with defaults", {
   res <- seqR::count_multimers(sq, c(2,3), alphabet=c("A", "D", "C"))
   expect_matrices_equal(expected_res, as.matrix(res))
 })
+
+test_that("expect simple_triplet_matrix as an output", {
+  sq <- list(strrep("AC", 100), strrep("AD", 10))
+  res <- seqR::count_multimers(sq, c(2,3), alphabet=c("A", "D", "C"))
+  
+  expect_is(res, "simple_triplet_matrix")
+})

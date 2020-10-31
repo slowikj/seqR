@@ -9,6 +9,10 @@ expect_matrices_equal <- function(a, b) {
   }
 }
 
+convert_seqR_list_to_matrix <- function(seqR_list) {
+  as.matrix(seqR::convert_seqR_list_to_slam_matrix(seqR_list))
+}
+
 to_matrix <- function(v) {
   res <- matrix(unname(v), byrow=TRUE, nrow=1)
   colnames(res) <- names(v)

@@ -65,5 +65,5 @@ count_gapped_kmers_list_proxy <- function(sequences, ...) {
 }
 
 .prepare_final_result <- function(rcpp_result_list) {
-  convert_seqR_list_to_matrix(rcpp_result_list)
+  convert_seqR_list_to_slam_matrix(rcpp_result_list)
 }

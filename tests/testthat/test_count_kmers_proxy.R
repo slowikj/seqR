@@ -223,6 +223,7 @@ test_that("test list input sequences that are processed in THREE batch iteration
 })
 
 # CORNER CASES ----
+
 test_that("the last input sequence does not contain any specified k-mer", {
   sq <- list("aaaaacbb", "aa")
   expected_res <- matrix(c(
@@ -282,4 +283,18 @@ test_that("some input sequences do not contain any specified k-mer", {
                            batch_size = 100)
   
   expect_matrices_equal(as.matrix(res), expected_res)
+})
+
+test_that("expect simple_triplet_matrix as an output", {
+  sq <- list("AAAAA", "AA", "AAAAAAAB", "BBB")
+  
+  res <- seqR::count_kmers(sequences = sq,
+                           alphabet=c("A", "B"),
+                           k=3,
+                           positional=FALSE,
+                           with_kmer_counts=TRUE,
+                           kmer_dictionary_name="linear_list",
+                           batch_size = 100)
+  
+  expect_is(res, "simple_triplet_matrix")
 })
