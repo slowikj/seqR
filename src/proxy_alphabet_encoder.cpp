@@ -2,6 +2,7 @@
 #include <Rcpp.h>
 #include "alphabet_encoder.h"
 #include "hash/custom_hashers.h"
+#include "dictionary/unordered_map_wrapper.h"
 #include <utility>
 #include <functional>
 

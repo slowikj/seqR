@@ -4,7 +4,6 @@
 #include <Rcpp.h>
 #include <functional>
 #include <memory>
-#include "dictionary/unordered_map_wrapper.h"
 
 template<class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class dictionary_t>
@@ -64,5 +63,5 @@ AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> getAlphabetEncoding
             1
     );
 }
-\
+
 #endif

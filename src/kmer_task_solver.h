@@ -10,6 +10,7 @@
 #include "dictionary/linear_list_dictionary.h"
 #include "gapped_kmer_counter.h"
 #include "kmer_counter.h"
+#include "dictionary/unordered_map_wrapper.h"
 #include <functional>
 #include <vector>
 
