@@ -65,12 +65,13 @@ count_gapped_kmers_list_proxy <- function(sequences, ...) {
 
 .prepare_final_result <- function(rcpp_result_list) {
   if(length(rcpp_result_list$i) == 0) {
-    slam::as.simple_triplet_matrix(matrix(nrow=rcpp_result_list$processed_sequences, ncol=0))
+    slam::as.simple_triplet_matrix(matrix(nrow=rcpp_result_list$seqNum, ncol=0))
   } else {
     slam::simple_triplet_matrix(
       i = rcpp_result_list$i,
       j = rcpp_result_list$j,
       v = rcpp_result_list$v,
+      nrow = rcpp_result_list$seqNum,
       dimnames = list(NULL, rcpp_result_list$names)
     )
   }

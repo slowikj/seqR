@@ -15,7 +15,7 @@ public:
     const Rcpp::String PROXY_COLUMNS_NAME = "j";
     const Rcpp::String PROXY_VALUES_NAME = "v";
     const Rcpp::String PROXY_COLUMN_NAMES_NAME = "names";
-    const Rcpp::String PROXY_PROCESSED_SEQUENCES_NAME = "processed_sequences";
+    const Rcpp::String PROXY_PROCESSED_SEQUENCES_NUM_NAME = "seqNum";
 
     std::vector<int> sequenceNums;
 
@@ -25,7 +25,9 @@ public:
 
     std::vector<std::string> kMerStrings;
 
-    int processedSequences = 0;
+    inline void increaseProcessSequencesNum(int cnt) {
+        this->processedSequencesNum += cnt;
+    }
 
     inline bool addKMer(const std::vector<int> &kMerHash,
                         int sequenceNum,
@@ -51,15 +53,17 @@ public:
                 Rcpp::Named(PROXY_COLUMNS_NAME) = rcppKMerIndices + 1,
                 Rcpp::Named(PROXY_VALUES_NAME) = rcppKmerCounts,
                 Rcpp::Named(PROXY_COLUMN_NAMES_NAME) = rcppKMerStrings,
-                Rcpp::Named(PROXY_PROCESSED_SEQUENCES_NAME) = this->processedSequences);
+                Rcpp::Named(PROXY_PROCESSED_SEQUENCES_NUM_NAME) = this->processedSequencesNum);
 
     }
 
 private:
     std::unordered_map<std::vector<int>, int> kMerHash2ColumnIndex;
 
+    int processedSequencesNum = 0;
+
     inline void addKMerCountsInfo(int kMerIndex, int sequenceNum, int kMerCount) {
-        sequenceNums.push_back(sequenceNum + processedSequences);
+        sequenceNums.push_back(sequenceNum + processedSequencesNum);
         kMerIndices.push_back(kMerIndex);
         kMerCounts.push_back(kMerCount);
     }

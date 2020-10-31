@@ -1,4 +1,5 @@
 library(testthat)
+source("utils.R")
 
 test_that("null alphabet throws an error", {
   expect_error(seqR::count_kmers(sequences=c("a", "a", "a"),
@@ -184,6 +185,7 @@ test_that("test the case when there is 0 found k-mers", {
                           positional=FALSE,
                           kmer_gaps=c(1),
                           kmer_dictionary_name="unordered_map")
+  
   expect_equal(expected_res, as.matrix(res))
 })
 
@@ -218,4 +220,66 @@ test_that("test list input sequences that are processed in TWO batch iterations"
 
 test_that("test list input sequences that are processed in THREE batch iterations", {
   run_batch_test(batch_size=1)
+})
+
+# CORNER CASES ----
+test_that("the last input sequence does not contain any specified k-mer", {
+  sq <- list("aaaaacbb", "aa")
+  expected_res <- matrix(c(
+    1, 1, 1, 1,
+    0, 0, 0, 0
+  ), nrow=2, byrow=TRUE)
+  colnames(expected_res) <- c("a.a.c.b.b_0.0.0.0", "a.a.a.c.b_0.0.0.0", "a.a.a.a.a_0.0.0.0", "a.a.a.a.c_0.0.0.0")
+  
+  res <- seqR::count_kmers(sequences=sq,
+                           alphabet=letters,
+                           k=5,
+                           positional=FALSE,
+                           with_kmer_counts = FALSE,
+                           kmer_dictionary_name = "unordered_map",
+                           batch_size = 100)
+  
+  expect_matrices_equal(as.matrix(res), expected_res)
+})
+
+test_that("more than one last input sequences do not contain any specified k-mer", {
+  sq <- list("aaaaacbb", "aa", "bb", "aaa")
+  expected_res <- matrix(c(
+    1, 1, 1, 1,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+  ), nrow=4, byrow=TRUE)
+  colnames(expected_res) <- c("a.a.c.b.b_0.0.0.0", "a.a.a.c.b_0.0.0.0", "a.a.a.a.a_0.0.0.0", "a.a.a.a.c_0.0.0.0")
+  
+  res <- seqR::count_kmers(sequences=sq,
+                           alphabet=letters,
+                           k=5,
+                           positional=FALSE,
+                           with_kmer_counts = FALSE,
+                           kmer_dictionary_name = "unordered_map",
+                           batch_size = 100)
+  
+  expect_matrices_equal(as.matrix(res), expected_res)
+})
+
+test_that("some input sequences do not contain any specified k-mer", {
+  sq <- list("aa", "aaaaacbb", "bb", "aaa")
+  expected_res <- matrix(c(
+    0, 0, 0, 0,
+    1, 1, 1, 1,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+  ), nrow=4, byrow=TRUE)
+  colnames(expected_res) <- c("a.a.c.b.b_0.0.0.0", "a.a.a.c.b_0.0.0.0", "a.a.a.a.a_0.0.0.0", "a.a.a.a.c_0.0.0.0")
+  
+  res <- seqR::count_kmers(sequences=sq,
+                           alphabet=letters,
+                           k=5,
+                           positional=FALSE,
+                           with_kmer_counts = FALSE,
+                           kmer_dictionary_name = "unordered_map",
+                           batch_size = 100)
+  
+  expect_matrices_equal(as.matrix(res), expected_res)
 })
