@@ -93,7 +93,7 @@ void parallelGetKMerCounts(
                                                              kMerTaskConf,
                                                              kMerCountingResult.kMerStrings);
 
-    kMerCountingResult.processedSequences += kMerTaskConf.sequencesNum;
+    kMerCountingResult.increaseProcessSequencesNum(kMerTaskConf.sequencesNum);
 }
 
 #endif

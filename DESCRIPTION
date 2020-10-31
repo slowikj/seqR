@@ -41,6 +41,7 @@ VignetteBuilder: knitr
 Language: en-US
 Collate: 
     'RcppExports.R'
+    'util.R'
     'validators.R'
     'kmer_typed_functions.R'
     'kmer_functions_provider.R'

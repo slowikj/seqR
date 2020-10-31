@@ -10,16 +10,7 @@ expect_matrices_equal <- function(a, b) {
 }
 
 convert_seqR_list_to_matrix <- function(seqR_list) {
-  if(length(seqR_list$i) == 0) {
-    matrix(nrow = seqR_list$processed_sequences, ncol=0)
-  } else {
-    as.matrix(slam::simple_triplet_matrix(
-      i = seqR_list$i,
-      j = seqR_list$j,
-      v = seqR_list$v,
-      dimnames = list(NULL, seqR_list$names)
-    ))
-  }
+  as.matrix(seqR::convert_seqR_list_to_slam_matrix(seqR_list))
 }
 
 to_matrix <- function(v) {
