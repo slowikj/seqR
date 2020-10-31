@@ -2,6 +2,7 @@
 
 export(compute_polynomial_hash)
 export(compute_polynomial_multihash)
+export(convert_seqR_list_to_matrix)
 export(count_kmers)
 export(count_multimers)
 export(encode_integer_alphabet)
