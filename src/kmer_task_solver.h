@@ -102,195 +102,174 @@ void computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
     }
 }
 
-template<class alphabet_t,
-        class input_vector_t,
-        class input_elem_t,
-        class encoded_elem_t,
-        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
-        class algorithm_params_t>
 inline
-void computeResult(alphabet_t &alphabet,
-                   KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
-                   const std::string &kmerDictionaryName,
-                   algorithm_params_t &algorithmParams,
-                   KMerCountingResult &kMerCountingResult) {
+Rcpp::List computeKMersInBatches(const std::function<void(KMerCountingResult &, int, int)> &batchFunc,
+                                 int sequencesNum,
+                                 int batchSize) {
+    KMerCountingResult kMerCountingResult;
+    for (int begin = 0; begin < sequencesNum; begin += batchSize) {
+        int end = std::min(begin + batchSize, sequencesNum);
+        batchFunc(kMerCountingResult, begin, end);
+    }
+    return kMerCountingResult.toRcppList();
+}
+
+template<class algorithm_params_t>
+inline
+Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
+                             std::vector<std::string> &alphabet,
+                             std::vector<int> &gaps,
+                             bool positionalKMers,
+                             bool withKMerCounts,
+                             const std::string &kmerDictionaryName,
+                             int batchSize,
+                             algorithm_params_t &algorithmParams) {
     auto alphabetEncoding = std::move(
-            getAlphabetEncoding<alphabet_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
-                    alphabet));
+            getAlphabetEncoding<std::vector<std::string>, std::string, short, UnorderedMapWrapper>(alphabet));
 
-    computeResult<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, algorithm_params_t>(
-            kMerTaskConfig,
-            alphabetEncoding,
-            kmerDictionaryName,
-            algorithmParams,
-            kMerCountingResult
-    );
+    auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
+        SafeSequencesMatrixWrapper<std::string> safeMatrixWrapper(sequenceMatrix, seqBegin, seqEnd);
+        KMerTaskConfig<SafeSequencesMatrixWrapper<std::string>::Row, std::string> kMerTaskConfig(
+                (seqEnd - seqBegin),
+                getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
+                gaps,
+                positionalKMers,
+                withKMerCounts,
+                getStringToStringConverter(),
+                DEFAULT_KMER_ITEM_SEPARATOR,
+                DEFAULT_KMER_SECTION_SEPARATOR);
+        computeResult<
+                SafeSequencesMatrixWrapper<std::string>::Row,
+                std::string,
+                short,
+                UnorderedMapWrapper,
+                algorithm_params_t>(kMerTaskConfig,
+                                    alphabetEncoding,
+                                    kmerDictionaryName,
+                                    algorithmParams,
+                                    kMerCountingResult);
+    };
+
+    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize);
 }
 
 template<class algorithm_params_t>
 inline
-void findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
-                       int seqBegin,
-                       int seqEnd,
-                       std::vector<std::string> &alphabet,
-                       std::vector<int> &gaps,
-                       bool positionalKMers,
-                       bool withKMerCounts,
-                       const std::string &kmerDictionaryName,
-                       algorithm_params_t &algorithmParams,
-                       KMerCountingResult &kMerCountingResult) {
-    SafeSequencesMatrixWrapper<std::string> safeMatrixWrapper(sequenceMatrix, seqBegin, seqEnd);
-    KMerTaskConfig<SafeSequencesMatrixWrapper<std::string>::Row, std::string> kMerTaskConfig(
-            (seqEnd - seqBegin),
-            getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
-            gaps,
-            positionalKMers,
-            withKMerCounts,
-            getStringToStringConverter(),
-            DEFAULT_KMER_ITEM_SEPARATOR,
-            DEFAULT_KMER_SECTION_SEPARATOR);
-    computeResult<
-            std::vector<std::string>,
-            SafeSequencesMatrixWrapper<std::string>::Row,
-            std::string,
-            short,
-            UnorderedMapWrapper,
-            algorithm_params_t>(alphabet,
-                                kMerTaskConfig,
-                                kmerDictionaryName,
-                                algorithmParams,
-                                kMerCountingResult);
+Rcpp::List findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
+                             std::vector<int> &alphabet,
+                             std::vector<int> &gaps,
+                             bool positionalKMers,
+                             bool withKMerCounts,
+                             const std::string &kmerDictionaryName,
+                             int batchSize,
+                             algorithm_params_t &algorithmParams) {
+    auto alphabetEncoding = std::move(
+            getAlphabetEncoding<std::vector<int>, int, short, UnorderedMapWrapper>(alphabet));
+
+    auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
+        KMerTaskConfig<RcppParallel::RMatrix<int>::Row, int> kMerTaskConfig(
+                (seqEnd - seqBegin),
+                getRMatrixRowGetter<Rcpp::IntegerMatrix, int>(sequenceMatrix, seqBegin),
+                gaps,
+                positionalKMers,
+                withKMerCounts,
+                getIntToStringConverter(),
+                DEFAULT_KMER_ITEM_SEPARATOR,
+                DEFAULT_KMER_SECTION_SEPARATOR);
+        computeResult<
+                RcppParallel::RMatrix<int>::Row,
+                int,
+                short,
+                UnorderedMapWrapper,
+                algorithm_params_t>(kMerTaskConfig,
+                                    alphabetEncoding,
+                                    kmerDictionaryName,
+                                    algorithmParams,
+                                    kMerCountingResult);
+    };
+
+    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize);
 }
 
 template<class algorithm_params_t>
 inline
-void findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
-                       int seqBegin,
-                       int seqEnd,
-                       std::vector<int> &alphabet,
-                       std::vector<int> &gaps,
-                       bool positionalKMers,
-                       bool withKMerCounts,
-                       const std::string &kmerDictionaryName,
-                       algorithm_params_t &algorithmParams,
-                       KMerCountingResult &kMerCountingResult) {
-    KMerTaskConfig<RcppParallel::RMatrix<int>::Row, int> kMerTaskConfig(
-            (seqEnd - seqBegin),
-            getRMatrixRowGetter<Rcpp::IntegerMatrix, int>(sequenceMatrix, seqBegin),
-            gaps,
-            positionalKMers,
-            withKMerCounts,
-            getIntToStringConverter(),
-            DEFAULT_KMER_ITEM_SEPARATOR,
-            DEFAULT_KMER_SECTION_SEPARATOR);
-    computeResult<
-            std::vector<int>,
-            RcppParallel::RMatrix<int>::Row,
-            int,
-            short,
-            UnorderedMapWrapper,
-            algorithm_params_t>(alphabet,
-                                kMerTaskConfig,
-                                kmerDictionaryName,
-                                algorithmParams,
-                                kMerCountingResult);
+Rcpp::List findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
+                             std::vector<double> &alphabet,
+                             std::vector<int> &gaps,
+                             bool positionalKMers,
+                             bool withKMerCounts,
+                             const std::string &kmerDictionaryName,
+                             int batchSize,
+                             algorithm_params_t &algorithmParams) {
+    auto alphabetEncoding = std::move(
+            getAlphabetEncoding<std::vector<double>, double, short, UnorderedMapWrapper>(alphabet));
+
+    auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
+        KMerTaskConfig<RcppParallel::RMatrix<double>::Row, double> kMerTaskConfig(
+                (seqEnd - seqBegin),
+                getRMatrixRowGetter<Rcpp::NumericMatrix, double>(sequenceMatrix, seqBegin),
+                gaps,
+                positionalKMers,
+                withKMerCounts,
+                getDoubleToStringConverter(3),
+                DEFAULT_KMER_ITEM_SEPARATOR,
+                DEFAULT_KMER_SECTION_SEPARATOR);
+        computeResult<
+                RcppParallel::RMatrix<double>::Row,
+                double,
+                short,
+                UnorderedMapWrapper,
+                algorithm_params_t>(kMerTaskConfig,
+                                    alphabetEncoding,
+                                    kmerDictionaryName,
+                                    algorithmParams,
+                                    kMerCountingResult);
+    };
+
+    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize);
 }
 
 template<class algorithm_params_t>
 inline
-void findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
-                       int seqBegin,
-                       int seqEnd,
-                       std::vector<double> &alphabet,
-                       std::vector<int> &gaps,
-                       bool positionalKMers,
-                       bool withKMerCounts,
-                       const std::string &kmerDictionaryName,
-                       algorithm_params_t &algorithmParams,
-                       KMerCountingResult &kMerCountingResult) {
-    KMerTaskConfig<RcppParallel::RMatrix<double>::Row, double> kMerTaskConfig(
-            (seqEnd - seqBegin),
-            getRMatrixRowGetter<Rcpp::NumericMatrix, double>(sequenceMatrix, seqBegin),
-            gaps,
-            positionalKMers,
-            withKMerCounts,
-            getDoubleToStringConverter(3),
-            DEFAULT_KMER_ITEM_SEPARATOR,
-            DEFAULT_KMER_SECTION_SEPARATOR);
-    computeResult<
-            std::vector<double>,
-            RcppParallel::RMatrix<double>::Row,
-            double,
-            short,
-            UnorderedMapWrapper,
-            algorithm_params_t>(alphabet,
-                                kMerTaskConfig,
-                                kmerDictionaryName,
-                                algorithmParams,
-                                kMerCountingResult);
-}
-
-template<class algorithm_params_t>
-inline
-void findKMersSpecific(Rcpp::List &sequences,
-                       int seqBegin,
-                       int seqEnd,
-                       Rcpp::StringVector &alphabet,
-                       std::vector<int> &gaps,
-                       bool positionalKMers,
-                       bool withKMerCounts,
-                       const std::string &kmerDictionaryName,
-                       algorithm_params_t &algorithmParams,
-                       KMerCountingResult &kMerCountingResult) {
+Rcpp::List findKMersSpecific(Rcpp::List &sequences,
+                             Rcpp::StringVector &alphabet,
+                             std::vector<int> &gaps,
+                             bool positionalKMers,
+                             bool withKMerCounts,
+                             const std::string &kmerDictionaryName,
+                             int batchSize,
+                             algorithm_params_t &algorithmParams) {
     std::string alphabetStr("", alphabet.size());
     for (int i = 0; i < alphabet.size(); ++i) {
         alphabetStr[i] = Rcpp::as<char>(alphabet[i]);
     }
+    auto alphabetEncoding = std::move(
+            getAlphabetEncoding<std::string, char, short, UnorderedMapWrapper>(alphabetStr));
 
-    SafeSequencesStringListWrapper sequenceWrapper(sequences, seqBegin, seqEnd);
-    KMerTaskConfig<SafeSequencesStringListWrapper::Row, char> kMerTaskConfig(
-            (seqEnd - seqBegin),
-            getStringSequenceGetter(sequenceWrapper),
-            gaps,
-            positionalKMers,
-            withKMerCounts,
-            getCharToStringConverter(),
-            DEFAULT_KMER_ITEM_SEPARATOR,
-            DEFAULT_KMER_SECTION_SEPARATOR);
-    computeResult<
-            std::string,
-            SafeSequencesStringListWrapper::Row,
-            char,
-            short,
-            UnorderedMapWrapper,
-            algorithm_params_t>(alphabetStr,
-                                kMerTaskConfig,
-                                kmerDictionaryName,
-                                algorithmParams,
-                                kMerCountingResult);
-}
+    auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
+        SafeSequencesStringListWrapper sequenceWrapper(sequences, seqBegin, seqEnd);
+        KMerTaskConfig<SafeSequencesStringListWrapper::Row, char> kMerTaskConfig(
+                (seqEnd - seqBegin),
+                getStringSequenceGetter(sequenceWrapper),
+                gaps,
+                positionalKMers,
+                withKMerCounts,
+                getCharToStringConverter(),
+                DEFAULT_KMER_ITEM_SEPARATOR,
+                DEFAULT_KMER_SECTION_SEPARATOR);
+        computeResult<
+                SafeSequencesStringListWrapper::Row,
+                char,
+                short,
+                UnorderedMapWrapper,
+                algorithm_params_t>(kMerTaskConfig,
+                                    alphabetEncoding,
+                                    kmerDictionaryName,
+                                    algorithmParams,
+                                    kMerCountingResult);
+    };
 
-template<class seq_t,
-        class alphabet_t,
-        class algorithm_params_t>
-inline
-Rcpp::List findKMers(seq_t &sequences,
-                     int sequencesNum,
-                     alphabet_t &alphabet,
-                     std::vector<int> &gaps,
-                     bool positionalKMers,
-                     bool withKMerCounts,
-                     const std::string &kmerDictionaryName,
-                     algorithm_params_t &algorithmParams,
-                     int batchSize) {
-    KMerCountingResult kMerCountingResult;
-    for (int seqBegin = 0; seqBegin < sequencesNum; seqBegin += batchSize) {
-        int seqEnd = std::min(seqBegin + batchSize, sequencesNum);
-        findKMersSpecific<algorithm_params_t>(sequences, seqBegin, seqEnd, alphabet, gaps, positionalKMers,
-                                              withKMerCounts,
-                                              kmerDictionaryName, algorithmParams, kMerCountingResult);
-    }
-    return kMerCountingResult.toRcppList();
+    return computeKMersInBatches(batchFunc, sequences.size(), batchSize);
 }
 
 #endif //SEQR_KMER_TASK_SOLVER_H
