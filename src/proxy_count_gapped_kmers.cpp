@@ -2,7 +2,7 @@
 #include <Rcpp.h>
 #include <memory>
 #include <functional>
-#include "kmer_task_solver.h"
+#include "kmer_task_solver_type_specific.h"
 
 //' @export
 // [[Rcpp::export]]

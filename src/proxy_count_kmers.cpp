@@ -3,7 +3,8 @@
 #include <memory>
 #include <vector>
 #include <functional>
-#include "kmer_task_solver.h"
+#include "kmer_task_solver_type_specific.h"
+#include "hash/polynomial_single_hasher.h"
 
 inline ComplexHasher createKMerComplexHasher() {
     std::vector<std::unique_ptr<SingleHasher>> singleHashers;
