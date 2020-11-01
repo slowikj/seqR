@@ -4,7 +4,7 @@
 #include "rcpp_to_cpp_converters.h"
 
 template<class sequence_t, class elem_t>
-class BaseSafeSequencesWrapper {
+class BaseSequencesWrapper {
 public:
 
     class Row {
@@ -46,80 +46,90 @@ public:
 protected:
     std::vector<sequence_t> sequences_;
 
-    BaseSafeSequencesWrapper() = default;
+    BaseSequencesWrapper() = default;
 };
 
 template<class elem_t>
-class SafeSequencesWrapper : public BaseSafeSequencesWrapper<std::vector<elem_t>, elem_t> {
+class SafeSequencesVectorWrapper : public BaseSequencesWrapper<std::vector<elem_t>, elem_t> {
 public:
-    explicit SafeSequencesWrapper(std::vector<std::vector<elem_t>> &&sequences) {
+    explicit SafeSequencesVectorWrapper(std::vector<std::vector<elem_t>> &&sequences) {
         this->sequences_ = std::move(sequences);
     }
 
-    SafeSequencesWrapper(SafeSequencesWrapper &&) noexcept = default;
+    SafeSequencesVectorWrapper(SafeSequencesVectorWrapper &&) noexcept = default;
 
-    SafeSequencesWrapper(const SafeSequencesWrapper &) = delete;
+    SafeSequencesVectorWrapper(const SafeSequencesVectorWrapper &) = delete;
 
-    SafeSequencesWrapper &operator=(SafeSequencesWrapper &&) noexcept = default;
+    SafeSequencesVectorWrapper &operator=(SafeSequencesVectorWrapper &&) noexcept = default;
 
-    SafeSequencesWrapper &operator=(const SafeSequencesWrapper &) = delete;
+    SafeSequencesVectorWrapper &operator=(const SafeSequencesVectorWrapper &) = delete;
 
-    SafeSequencesWrapper() = delete;
+    SafeSequencesVectorWrapper() = delete;
 };
 
 template<class cell_t>
-class SafeMatrixSequenceWrapper : public BaseSafeSequencesWrapper<std::vector<cell_t>, cell_t> {
+class SafeSequencesMatrixWrapper : public BaseSequencesWrapper<std::vector<cell_t>, cell_t> {
 public:
 
     template<class matrix_t>
-    explicit SafeMatrixSequenceWrapper(const matrix_t &matrix) {
-        initSequences(matrix);
+    explicit
+    SafeSequencesMatrixWrapper(const matrix_t &matrix)
+            : SafeSequencesMatrixWrapper(matrix, 0, matrix.nrow()) {}
+
+    template<class matrix_t>
+    SafeSequencesMatrixWrapper(const matrix_t &matrix, int beginRow, int endRow) {
+        initSequences(matrix, beginRow, endRow);
     }
 
-    SafeMatrixSequenceWrapper(SafeMatrixSequenceWrapper &&) noexcept = default;
+    SafeSequencesMatrixWrapper(SafeSequencesMatrixWrapper &&) noexcept = default;
 
-    SafeMatrixSequenceWrapper(const SafeMatrixSequenceWrapper &) = delete;
+    SafeSequencesMatrixWrapper(const SafeSequencesMatrixWrapper &) = delete;
 
-    SafeMatrixSequenceWrapper &operator=(SafeMatrixSequenceWrapper &&) noexcept = default;
+    SafeSequencesMatrixWrapper &operator=(SafeSequencesMatrixWrapper &&) noexcept = default;
 
-    SafeMatrixSequenceWrapper &operator=(const SafeMatrixSequenceWrapper &) = delete;
+    SafeSequencesMatrixWrapper &operator=(const SafeSequencesMatrixWrapper &) = delete;
 
-    SafeMatrixSequenceWrapper() = delete;
+    SafeSequencesMatrixWrapper() = delete;
 
 private:
 
     template<class matrix_t>
-    inline void initSequences(const matrix_t &matrix) {
-        this->sequences_.resize(matrix.nrow());
-        for (int row = 0; row < matrix.nrow(); ++row) {
-            setSequenceRow(matrix, row);
+    inline void initSequences(const matrix_t &matrix, std::size_t beginRow, std::size_t endRow) {
+        this->sequences_.resize(endRow - beginRow);
+        for (std::size_t row = beginRow; row < endRow; ++row) {
+            setSequenceRow(matrix, beginRow, row);
         }
     }
 
     template<class matrix_t>
-    inline void setSequenceRow(const matrix_t &matrix, int row) {
-        this->sequences_[row].resize(matrix.ncol());
+    inline void setSequenceRow(const matrix_t &matrix, std::size_t rowOffset, std::size_t row) {
+        size_t sequenceNum = row - rowOffset;
+        this->sequences_[sequenceNum].resize(matrix.ncol());
         for (int column = 0; column < matrix.ncol(); ++column) {
             auto matrixCell = matrix(row, column);
-            this->sequences_[row][column] = convert<decltype(matrixCell), cell_t>(matrix(row, column));
+            this->sequences_[sequenceNum][column] = std::move(
+                    convert<decltype(matrixCell), cell_t>(matrix(row, column)));
         }
     }
 };
 
-class SafeStringListSequenceWrapper : public BaseSafeSequencesWrapper<std::string, char> {
+class SafeSequencesStringListWrapper : public BaseSequencesWrapper<std::string, char> {
 public:
 
-    explicit SafeStringListSequenceWrapper(const Rcpp::List &inputVector) {
-        this->initSequences(inputVector);
+    explicit SafeSequencesStringListWrapper(const Rcpp::List &inputVector)
+            : SafeSequencesStringListWrapper(inputVector, 0, inputVector.size()) {}
+
+    SafeSequencesStringListWrapper(const Rcpp::List &inputVector, std::size_t begin, std::size_t end) {
+        this->initSequences(inputVector, begin, end);
     }
 
 private:
 
-    void initSequences(const Rcpp::List &inputList) {
-        this->sequences_.resize(inputList.size());
-        for (int i = 0; i < inputList.size(); ++i) {
+    void initSequences(const Rcpp::List &inputList, int begin, int end) {
+        this->sequences_.resize(end - begin);
+        for (int i = begin; i < end; ++i) {
             Rcpp::StringVector listElem = inputList[i];
-            this->sequences_[i] = std::move(Rcpp::as<std::string>(listElem[0]));
+            this->sequences_[i - begin] = std::move(Rcpp::as<std::string>(listElem[0]));
         }
     }
 };

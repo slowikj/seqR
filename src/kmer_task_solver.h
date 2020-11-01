@@ -139,10 +139,10 @@ void findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                        const std::string &kmerDictionaryName,
                        algorithm_params_t &algorithmParams,
                        KMerCountingResult &kMerCountingResult) {
-    SafeMatrixSequenceWrapper<std::string> safeMatrixWrapper(sequenceMatrix);
-    KMerTaskConfig<SafeMatrixSequenceWrapper<std::string>::Row, std::string> kMerTaskConfig(
+    SafeSequencesMatrixWrapper<std::string> safeMatrixWrapper(sequenceMatrix, seqBegin, seqEnd);
+    KMerTaskConfig<SafeSequencesMatrixWrapper<std::string>::Row, std::string> kMerTaskConfig(
             (seqEnd - seqBegin),
-            getSafeMatrixRowGetter<std::string>(safeMatrixWrapper, seqBegin),
+            getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
             gaps,
             positionalKMers,
             withKMerCounts,
@@ -151,7 +151,7 @@ void findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
             DEFAULT_KMER_SECTION_SEPARATOR);
     computeResult<
             std::vector<std::string>,
-            SafeMatrixSequenceWrapper<std::string>::Row,
+            SafeSequencesMatrixWrapper<std::string>::Row,
             std::string,
             short,
             UnorderedMapWrapper,
@@ -247,10 +247,10 @@ void findKMersSpecific(Rcpp::List &sequences,
         alphabetStr[i] = Rcpp::as<char>(alphabet[i]);
     }
 
-    SafeStringListSequenceWrapper sequenceWrapper(sequences);
-    KMerTaskConfig<SafeStringListSequenceWrapper::Row, char> kMerTaskConfig(
+    SafeSequencesStringListWrapper sequenceWrapper(sequences, seqBegin, seqEnd);
+    KMerTaskConfig<SafeSequencesStringListWrapper::Row, char> kMerTaskConfig(
             (seqEnd - seqBegin),
-            getStringSequenceGetter(sequenceWrapper, seqBegin),
+            getStringSequenceGetter(sequenceWrapper),
             gaps,
             positionalKMers,
             withKMerCounts,
@@ -259,7 +259,7 @@ void findKMersSpecific(Rcpp::List &sequences,
             DEFAULT_KMER_SECTION_SEPARATOR);
     computeResult<
             std::string,
-            SafeStringListSequenceWrapper::Row,
+            SafeSequencesStringListWrapper::Row,
             char,
             short,
             UnorderedMapWrapper,
