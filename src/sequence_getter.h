@@ -14,9 +14,9 @@ template<class input_vector_t>
 using SequenceGetter_t = std::function<input_vector_t(int)>;
 
 template<class elem_t>
-inline SequenceGetter_t<typename SafeMatrixSequenceWrapper<elem_t>::Row>
-getSafeMatrixRowGetter(SafeMatrixSequenceWrapper<elem_t> &sequenceWrapper, int rowOffset = 0) {
-    return [&sequenceWrapper, rowOffset](int rowNum) -> typename SafeMatrixSequenceWrapper<elem_t>::Row {
+inline SequenceGetter_t<typename SafeSequencesMatrixWrapper<elem_t>::Row>
+getSafeMatrixRowGetter(SafeSequencesMatrixWrapper<elem_t> &sequenceWrapper, int rowOffset = 0) {
+    return [&sequenceWrapper, rowOffset](int rowNum) -> typename SafeSequencesMatrixWrapper<elem_t>::Row {
         return std::move(sequenceWrapper.row(rowNum + rowOffset));
     };
 }
@@ -30,9 +30,9 @@ getRMatrixRowGetter(rcpp_matrix_t &rcppMatrix, int rowOffset = 0) {
     };
 }
 
-inline SequenceGetter_t<typename SafeStringListSequenceWrapper::Row>
-getStringSequenceGetter(SafeStringListSequenceWrapper &sequencesWrapper, int rowOffset = 0) {
-    return [&sequencesWrapper, rowOffset](int rowNum) -> typename SafeStringListSequenceWrapper::Row {
+inline SequenceGetter_t<typename SafeSequencesStringListWrapper::Row>
+getStringSequenceGetter(SafeSequencesStringListWrapper &sequencesWrapper, int rowOffset = 0) {
+    return [&sequencesWrapper, rowOffset](int rowNum) -> typename SafeSequencesStringListWrapper::Row {
         return std::move(sequencesWrapper.row(rowNum + rowOffset));
     };
 }
