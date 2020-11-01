@@ -34,7 +34,7 @@ Rcpp::List findKMers(sequences_t &sequences,
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
-                             std::vector<std::string> &alphabet,
+                             Rcpp::StringVector &alphabet,
                              int k,
                              bool positionalKMers,
                              bool withKMerCounts,
@@ -49,7 +49,7 @@ Rcpp::List find_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
-                              std::vector<int> &alphabet,
+                              Rcpp::IntegerVector &alphabet,
                               int k,
                               bool positionalKMers,
                               bool withKMerCounts,
@@ -64,7 +64,7 @@ Rcpp::List find_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
-                              std::vector<double> &alphabet,
+                              Rcpp::NumericVector &alphabet,
                               int k,
                               bool positionalKMers,
                               bool withKMerCounts,

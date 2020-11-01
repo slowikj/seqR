@@ -50,13 +50,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_gapped_kmers_string
-Rcpp::List find_gapped_kmers_string(Rcpp::StringMatrix& sequenceMatrix, std::vector<std::string>& alphabet, std::vector<int>& gaps, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
+Rcpp::List find_gapped_kmers_string(Rcpp::StringMatrix& sequenceMatrix, Rcpp::StringVector& alphabet, std::vector<int>& gaps, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
 RcppExport SEXP _seqR_find_gapped_kmers_string(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP, SEXP batchSizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
-    Rcpp::traits::input_parameter< std::vector<std::string>& >::type alphabet(alphabetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< std::vector<int>& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
@@ -67,13 +67,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_gapped_kmers_integer
-Rcpp::List find_gapped_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix, std::vector<int>& alphabet, std::vector<int>& gaps, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
+Rcpp::List find_gapped_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix, Rcpp::IntegerVector& alphabet, std::vector<int>& gaps, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
 RcppExport SEXP _seqR_find_gapped_kmers_integer(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP, SEXP batchSizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
-    Rcpp::traits::input_parameter< std::vector<int>& >::type alphabet(alphabetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< std::vector<int>& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
@@ -84,13 +84,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_gapped_kmers_numeric
-Rcpp::List find_gapped_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix, std::vector<double>& alphabet, std::vector<int>& gaps, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
+Rcpp::List find_gapped_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix, Rcpp::NumericVector& alphabet, std::vector<int>& gaps, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
 RcppExport SEXP _seqR_find_gapped_kmers_numeric(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP gapsSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP, SEXP batchSizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
-    Rcpp::traits::input_parameter< std::vector<double>& >::type alphabet(alphabetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< std::vector<int>& >::type gaps(gapsSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
@@ -118,13 +118,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_kmers_string
-Rcpp::List find_kmers_string(Rcpp::StringMatrix& sequenceMatrix, std::vector<std::string>& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
+Rcpp::List find_kmers_string(Rcpp::StringMatrix& sequenceMatrix, Rcpp::StringVector& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
 RcppExport SEXP _seqR_find_kmers_string(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP, SEXP batchSizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::StringMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
-    Rcpp::traits::input_parameter< std::vector<std::string>& >::type alphabet(alphabetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
@@ -135,13 +135,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_kmers_integer
-Rcpp::List find_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix, std::vector<int>& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
+Rcpp::List find_kmers_integer(Rcpp::IntegerMatrix& sequenceMatrix, Rcpp::IntegerVector& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
 RcppExport SEXP _seqR_find_kmers_integer(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP, SEXP batchSizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
-    Rcpp::traits::input_parameter< std::vector<int>& >::type alphabet(alphabetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);
@@ -152,13 +152,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_kmers_numeric
-Rcpp::List find_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix, std::vector<double>& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
+Rcpp::List find_kmers_numeric(Rcpp::NumericMatrix& sequenceMatrix, Rcpp::NumericVector& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize);
 RcppExport SEXP _seqR_find_kmers_numeric(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP, SEXP batchSizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type sequenceMatrix(sequenceMatrixSEXP);
-    Rcpp::traits::input_parameter< std::vector<double>& >::type alphabet(alphabetSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
     Rcpp::traits::input_parameter< bool >::type positionalKMers(positionalKMersSEXP);
     Rcpp::traits::input_parameter< bool >::type withKMerCounts(withKMerCountsSEXP);

@@ -44,7 +44,7 @@ Rcpp::List findKMers(sequences_t &sequences,
 // [[Rcpp::export]]
 Rcpp::List
 find_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
-                         std::vector<std::string> &alphabet,
+                         Rcpp::StringVector &alphabet,
                          std::vector<int> &gaps,
                          bool positionalKMers,
                          bool withKMerCounts,
@@ -57,7 +57,7 @@ find_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
-                                     std::vector<int> &alphabet,
+                                     Rcpp::IntegerVector &alphabet,
                                      std::vector<int> &gaps,
                                      bool positionalKMers,
                                      bool withKMerCounts,
@@ -70,7 +70,7 @@ Rcpp::List find_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
 //' @export
 // [[Rcpp::export]]
 Rcpp::List find_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
-                                     std::vector<double> &alphabet,
+                                     Rcpp::NumericVector &alphabet,
                                      std::vector<int> &gaps,
                                      bool positionalKMers,
                                      bool withKMerCounts,
