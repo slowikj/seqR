@@ -26,12 +26,16 @@ Rcpp::List findKMers(sequences_t &sequences,
                      bool withKMerCounts,
                      const std::string &kmerDictionaryName,
                      int batchSize,
-                     int hashDim) {
-    std::function<ComplexHasher()> algorithmParams = [hashDim]() -> ComplexHasher { return createKMerComplexHasher(hashDim); };
+                     int hashDim,
+                     bool verbose) {
+    std::function<ComplexHasher()> algorithmParams = [hashDim]() -> ComplexHasher {
+        return createKMerComplexHasher(hashDim);
+    };
     std::vector<int> gaps(k - 1);
     return findKMersSpecific<decltype(algorithmParams)>(
             sequences, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
             batchSize,
+            verbose,
             algorithmParams);
 }
 
@@ -44,11 +48,13 @@ Rcpp::List find_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
                              bool withKMerCounts,
                              const std::string &kmerDictionaryName,
                              int batchSize,
-                             int hashDim) {
+                             int hashDim,
+                             bool verbose) {
     return findKMers(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts,
                      kmerDictionaryName,
                      batchSize,
-                     hashDim
+                     hashDim,
+                     verbose
     );
 }
 
@@ -61,11 +67,13 @@ Rcpp::List find_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
                               bool withKMerCounts,
                               const std::string &kmerDictionaryName,
                               int batchSize,
-                              int hashDim) {
+                              int hashDim,
+                              bool verbose) {
     return findKMers(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts,
                      kmerDictionaryName,
                      batchSize,
-                     hashDim
+                     hashDim,
+                     verbose
     );
 }
 
@@ -78,11 +86,13 @@ Rcpp::List find_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
                               bool withKMerCounts,
                               const std::string &kmerDictionaryName,
                               int batchSize,
-                              int hashDim) {
+                              int hashDim,
+                              bool verbose) {
     return findKMers(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts,
                      kmerDictionaryName,
                      batchSize,
-                     hashDim
+                     hashDim,
+                     verbose
     );
 }
 
@@ -95,7 +105,9 @@ Rcpp::List find_kmers_list(Rcpp::List &sq,
                            bool withKMerCounts,
                            const std::string &kmerDictionaryName,
                            int batchSize,
-                           int hashDim) {
+                           int hashDim,
+                           bool verbose) {
     return findKMers(sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize,
-                     hashDim);
+                     hashDim,
+                     verbose);
 }

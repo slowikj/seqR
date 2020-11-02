@@ -19,6 +19,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                              bool withKMerCounts,
                              const std::string &kmerDictionaryName,
                              int batchSize,
+                             bool verbose,
                              algorithm_params_t &algorithmParams) {
     auto cppAlphabet = std::move(Rcpp::as<std::vector<std::string>>(alphabet));
     auto alphabetEncoding = std::move(
@@ -47,7 +48,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                                     kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize);
+    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize, verbose);
 }
 
 template<class algorithm_params_t>
@@ -59,6 +60,7 @@ Rcpp::List findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
                              bool withKMerCounts,
                              const std::string &kmerDictionaryName,
                              int batchSize,
+                             bool verbose,
                              algorithm_params_t &algorithmParams) {
     auto alphabetEncoding = std::move(
             getAlphabetEncoding<Rcpp::IntegerVector, int, short, UnorderedMapWrapper>(alphabet));
@@ -85,7 +87,7 @@ Rcpp::List findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
                                     kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize);
+    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize, verbose);
 }
 
 template<class algorithm_params_t>
@@ -97,6 +99,7 @@ Rcpp::List findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
                              bool withKMerCounts,
                              const std::string &kmerDictionaryName,
                              int batchSize,
+                             bool verbose,
                              algorithm_params_t &algorithmParams) {
     auto alphabetEncoding = std::move(
             getAlphabetEncoding<Rcpp::NumericVector, double, short, UnorderedMapWrapper>(alphabet));
@@ -123,7 +126,7 @@ Rcpp::List findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
                                     kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize);
+    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize, verbose);
 }
 
 template<class algorithm_params_t>
@@ -135,6 +138,7 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
                              bool withKMerCounts,
                              const std::string &kmerDictionaryName,
                              int batchSize,
+                             bool verbose,
                              algorithm_params_t &algorithmParams) {
     std::string alphabetStr("", alphabet.size());
     for (int i = 0; i < alphabet.size(); ++i) {
@@ -166,7 +170,7 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
                                     kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequences.size(), batchSize);
+    return computeKMersInBatches(batchFunc, sequences.size(), batchSize, verbose);
 }
 
 

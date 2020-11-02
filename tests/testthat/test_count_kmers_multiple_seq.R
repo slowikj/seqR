@@ -5,6 +5,7 @@ invoke_test <- function(test_fun, expectedRes, ...) {
   result_list <- test_fun(kmerDictionaryName="unordered_map",
                           batchSize=100,
                           hashDim=2,
+                          verbose=FALSE,
                           ...)
   res <- convert_seqR_list_to_matrix(result_list)
   expect_matrices_equal(res, expectedRes)

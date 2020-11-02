@@ -102,13 +102,21 @@ void computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
     }
 }
 
+inline void printLogIfVerbose(bool verbose, int begin, int end) {
+    if (verbose) {
+        Rcpp::Rcout << "Start processing sequences (batch: [" << begin + 1 << "-" << end << "])..." << std::endl;
+    }
+}
+
 inline
 Rcpp::List computeKMersInBatches(const std::function<void(KMerCountingResult &, int, int)> &batchFunc,
                                  int sequencesNum,
-                                 int batchSize) {
+                                 int batchSize,
+                                 bool verbose) {
     KMerCountingResult kMerCountingResult;
     for (int begin = 0; begin < sequencesNum; begin += batchSize) {
         int end = std::min(begin + batchSize, sequencesNum);
+        printLogIfVerbose(verbose, begin, end);
         Rcpp::checkUserInterrupt();
         batchFunc(kMerCountingResult, begin, end);
     }

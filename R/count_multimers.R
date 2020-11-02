@@ -8,7 +8,8 @@ count_multimers <- function(sequences,
                             with_kmer_counts=TRUE,
                             kmer_dictionary_name="unordered_map",
                             batch_size=200,
-                            hash_dim=2) {
+                            hash_dim=2,
+                            verbose=FALSE) {
   if(length(k_vector) != length(kmer_gaps_list)) {
     stop("the length of 'k_vector' must have equal length to 'kmer_gaps_list' ")
   }
@@ -17,8 +18,16 @@ count_multimers <- function(sequences,
     stop("the length of 'k_vector' must have equal length to 'positional vector'")
   }
   
+  if(!is_bool_value(verbose)) {
+    stop("verbose must be a single logical value")
+  }
+  
   configs_num <- length(k_vector)
   do.call(cbind, lapply(1:configs_num, function(index) {
+    if(verbose) {
+      print(paste0("Processing sequences for ", index, " config"))
+    }
+    
     count_kmers(sequences,
                 k_vector[index],
                 alphabet,
@@ -27,6 +36,7 @@ count_multimers <- function(sequences,
                 with_kmer_counts,
                 kmer_dictionary_name,
                 batch_size,
-                hash_dim)
+                hash_dim,
+                verbose)
   }))
 }
