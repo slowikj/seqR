@@ -2,15 +2,11 @@ library(testthat)
 source("utils.R")
 
 invoke_test <- function(expected_res,
-                        sequences,
-                        k_vector,
-                        alphabet,
-                        kmer_gaps_list,
-                        positional_vector,
-                        with_kmer_counts, kmer_dictionary_name, batch_size) {
-  triplet_matrix_res <- seqR::count_multimers(sequences, k_vector, alphabet, positional_vector,
-                                              kmer_gaps_list,
-                                              with_kmer_counts, kmer_dictionary_name, batch_size)
+                        ...) {
+  triplet_matrix_res <- seqR::count_multimers(kmer_dictionary_name="unordered_map",
+                                              batch_size=200,
+                                              hash_dim=2,
+                                              ...)
   expect_matrices_equal(expected_res, as.matrix(triplet_matrix_res))
 }
 
@@ -28,9 +24,7 @@ test_that("count 2-mers and 3-mers for list input (AC){100}", {
               alphabet=c("A", "C"),
               positional_vector=rep(FALSE, 2),
               kmer_gaps_list=list(c(), c()),
-              with_kmer_counts = TRUE,
-              kmer_dictionary_name="unordered_map",
-              batch_size=200
+              with_kmer_counts = TRUE
   )
 })
 
@@ -49,9 +43,7 @@ test_that("count 2-mers and 3-mers for 2 sequences: (AC){100}, (AD){10}", {
               alphabet=c("A", "C", "D"),
               positional_vector=rep(FALSE, 2),
               kmer_gaps_list=list(c(), c()),
-              with_kmer_counts = TRUE,
-              kmer_dictionary_name="unordered_map",
-              batch_size=200
+              with_kmer_counts = TRUE
   )
 })
 
