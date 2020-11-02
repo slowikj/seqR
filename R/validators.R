@@ -24,7 +24,10 @@ has_integers_only <- function(v, tol=1e-9) {
   is.numeric(v) && all(abs(v - as.integer(v)) < tol)
 }
 
+is_positive_integer <- function(val) {
+  length(val) == 1 && has_integers_only(val) && val > 0
+}
 
-is_positive_integer <- function(batch_size) {
-  length(batch_size) == 1 && has_integers_only(batch_size) && batch_size > 0
+is_bool_value <- function(val) {
+  length(val) == 1 && is.logical(val)
 }

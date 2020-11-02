@@ -6,6 +6,7 @@ invoke_test <- function(expected_res,
   triplet_matrix_res <- seqR::count_multimers(kmer_dictionary_name="unordered_map",
                                               batch_size=200,
                                               hash_dim=2,
+                                              verbose=FALSE,
                                               ...)
   expect_matrices_equal(expected_res, as.matrix(triplet_matrix_res))
 }

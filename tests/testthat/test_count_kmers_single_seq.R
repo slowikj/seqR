@@ -6,9 +6,10 @@ invoke_test <- function(fun, expectedRes, sequence, ...) {
   expectedRes <- to_matrix(expectedRes)
   
   resultList <- fun(sequenceMatrix=sequenceMatrix,
-                     kmerDictionaryName="unordered_map",
-                     batchSize=200,
-                     hashDim=2,
+                    kmerDictionaryName="unordered_map",
+                    batchSize=200,
+                    hashDim=2,
+                    verbose=FALSE,
                      ...)
   res <- convert_seqR_list_to_matrix(resultList)
   
