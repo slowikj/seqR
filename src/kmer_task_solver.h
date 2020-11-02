@@ -109,6 +109,7 @@ Rcpp::List computeKMersInBatches(const std::function<void(KMerCountingResult &, 
     KMerCountingResult kMerCountingResult;
     for (int begin = 0; begin < sequencesNum; begin += batchSize) {
         int end = std::min(begin + batchSize, sequencesNum);
+        Rcpp::checkUserInterrupt();
         batchFunc(kMerCountingResult, begin, end);
     }
     return kMerCountingResult.toRcppList();
