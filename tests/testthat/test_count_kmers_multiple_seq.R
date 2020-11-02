@@ -2,7 +2,10 @@ library(testthat)
 source("utils.R")
 
 invoke_test <- function(test_fun, expectedRes, ...) {
-  result_list <- test_fun(...)
+  result_list <- test_fun(kmerDictionaryName="unordered_map",
+                          batchSize=100,
+                          hashDim=2,
+                          ...)
   res <- convert_seqR_list_to_matrix(result_list)
   expect_matrices_equal(res, expectedRes)
 }
@@ -38,10 +41,7 @@ test_that("count non-positional 2-mers for 2 sequences", {
                      sequenceMatrix=sequenceMatrix,
                      k=2,
                      positionalKMers=FALSE,
-                     withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map",
-                     batchSize = 100
-  )
+                     withKMerCounts=TRUE)
 })
 
 test_that("count positional 2-mers for 2 sequences", {
@@ -61,9 +61,7 @@ test_that("count positional 2-mers for 2 sequences", {
                      sequenceMatrix=sequenceMatrix,
                      k=2,
                      positionalKMers=TRUE,
-                     withKMerCounts=TRUE,
-                     kmerDictionaryName = "unordered_map",
-                     batchSize = 100)
+                     withKMerCounts=TRUE)
 })
 
 test_that("count non positional 5-mers for 10 sequences (10^6 each)", {
@@ -79,9 +77,7 @@ test_that("count non positional 5-mers for 10 sequences (10^6 each)", {
                       sequenceMatrix=sequenceMatrix,
                       k=5,
                       positionalKMers=FALSE,
-                      withKMerCounts=TRUE,
-                      kmerDictionaryName = "unordered_map",
-                      batchSize = 100)
+                      withKMerCounts=TRUE)
 })
 
 test_that("find non positional 5-mers for 100 sequences (10^6 each) (without k-mer counts)", {
@@ -97,7 +93,5 @@ test_that("find non positional 5-mers for 100 sequences (10^6 each) (without k-m
                       sequenceMatrix=sequenceMatrix,
                       k=5,
                       positionalKMers=FALSE,
-                      withKMerCounts=FALSE,
-                      kmerDictionaryName = "unordered_map",
-                      batchSize = 100)
+                      withKMerCounts=FALSE)
 })

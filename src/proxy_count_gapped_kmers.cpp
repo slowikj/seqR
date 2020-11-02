@@ -1,7 +1,7 @@
 // [[Rcpp::plugins("cpp17")]]
 #include <Rcpp.h>
 #include <memory>
-#include <functional>
+#include "hash/primes.h"
 #include "kmer_task_solver_type_specific.h"
 
 //' @export
@@ -16,10 +16,11 @@ Rcpp::IntegerMatrix get_contiguous_intervals_matrix(const Rcpp::IntegerVector &g
     return res;
 }
 
-inline std::vector<PolynomialSingleHasherConfig> getGappedKMerHasherConfigs() {
+inline std::vector<PolynomialSingleHasherConfig> getGappedKMerHasherConfigs(int hashDim) {
     std::vector<PolynomialSingleHasherConfig> res;
-    res.emplace_back(101, 1e9 + 7);
-    res.emplace_back(97, 1e9 + 33);
+    for (int i = 0; i < hashDim; ++i) {
+        res.emplace_back(hashPrimes[i].first, hashPrimes[i].second);
+    }
     return std::move(res);
 }
 
@@ -32,8 +33,9 @@ Rcpp::List findKMers(sequences_t &sequences,
                      bool positionalKMers,
                      bool withKMerCounts,
                      const std::string &kmerDictionaryName,
-                     int batchSize) {
-    auto hasherConfigs = std::move(getGappedKMerHasherConfigs());
+                     int batchSize,
+                     int hashDim) {
+    auto hasherConfigs = std::move(getGappedKMerHasherConfigs(hashDim));
     return findKMersSpecific<decltype(hasherConfigs)>(
             sequences, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
             batchSize,
@@ -49,9 +51,10 @@ find_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
                          bool positionalKMers,
                          bool withKMerCounts,
                          const std::string &kmerDictionaryName,
-                         int batchSize) {
+                         int batchSize,
+                         int hashDim) {
     return findKMers(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts,
-                     kmerDictionaryName, batchSize);
+                     kmerDictionaryName, batchSize, hashDim);
 }
 
 //' @export
@@ -62,9 +65,10 @@ Rcpp::List find_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
                                      bool positionalKMers,
                                      bool withKMerCounts,
                                      const std::string &kmerDictionaryName,
-                                     int batchSize) {
+                                     int batchSize,
+                                     int hashDim) {
     return findKMers(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts,
-                     kmerDictionaryName, batchSize);
+                     kmerDictionaryName, batchSize, hashDim);
 }
 
 //' @export
@@ -75,9 +79,10 @@ Rcpp::List find_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
                                      bool positionalKMers,
                                      bool withKMerCounts,
                                      const std::string &kmerDictionaryName,
-                                     int batchSize) {
+                                     int batchSize,
+                                     int hashDim) {
     return findKMers(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts,
-                     kmerDictionaryName, batchSize);
+                     kmerDictionaryName, batchSize, hashDim);
 }
 
 //' @export
@@ -88,6 +93,7 @@ Rcpp::List find_gapped_kmers_list(Rcpp::List &sq,
                                   bool positionalKMers,
                                   bool withKMerCounts,
                                   const std::string &kmerDictionaryName,
-                                  int batchSize) {
-    return findKMers(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize);
+                                  int batchSize,
+                                  int hashDim) {
+    return findKMers(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim);
 }

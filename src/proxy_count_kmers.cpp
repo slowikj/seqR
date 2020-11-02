@@ -2,14 +2,17 @@
 #include <Rcpp.h>
 #include <memory>
 #include <vector>
-#include <functional>
+#include "hash/primes.h"
 #include "kmer_task_solver_type_specific.h"
 #include "hash/polynomial_single_hasher.h"
 
-inline ComplexHasher createKMerComplexHasher() {
+inline ComplexHasher createKMerComplexHasher(int hashDim) {
     std::vector<std::unique_ptr<SingleHasher>> singleHashers;
-    singleHashers.emplace_back(new PolynomialSingleHasher(PolynomialSingleHasherConfig(101, 1e9 + 33)));
-    singleHashers.emplace_back(new PolynomialSingleHasher(PolynomialSingleHasherConfig(97, 1e9 + 7)));
+    for (int i = 0; i < hashDim; ++i) {
+        singleHashers.emplace_back(
+                new PolynomialSingleHasher(
+                        PolynomialSingleHasherConfig(hashPrimes[i].first, hashPrimes[i].second)));
+    }
     ComplexHasher complexHasher(std::move(singleHashers));
     return complexHasher;
 }
@@ -22,8 +25,9 @@ Rcpp::List findKMers(sequences_t &sequences,
                      bool positionalKMers,
                      bool withKMerCounts,
                      const std::string &kmerDictionaryName,
-                     int batchSize) {
-    std::function<ComplexHasher()> algorithmParams = []() -> ComplexHasher { return createKMerComplexHasher(); };
+                     int batchSize,
+                     int hashDim) {
+    std::function<ComplexHasher()> algorithmParams = [hashDim]() -> ComplexHasher { return createKMerComplexHasher(hashDim); };
     std::vector<int> gaps(k - 1);
     return findKMersSpecific<decltype(algorithmParams)>(
             sequences, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
@@ -39,10 +43,12 @@ Rcpp::List find_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
                              bool positionalKMers,
                              bool withKMerCounts,
                              const std::string &kmerDictionaryName,
-                             int batchSize) {
+                             int batchSize,
+                             int hashDim) {
     return findKMers(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts,
                      kmerDictionaryName,
-                     batchSize
+                     batchSize,
+                     hashDim
     );
 }
 
@@ -54,10 +60,12 @@ Rcpp::List find_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
                               bool positionalKMers,
                               bool withKMerCounts,
                               const std::string &kmerDictionaryName,
-                              int batchSize) {
+                              int batchSize,
+                              int hashDim) {
     return findKMers(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts,
                      kmerDictionaryName,
-                     batchSize
+                     batchSize,
+                     hashDim
     );
 }
 
@@ -69,10 +77,12 @@ Rcpp::List find_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
                               bool positionalKMers,
                               bool withKMerCounts,
                               const std::string &kmerDictionaryName,
-                              int batchSize) {
+                              int batchSize,
+                              int hashDim) {
     return findKMers(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts,
                      kmerDictionaryName,
-                     batchSize
+                     batchSize,
+                     hashDim
     );
 }
 
@@ -84,6 +94,8 @@ Rcpp::List find_kmers_list(Rcpp::List &sq,
                            bool positionalKMers,
                            bool withKMerCounts,
                            const std::string &kmerDictionaryName,
-                           int batchSize) {
-    return findKMers(sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize);
+                           int batchSize,
+                           int hashDim) {
+    return findKMers(sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize,
+                     hashDim);
 }
