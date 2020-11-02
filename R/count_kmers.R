@@ -8,7 +8,8 @@ count_kmers <- function(sequences,
                        kmer_gaps = c(),
                        with_kmer_counts = TRUE,
                        kmer_dictionary_name = "unordered_map",
-                       batch_size = 100) {
+                       batch_size = 100,
+                       hash_dim = 2) {
   if (is_empty(alphabet)) {
     stop("alphabet param is empty")
   }
@@ -38,6 +39,10 @@ count_kmers <- function(sequences,
     sequences <- matrix(data=sequences, nrow=1)
   }
   
+  if(!is_positive_integer(hash_dim) || hash_dim > 8) {
+    stop("hash_dim is a single integer number from the range [1, 8]")
+  }
+  
   alphabet <- unique(alphabet)
   
   if(length(kmer_gaps) == 0) {
@@ -48,7 +53,8 @@ count_kmers <- function(sequences,
       positionalKMers=positional,
       withKMerCounts=with_kmer_counts,
       kmerDictionaryName=kmer_dictionary_name,
-      batchSize=batch_size)
+      batchSize=batch_size,
+      hashDim=hash_dim)
   } else {
     invoke_gapped_kmer_function(
       sequences=sequences,
@@ -57,6 +63,7 @@ count_kmers <- function(sequences,
       positionalKMers=positional,
       withKMerCounts=with_kmer_counts,
       kmerDictionaryName=kmer_dictionary_name,
-      batchSize=batch_size)
+      batchSize=batch_size,
+      hashDim=hash_dim)
   }
 }

@@ -2,7 +2,8 @@ library(testthat)
 source("utils.R")
 
 invoke_test <- function(expected_res, ...) {
-  result_list <- seqR::find_kmers_list(...)
+  result_list <- seqR::find_kmers_list(hashDim = 2,
+                                       ...)
   res <- convert_seqR_list_to_matrix(result_list)
   expect_matrices_equal(res, expected_res)
 }
@@ -21,7 +22,7 @@ test_that("count 3-mers for sequences A+ in a list", {
               k=3,
               positionalKMers=FALSE,
               withKMerCounts=TRUE,
-              kmerDictionaryName="unordered_map",
+              kmerDictionaryName = "linear_list",
               batchSize = 200)
 })
 
