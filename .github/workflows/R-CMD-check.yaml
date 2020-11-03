@@ -102,3 +102,15 @@ jobs:
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
+      
+      - name: Install covr
+        if: github.ref == 'refs/heads/master' && env.run_covr == 'true'
+        run: |
+          remotes::install_cran("covr")
+        shell: Rscript {0}
+
+      - name: Test coverage
+        if: github.ref == 'refs/heads/master' && env.run_covr == 'true'
+        run: |
+          covr::codecov()
+        shell: Rscript {0}
