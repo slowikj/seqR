@@ -14,3 +14,7 @@ src-i386/*
 src-x64/*
 .idea/*
 cmake-build-debug/*
+
+config.log
+config.status
+src/Makevars
