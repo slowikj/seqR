@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.com/slowikj/seqR.svg?branch=master)](https://travis-ci.com/slowikj/seqR)
+[![R build status](https://github.com/slowikj/seqR/workflows/R-CMD-check/badge.svg)](https://github.com/slowikj/seqR/actions)
+
 # seqR <img src = "man/images/logo.png" align = "right" width="120"/>
 
 `seqR` is an R package that implements feature extraction (`k-mer counting`) of biological sequences such as proteins and nucleic acids.
@@ -15,7 +17,7 @@ Addationally, several types of k-mers are supported:
 
 The core algorithm is implemented in C++ and it takes advantage of parallel programming.
 
-# Package installation and loading
+## Package installation and loading
 
 ```{r setup, eval=FALSE}
 #install.packages('devtools') # if you do not have it installed
@@ -23,7 +25,7 @@ devtools::install_github("slowikj/seqR")
 library(seqR)
 ```
 
-# Usage
+## Usage
 
 ```{r, eval=FALSE}
 count_kmers(list("aaaaacbb", "aaaaa"), 5, letters)
