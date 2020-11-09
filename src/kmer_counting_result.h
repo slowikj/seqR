@@ -11,18 +11,6 @@
 class KMerCountingResult {
 public:
 
-    const Rcpp::String PROXY_ROWS_NAME = "i";
-    const Rcpp::String PROXY_COLUMNS_NAME = "j";
-    const Rcpp::String PROXY_VALUES_NAME = "v";
-    const Rcpp::String PROXY_COLUMN_NAMES_NAME = "names";
-    const Rcpp::String PROXY_PROCESSED_SEQUENCES_NUM_NAME = "seqNum";
-
-    std::vector<int> sequenceNums;
-
-    std::vector<int> kMerIndices;
-
-    std::vector<int> kMerCounts;
-
     std::vector<std::string> kMerStrings;
 
     inline void increaseProcessSequencesNum(int cnt) {
@@ -58,6 +46,18 @@ public:
     }
 
 private:
+    const Rcpp::String PROXY_ROWS_NAME = "i";
+    const Rcpp::String PROXY_COLUMNS_NAME = "j";
+    const Rcpp::String PROXY_VALUES_NAME = "v";
+    const Rcpp::String PROXY_COLUMN_NAMES_NAME = "names";
+    const Rcpp::String PROXY_PROCESSED_SEQUENCES_NUM_NAME = "seqNum";
+
+    std::vector<int> sequenceNums;
+
+    std::vector<int> kMerIndices;
+
+    std::vector<int> kMerCounts;
+
     std::unordered_map<std::vector<int>, int> kMerHash2ColumnIndex;
 
     int processedSequencesNum = 0;
