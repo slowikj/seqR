@@ -9,8 +9,7 @@
 int compute_polynomial_hash(int P,
                             int M,
                             Rcpp::IntegerVector items,
-                            int begin,
-                            int position) {
+                            int begin) {
     PolynomialSingleHasher hasher(PolynomialSingleHasherConfig(P, M));
     for (const int &item: items) {
         hasher.append(item);
@@ -18,9 +17,7 @@ int compute_polynomial_hash(int P,
     for (int i = 0; i < begin; ++i) {
         hasher.removeFirst(items[i]);
     }
-    return position == -1 ?
-           hasher.getHash() :
-           hasher.getHash(position);
+    return hasher.getHash();
 }
 
 //' @export
@@ -47,5 +44,5 @@ std::vector<int> compute_polynomial_multihash(Rcpp::IntegerVector P,
 
     return position == -1 ?
            hasher.getHashes() :
-           hasher.getHashes(position);
+           hasher.getHashes(position - 1);
 }

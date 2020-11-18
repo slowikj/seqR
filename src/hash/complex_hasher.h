@@ -36,15 +36,13 @@ public:
                       });
     }
 
-    inline std::vector<int> getHashes(int position) const {
-        return prepareResultHashes(
-                [&position](const std::unique_ptr<SingleHasher> &singleHasher) -> int {
-                    return singleHasher->getHash(position);
-                }
-        );
+    [[nodiscard]] inline std::vector<int> getHashes(int position) const {
+        auto res = getHashes();
+        res.push_back(position);
+        return res;
     }
 
-    inline std::vector<int> getHashes() const {
+    [[nodiscard]] inline std::vector<int> getHashes() const {
         return prepareResultHashes(
                 [](const std::unique_ptr<SingleHasher> &singleHasher) -> int {
                     return singleHasher->getHash();
