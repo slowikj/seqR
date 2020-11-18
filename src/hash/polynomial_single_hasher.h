@@ -47,10 +47,6 @@ public:
         return SingleHasher::getHash();
     }
 
-    inline int getHash(int position) const override {
-        return this->computeHash(currentHash, position);
-    }
-
     inline void clear() override {
         SingleHasher::clear();
         this->initPowersP();
@@ -66,19 +62,19 @@ private:
     int nextPowerP;
     int currentPowerP;
 
-    inline int computeHash(int currentHash, const int &elem) const {
+    [[nodiscard]] inline int computeHash(int currentHash, const int &elem) const {
         return static_cast<int>(
                 (static_cast<long long>(this->currentHash) * config.P + elem) % config.M
         );
     }
 
-    inline int computeNextPowerP(int currentPowerP) const {
+    [[nodiscard]] inline int computeNextPowerP(int currentPowerP) const {
         return static_cast<int>(
                 (static_cast<long long>(currentPowerP) * config.P) % config.M
         );
     }
 
-    inline int computePreviousPowerP(int currentPowerP) const {
+    [[nodiscard]] inline int computePreviousPowerP(int currentPowerP) const {
         if (currentPowerP == 1) {
             return 0;
         }

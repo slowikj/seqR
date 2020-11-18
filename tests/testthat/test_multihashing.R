@@ -33,7 +33,7 @@ test_that("test 3 hashes for 3 items without position", {
 })
 
 test_that("test 3 hashes for 3 items with position 1", {
-  invoke_test(expected_res=c(1051007, 463, 13295),
+  invoke_test(expected_res=c(10406, 66, 578, 0),
               P=c(101, 7, 23),
               M=rep(1e9 + 33, 3),
               items=c(1,2,3),
@@ -51,7 +51,7 @@ test_that("test 3 hashes for 3 items without the first one without position", {
 })
 
 test_that("test 3 hashes for 3 items without the first one with position 2", {
-  invoke_test(expected_res=c(20707, 121, 1129),
+  invoke_test(expected_res=c(205, 17, 49, 1),
               P=c(101, 7, 23),
               M=rep(1e9 + 33, 3),
               items=c(1,2,3),

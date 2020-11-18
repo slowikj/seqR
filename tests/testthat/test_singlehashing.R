@@ -10,8 +10,7 @@ test_that("test hashing one element", {
               P=101,
               M=1e9 + 33,
               items=c(1),
-              begin=0,
-              position=-1)
+              begin=0)
 })
 
 test_that("test hashing two elements", {
@@ -19,8 +18,7 @@ test_that("test hashing two elements", {
               P=101,
               M=1e9 + 33,
               items=c(1, 1),
-              begin=0,
-              position=-1)
+              begin=0)
 })
 
 test_that("test hashing elements without the first element", {
@@ -28,8 +26,7 @@ test_that("test hashing elements without the first element", {
               P=101,
               M=1e9 + 33,
               items=c(1, 1),
-              begin=1,
-              position=-1)
+              begin=1)
 })
 
 test_that("test hashing two different elements", {
@@ -37,8 +34,7 @@ test_that("test hashing two different elements", {
               P=101,
               M=1e9 + 33,
               items=c(1, 2),
-              begin=0,
-              position=-1)
+              begin=0)
 })
 
 test_that("test hashing two different elements without the first element", {
@@ -46,8 +42,7 @@ test_that("test hashing two different elements without the first element", {
               P=101,
               M=1e9 + 33,
               items=c(1, 2),
-              begin=1,
-              position=-1)
+              begin=1)
 })
 
 test_that("test hashing three different elements without the first element", {
@@ -55,15 +50,6 @@ test_that("test hashing three different elements without the first element", {
               P=101,
               M=1e9 + 33,
               items=c(1, 2, 3),
-              begin=1,
-              position=-1)
+              begin=1)
 })
 
-test_that("test hashing with position", {
-  invoke_test(expected_res=20506,
-              P=101,
-              M=1e9 + 33,
-              items=c(2, 1),
-              begin=0,
-              position=3)
-})

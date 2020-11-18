@@ -202,8 +202,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // compute_polynomial_hash
-int compute_polynomial_hash(int P, int M, Rcpp::IntegerVector items, int begin, int position);
-RcppExport SEXP _seqR_compute_polynomial_hash(SEXP PSEXP, SEXP MSEXP, SEXP itemsSEXP, SEXP beginSEXP, SEXP positionSEXP) {
+int compute_polynomial_hash(int P, int M, Rcpp::IntegerVector items, int begin);
+RcppExport SEXP _seqR_compute_polynomial_hash(SEXP PSEXP, SEXP MSEXP, SEXP itemsSEXP, SEXP beginSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -211,8 +211,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type M(MSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type items(itemsSEXP);
     Rcpp::traits::input_parameter< int >::type begin(beginSEXP);
-    Rcpp::traits::input_parameter< int >::type position(positionSEXP);
-    rcpp_result_gen = Rcpp::wrap(compute_polynomial_hash(P, M, items, begin, position));
+    rcpp_result_gen = Rcpp::wrap(compute_polynomial_hash(P, M, items, begin));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -245,7 +244,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_seqR_find_kmers_integer", (DL_FUNC) &_seqR_find_kmers_integer, 9},
     {"_seqR_find_kmers_numeric", (DL_FUNC) &_seqR_find_kmers_numeric, 9},
     {"_seqR_find_kmers_list", (DL_FUNC) &_seqR_find_kmers_list, 9},
-    {"_seqR_compute_polynomial_hash", (DL_FUNC) &_seqR_compute_polynomial_hash, 5},
+    {"_seqR_compute_polynomial_hash", (DL_FUNC) &_seqR_compute_polynomial_hash, 4},
     {"_seqR_compute_polynomial_multihash", (DL_FUNC) &_seqR_compute_polynomial_multihash, 5},
     {NULL, NULL, 0}
 };

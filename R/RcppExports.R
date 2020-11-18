@@ -71,8 +71,8 @@ find_kmers_list <- function(sq, alphabet, k, positionalKMers, withKMerCounts, km
 }
 
 #' @export
-compute_polynomial_hash <- function(P, M, items, begin, position) {
-    .Call('_seqR_compute_polynomial_hash', PACKAGE = 'seqR', P, M, items, begin, position)
+compute_polynomial_hash <- function(P, M, items, begin) {
+    .Call('_seqR_compute_polynomial_hash', PACKAGE = 'seqR', P, M, items, begin)
 }
 
 #' @export

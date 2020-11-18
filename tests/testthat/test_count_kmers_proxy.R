@@ -298,3 +298,38 @@ test_that("expect simple_triplet_matrix as an output", {
   
   expect_is(res, "simple_triplet_matrix")
 })
+
+# POSITIONAL K-MERS ----
+
+test_that("count positional 1-mers for one-dimensional hash P_a, 1_b (P is hashing prime)", {
+  P <- 101
+  sq <- list(paste0("B", strrep("C", P - 1), "A"))
+  
+  expected_res <- matrix(c(1, 1), nrow=1, byrow = TRUE)
+  colnames(expected_res) <- c("102_A", "1_B")
+  
+  res <- seqR::count_kmers(sequences = sq,
+                           alphabet = c("A", "B"),
+                           k = 1,
+                           positional = TRUE,
+                           hash_dim = 1)
+  
+  expect_matrices_equal(as.matrix(res), expected_res)
+})
+
+test_that("count positional gapped 2-mers (gap == 1) for one-dimensional hash 1_B.C_1, 10202_A.A_1", {
+  sq <- list(paste0("BCA", strrep("C", 10198), "ACA"))
+  
+  expected_res <- matrix(c(1, 1), nrow=1, byrow = TRUE)
+  colnames(expected_res) <- c("1_B.A_1", "10202_A.A_1")
+  
+  res <- seqR::count_kmers(sequences = sq,
+                           alphabet = c("A", "B"),
+                           k = 2,
+                           kmer_gaps = c(1),
+                           positional = TRUE,
+                           hash_dim = 1)
+
+  expect_matrices_equal(as.matrix(res), expected_res)
+})
+
