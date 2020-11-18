@@ -204,11 +204,7 @@ std::vector<int> getGappedKMerHash(
                     beginPosition, seqHasher, contiguousKMerIntervals)
     );
     if (isPositionalKMer) {
-        for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
-            res[hasherInd] = static_cast<int>(
-                    (static_cast<long long>(res[hasherInd]) * seqHasher.getHasherP(hasherInd)
-                     + beginPosition) % seqHasher.getHasherM(hasherInd));
-        }
+        res.push_back(beginPosition);
     }
     return std::move(res);
 }
