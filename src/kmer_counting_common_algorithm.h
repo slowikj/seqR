@@ -30,13 +30,13 @@ public:
                       SequenceGetter_t<input_vector_t> sequenceGetter) :
             countingKMersProc(countingKMersProc),
             sequenceGetter(sequenceGetter) {
-        kmers.resize(rowsNum);
+        kMers.resize(rowsNum);
     }
 
     inline void operator()(size_t begin, size_t end) override {
         for (int rowNum = begin; rowNum < end; ++rowNum) {
             auto row = std::move(sequenceGetter(rowNum));
-            kmers[rowNum] = std::move(countingKMersProc(row));
+            kMers[rowNum] = std::move(countingKMersProc(row));
         }
     }
 
@@ -45,11 +45,10 @@ private:
     SequenceGetter_t<input_vector_t> sequenceGetter;
 
 public:
-    std::vector<KMerManager<kmer_dictionary_t>> kmers;
+    std::vector<KMerManager<kmer_dictionary_t>> kMers;
 };
 
 template<class input_vector_t,
-        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
@@ -58,24 +57,24 @@ std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
         SequenceGetter_t<input_vector_t> sequenceGetter) {
     KMerCounterWorker<input_vector_t, kmer_dictionary_t> worker(rowsNum, countingProc, sequenceGetter);
     RcppParallel::parallelFor(0, rowsNum, worker);
-    return std::move(worker.kmers);
+    return std::move(worker.kMers);
 }
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t,
-        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
+        class alphabet_encoding_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 using ParallelKMerCountingProc_t = std::function<std::vector<KMerManager<kmer_dictionary_t>>(
         KMerTaskConfig<input_vector_t, input_elem_t> &,
-        AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &)>;
+        alphabet_encoding_t &)>;
 
 template<class input_vector_t, class input_elem_t, class encoded_elem_t,
-        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
+        class alphabet_encoding_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 void parallelGetKMerCounts(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConf,
-        AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
-        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t> parallelKMerCountingProc,
+        alphabet_encoding_t &alphabetEncoding,
+        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_encoding_t, kmer_dictionary_t> parallelKMerCountingProc,
         KMerCountingResult &kMerCountingResult) {
     auto kMersManagers = std::move(parallelKMerCountingProc(kMerTaskConf, alphabetEncoding));
 
