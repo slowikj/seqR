@@ -6,9 +6,10 @@
 #include "../hash/complex_hasher.h"
 #include "../utils.h"
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t, class alphabet_encoding_t>
+template<class input_vector_t, class alphabet_encoding_t>
 class RollingWindow {
 public:
+    using encoded_elem_t = typename alphabet_encoding_t::encoded_elem_t;
 
     RollingWindow(input_vector_t &sequence,
                   ComplexHasher &&hasher,

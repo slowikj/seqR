@@ -46,7 +46,6 @@ Rcpp::List findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
         computeResult<
                 RcppParallel::RMatrix<int>::Row,
                 int,
-                short,
                 DefaultAlphabetEncoder<int, short, UnorderedMapWrapper>,
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoding,

@@ -60,21 +60,21 @@ std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
     return std::move(worker.kMers);
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t,
+template<class input_vector_t, class input_elem_t,
         class alphabet_encoding_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 using ParallelKMerCountingProc_t = std::function<std::vector<KMerManager<kmer_dictionary_t>>(
         KMerTaskConfig<input_vector_t, input_elem_t> &,
         alphabet_encoding_t &)>;
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t,
+template<class input_vector_t, class input_elem_t,
         class alphabet_encoding_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 void parallelGetKMerCounts(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConf,
         alphabet_encoding_t &alphabetEncoding,
-        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, encoded_elem_t, alphabet_encoding_t, kmer_dictionary_t> parallelKMerCountingProc,
+        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t> parallelKMerCountingProc,
         KMerCountingResult &kMerCountingResult) {
     auto kMersManagers = std::move(parallelKMerCountingProc(kMerTaskConf, alphabetEncoding));
 

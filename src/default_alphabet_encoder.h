@@ -5,10 +5,12 @@
 #include <functional>
 #include <memory>
 
-template<class input_elem_t, class encoded_elem_t,
+template<class input_elem_t, class encoded_elem_t_,
         template<typename input_t, typename encoded_t, typename...> class dictionary_t>
 class DefaultAlphabetEncoder {
 public:
+    using encoded_elem_t = encoded_elem_t_;
+
     DefaultAlphabetEncoder(dictionary_t<input_elem_t, encoded_elem_t> &&encoder,
                            encoded_elem_t notAllowedEncodingNum) :
             encoder(std::move(encoder)),
@@ -17,11 +19,13 @@ public:
 
     DefaultAlphabetEncoder() = default;
 
-    DefaultAlphabetEncoder(DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> &&other) noexcept = default;
+    DefaultAlphabetEncoder(
+            DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> &&other) noexcept = default;
 
     DefaultAlphabetEncoder(const DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> &) = delete;
 
-    DefaultAlphabetEncoder &operator=(const DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> &) = delete;
+    DefaultAlphabetEncoder &
+    operator=(const DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> &) = delete;
 
     DefaultAlphabetEncoder &
     operator=(DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> &&other) noexcept = default;

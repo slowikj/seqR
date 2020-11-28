@@ -42,7 +42,6 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
         computeResult<
                 SafeSequencesMatrixWrapper<std::string>::Row,
                 std::string,
-                short,
                 DefaultAlphabetEncoder<std::string, short, UnorderedMapWrapper>,
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoding,
