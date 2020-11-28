@@ -2,7 +2,10 @@
 #include <Rcpp.h>
 #include <memory>
 #include "hash/primes.h"
-#include "kmer_task_solver_type_specific.h"
+#include "find_kmers_specific/find_kmers_integer_matrix.h"
+#include "find_kmers_specific/find_kmers_string_matrix.h"
+#include "find_kmers_specific/find_kmers_numeric_matrix.h"
+#include "find_kmers_specific/find_kmers_string_list.h"
 
 //' @export
 // [[Rcpp::export]]
