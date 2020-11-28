@@ -8,7 +8,7 @@
 #include <Rcpp.h>
 #include <vector>
 #include "../kmer_task_config.h"
-#include "../alphabet_encoder.h"
+#include "../default_alphabet_encoder.h"
 #include "../dictionary/unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
@@ -26,7 +26,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                              algorithm_params_t &algorithmParams) {
     auto cppAlphabet = std::move(Rcpp::as<std::vector<std::string>>(alphabet));
     auto alphabetEncoding = std::move(
-            getAlphabetEncoding<std::vector<std::string>, std::string, short, UnorderedMapWrapper>(cppAlphabet));
+            getDefaultAlphabetEncoder<std::vector<std::string>, std::string, short, UnorderedMapWrapper>(cppAlphabet));
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         SafeSequencesMatrixWrapper<std::string> safeMatrixWrapper(sequenceMatrix, seqBegin, seqEnd);
@@ -43,7 +43,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                 SafeSequencesMatrixWrapper<std::string>::Row,
                 std::string,
                 short,
-                AlphabetEncoding<std::string, short, UnorderedMapWrapper>,
+                DefaultAlphabetEncoder<std::string, short, UnorderedMapWrapper>,
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoding,
                                     kmerDictionaryName,

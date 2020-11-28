@@ -10,7 +10,7 @@
 #include <functional>
 #include "sequence_getter.h"
 #include "kmer_manager.h"
-#include "alphabet_encoder.h"
+#include "default_alphabet_encoder.h"
 #include "kmer_strings_creator.h"
 #include "input_to_string_item_converter.h"
 #include "kmer_counting_result.h"

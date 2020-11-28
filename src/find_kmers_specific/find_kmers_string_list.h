@@ -8,7 +8,7 @@
 #include <Rcpp.h>
 #include <vector>
 #include "../kmer_task_config.h"
-#include "../alphabet_encoder.h"
+#include "../default_alphabet_encoder.h"
 #include "../dictionary/unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
@@ -30,7 +30,7 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
         alphabetStr[i] = Rcpp::as<char>(alphabet[i]);
     }
     auto alphabetEncoding = std::move(
-            getAlphabetEncoding<std::string, char, short, UnorderedMapWrapper>(alphabetStr));
+            getDefaultAlphabetEncoder<std::string, char, short, UnorderedMapWrapper>(alphabetStr));
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         SafeSequencesStringListWrapper sequenceWrapper(sequences, seqBegin, seqEnd);
@@ -47,7 +47,7 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
                 SafeSequencesStringListWrapper::Row,
                 char,
                 short,
-                AlphabetEncoding<char, short, UnorderedMapWrapper>,
+                DefaultAlphabetEncoder<char, short, UnorderedMapWrapper>,
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoding,
                                     kmerDictionaryName,

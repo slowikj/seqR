@@ -14,7 +14,7 @@ add_library(seqR
         src/hash/single_hasher.h
         src/hash/polynomial_single_hasher.h
         src/hash/complex_hasher.h src/hash/custom_hashers.h
-        src/hash/rolling_window.h src/dictionary/unordered_map_wrapper.h src/alphabet_encoder.h
+        src/hash/rolling_window.h src/dictionary/unordered_map_wrapper.h src/default_alphabet_encoder.h
         src/proxy_hashing.cpp
         src/input_to_string_item_converter.h
         src/kmer_manager.h

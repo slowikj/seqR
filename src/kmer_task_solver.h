@@ -3,7 +3,7 @@
 
 #include <Rcpp.h>
 #include "kmer_task_config.h"
-#include "alphabet_encoder.h"
+#include "default_alphabet_encoder.h"
 #include "kmer_manager.h"
 #include "kmer_counting_common_algorithm.h"
 #include "dictionary/supported_dict_names.h"

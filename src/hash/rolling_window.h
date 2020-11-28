@@ -2,7 +2,7 @@
 #define ROLLING_WINDOW_H
 
 #include <memory>
-#include "../alphabet_encoder.h"
+#include "../default_alphabet_encoder.h"
 #include "../hash/complex_hasher.h"
 #include "../utils.h"
 
@@ -28,7 +28,7 @@ public:
     }
 
     inline void append() {
-        encoded_elem_t encodedElem = this->alphabetEncoding.encode(
+        encoded_elem_t encodedElem = this->alphabetEncoding.encodeUnsafe(
                 this->sequence[this->nextElementIndex]
         );
         this->window.push(encodedElem);

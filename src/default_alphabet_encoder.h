@@ -7,29 +7,33 @@
 
 template<class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class dictionary_t>
-class AlphabetEncoding {
+class DefaultAlphabetEncoder {
 public:
-    AlphabetEncoding(dictionary_t<input_elem_t, encoded_elem_t> &&encoder,
-                     encoded_elem_t notAllowedEncodingNum) :
+    DefaultAlphabetEncoder(dictionary_t<input_elem_t, encoded_elem_t> &&encoder,
+                           encoded_elem_t notAllowedEncodingNum) :
             encoder(std::move(encoder)),
             notAllowedEncodingNum(notAllowedEncodingNum) {
     }
 
-    AlphabetEncoding() = default;
+    DefaultAlphabetEncoder() = default;
 
-    AlphabetEncoding(AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> &&other) noexcept = default;
+    DefaultAlphabetEncoder(DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> &&other) noexcept = default;
 
-    AlphabetEncoding(const AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> &) = delete;
+    DefaultAlphabetEncoder(const DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> &) = delete;
 
-    AlphabetEncoding &operator=(const AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> &) = delete;
+    DefaultAlphabetEncoder &operator=(const DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> &) = delete;
 
-    AlphabetEncoding &
-    operator=(AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> &&other) noexcept = default;
+    DefaultAlphabetEncoder &
+    operator=(DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> &&other) noexcept = default;
 
     inline encoded_elem_t encode(const input_elem_t &inputElem) {
         return isAllowed(inputElem) ?
                this->encoder[inputElem] :
                getNotAllowedEncodingNum();
+    }
+
+    inline encoded_elem_t encodeUnsafe(const input_elem_t &inputElem) {
+        return this->encoder[inputElem];
     }
 
     inline bool isAllowed(const input_elem_t &inputElem) const {
@@ -52,7 +56,7 @@ private:
 template<class input_t, class input_elem_t, class encoded_elem_t,
         template<typename key, typename value, typename...> class dictionary_t>
 inline
-AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> getAlphabetEncoding(input_t &input) {
+DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> getDefaultAlphabetEncoder(input_t &input) {
     encoded_elem_t currentNum = 2;
     dictionary_t<input_elem_t, encoded_elem_t> encoder;
     for (const auto &inputElem: input) {
@@ -60,7 +64,7 @@ AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> getAlphabetEncoding
             encoder[inputElem] = currentNum++;
         }
     }
-    return AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t>(
+    return DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t>(
             std::move(encoder),
             1
     );
