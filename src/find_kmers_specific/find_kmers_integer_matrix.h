@@ -13,6 +13,12 @@
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
 
+inline InputToStringItemConverter_t<int> getIntToStringConverter() {
+    return [](const int &elem) -> std::string {
+        return std::to_string(elem);
+    };
+}
+
 template<class algorithm_params_t>
 inline
 Rcpp::List findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,

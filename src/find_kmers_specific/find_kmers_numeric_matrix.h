@@ -13,6 +13,15 @@
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
 
+inline InputToStringItemConverter_t<double> getDoubleToStringConverter(int decimalPrecision) {
+    return [decimalPrecision](const double &elem) -> std::string {
+        std::ostringstream stream;
+        stream << std::fixed << std::setprecision(decimalPrecision);
+        stream << elem;
+        return stream.str();
+    };
+}
+
 template<class algorithm_params_t>
 inline
 Rcpp::List findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
