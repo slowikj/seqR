@@ -27,15 +27,13 @@ public:
     operator=(AlphabetEncoding<input_elem_t, encoded_elem_t, dictionary_t> &&other) noexcept = default;
 
     inline encoded_elem_t encode(const input_elem_t &inputElem) {
-        return this->encoder[inputElem];
+        return isAllowed(inputElem) ?
+               this->encoder[inputElem] :
+               getNotAllowedEncodingNum();
     }
 
     inline bool isAllowed(const input_elem_t &inputElem) const {
         return this->encoder.isPresent(inputElem);
-    }
-
-    inline encoded_elem_t getNotAllowedEncodingNum() const {
-        return this->notAllowedEncodingNum;
     }
 
     inline std::size_t size() const {
@@ -45,6 +43,10 @@ public:
 private:
     dictionary_t<input_elem_t, encoded_elem_t> encoder;
     encoded_elem_t notAllowedEncodingNum;
+
+    inline encoded_elem_t getNotAllowedEncodingNum() const {
+        return this->notAllowedEncodingNum;
+    }
 };
 
 template<class input_t, class input_elem_t, class encoded_elem_t,

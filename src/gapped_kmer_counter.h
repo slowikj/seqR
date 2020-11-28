@@ -118,10 +118,7 @@ private:
     inline void appendPrefixValues(input_vector_t &sequence,
                                    alphabet_encoding_t &alphabetEncoding,
                                    int seqInd) {
-        encoded_elem_t encodedElem = alphabetEncoding.isAllowed(sequence[seqInd]) ?
-                                     alphabetEncoding.encode(sequence[seqInd]) :
-                                     alphabetEncoding.getNotAllowedEncodingNum();
-
+        encoded_elem_t encodedElem = alphabetEncoding.encode(sequence[seqInd]);
         appendCurrentComplexHash(encodedElem);
         appendCurrentPowerP();
     }
