@@ -34,7 +34,7 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         SafeSequencesStringListWrapper sequenceWrapper(sequences, seqBegin, seqEnd);
-        KMerTaskConfig<SafeSequencesStringListWrapper::Row, char> kMerTaskConfig(
+        KMerTaskConfig<SafeSequencesStringListWrapper::Row, decltype(alphabetEncoding)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
                 getStringSequenceGetter(sequenceWrapper),
                 gaps,
@@ -45,7 +45,7 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
                 DEFAULT_KMER_SECTION_SEPARATOR);
         computeResult<
                 SafeSequencesStringListWrapper::Row,
-                char,
+                decltype(alphabetEncoding)::input_elem_t,
                 DefaultAlphabetEncoder<char, short, UnorderedMapWrapper>,
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoding,

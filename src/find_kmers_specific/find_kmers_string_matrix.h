@@ -30,7 +30,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         SafeSequencesMatrixWrapper<std::string> safeMatrixWrapper(sequenceMatrix, seqBegin, seqEnd);
-        KMerTaskConfig<SafeSequencesMatrixWrapper<std::string>::Row, std::string> kMerTaskConfig(
+        KMerTaskConfig<SafeSequencesMatrixWrapper<std::string>::Row, decltype(alphabetEncoding)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
                 getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
                 gaps,
@@ -41,7 +41,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                 DEFAULT_KMER_SECTION_SEPARATOR);
         computeResult<
                 SafeSequencesMatrixWrapper<std::string>::Row,
-                std::string,
+                decltype(alphabetEncoding)::input_elem_t,
                 DefaultAlphabetEncoder<std::string, short, UnorderedMapWrapper>,
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoding,

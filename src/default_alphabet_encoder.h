@@ -5,11 +5,12 @@
 #include <functional>
 #include <memory>
 
-template<class input_elem_t, class encoded_elem_t_,
+template<class input_elem_t_, class encoded_elem_t_,
         template<typename input_t, typename encoded_t, typename...> class dictionary_t>
 class DefaultAlphabetEncoder {
 public:
     using encoded_elem_t = encoded_elem_t_;
+    using input_elem_t = input_elem_t_;
 
     DefaultAlphabetEncoder(dictionary_t<input_elem_t, encoded_elem_t> &&encoder,
                            encoded_elem_t notAllowedEncodingNum) :

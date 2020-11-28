@@ -39,7 +39,7 @@ Rcpp::List findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         KMerTaskConfig<RcppParallel::RMatrix<double>::Row, double> kMerTaskConfig(
                 (seqEnd - seqBegin),
-                getRMatrixRowGetter<Rcpp::NumericMatrix, double>(sequenceMatrix, seqBegin),
+                getRMatrixRowGetter<Rcpp::NumericMatrix, decltype(alphabetEncoding)::input_elem_t>(sequenceMatrix, seqBegin),
                 gaps,
                 positionalKMers,
                 withKMerCounts,
@@ -48,7 +48,7 @@ Rcpp::List findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
                 DEFAULT_KMER_SECTION_SEPARATOR);
         computeResult<
                 RcppParallel::RMatrix<double>::Row,
-                double,
+                decltype(alphabetEncoding)::input_elem_t,
                 DefaultAlphabetEncoder<double, short, UnorderedMapWrapper>,
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoding,
