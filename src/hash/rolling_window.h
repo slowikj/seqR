@@ -2,7 +2,6 @@
 #define ROLLING_WINDOW_H
 
 #include <memory>
-#include "../default_alphabet_encoder.h"
 #include "../hash/complex_hasher.h"
 #include "../utils.h"
 

@@ -1,6 +1,6 @@
 // [[Rcpp::plugins("cpp17")]]
 #include <Rcpp.h>
-#include "default_alphabet_encoder.h"
+#include "alphabet_encoder/default_alphabet_encoder.h"
 #include "dictionary/unordered_map_wrapper.h"
 #include <utility>
 #include <functional>

@@ -4,12 +4,13 @@
 #include <Rcpp.h>
 #include <vector>
 #include "../kmer_task_config.h"
-#include "../default_alphabet_encoder.h"
+#include "../alphabet_encoder/default_alphabet_encoder.h"
 #include "../dictionary/unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
 #include "../sequence_getter.h"
 #include "../common_config.h"
+#include "../alphabet_encoder/identity_alphabet_encoder.h"
 
 template<class encoded_elem_t>
 class FastStringMatrixWrapper {
@@ -58,37 +59,6 @@ public:
 private:
     std::shared_ptr<encoded_elem_t[]> encoded;
     int ncol, nrow;
-};
-
-template<class encoded_elem_t_>
-class IdentityAlphabetEncoder {
-public:
-    using encoded_elem_t = encoded_elem_t_;
-    using input_elem_t = encoded_elem_t;
-
-    IdentityAlphabetEncoder(encoded_elem_t_ allowedBegin,
-                            encoded_elem_t_ allowedEnd)
-            : allowedBegin(allowedBegin), allowedEnd(allowedEnd) {}
-
-    inline encoded_elem_t encode(const input_elem_t &inputElem) {
-        return inputElem;
-    }
-
-    inline encoded_elem_t encodeUnsafe(const input_elem_t &inputElem) {
-        return encode(inputElem);
-    }
-
-    inline bool isAllowed(const input_elem_t &inputElem) const {
-        return allowedBegin <= inputElem && inputElem <= allowedEnd;
-    }
-
-    inline std::size_t size() const {
-        return (allowedEnd - allowedBegin + 1);
-    }
-
-private:
-    encoded_elem_t_ allowedBegin, allowedEnd;
-
 };
 
 template<class encoded_elem_t>

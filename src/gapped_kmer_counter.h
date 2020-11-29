@@ -1,7 +1,6 @@
 #ifndef GAPPED_KMER_COUNTER_H
 #define GAPPED_KMER_COUNTER_H
 
-#include "default_alphabet_encoder.h"
 #include "hash/polynomial_single_hasher.h"
 #include "kmer_counting_common_algorithm.h"
 #include "kmer_manager.h"
