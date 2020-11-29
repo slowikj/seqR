@@ -11,28 +11,12 @@
 #include "../sequence_getter.h"
 #include "../common_config.h"
 #include "../alphabet_encoder/identity_alphabet_encoder.h"
+#include "encoded_sequence_row.h"
 
 template<class encoded_elem_t>
 class FastStringMatrixWrapper {
 public:
-
-    class Row {
-    public:
-        Row(std::shared_ptr<encoded_elem_t[]> encoded, int begin, int size)
-                : encoded_(std::move(encoded)), begin_(begin), size_(size) {}
-
-        inline const encoded_elem_t &operator[](int index) const {
-            return this->encoded_[begin_ + index];
-        }
-
-        inline std::size_t size() const {
-            return this->size_;
-        }
-
-    private:
-        std::shared_ptr<encoded_elem_t[]> encoded_;
-        std::size_t begin_, size_;
-    };
+    using Row = EncodedSequenceRow<encoded_elem_t>;
 
     FastStringMatrixWrapper(Rcpp::StringMatrix &matrix,
                             std::unordered_map<Rcpp::StringMatrix::stored_type, encoded_elem_t> &encoder,
