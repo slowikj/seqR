@@ -1,7 +1,6 @@
 #ifndef GAPPED_KMER_COUNTER_H
 #define GAPPED_KMER_COUNTER_H
 
-#include "alphabet_encoder.h"
 #include "hash/polynomial_single_hasher.h"
 #include "kmer_counting_common_algorithm.h"
 #include "kmer_manager.h"
@@ -38,12 +37,12 @@ inline std::size_t getTotalKMerSize(const std::vector<int> &gaps) {
     return getSum(gaps) + gaps.size() + 1; // Rcpp::sum(gaps + 1) + 1
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t,
-        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t>
+template<class input_vector_t,
+        class alphabet_encoding_t>
 inline
 std::vector<int> prepareNotAllowedItemsPrefixCount(
         input_vector_t &sequence,
-        AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding) {
+        alphabet_encoding_t &alphabetEncoding) {
     std::vector<int> res;
     res.reserve(sequence.size());
     for (int i = 0; i < sequence.size(); ++i) {
@@ -55,12 +54,12 @@ std::vector<int> prepareNotAllowedItemsPrefixCount(
     return std::move(res);
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t,
-        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t>
+template<class input_vector_t,
+        class alphabet_encoding_t>
 class PrefixSequencePolynomialHasher {
 public:
     PrefixSequencePolynomialHasher(input_vector_t &sequence,
-                                   AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
+                                   alphabet_encoding_t &alphabetEncoding,
                                    const std::vector<PolynomialSingleHasherConfig> &polynomialHasherConfigs) :
             polynomialHasherConfigs(polynomialHasherConfigs) {
         computePrefixValues(sequence, alphabetEncoding);
@@ -95,7 +94,7 @@ private:
     std::vector<std::vector<int>> prefixComplexHashes;
 
     inline void computePrefixValues(input_vector_t &sequence,
-                                    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding) {
+                                    alphabet_encoding_t &alphabetEncoding) {
         initPrefixP(sequence.size(), polynomialHasherConfigs.size());
         initPrefixComplexHashes(sequence.size(), polynomialHasherConfigs.size());
         for (int seqInd = 0; seqInd < sequence.size(); ++seqInd) {
@@ -116,17 +115,14 @@ private:
     }
 
     inline void appendPrefixValues(input_vector_t &sequence,
-                                   AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
+                                   alphabet_encoding_t &alphabetEncoding,
                                    int seqInd) {
-        encoded_elem_t encodedElem = alphabetEncoding.isAllowed(sequence[seqInd]) ?
-                                     alphabetEncoding.encode(sequence[seqInd]) :
-                                     alphabetEncoding.getNotAllowedEncodingNum();
-
+        typename alphabet_encoding_t::encoded_elem_t encodedElem = alphabetEncoding.encode(sequence[seqInd]);
         appendCurrentComplexHash(encodedElem);
         appendCurrentPowerP();
     }
 
-    inline void appendCurrentComplexHash(const encoded_elem_t &encodedElem) {
+    inline void appendCurrentComplexHash(const typename alphabet_encoding_t::encoded_elem_t &encodedElem) {
         std::vector<int> prefixHash(polynomialHasherConfigs.size());
         for (int hasherInd = 0; hasherInd < prefixHash.size(); ++hasherInd) {
             int P = polynomialHasherConfigs[hasherInd].P;
@@ -168,12 +164,11 @@ inline int getIntervalLength(const std::pair<int, int> &interval) {
     return interval.second - interval.first + 1;
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t,
-        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t>
+template<class input_vector_t, class alphabet_encoding_t>
 inline
 std::vector<int> getGappedKMerHashNotPositional(
         int beginPosition,
-        const PrefixSequencePolynomialHasher<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t> &seqHasher,
+        const PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
         const std::vector<std::pair<int, int>> &contiguousKMerIntervals) {
     std::vector<int> res(seqHasher.getHashersNum());
     for (const auto &kmerInterval: contiguousKMerIntervals) {
@@ -191,16 +186,15 @@ std::vector<int> getGappedKMerHashNotPositional(
     return std::move(res);
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t,
-        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t>
+template<class input_vector_t, class alphabet_encoding_t>
 inline
 std::vector<int> getGappedKMerHash(
         int beginPosition,
-        const PrefixSequencePolynomialHasher<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t> &seqHasher,
+        const PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
         const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
         bool isPositionalKMer) {
     std::vector<int> res = std::move(
-            getGappedKMerHashNotPositional<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
+            getGappedKMerHashNotPositional<input_vector_t, alphabet_encoding_t>(
                     beginPosition, seqHasher, contiguousKMerIntervals)
     );
     if (isPositionalKMer) {
@@ -209,24 +203,24 @@ std::vector<int> getGappedKMerHash(
     return std::move(res);
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t,
-        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
+template<class input_vector_t,
+        class alphabet_encoding_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 KMerManager<kmer_dictionary_t> countGappedKMers(const std::vector<int> &gaps,
                                                 std::size_t totalKMerSize,
                                                 input_vector_t &sequence,
-                                                AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
+                                                alphabet_encoding_t &alphabetEncoding,
                                                 bool isPositionalKMer,
                                                 bool withKMerCounts,
                                                 const std::vector<PolynomialSingleHasherConfig> &hasherConfigs) {
     std::vector<std::pair<int, int>> contiguousIntervals = getContiguousIntervals(gaps);
-    PrefixSequencePolynomialHasher<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t> sequenceHasher(
+    PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> sequenceHasher(
             sequence, alphabetEncoding, hasherConfigs
     );
 
     std::vector<int> notAllowedItemsPrefixCount = std::move(
-            prepareNotAllowedItemsPrefixCount<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
+            prepareNotAllowedItemsPrefixCount<input_vector_t, alphabet_encoding_t>(
                     sequence,
                     alphabetEncoding
             )
@@ -244,21 +238,21 @@ KMerManager<kmer_dictionary_t> countGappedKMers(const std::vector<int> &gaps,
     return std::move(kMerManager);
 }
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t,
-        template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t,
+template<class input_vector_t, class input_elem_t,
+        class alphabet_encoding_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
 std::vector<KMerManager<kmer_dictionary_t>> parallelComputeGappedKMers(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
-        AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding,
+        alphabet_encoding_t &alphabetEncoding,
         const std::vector<PolynomialSingleHasherConfig> &hasherConfigs) {
     std::size_t totalKMerSize = getTotalKMerSize(kMerTaskConfig.gaps);
     return std::move(
-            parallelComputeKMers<input_vector_t, alphabet_dictionary_t, kmer_dictionary_t>(
+            parallelComputeKMers<input_vector_t, kmer_dictionary_t>(
                     kMerTaskConfig.sequencesNum,
                     [&kMerTaskConfig, &alphabetEncoding, &totalKMerSize, &hasherConfigs]
                             (input_vector_t &v) -> KMerManager<kmer_dictionary_t> {
-                        return countGappedKMers<input_vector_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t, kmer_dictionary_t>(
+                        return countGappedKMers<input_vector_t, alphabet_encoding_t, kmer_dictionary_t>(
                                 kMerTaskConfig.gaps,
                                 totalKMerSize,
                                 v,

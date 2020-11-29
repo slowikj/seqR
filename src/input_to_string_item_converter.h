@@ -22,21 +22,4 @@ inline InputToStringItemConverter_t<char> getCharToStringConverter() {
     };
 }
 
-
-inline InputToStringItemConverter_t<int> getIntToStringConverter() {
-    return [](const int &elem) -> std::string {
-        return std::to_string(elem);
-    };
-}
-
-inline InputToStringItemConverter_t<double> getDoubleToStringConverter(int decimalPrecision) {
-    return [decimalPrecision](const double &elem) -> std::string {
-        std::ostringstream stream;
-        stream << std::fixed << std::setprecision(decimalPrecision);
-        stream << elem;
-        return stream.str();
-    };
-}
-
-
 #endif

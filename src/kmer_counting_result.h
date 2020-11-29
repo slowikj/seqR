@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 #include <tuple>
-#include "hash/custom_hashers.h"
+#include "hash/custom_vector_int_hasher.h"
 
 class KMerCountingResult {
 public:

@@ -1,7 +1,6 @@
 // [[Rcpp::plugins("cpp17")]]
 #include <Rcpp.h>
-#include "alphabet_encoder.h"
-#include "hash/custom_hashers.h"
+#include "alphabet_encoder/default_alphabet_encoder.h"
 #include "dictionary/unordered_map_wrapper.h"
 #include <utility>
 #include <functional>
@@ -10,7 +9,7 @@ template<class rcpp_input_t, class input_elem_t, class encoded_elem_t,
         template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t>
 Rcpp::IntegerVector prepareOutputVector(
         rcpp_input_t &input) {
-    auto alphabetEncoding = getAlphabetEncoding<rcpp_input_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
+    auto alphabetEncoding = getDefaultAlphabetEncoder<rcpp_input_t, input_elem_t, encoded_elem_t, alphabet_dictionary_t>(
             input
     );
     auto res = Rcpp::IntegerVector(input.size());

@@ -2,17 +2,17 @@
 #define ROLLING_WINDOW_H
 
 #include <memory>
-#include "../alphabet_encoder.h"
 #include "../hash/complex_hasher.h"
 #include "../utils.h"
 
-template<class input_vector_t, class input_elem_t, class encoded_elem_t, template<typename input_t, typename encoded_t, typename...> class alphabet_dictionary_t>
+template<class input_vector_t, class alphabet_encoding_t>
 class RollingWindow {
 public:
+    using encoded_elem_t = typename alphabet_encoding_t::encoded_elem_t;
 
     RollingWindow(input_vector_t &sequence,
                   ComplexHasher &&hasher,
-                  AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding) :
+                  alphabet_encoding_t &alphabetEncoding) :
             sequence(sequence),
             hasher(std::move(hasher)),
             alphabetEncoding(alphabetEncoding) {
@@ -28,7 +28,7 @@ public:
     }
 
     inline void append() {
-        encoded_elem_t encodedElem = this->alphabetEncoding.encode(
+        encoded_elem_t encodedElem = this->alphabetEncoding.encodeUnsafe(
                 this->sequence[this->nextElementIndex]
         );
         this->window.push(encodedElem);
@@ -65,7 +65,7 @@ public:
 private:
     input_vector_t &sequence;
 
-    AlphabetEncoding<input_elem_t, encoded_elem_t, alphabet_dictionary_t> &alphabetEncoding;
+    alphabet_encoding_t &alphabetEncoding;
 
     ComplexHasher hasher;
 

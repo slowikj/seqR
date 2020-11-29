@@ -1,7 +1,7 @@
 #ifndef KMER_COUNTS_MANAGER_H
 #define KMER_COUNTS_MANAGER_H
 
-#include "hash/custom_hashers.h"
+#include "hash/custom_vector_int_hasher.h"
 #include <vector>
 #include <memory>
 
@@ -32,7 +32,7 @@ public:
     using dict_t = kmer_dictionary_t<std::vector<int>, KMerHashInfo>;
 
     explicit KMerManager(bool kmerWithCounts) :
-            kmerWithCounts(kmerWithCounts) {
+            kMerWithCounts(kmerWithCounts) {
     }
 
     KMerManager(const KMerManager<kmer_dictionary_t> &) = default;
@@ -48,7 +48,7 @@ public:
     operator=(KMerManager<kmer_dictionary_t> &&) noexcept = default;
 
     inline void add(std::vector<int> &&hash, int position) {
-        if (kmerWithCounts) {
+        if (kMerWithCounts) {
             handleWithCounts(std::move(hash), position);
         } else {
             handleWithoutCounts(std::move(hash), position);
@@ -61,7 +61,7 @@ public:
 
 private:
     dict_t dictionary;
-    bool kmerWithCounts;
+    bool kMerWithCounts;
 
     inline void handleWithCounts(std::vector<int> &&hash, int position) {
         if (!dictionary.isPresent(hash)) {
