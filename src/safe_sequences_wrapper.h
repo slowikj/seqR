@@ -65,25 +65,4 @@ public:
     SafeSequencesVectorWrapper() = delete;
 };
 
-class SafeSequencesStringListWrapper : public BaseSequencesWrapper<std::string, char> {
-public:
-
-    explicit SafeSequencesStringListWrapper(const Rcpp::List &inputVector)
-            : SafeSequencesStringListWrapper(inputVector, 0, inputVector.size()) {}
-
-    SafeSequencesStringListWrapper(const Rcpp::List &inputVector, std::size_t begin, std::size_t end) {
-        this->initSequences(inputVector, begin, end);
-    }
-
-private:
-
-    void initSequences(const Rcpp::List &inputList, int begin, int end) {
-        this->sequences_.resize(end - begin);
-        for (int i = begin; i < end; ++i) {
-            Rcpp::StringVector listElem = inputList[i];
-            this->sequences_[i - begin] = std::move(Rcpp::as<std::string>(listElem[0]));
-        }
-    }
-};
-
 #endif //SEQR_SAFE_SEQUENCES_WRAPPER_H

@@ -14,14 +14,14 @@
 #include "encoded_sequence_row.h"
 
 template<class encoded_elem_t>
-class FastStringMatrixWrapper {
+class EncodedStringMatrix {
 public:
     using Row = EncodedSequenceRow<encoded_elem_t>;
 
-    FastStringMatrixWrapper(Rcpp::StringMatrix &matrix,
-                            std::unordered_map<Rcpp::StringMatrix::stored_type, encoded_elem_t> &encoder,
-                            int notAllowedEncodingNum,
-                            int begin, int end) :
+    EncodedStringMatrix(Rcpp::StringMatrix &matrix,
+                        std::unordered_map<Rcpp::StringMatrix::stored_type, encoded_elem_t> &encoder,
+                        int notAllowedEncodingNum,
+                        int begin, int end) :
             nrow(end - begin), ncol(matrix.ncol()) {
         this->encoded = std::move(std::shared_ptr<encoded_elem_t[]>(new encoded_elem_t[nrow * ncol]));
 
@@ -46,9 +46,9 @@ private:
 };
 
 template<class encoded_elem_t>
-inline SequenceGetter_t<typename FastStringMatrixWrapper<encoded_elem_t>::Row>
-getFastEncodedMatrixGetter(FastStringMatrixWrapper<encoded_elem_t> &wrapper, int rowOffset = 0) {
-    return [&wrapper, rowOffset](int rowNum) -> typename FastStringMatrixWrapper<encoded_elem_t>::Row {
+inline SequenceGetter_t<typename EncodedStringMatrix<encoded_elem_t>::Row>
+getFastEncodedMatrixGetter(EncodedStringMatrix<encoded_elem_t> &wrapper, int rowOffset = 0) {
+    return [&wrapper, rowOffset](int rowNum) -> typename EncodedStringMatrix<encoded_elem_t>::Row {
         return std::move(wrapper.row(rowNum + rowOffset));
     };
 }
@@ -78,10 +78,10 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
     IdentityAlphabetEncoder<encoded_elem_t> alphabetEncoder(alphabetBeginCnt, alphabetCnt - 1);
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
-        FastStringMatrixWrapper<encoded_elem_t> safeMatrixWrapper(sequenceMatrix,
-                                                                  stringAlphabetEncoder,
+        EncodedStringMatrix<encoded_elem_t> safeMatrixWrapper(sequenceMatrix,
+                                                              stringAlphabetEncoder,
                                                                    alphabetBeginCnt - 1,
-                                                                  seqBegin, seqEnd);
+                                                              seqBegin, seqEnd);
         KMerTaskConfig<typename decltype(safeMatrixWrapper)::Row, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
                 getFastEncodedMatrixGetter<encoded_elem_t>(safeMatrixWrapper),
