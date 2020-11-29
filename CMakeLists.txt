@@ -13,7 +13,7 @@ add_library(seqR
         src/utils.h
         src/hash/single_hasher.h
         src/hash/polynomial_single_hasher.h
-        src/hash/complex_hasher.h src/hash/custom_hashers.h
+        src/hash/complex_hasher.h src/hash/rcpp_string_hasher.h
         src/hash/rolling_window.h src/dictionary/unordered_map_wrapper.h src/default_alphabet_encoder.h
         src/proxy_hashing.cpp
         src/input_to_string_item_converter.h
@@ -25,4 +25,4 @@ add_library(seqR
         src/sequence_getter.h
         src/proxy_alphabet_encoder.cpp
         src/proxy_count_gapped_kmers.cpp
-        src/proxy_count_kmers.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h src/dictionary/iterator.h src/dictionary/linear_list_dictionary.h src/dictionary/supported_dict_names.h src/kmer_task_config.h src/kmer_task_solver.h src/kmer_counting_result.h src/kmer_position_info.h src/hash/primes.h src/find_kmers_specific/find_kmers_string_matrix.h src/find_kmers_specific/find_kmers_integer_matrix.h src/find_kmers_specific/find_kmers_numeric_matrix.h src/find_kmers_specific/find_kmers_string_list.h)
+        src/proxy_count_kmers.cpp src/rcpp_to_cpp_converters.h src/safe_sequences_wrapper.h src/dictionary/iterator.h src/dictionary/linear_list_dictionary.h src/dictionary/supported_dict_names.h src/kmer_task_config.h src/kmer_task_solver.h src/kmer_counting_result.h src/kmer_position_info.h src/hash/primes.h src/find_kmers_specific/find_kmers_string_matrix.h src/find_kmers_specific/find_kmers_integer_matrix.h src/find_kmers_specific/find_kmers_numeric_matrix.h src/find_kmers_specific/find_kmers_string_list.h src/hash/custom_vector_int_hasher.h)

@@ -13,14 +13,6 @@
 template<class input_vector_t>
 using SequenceGetter_t = std::function<input_vector_t(int)>;
 
-template<class elem_t>
-inline SequenceGetter_t<typename SafeSequencesMatrixWrapper<elem_t>::Row>
-getSafeMatrixRowGetter(SafeSequencesMatrixWrapper<elem_t> &sequenceWrapper, int rowOffset = 0) {
-    return [&sequenceWrapper, rowOffset](int rowNum) -> typename SafeSequencesMatrixWrapper<elem_t>::Row {
-        return std::move(sequenceWrapper.row(rowNum + rowOffset));
-    };
-}
-
 template<class rcpp_matrix_t, class elem_t>
 inline SequenceGetter_t<typename RcppParallel::RMatrix<elem_t>::Row>
 getRMatrixRowGetter(rcpp_matrix_t &rcppMatrix, int rowOffset = 0) {

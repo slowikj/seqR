@@ -1,7 +1,7 @@
 #ifndef KMER_COUNTS_MANAGER_H
 #define KMER_COUNTS_MANAGER_H
 
-#include "hash/custom_hashers.h"
+#include "hash/custom_vector_int_hasher.h"
 #include <vector>
 #include <memory>
 

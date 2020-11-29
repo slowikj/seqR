@@ -1,7 +1,3 @@
-//
-// Created by slowik on 28.11.2020.
-//
-
 #ifndef SEQR_FIND_KMERS_STRING_MATRIX_H
 #define SEQR_FIND_KMERS_STRING_MATRIX_H
 
@@ -12,6 +8,96 @@
 #include "../dictionary/unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
+#include "../hash/rcpp_string_hasher.h"
+#include "../sequence_getter.h"
+
+template<class encoded_elem_t>
+class FastStringMatrixWrapper {
+public:
+
+    class Row {
+    public:
+        Row(std::shared_ptr<encoded_elem_t[]> encoded, int begin, int size)
+                : encoded_(std::move(encoded)), begin_(begin), size_(size) {}
+
+        inline const encoded_elem_t &operator[](int index) const {
+            return this->encoded_[begin_ + index];
+        }
+
+        inline std::size_t size() const {
+            return this->size_;
+        }
+
+    private:
+        std::shared_ptr<encoded_elem_t[]> encoded_;
+        std::size_t begin_, size_;
+    };
+
+    FastStringMatrixWrapper(Rcpp::StringMatrix &matrix,
+                            std::unordered_map<Rcpp::StringMatrix::stored_type, encoded_elem_t> &encoder,
+                            int notAllowedEncodingNum,
+                            int begin, int end) :
+            nrow(end - begin), ncol(matrix.ncol()) {
+        this->encoded = std::move(std::shared_ptr<encoded_elem_t[]>(new encoded_elem_t[nrow * ncol]));
+
+        for (int r = begin; r < end; ++r) {
+            for (int c = 0; c < ncol; ++c) {
+                int encodedIndex = (r - begin) * ncol + c;
+                auto matrixElem = matrix(r, c);
+                encoded[encodedIndex] = encoder.find(matrixElem) != encoder.end() ?
+                                        encoder[matrixElem] :
+                                        notAllowedEncodingNum;
+            }
+        }
+    }
+
+    inline Row row(int index) {
+        return std::move(Row(encoded, index * ncol, ncol));
+    }
+
+private:
+    std::shared_ptr<encoded_elem_t[]> encoded;
+    int ncol, nrow;
+};
+
+template<class encoded_elem_t_>
+class IdentityAlphabetEncoder {
+public:
+    using encoded_elem_t = encoded_elem_t_;
+    using input_elem_t = encoded_elem_t;
+
+    IdentityAlphabetEncoder(encoded_elem_t_ allowedBegin,
+                            encoded_elem_t_ allowedEnd)
+            : allowedBegin(allowedBegin), allowedEnd(allowedEnd) {}
+
+    inline encoded_elem_t encode(const input_elem_t &inputElem) {
+        return inputElem;
+    }
+
+    inline encoded_elem_t encodeUnsafe(const input_elem_t &inputElem) {
+        return encode(inputElem);
+    }
+
+    inline bool isAllowed(const input_elem_t &inputElem) const {
+        return allowedBegin <= inputElem && inputElem <= allowedEnd;
+    }
+
+    inline std::size_t size() const {
+        return (allowedEnd - allowedBegin + 1);
+    }
+
+private:
+    encoded_elem_t_ allowedBegin, allowedEnd;
+
+};
+
+template<class encoded_elem_t>
+inline SequenceGetter_t<typename FastStringMatrixWrapper<encoded_elem_t>::Row>
+getFastEncodedMatrixGetter(FastStringMatrixWrapper<encoded_elem_t> &wrapper, int rowOffset = 0) {
+    return [&wrapper, rowOffset](int rowNum) -> typename FastStringMatrixWrapper<encoded_elem_t>::Row {
+        return std::move(wrapper.row(rowNum + rowOffset));
+    };
+}
 
 template<class algorithm_params_t>
 inline
@@ -24,27 +110,40 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                              int batchSize,
                              bool verbose,
                              algorithm_params_t &algorithmParams) {
-    auto cppAlphabet = std::move(Rcpp::as<std::vector<std::string>>(alphabet));
-    auto alphabetEncoding = std::move(
-            getDefaultAlphabetEncoder<std::vector<std::string>, std::string, short, UnorderedMapWrapper>(cppAlphabet));
+    using encodedElemType = short;
+    std::unordered_map<Rcpp::StringVector::stored_type, encodedElemType> stringAlphabetEncoder;
+    std::vector<std::string> alphabetStrings;
+    encodedElemType alphabetBeginCnt = 1;
+    encodedElemType alphabetCnt = alphabetBeginCnt;
+    for (const auto &alphabetElem: alphabet) {
+        if (stringAlphabetEncoder.find(alphabetElem) == stringAlphabetEncoder.end()) {
+            stringAlphabetEncoder[alphabetElem] = alphabetCnt++;
+            alphabetStrings.push_back(Rcpp::as<std::string>(alphabetElem));
+        }
+    }
+    IdentityAlphabetEncoder<encodedElemType> alphabetEncoder(alphabetBeginCnt, alphabetCnt - 1);
+
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
-        SafeSequencesMatrixWrapper<std::string> safeMatrixWrapper(sequenceMatrix, seqBegin, seqEnd);
-        KMerTaskConfig<SafeSequencesMatrixWrapper<std::string>::Row, decltype(alphabetEncoding)::input_elem_t> kMerTaskConfig(
+        FastStringMatrixWrapper<encodedElemType> safeMatrixWrapper(sequenceMatrix,
+                                                                   stringAlphabetEncoder,
+                                                                   alphabetBeginCnt - 1,
+                                                                   seqBegin, seqEnd);
+        KMerTaskConfig<typename decltype(safeMatrixWrapper)::Row, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
-                getSafeMatrixRowGetter<std::string>(safeMatrixWrapper),
+                getFastEncodedMatrixGetter<encodedElemType>(safeMatrixWrapper),
                 gaps,
                 positionalKMers,
                 withKMerCounts,
-                getStringToStringConverter(),
+                [&alphabetStrings](const encodedElemType& encodedElem) -> std::string { return alphabetStrings[encodedElem - 1]; },
                 DEFAULT_KMER_ITEM_SEPARATOR,
                 DEFAULT_KMER_SECTION_SEPARATOR);
         computeResult<
-                SafeSequencesMatrixWrapper<std::string>::Row,
-                decltype(alphabetEncoding)::input_elem_t,
-                DefaultAlphabetEncoder<std::string, short, UnorderedMapWrapper>,
+                typename decltype(safeMatrixWrapper)::Row,
+                decltype(alphabetEncoder)::input_elem_t,
+                decltype(alphabetEncoder),
                 algorithm_params_t>(kMerTaskConfig,
-                                    alphabetEncoding,
+                                    alphabetEncoder,
                                     kmerDictionaryName,
                                     algorithmParams,
                                     kMerCountingResult);

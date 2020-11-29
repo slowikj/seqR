@@ -1,7 +1,3 @@
-//
-// Created by slowik on 28.11.2020.
-//
-
 #ifndef SEQR_FIND_KMERS_NUMERIC_MATRIX_H
 #define SEQR_FIND_KMERS_NUMERIC_MATRIX_H
 
