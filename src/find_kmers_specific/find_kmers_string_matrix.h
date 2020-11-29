@@ -9,6 +9,7 @@
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
 #include "../sequence_getter.h"
+#include "../common_config.h"
 
 template<class encoded_elem_t>
 class FastStringMatrixWrapper {
@@ -109,7 +110,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                              int batchSize,
                              bool verbose,
                              algorithm_params_t &algorithmParams) {
-    using encoded_elem_t = short;
+    using encoded_elem_t = config::encoded_elem_t;
     std::unordered_map<Rcpp::StringVector::stored_type, encoded_elem_t> stringAlphabetEncoder;
     std::vector<std::string> alphabetStrings;
     encoded_elem_t alphabetBeginCnt = 1;

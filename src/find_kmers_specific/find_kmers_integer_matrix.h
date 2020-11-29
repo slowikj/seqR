@@ -8,6 +8,7 @@
 #include "../dictionary/unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
+#include "../common_config.h"
 
 inline InputToStringItemConverter_t<int> getIntToStringConverter() {
     return [](const int &elem) -> std::string {
@@ -26,8 +27,9 @@ Rcpp::List findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
                              int batchSize,
                              bool verbose,
                              algorithm_params_t &algorithmParams) {
+    using encoded_elem_t = config::encoded_elem_t ;
     auto alphabetEncoding = std::move(
-            getDefaultAlphabetEncoder<Rcpp::IntegerVector, int, short, UnorderedMapWrapper>(alphabet));
+            getDefaultAlphabetEncoder<Rcpp::IntegerVector, int, encoded_elem_t, UnorderedMapWrapper>(alphabet));
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         KMerTaskConfig<RcppParallel::RMatrix<int>::Row, int> kMerTaskConfig(
@@ -42,7 +44,7 @@ Rcpp::List findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
         computeResult<
                 RcppParallel::RMatrix<int>::Row,
                 decltype(alphabetEncoding)::input_elem_t,
-                DefaultAlphabetEncoder<int, short, UnorderedMapWrapper>,
+                decltype(alphabetEncoding),
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoding,
                                     kmerDictionaryName,
