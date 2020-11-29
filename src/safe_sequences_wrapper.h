@@ -1,8 +1,6 @@
 #ifndef SEQR_SAFE_SEQUENCES_WRAPPER_H
 #define SEQR_SAFE_SEQUENCES_WRAPPER_H
 
-#include "rcpp_to_cpp_converters.h"
-
 template<class sequence_t, class elem_t>
 class BaseSequencesWrapper {
 public:

@@ -8,7 +8,6 @@
 #include "../dictionary/unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
-#include "../hash/rcpp_string_hasher.h"
 #include "../sequence_getter.h"
 
 template<class encoded_elem_t>
