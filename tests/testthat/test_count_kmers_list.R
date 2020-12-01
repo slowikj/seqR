@@ -4,6 +4,7 @@ source("utils.R")
 invoke_test <- function(expected_res, ...) {
   result_list <- seqR::find_kmers_list(hashDim = 2,
                                        verbose=FALSE,
+                                       parallelMode=TRUE,
                                        ...)
   res <- convert_seqR_list_to_matrix(result_list)
   expect_matrices_equal(res, expected_res)

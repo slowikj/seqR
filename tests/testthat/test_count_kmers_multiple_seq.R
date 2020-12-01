@@ -6,6 +6,7 @@ invoke_test <- function(test_fun, expectedRes, ...) {
                           batchSize=100,
                           hashDim=2,
                           verbose=FALSE,
+                          parallelMode=TRUE,
                           ...)
   res <- convert_seqR_list_to_matrix(result_list)
   expect_matrices_equal(res, expectedRes)

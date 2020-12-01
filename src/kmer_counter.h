@@ -95,30 +95,4 @@ inline KMerManager<kmer_dictionary_t> countKMers(
     return std::move(kMerManager);
 }
 
-template<class input_vector_t, class input_elem_t,
-        class alphabet_encoding_t,
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
-inline
-std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
-        KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
-        alphabet_encoding_t &alphabetEncoding,
-        std::function<ComplexHasher()> complexHasherFactory) {
-    return std::move(
-            parallelComputeKMers<input_vector_t, kmer_dictionary_t>(
-                    kMerTaskConfig.sequencesNum,
-                    [&kMerTaskConfig, &alphabetEncoding, &complexHasherFactory]
-                            (input_vector_t &v) -> KMerManager<kmer_dictionary_t> {
-                        return countKMers<input_vector_t, alphabet_encoding_t, kmer_dictionary_t>(
-                                kMerTaskConfig.k,
-                                v,
-                                alphabetEncoding,
-                                kMerTaskConfig.positionalKMers,
-                                kMerTaskConfig.withKMerCounts,
-                                std::move(complexHasherFactory())
-                        );
-                    },
-                    kMerTaskConfig.sequenceGetter
-            ));
-}
-
 #endif //KMER_COUNTER_H

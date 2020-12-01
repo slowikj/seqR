@@ -26,6 +26,7 @@ Rcpp::List findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
                              const std::string &kmerDictionaryName,
                              int batchSize,
                              bool verbose,
+                             bool parallelMode,
                              algorithm_params_t &algorithmParams) {
     using encoded_elem_t = config::encoded_elem_t ;
     auto alphabetEncoding = std::move(
@@ -38,6 +39,7 @@ Rcpp::List findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
                 gaps,
                 positionalKMers,
                 withKMerCounts,
+                parallelMode,
                 getIntToStringConverter(),
                 DEFAULT_KMER_ITEM_SEPARATOR,
                 DEFAULT_KMER_SECTION_SEPARATOR);

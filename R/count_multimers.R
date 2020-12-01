@@ -9,7 +9,8 @@ count_multimers <- function(sequences,
                             kmer_dictionary_name="unordered_map",
                             batch_size=200,
                             hash_dim=2,
-                            verbose=FALSE) {
+                            verbose=FALSE,
+                            parallel_mode=TRUE) {
   if(length(k_vector) != length(kmer_gaps_list)) {
     stop("the length of 'k_vector' must have equal length to 'kmer_gaps_list' ")
   }
@@ -37,6 +38,7 @@ count_multimers <- function(sequences,
                 kmer_dictionary_name,
                 batch_size,
                 hash_dim,
-                verbose)
+                verbose,
+                parallel_mode)
   }))
 }

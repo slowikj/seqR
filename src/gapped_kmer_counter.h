@@ -238,32 +238,4 @@ KMerManager<kmer_dictionary_t> countGappedKMers(const std::vector<int> &gaps,
     return std::move(kMerManager);
 }
 
-template<class input_vector_t, class input_elem_t,
-        class alphabet_encoding_t,
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
-inline
-std::vector<KMerManager<kmer_dictionary_t>> parallelComputeGappedKMers(
-        KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
-        alphabet_encoding_t &alphabetEncoding,
-        const std::vector<PolynomialSingleHasherConfig> &hasherConfigs) {
-    std::size_t totalKMerSize = getTotalKMerSize(kMerTaskConfig.gaps);
-    return std::move(
-            parallelComputeKMers<input_vector_t, kmer_dictionary_t>(
-                    kMerTaskConfig.sequencesNum,
-                    [&kMerTaskConfig, &alphabetEncoding, &totalKMerSize, &hasherConfigs]
-                            (input_vector_t &v) -> KMerManager<kmer_dictionary_t> {
-                        return countGappedKMers<input_vector_t, alphabet_encoding_t, kmer_dictionary_t>(
-                                kMerTaskConfig.gaps,
-                                totalKMerSize,
-                                v,
-                                alphabetEncoding,
-                                kMerTaskConfig.positionalKMers,
-                                kMerTaskConfig.withKMerCounts,
-                                hasherConfigs
-                        );
-                    },
-                    kMerTaskConfig.sequenceGetter
-            ));
-}
-
 #endif

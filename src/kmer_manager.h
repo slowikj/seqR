@@ -15,7 +15,7 @@ struct KMerHashInfo {
     }
 
     KMerHashInfo(int seqStartPosition, int cnt) :
-            seqStartPosition(seqStartPosition), cnt(cnt) {
+            cnt(cnt), seqStartPosition(seqStartPosition) {
     }
 
     KMerHashInfo() = default;

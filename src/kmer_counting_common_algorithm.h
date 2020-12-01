@@ -50,19 +50,24 @@ public:
 template<class input_vector_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
-std::vector<KMerManager<kmer_dictionary_t>> parallelComputeKMers(
+std::vector<KMerManager<kmer_dictionary_t>> computeKMersForAllSequences(
         int rowsNum,
         CountingKMersProc_t<input_vector_t, kmer_dictionary_t> countingProc,
-        SequenceGetter_t<input_vector_t> sequenceGetter) {
+        SequenceGetter_t<input_vector_t> sequenceGetter,
+        bool parallelMode) {
     KMerCounterWorker<input_vector_t, kmer_dictionary_t> worker(rowsNum, countingProc, sequenceGetter);
-    RcppParallel::parallelFor(0, rowsNum, worker);
+    if (parallelMode) {
+        RcppParallel::parallelFor(0, rowsNum, worker);
+    } else {
+        worker(0, rowsNum);
+    }
     return std::move(worker.kMers);
 }
 
 template<class input_vector_t, class input_elem_t,
         class alphabet_encoding_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
-using ParallelKMerCountingProc_t = std::function<std::vector<KMerManager<kmer_dictionary_t>>(
+using KMerCountingProc_t = std::function<std::vector<KMerManager<kmer_dictionary_t>>(
         KMerTaskConfig<input_vector_t, input_elem_t> &,
         alphabet_encoding_t &)>;
 
@@ -70,12 +75,12 @@ template<class input_vector_t, class input_elem_t,
         class alphabet_encoding_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline
-void parallelGetKMerCounts(
+void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConf,
         alphabet_encoding_t &alphabetEncoding,
-        ParallelKMerCountingProc_t<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t> parallelKMerCountingProc,
+        KMerCountingProc_t<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t> kMerCountingProc,
         KMerCountingResult &kMerCountingResult) {
-    auto kMersManagers = std::move(parallelKMerCountingProc(kMerTaskConf, alphabetEncoding));
+    auto kMersManagers = std::move(kMerCountingProc(kMerTaskConf, alphabetEncoding));
 
     std::vector<KMerPositionInfo> kMersToCreate;
     for (int seqNum = 0; seqNum < kMersManagers.size(); ++seqNum) {
@@ -87,9 +92,9 @@ void parallelGetKMerCounts(
         }
     }
 
-    parallelComputeKMerStrings<input_vector_t, input_elem_t>(kMersToCreate,
-                                                             kMerTaskConf,
-                                                             kMerCountingResult.kMerStrings);
+    generateKMerStrings<input_vector_t, input_elem_t>(kMersToCreate,
+                                                      kMerTaskConf,
+                                                      kMerCountingResult.kMerStrings);
 
     kMerCountingResult.increaseProcessSequencesNum(kMerTaskConf.sequencesNum);
 }
