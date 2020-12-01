@@ -20,36 +20,34 @@ const std::string DEFAULT_KMER_SECTION_SEPARATOR = "_";
 template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
-inline
-void computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
-                   alphabet_encoding_t &alphabetEncoding,
-                   ParallelKMerCountingProc_t<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t> &parallelKMerCountingProc,
-                   KMerCountingResult &kMerCountingResult) {
-    parallelGetKMerCounts<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
-            kMerTaskConfig,
-            alphabetEncoding,
-            parallelKMerCountingProc,
-            kMerCountingResult);
-}
-
-template<class input_vector_t,
-        class input_elem_t,
-        class alphabet_encoding_t,
         template<typename key, typename value> class kmer_dictionary_t>
 inline
 void computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
                    alphabet_encoding_t &alphabetEncoding,
                    std::function<ComplexHasher()> &complexHasherFactory,
                    KMerCountingResult &kMerCountingResult) {
-    ParallelKMerCountingProc_t<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t> countingProc = [&complexHasherFactory](
+    KMerCountingProc_t<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t> countingProc = [&complexHasherFactory](
             KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
             alphabet_encoding_t &encoding) -> std::vector<KMerManager<kmer_dictionary_t>> {
         return std::move(
-                parallelComputeKMers<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
-                        kMerTaskConfig, encoding, complexHasherFactory));
+                computeKMersForAllSequences<input_vector_t, kmer_dictionary_t>(
+                        kMerTaskConfig.sequencesNum,
+                        [&kMerTaskConfig, &complexHasherFactory, &encoding]
+                                (input_vector_t &v) -> KMerManager<kmer_dictionary_t> {
+                            return countKMers<input_vector_t, alphabet_encoding_t, kmer_dictionary_t>(
+                                    kMerTaskConfig.k,
+                                    v,
+                                    encoding,
+                                    kMerTaskConfig.positionalKMers,
+                                    kMerTaskConfig.withKMerCounts,
+                                    std::move(complexHasherFactory())
+                            );
+                        },
+                        kMerTaskConfig.sequenceGetter,
+                        kMerTaskConfig.parallelMode
+                ));
     };
-    computeResult<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
+    updateKMerCountingResult<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
             kMerTaskConfig, alphabetEncoding, countingProc, kMerCountingResult);
 }
 
@@ -62,14 +60,30 @@ void computeResult(KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
                    alphabet_encoding_t &alphabetEncoding,
                    std::vector<PolynomialSingleHasherConfig> &hasherConfigs,
                    KMerCountingResult &kMerCountingResult) {
-    ParallelKMerCountingProc_t<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t> countingProc = [&hasherConfigs](
+    KMerCountingProc_t<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t> countingProc = [&hasherConfigs](
             KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
             alphabet_encoding_t &encoding) -> std::vector<KMerManager<kmer_dictionary_t>> {
+        std::size_t totalKMerSize = getTotalKMerSize(kMerTaskConfig.gaps);
         return std::move(
-                parallelComputeGappedKMers<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
-                        kMerTaskConfig, encoding, hasherConfigs));
+                computeKMersForAllSequences<input_vector_t, kmer_dictionary_t>(
+                        kMerTaskConfig.sequencesNum,
+                        [&kMerTaskConfig, &encoding, &totalKMerSize, &hasherConfigs]
+                                (input_vector_t &v) -> KMerManager<kmer_dictionary_t> {
+                            return countGappedKMers<input_vector_t, alphabet_encoding_t, kmer_dictionary_t>(
+                                    kMerTaskConfig.gaps,
+                                    totalKMerSize,
+                                    v,
+                                    encoding,
+                                    kMerTaskConfig.positionalKMers,
+                                    kMerTaskConfig.withKMerCounts,
+                                    hasherConfigs
+                            );
+                        },
+                        kMerTaskConfig.sequenceGetter,
+                        kMerTaskConfig.parallelMode
+                ));
     };
-    computeResult<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
+    updateKMerCountingResult<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
             kMerTaskConfig, alphabetEncoding, countingProc, kMerCountingResult);
 }
 

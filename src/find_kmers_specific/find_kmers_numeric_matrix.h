@@ -28,6 +28,7 @@ Rcpp::List findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
                              const std::string &kmerDictionaryName,
                              int batchSize,
                              bool verbose,
+                             bool parallelMode,
                              algorithm_params_t &algorithmParams) {
     using encoded_elem_t = config::encoded_elem_t;
     auto alphabetEncoding = std::move(
@@ -36,11 +37,11 @@ Rcpp::List findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         KMerTaskConfig<RcppParallel::RMatrix<double>::Row, double> kMerTaskConfig(
                 (seqEnd - seqBegin),
-                getRMatrixRowGetter<Rcpp::NumericMatrix, decltype(alphabetEncoding)::input_elem_t>(sequenceMatrix,
-                                                                                                   seqBegin),
+                getRMatrixRowGetter<Rcpp::NumericMatrix, decltype(alphabetEncoding)::input_elem_t>(sequenceMatrix, seqBegin),
                 gaps,
                 positionalKMers,
                 withKMerCounts,
+                parallelMode,
                 getDoubleToStringConverter(3),
                 DEFAULT_KMER_ITEM_SEPARATOR,
                 DEFAULT_KMER_SECTION_SEPARATOR);

@@ -63,6 +63,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                              const std::string &kmerDictionaryName,
                              int batchSize,
                              bool verbose,
+                             bool parallelMode,
                              algorithm_params_t &algorithmParams) {
     using encoded_elem_t = config::encoded_elem_t;
     std::unordered_map<Rcpp::StringVector::stored_type, encoded_elem_t> stringAlphabetEncoder;
@@ -88,6 +89,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                 gaps,
                 positionalKMers,
                 withKMerCounts,
+                parallelMode,
                 [&alphabetStrings](const encoded_elem_t& encodedElem) -> std::string { return alphabetStrings[encodedElem - 1]; },
                 DEFAULT_KMER_ITEM_SEPARATOR,
                 DEFAULT_KMER_SECTION_SEPARATOR);

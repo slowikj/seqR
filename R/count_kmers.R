@@ -10,7 +10,8 @@ count_kmers <- function(sequences,
                        kmer_dictionary_name = "unordered_map",
                        batch_size = 100,
                        hash_dim = 2,
-                       verbose = FALSE) {
+                       verbose = FALSE,
+                       parallel_mode = TRUE) {
   if (is_empty(alphabet)) {
     stop("alphabet param is empty")
   }
@@ -60,7 +61,8 @@ count_kmers <- function(sequences,
       kmerDictionaryName=kmer_dictionary_name,
       batchSize=batch_size,
       hashDim=hash_dim,
-      verbose=verbose)
+      verbose=verbose,
+      parallelMode=parallel_mode)
   } else {
     invoke_gapped_kmer_function(
       sequences=sequences,
@@ -71,6 +73,7 @@ count_kmers <- function(sequences,
       kmerDictionaryName=kmer_dictionary_name,
       batchSize=batch_size,
       hashDim=hash_dim,
-      verbose=verbose)
+      verbose=verbose,
+      parallelMode=parallel_mode)
   }
 }

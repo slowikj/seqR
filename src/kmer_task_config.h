@@ -13,6 +13,7 @@ struct KMerTaskConfig {
     int k;
     bool positionalKMers;
     bool withKMerCounts;
+    bool parallelMode;
     InputToStringItemConverter_t<elem_t> inputToStringItemConverter;
     std::vector<int> gaps;
     std::string kMerItemSeparator;
@@ -23,6 +24,7 @@ struct KMerTaskConfig {
                    std::vector<int> &gaps,
                    bool positionalKMers,
                    bool withKMerCounts,
+                   bool parallelMode,
                    InputToStringItemConverter_t<elem_t> inputToStringItemConverter,
                    std::string kmerItemSeparator,
                    std::string kmerSectionSeparator) :
@@ -32,6 +34,7 @@ struct KMerTaskConfig {
             gaps(gaps),
             positionalKMers(positionalKMers),
             withKMerCounts(withKMerCounts),
+            parallelMode(parallelMode),
             inputToStringItemConverter(inputToStringItemConverter),
             kMerItemSeparator(std::move(kmerItemSeparator)),
             kMerSectionSeparator(std::move(kmerSectionSeparator)) {

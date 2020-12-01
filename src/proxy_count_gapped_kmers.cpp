@@ -38,12 +38,14 @@ Rcpp::List findKMers(sequences_t &sequences,
                      const std::string &kmerDictionaryName,
                      int batchSize,
                      int hashDim,
-                     bool verbose) {
+                     bool verbose,
+                     bool parallelMode) {
     auto hasherConfigs = std::move(getGappedKMerHasherConfigs(hashDim));
     return findKMersSpecific<decltype(hasherConfigs)>(
             sequences, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
             batchSize,
             verbose,
+            parallelMode,
             hasherConfigs);
 }
 
@@ -58,9 +60,10 @@ find_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
                          const std::string &kmerDictionaryName,
                          int batchSize,
                          int hashDim,
-                         bool verbose) {
+                         bool verbose,
+                         bool parallelMode) {
     return findKMers(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts,
-                     kmerDictionaryName, batchSize, hashDim, verbose);
+                     kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
 }
 
 //' @export
@@ -73,9 +76,10 @@ Rcpp::List find_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
                                      const std::string &kmerDictionaryName,
                                      int batchSize,
                                      int hashDim,
-                                     bool verbose) {
+                                     bool verbose,
+                                     bool parallelMode) {
     return findKMers(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts,
-                     kmerDictionaryName, batchSize, hashDim, verbose);
+                     kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
 }
 
 //' @export
@@ -88,9 +92,10 @@ Rcpp::List find_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
                                      const std::string &kmerDictionaryName,
                                      int batchSize,
                                      int hashDim,
-                                     bool verbose) {
+                                     bool verbose,
+                                     bool parallelMode) {
     return findKMers(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts,
-                     kmerDictionaryName, batchSize, hashDim, verbose);
+                     kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
 }
 
 //' @export
@@ -103,6 +108,7 @@ Rcpp::List find_gapped_kmers_list(Rcpp::List &sq,
                                   const std::string &kmerDictionaryName,
                                   int batchSize,
                                   int hashDim,
-                                  bool verbose) {
-    return findKMers(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose);
+                                  bool verbose,
+                                  bool parallelMode) {
+    return findKMers(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
 }

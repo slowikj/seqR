@@ -76,6 +76,7 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
                              const std::string &kmerDictionaryName,
                              int batchSize,
                              bool verbose,
+                             bool parallelMode,
                              algorithm_params_t &algorithmParams) {
     std::string alphabetStr("", alphabet.size());
     for (int i = 0; i < alphabet.size(); ++i) {
@@ -95,6 +96,7 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
                 gaps,
                 positionalKMers,
                 withKMerCounts,
+                parallelMode,
                 getCharToStringConverter(),
                 DEFAULT_KMER_ITEM_SEPARATOR,
                 DEFAULT_KMER_SECTION_SEPARATOR);

@@ -147,12 +147,16 @@ private:
 
 template<class input_vector_t, class input_elem_t>
 inline
-void parallelComputeKMerStrings(
+void generateKMerStrings(
         const std::vector<KMerPositionInfo> &indexedKMers,
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         std::vector<std::string> &resultStrings) {
     KMerStringsCreatorWorker<input_vector_t, input_elem_t> worker(indexedKMers, kMerTaskConfig, resultStrings);
-    RcppParallel::parallelFor(0, indexedKMers.size(), worker);
+    if (kMerTaskConfig.parallelMode) {
+        RcppParallel::parallelFor(0, indexedKMers.size(), worker);
+    } else {
+        worker(0, indexedKMers.size());
+    }
 }
 
 #endif

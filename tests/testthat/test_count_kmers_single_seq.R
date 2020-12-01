@@ -10,6 +10,7 @@ invoke_test <- function(fun, expectedRes, sequence, ...) {
                     batchSize=200,
                     hashDim=2,
                     verbose=FALSE,
+                    parallelMode=TRUE,
                      ...)
   res <- convert_seqR_list_to_matrix(resultList)
   
