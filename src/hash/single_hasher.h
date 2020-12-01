@@ -20,6 +20,8 @@ public:
         this->currentHash = 0;
     }
 
+    virtual ~SingleHasher() = default;
+
 protected:
     int currentHash = 0;
 
