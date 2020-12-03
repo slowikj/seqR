@@ -7,7 +7,7 @@
 #include "../dictionary/unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
-#include "../safe_sequences_wrapper.h"
+#include "safe_sequences_wrapper.h"
 #include <limits>
 
 class SafeStringListWrapper : public BaseSequencesWrapper<std::string, char> {
