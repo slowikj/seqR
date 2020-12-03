@@ -17,14 +17,6 @@
 #include <functional>
 #include <vector>
 
-template<class input_vector_t,
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
-using CountingKMersProc_t = std::function<KMerManager<kmer_dictionary_t>(input_vector_t &)>;
-
-template<class input_vector_t,
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
-class KMerCounterWorker;
-
 inline Rcpp::List computeKMersInBatches(
         const std::function<void(KMerCountingResult &, int, int)> &batchFunc,
         int sequencesNum,
@@ -61,6 +53,14 @@ inline void computeResult(
         alphabet_encoding_t &alphabetEncoding,
         std::function<hashing::ComplexHasher()> &complexHasherFactory,
         KMerCountingResult &kMerCountingResult);
+
+template<class input_vector_t,
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
+using CountingKMersProc_t = std::function<KMerManager<kmer_dictionary_t>(input_vector_t &)>;
+
+template<class input_vector_t,
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
+class KMerCounterWorker;
 
 template<class input_vector_t, class input_elem_t,
         class alphabet_encoding_t,

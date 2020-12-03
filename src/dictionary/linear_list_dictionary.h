@@ -1,9 +1,10 @@
 #ifndef SEQR_LINEAR_LIST_DICTIONARY_H
 #define SEQR_LINEAR_LIST_DICTIONARY_H
 
-#include<vector>
-#include<utility>
-#include<algorithm>
+#include <vector>
+#include <utility>
+#include <string>
+#include <algorithm>
 #include "iterator.h"
 
 namespace dictionary {
