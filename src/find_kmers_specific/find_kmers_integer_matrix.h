@@ -42,7 +42,7 @@ Rcpp::List findKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
                 getIntToStringConverter(),
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
                 config::DEFAULT_KMER_SECTION_SEPARATOR);
-        computeResult<
+        updateKMerCountingResult<
                 RcppParallel::RMatrix<int>::Row,
                 decltype(alphabetEncoding)::input_elem_t,
                 decltype(alphabetEncoding),

@@ -106,7 +106,7 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
                 getCharToStringConverter(),
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
                 config::DEFAULT_KMER_SECTION_SEPARATOR);
-        computeResult<
+        updateKMerCountingResult<
                 SafeStringListWrapper::Row,
                 decltype(alphabetEncoder)::input_elem_t,
                 decltype(alphabetEncoder),

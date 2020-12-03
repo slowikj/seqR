@@ -92,7 +92,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                 [&alphabetStrings](const encoded_elem_t& encodedElem) -> std::string { return alphabetStrings[encodedElem - 1]; },
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
                 config::DEFAULT_KMER_SECTION_SEPARATOR);
-        computeResult<
+        updateKMerCountingResult<
                 typename decltype(safeMatrixWrapper)::Row,
                 decltype(alphabetEncoder)::input_elem_t,
                 decltype(alphabetEncoder),

@@ -27,7 +27,7 @@ template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
         class algorithm_params_t>
-inline void computeResult(
+inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         const std::string &kMerDictionaryName,
@@ -38,7 +38,7 @@ template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
         template<typename key, typename value> class kmer_dictionary_t>
-inline void computeResult(
+inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs,
@@ -48,7 +48,7 @@ template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
         template<typename key, typename value> class kmer_dictionary_t>
-inline void computeResult(
+inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::function<hashing::ComplexHasher()> &complexHasherFactory,
@@ -102,17 +102,17 @@ template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
         class algorithm_params_t>
-inline void computeResult(
+inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         const std::string &kMerDictionaryName,
         algorithm_params_t &algorithmParams,
         KMerCountingResult &kMerCountingResult) {
     if (kMerDictionaryName == dictionary::names::UNORDERED_MAP_NAME) {
-        computeResult<input_vector_t, input_elem_t, alphabet_encoding_t, dictionary::UnorderedMapWrapper>(
+        updateKMerCountingResult<input_vector_t, input_elem_t, alphabet_encoding_t, dictionary::UnorderedMapWrapper>(
                 kMerTaskConfig, alphabetEncoding, algorithmParams, kMerCountingResult);
     } else if (kMerDictionaryName == dictionary::names::LINEAR_LIST_NAME) {
-        computeResult<input_vector_t, input_elem_t, alphabet_encoding_t, dictionary::LinearListDictionary>(
+        updateKMerCountingResult<input_vector_t, input_elem_t, alphabet_encoding_t, dictionary::LinearListDictionary>(
                 kMerTaskConfig, alphabetEncoding, algorithmParams, kMerCountingResult);
     } else {
         std::string errorMessage = "unsupported k-mer dictionary name: " + kMerDictionaryName;
@@ -124,7 +124,7 @@ template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
         template<typename key, typename value> class kmer_dictionary_t>
-inline void computeResult(
+inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs,
@@ -152,7 +152,7 @@ template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
         template<typename key, typename value> class kmer_dictionary_t>
-inline void computeResult(
+inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::function<hashing::ComplexHasher()> &complexHasherFactory,
