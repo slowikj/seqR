@@ -9,7 +9,6 @@
 #include <RcppParallel.h>
 #include <functional>
 #include <algorithm>
-#include "hash/complex_hasher.h"
 #include "utils.h"
 #include "kmer_task_config.h"
 

@@ -5,7 +5,7 @@
 #include <utility>
 #include <string>
 #include <algorithm>
-#include "iterator.h"
+#include "dict_iterator.h"
 
 namespace dictionary {
     template<class K, class V, class...>

@@ -1,5 +1,5 @@
-#ifndef SEQR_ITERATOR_H
-#define SEQR_ITERATOR_H
+#ifndef SEQR_DICT_ITERATOR_H
+#define SEQR_DICT_ITERATOR_H
 
 #include <iterator>
 
@@ -50,4 +50,4 @@ namespace dictionary {
 }
 
 
-#endif //SEQR_ITERATOR_H
+#endif //SEQR_DICT_ITERATOR_H

@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <functional>
 #include <algorithm>
-#include "iterator.h"
+#include "dict_iterator.h"
 
 namespace dictionary {
 

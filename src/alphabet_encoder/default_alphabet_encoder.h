@@ -1,7 +1,6 @@
 #ifndef ALPHABET_ENCODER_H
 #define ALPHABET_ENCODER_H
 
-#include <Rcpp.h>
 #include <functional>
 #include <memory>
 
