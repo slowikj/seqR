@@ -1,10 +1,14 @@
 #ifndef SEQR_KMER_TASK_CONFIG_H
 #define SEQR_KMER_TASK_CONFIG_H
 
-#include "sequence_getter.h"
-#include "input_to_string_item_converter.h"
 #include <utility>
 #include <vector>
+
+template<class input_vector_t>
+using SequenceGetter_t = std::function<input_vector_t(int)>;
+
+template<class input_elem_t>
+using InputToStringItemConverter_t = std::function<std::string(const input_elem_t &)>;
 
 template<class vector_t, class elem_t>
 struct KMerTaskConfig {

@@ -1,6 +1,9 @@
 #ifndef SEQR_SAFE_SEQUENCES_WRAPPER_H
 #define SEQR_SAFE_SEQUENCES_WRAPPER_H
 
+#include <utility>
+#include <vector>
+
 template<class sequence_t, class elem_t>
 class BaseSequencesWrapper {
 public:

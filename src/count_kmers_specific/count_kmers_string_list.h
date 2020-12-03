@@ -1,13 +1,13 @@
-#ifndef SEQR_FIND_KMERS_STRING_LIST_H
-#define SEQR_FIND_KMERS_STRING_LIST_H
+#ifndef SEQR_COUNT_KMERS_STRING_LIST_H
+#define SEQR_COUNT_KMERS_STRING_LIST_H
 
 #include <Rcpp.h>
 #include <vector>
-#include "../kmer_task_config.h"
 #include "../alphabet_encoder/default_alphabet_encoder.h"
 #include "../dictionary/unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
+#include "safe_sequences_wrapper.h"
 #include <limits>
 
 class SafeStringListWrapper : public BaseSequencesWrapper<std::string, char> {
@@ -66,9 +66,15 @@ getStringSequenceGetter(SafeStringListWrapper &sequencesWrapper, int rowOffset =
     };
 }
 
+inline InputToStringItemConverter_t<char> getCharToStringConverter() {
+    return [](const char &elem) -> std::string {
+        return std::string(1, elem);
+    };
+}
+
 template<class algorithm_params_t>
 inline
-Rcpp::List findKMersSpecific(Rcpp::List &sequences,
+Rcpp::List countKMersSpecific(Rcpp::List &sequences,
                              Rcpp::StringVector &alphabet,
                              std::vector<int> &gaps,
                              bool positionalKMers,
@@ -98,9 +104,9 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
                 withKMerCounts,
                 parallelMode,
                 getCharToStringConverter(),
-                DEFAULT_KMER_ITEM_SEPARATOR,
-                DEFAULT_KMER_SECTION_SEPARATOR);
-        computeResult<
+                config::DEFAULT_KMER_ITEM_SEPARATOR,
+                config::DEFAULT_KMER_SECTION_SEPARATOR);
+        updateKMerCountingResult<
                 SafeStringListWrapper::Row,
                 decltype(alphabetEncoder)::input_elem_t,
                 decltype(alphabetEncoder),
@@ -115,4 +121,4 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
 }
 
 
-#endif //SEQR_FIND_KMERS_STRING_LIST_H
+#endif //SEQR_COUNT_KMERS_STRING_LIST_H

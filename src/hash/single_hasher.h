@@ -5,26 +5,29 @@
 #include<functional>
 #include<utility>
 
-class SingleHasher {
-public:
+namespace hashing {
 
-    virtual void append(const int &elem) = 0;
+    class SingleHasher {
+    public:
 
-    virtual void removeFirst(const int &elem) = 0;
+        virtual void append(const int &elem) = 0;
 
-    virtual int getHash() const {
-        return currentHash;
-    }
+        virtual void removeFirst(const int &elem) = 0;
 
-    virtual void clear() {
-        this->currentHash = 0;
-    }
+        virtual int getHash() const {
+            return currentHash;
+        }
 
-    virtual ~SingleHasher() = default;
+        virtual void clear() {
+            this->currentHash = 0;
+        }
 
-protected:
-    int currentHash = 0;
+        virtual ~SingleHasher() = default;
 
-};
+    protected:
+        int currentHash = 0;
+
+    };
+}
 
 #endif
