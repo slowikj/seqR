@@ -10,7 +10,7 @@
 //' @export
 // [[Rcpp::export]]
 Rcpp::IntegerMatrix get_contiguous_intervals_matrix(const Rcpp::IntegerVector &gaps) {
-    auto intervals = getContiguousIntervals(gaps);
+    auto intervals = gappedKMers::getContiguousIntervals(gaps);
     Rcpp::IntegerMatrix res(intervals.size(), 2);
     for (int i = 0; i < intervals.size(); ++i) {
         res(i, 0) = intervals[i].first + 1;
@@ -19,10 +19,10 @@ Rcpp::IntegerMatrix get_contiguous_intervals_matrix(const Rcpp::IntegerVector &g
     return res;
 }
 
-inline std::vector<PolynomialSingleHasherConfig> getGappedKMerHasherConfigs(int hashDim) {
-    std::vector<PolynomialSingleHasherConfig> res;
+inline std::vector<hashing::PolynomialSingleHasherConfig> getGappedKMerHasherConfigs(int hashDim) {
+    std::vector<hashing::PolynomialSingleHasherConfig> res;
     for (int i = 0; i < hashDim; ++i) {
-        res.emplace_back(hashPrimes[i].first, hashPrimes[i].second);
+        res.emplace_back(hashing::hashPrimes[i].first, hashing::hashPrimes[i].second);
     }
     return std::move(res);
 }
@@ -110,5 +110,6 @@ Rcpp::List find_gapped_kmers_list(Rcpp::List &sq,
                                   int hashDim,
                                   bool verbose,
                                   bool parallelMode) {
-    return findKMers(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
+    return findKMers(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim,
+                     verbose, parallelMode);
 }

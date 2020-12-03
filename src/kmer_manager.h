@@ -29,7 +29,7 @@ template<
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 class KMerManager {
 public:
-    using dict_t = kmer_dictionary_t<std::vector<int>, KMerHashInfo>;
+    using dict_t = kmer_dictionary_t<std::vector<int>, KMerHashInfo, hashing::IntVectorHasher>;
 
     explicit KMerManager(bool kmerWithCounts) :
             kMerWithCounts(kmerWithCounts) {

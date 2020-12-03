@@ -3,8 +3,14 @@
 
 #include <string>
 
-const std::string UNORDERED_MAP_NAME = "unordered_map";
+namespace dictionary {
 
-const std::string LINEAR_LIST_NAME = "linear_list";
+    namespace names {
+        const std::string UNORDERED_MAP_NAME = "unordered_map";
+        const std::string LINEAR_LIST_NAME = "linear_list";
+
+    }
+}
+
 
 #endif //SEQR_SUPPORTED_DICT_NAMES_H

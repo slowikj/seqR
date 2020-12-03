@@ -3,7 +3,6 @@
 
 #include <Rcpp.h>
 #include <vector>
-#include "../kmer_task_config.h"
 #include "../alphabet_encoder/default_alphabet_encoder.h"
 #include "../dictionary/unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
@@ -32,7 +31,7 @@ Rcpp::List findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
                              algorithm_params_t &algorithmParams) {
     using encoded_elem_t = config::encoded_elem_t;
     auto alphabetEncoding = std::move(
-            getDefaultAlphabetEncoder<Rcpp::NumericVector, double, encoded_elem_t, UnorderedMapWrapper>(alphabet));
+            alphabetEncoding::getDefaultAlphabetEncoder<Rcpp::NumericVector, double, encoded_elem_t, dictionary::UnorderedMapWrapper>(alphabet));
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         KMerTaskConfig<RcppParallel::RMatrix<double>::Row, double> kMerTaskConfig(
@@ -43,8 +42,8 @@ Rcpp::List findKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
                 withKMerCounts,
                 parallelMode,
                 getDoubleToStringConverter(3),
-                DEFAULT_KMER_ITEM_SEPARATOR,
-                DEFAULT_KMER_SECTION_SEPARATOR);
+                config::DEFAULT_KMER_ITEM_SEPARATOR,
+                config::DEFAULT_KMER_SECTION_SEPARATOR);
         computeResult<
                 RcppParallel::RMatrix<double>::Row,
                 decltype(alphabetEncoding)::input_elem_t,

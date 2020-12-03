@@ -5,73 +5,76 @@
 #include "../hash/complex_hasher.h"
 #include "../utils.h"
 
-template<class input_vector_t, class alphabet_encoding_t>
-class RollingWindow {
-public:
-    using encoded_elem_t = typename alphabet_encoding_t::encoded_elem_t;
+namespace hashing {
 
-    RollingWindow(input_vector_t &sequence,
-                  ComplexHasher &&hasher,
-                  alphabet_encoding_t &alphabetEncoding) :
-            sequence(sequence),
-            hasher(std::move(hasher)),
-            alphabetEncoding(alphabetEncoding) {
-        this->nextElementIndex = 0;
-    }
+    template<class input_vector_t, class alphabet_encoding_t>
+    class RollingWindow {
+    public:
+        using encoded_elem_t = typename alphabet_encoding_t::encoded_elem_t;
 
-    RollingWindow() = delete;
+        RollingWindow(input_vector_t &sequence,
+                      ComplexHasher &&hasher,
+                      alphabet_encoding_t &alphabetEncoding) :
+                sequence(sequence),
+                hasher(std::move(hasher)),
+                alphabetEncoding(alphabetEncoding) {
+            this->nextElementIndex = 0;
+        }
 
-    inline void resetIndex(int nextElementIndex) {
-        this->nextElementIndex = nextElementIndex;
-        clear<encoded_elem_t>(this->window);
-        this->hasher.clear();
-    }
+        RollingWindow() = delete;
 
-    inline void append() {
-        encoded_elem_t encodedElem = this->alphabetEncoding.encodeUnsafe(
-                this->sequence[this->nextElementIndex]
-        );
-        this->window.push(encodedElem);
-        this->hasher.append(encodedElem);
-        ++this->nextElementIndex;
-    }
+        inline void resetIndex(int nextElementIndex) {
+            this->nextElementIndex = nextElementIndex;
+            util::clear<encoded_elem_t>(this->window);
+            this->hasher.clear();
+        }
 
-    inline void moveWindowRight() {
-        removeFirst();
-        append();
-    }
+        inline void append() {
+            encoded_elem_t encodedElem = this->alphabetEncoding.encodeUnsafe(
+                    this->sequence[this->nextElementIndex]
+            );
+            this->window.push(encodedElem);
+            this->hasher.append(encodedElem);
+            ++this->nextElementIndex;
+        }
 
-    inline void removeFirst() {
-        this->hasher.removeFirst(this->window.front());
-        this->window.pop();
-    }
+        inline void moveWindowRight() {
+            removeFirst();
+            append();
+        }
 
-    inline std::size_t sequenceSize() const {
-        return this->sequence.size();
-    }
+        inline void removeFirst() {
+            this->hasher.removeFirst(this->window.front());
+            this->window.pop();
+        }
 
-    inline std::vector<int> getWindowedHashes() const {
-        return this->hasher.getHashes();
-    }
+        inline std::size_t sequenceSize() const {
+            return this->sequence.size();
+        }
 
-    inline std::vector<int> getWindowedPositionedHashes() const {
-        return this->hasher.getHashes(this->nextElementIndex);
-    }
+        inline std::vector<int> getWindowedHashes() const {
+            return this->hasher.getHashes();
+        }
 
-    inline int currentBeginIndex() const {
-        return this->nextElementIndex - this->window.size();
-    }
+        inline std::vector<int> getWindowedPositionedHashes() const {
+            return this->hasher.getHashes(this->nextElementIndex);
+        }
 
-private:
-    input_vector_t &sequence;
+        inline int currentBeginIndex() const {
+            return this->nextElementIndex - this->window.size();
+        }
 
-    alphabet_encoding_t &alphabetEncoding;
+    private:
+        input_vector_t &sequence;
 
-    ComplexHasher hasher;
+        alphabet_encoding_t &alphabetEncoding;
 
-    std::queue<encoded_elem_t> window;
+        ComplexHasher hasher;
 
-    int nextElementIndex;
-};
+        std::queue<encoded_elem_t> window;
+
+        int nextElementIndex;
+    };
+}
 
 #endif

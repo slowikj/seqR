@@ -58,7 +58,7 @@ private:
 
     std::vector<int> kMerCounts;
 
-    std::unordered_map<std::vector<int>, int> kMerHash2ColumnIndex;
+    std::unordered_map<std::vector<int>, int, hashing::IntVectorHasher> kMerHash2ColumnIndex;
 
     int processedSequencesNum = 0;
 

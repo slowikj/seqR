@@ -9,14 +9,14 @@
 #include "find_kmers_specific/find_kmers_string_list.h"
 #include "hash/polynomial_single_hasher.h"
 
-inline ComplexHasher createKMerComplexHasher(int hashDim) {
-    std::vector<std::unique_ptr<SingleHasher>> singleHashers;
+inline hashing::ComplexHasher createKMerComplexHasher(int hashDim) {
+    std::vector<std::unique_ptr<hashing::SingleHasher>> singleHashers;
     for (int i = 0; i < hashDim; ++i) {
         singleHashers.emplace_back(
-                new PolynomialSingleHasher(
-                        PolynomialSingleHasherConfig(hashPrimes[i].first, hashPrimes[i].second)));
+                new hashing::PolynomialSingleHasher(
+                        hashing::PolynomialSingleHasherConfig(hashing::hashPrimes[i].first, hashing::hashPrimes[i].second)));
     }
-    ComplexHasher complexHasher(std::move(singleHashers));
+    hashing::ComplexHasher complexHasher(std::move(singleHashers));
     return complexHasher;
 }
 
@@ -32,7 +32,7 @@ Rcpp::List findKMers(sequences_t &sequences,
                      int hashDim,
                      bool verbose,
                      bool parallelMode) {
-    std::function<ComplexHasher()> algorithmParams = [hashDim]() -> ComplexHasher {
+    std::function<hashing::ComplexHasher()> algorithmParams = [hashDim]() -> hashing::ComplexHasher {
         return createKMerComplexHasher(hashDim);
     };
     std::vector<int> gaps(k - 1);

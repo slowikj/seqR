@@ -3,12 +3,11 @@
 
 #include <Rcpp.h>
 #include <vector>
-#include "../kmer_task_config.h"
 #include "../alphabet_encoder/default_alphabet_encoder.h"
 #include "../dictionary/unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
-#include "../sequence_getter.h"
+#include "rmatrix_row_getter.h"
 #include "../common_config.h"
 #include "../alphabet_encoder/identity_alphabet_encoder.h"
 #include "encoded_sequence_row.h"
@@ -76,7 +75,7 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
             alphabetStrings.push_back(Rcpp::as<std::string>(alphabetElem));
         }
     }
-    IdentityAlphabetEncoder<encoded_elem_t> alphabetEncoder(alphabetBeginCnt, alphabetCnt - 1);
+    alphabetEncoding::IdentityAlphabetEncoder<encoded_elem_t> alphabetEncoder(alphabetBeginCnt, alphabetCnt - 1);
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         EncodedStringMatrix<encoded_elem_t> safeMatrixWrapper(sequenceMatrix,
@@ -91,8 +90,8 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                 withKMerCounts,
                 parallelMode,
                 [&alphabetStrings](const encoded_elem_t& encodedElem) -> std::string { return alphabetStrings[encodedElem - 1]; },
-                DEFAULT_KMER_ITEM_SEPARATOR,
-                DEFAULT_KMER_SECTION_SEPARATOR);
+                config::DEFAULT_KMER_ITEM_SEPARATOR,
+                config::DEFAULT_KMER_SECTION_SEPARATOR);
         computeResult<
                 typename decltype(safeMatrixWrapper)::Row,
                 decltype(alphabetEncoder)::input_elem_t,

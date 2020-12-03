@@ -8,10 +8,7 @@
 #include <functional>
 #include <memory>
 #include <vector>
-#include "safe_sequences_wrapper.h"
-
-template<class input_vector_t>
-using SequenceGetter_t = std::function<input_vector_t(int)>;
+#include "../kmer_task_config.h"
 
 template<class rcpp_matrix_t, class elem_t>
 inline SequenceGetter_t<typename RcppParallel::RMatrix<elem_t>::Row>
@@ -21,7 +18,5 @@ getRMatrixRowGetter(rcpp_matrix_t &rcppMatrix, int rowOffset = 0) {
         return wrappedMatrix.row(rowNum + rowOffset);
     };
 }
-
-
 
 #endif

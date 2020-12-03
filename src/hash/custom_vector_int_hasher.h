@@ -7,12 +7,13 @@
 #include <functional>
 #include <algorithm>
 
-template<>
-struct std::hash<std::vector<int>> {
+namespace hashing {
 
-    inline std::size_t operator()(const std::vector<int> &c) const {
-        return boost::hash_range(c.begin(), c.end());
-    }
-};
+    struct IntVectorHasher {
+        inline std::size_t operator()(const std::vector<int> &c) const {
+            return boost::hash_range(c.begin(), c.end());
+        }
+    };
+}
 
 #endif //SEQR_CUSTOM_VECTOR_INT_HASHER_H

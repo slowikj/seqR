@@ -10,7 +10,7 @@ int compute_polynomial_hash(int P,
                             int M,
                             Rcpp::IntegerVector items,
                             int begin) {
-    PolynomialSingleHasher hasher(PolynomialSingleHasherConfig(P, M));
+    hashing::PolynomialSingleHasher hasher(hashing::PolynomialSingleHasherConfig(P, M));
     for (const int &item: items) {
         hasher.append(item);
     }
@@ -27,14 +27,14 @@ std::vector<int> compute_polynomial_multihash(Rcpp::IntegerVector P,
                                               Rcpp::IntegerVector items,
                                               int begin,
                                               int position) {
-    std::vector<std::unique_ptr<SingleHasher>> singleHashers;
+    std::vector<std::unique_ptr<hashing::SingleHasher>> singleHashers;
     for (int i = 0; i < P.size(); ++i) {
         singleHashers.emplace_back(
-                new PolynomialSingleHasher(PolynomialSingleHasherConfig(P[i], M[i]))
+                new hashing::PolynomialSingleHasher(hashing::PolynomialSingleHasherConfig(P[i], M[i]))
         );
     }
 
-    ComplexHasher hasher(std::move(singleHashers));
+    hashing::ComplexHasher hasher(std::move(singleHashers));
     for (const int &item: items) {
         hasher.append(item);
     }
