@@ -2,12 +2,11 @@ library(testthat)
 source("utils.R")
 
 invoke_test <- function(expected_res, ...) {
-  result_list <- seqR::find_kmers_list(hashDim = 2,
-                                       verbose=FALSE,
-                                       parallelMode=TRUE,
-                                       ...)
-  res <- convert_seqR_list_to_matrix(result_list)
-  expect_matrices_equal(res, expected_res)
+  res <- seqR::count_kmers(hash_dim = 2,
+                           verbose=FALSE,
+                           parallel_mode=TRUE,
+                           ...)
+  expect_matrices_equal(as.matrix(res), expected_res)
 }
 
 test_that("count 3-mers for sequences A+ in a list", {
@@ -20,12 +19,12 @@ test_that("count 3-mers for sequences A+ in a list", {
   colnames(expected_res) <- c("A.A.A_0.0")
   invoke_test(expected_res=expected_res,
               alphabet=c("A"),
-              sq=sq,
+              sequences=sq,
               k=3,
-              positionalKMers=FALSE,
-              withKMerCounts=TRUE,
-              kmerDictionaryName = "linear_list",
-              batchSize = 200)
+              positional=FALSE,
+              with_kmer_counts=TRUE,
+              kmer_dictionary_name = "linear_list",
+              batch_size = 200)
 })
 
 test_that("count 3-mers for sequences A+ longer in a list", {
@@ -38,12 +37,12 @@ test_that("count 3-mers for sequences A+ longer in a list", {
   colnames(expected_res) <- c("A.A.A_0.0")
   invoke_test(expected_res=expected_res,
               alphabet=c("A"),
-              sq=sq,
+              sequences=sq,
               k=3,
-              positionalKMers=FALSE,
-              withKMerCounts=TRUE,
-              kmerDictionaryName = "linear_list",
-              batchSize = 200)
+              positional=FALSE,
+              with_kmer_counts=TRUE,
+              kmer_dictionary_name = "linear_list",
+              batch_size = 200)
 })
 
 test_that("count non positional 10-mers sequences A+ longer in a list", {
@@ -58,12 +57,12 @@ test_that("count non positional 10-mers sequences A+ longer in a list", {
     paste0(rep("0", 9), collapse="."), collapse="")
   invoke_test(expected_res=expected_res,
               alphabet=c("A"),
-              sq=sq,
+              sequences=sq,
               k=10,
-              positionalKMers=FALSE,
-              withKMerCounts=TRUE,
-              kmerDictionaryName="unordered_map",
-              batchSize = 200)
+              positional=FALSE,
+              with_kmer_counts=TRUE,
+              kmer_dictionary_name="unordered_map",
+              batch_size = 200)
 })
 
 test_that("find 3-mers for sequences A+ (without k-mer counts) in a list", {
@@ -76,12 +75,12 @@ test_that("find 3-mers for sequences A+ (without k-mer counts) in a list", {
   colnames(expected_res) <- c("A.A.A_0.0")
   invoke_test(expected_res=expected_res,
               alphabet=c("A"),
-              sq=sq,
+              sequences=sq,
               k=3,
-              positionalKMers=FALSE,
-              withKMerCounts=FALSE,
-              kmerDictionaryName="linear_list",
-              batchSize = 200)
+              positional=FALSE,
+              with_kmer_counts=FALSE,
+              kmer_dictionary_name="linear_list",
+              batch_size = 200)
 })
 
 test_that("find 15-mers for sequences (AC){1000000} in a list", {
@@ -97,10 +96,10 @@ test_that("find 15-mers for sequences (AC){1000000} in a list", {
                               "C.A.C.A.C.A.C.A.C.A.C.A.C.A.C_0.0.0.0.0.0.0.0.0.0.0.0.0.0")
   invoke_test(expected_res=expected_res,
               alphabet=c("A", "C"),
-              sq=sq,
+              sequences=sq,
               k=15,
-              positionalKMers=FALSE,
-              withKMerCounts=TRUE,
-              kmerDictionaryName="unordered_map",
-              batchSize = 10)
+              positional=FALSE,
+              with_kmer_counts=TRUE,
+              kmer_dictionary_name="unordered_map",
+              batch_size = 10)
 })

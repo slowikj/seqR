@@ -49,7 +49,6 @@ Rcpp::List findKMers(sequences_t &sequences,
             hasherConfigs);
 }
 
-//' @export
 // [[Rcpp::export]]
 Rcpp::List
 find_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
@@ -66,7 +65,6 @@ find_gapped_kmers_string(Rcpp::StringMatrix &sequenceMatrix,
                      kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
 }
 
-//' @export
 // [[Rcpp::export]]
 Rcpp::List find_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
                                      Rcpp::IntegerVector &alphabet,
@@ -82,7 +80,6 @@ Rcpp::List find_gapped_kmers_integer(Rcpp::IntegerMatrix &sequenceMatrix,
                      kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
 }
 
-//' @export
 // [[Rcpp::export]]
 Rcpp::List find_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
                                      Rcpp::NumericVector &alphabet,
@@ -98,7 +95,6 @@ Rcpp::List find_gapped_kmers_numeric(Rcpp::NumericMatrix &sequenceMatrix,
                      kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
 }
 
-//' @export
 // [[Rcpp::export]]
 Rcpp::List find_gapped_kmers_list(Rcpp::List &sq,
                                   Rcpp::StringVector &alphabet,
