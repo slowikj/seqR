@@ -46,7 +46,7 @@ Rcpp::List countContiguousKMers(
             algorithmParams);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(".count_contiguous_kmers_string")]]
 Rcpp::List count_contiguous_kmers_string(
         Rcpp::StringMatrix &sequenceMatrix,
         Rcpp::StringVector &alphabet,
@@ -68,7 +68,7 @@ Rcpp::List count_contiguous_kmers_string(
     );
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(".count_contiguous_kmers_integer")]]
 Rcpp::List count_contiguous_kmers_integer(
         Rcpp::IntegerMatrix &sequenceMatrix,
         Rcpp::IntegerVector &alphabet,
@@ -90,7 +90,7 @@ Rcpp::List count_contiguous_kmers_integer(
     );
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(".count_contiguous_kmers_numeric")]]
 Rcpp::List count_contiguous_kmers_numeric(
         Rcpp::NumericMatrix &sequenceMatrix,
         Rcpp::NumericVector &alphabet,
@@ -112,7 +112,7 @@ Rcpp::List count_contiguous_kmers_numeric(
     );
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(".count_contiguous_kmers_list")]]
 Rcpp::List count_contiguous_kmers_list(
         Rcpp::List &sq,
         Rcpp::StringVector &alphabet,

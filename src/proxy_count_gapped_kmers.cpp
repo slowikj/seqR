@@ -38,7 +38,7 @@ Rcpp::List countGappedKMers(
             hasherConfigs);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(".count_gapped_kmers_string")]]
 Rcpp::List count_gapped_kmers_string(
         Rcpp::StringMatrix &sequenceMatrix,
         Rcpp::StringVector &alphabet,
@@ -55,7 +55,7 @@ Rcpp::List count_gapped_kmers_string(
             kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(".count_gapped_kmers_integer")]]
 Rcpp::List count_gapped_kmers_integer(
         Rcpp::IntegerMatrix &sequenceMatrix,
         Rcpp::IntegerVector &alphabet,
@@ -72,7 +72,7 @@ Rcpp::List count_gapped_kmers_integer(
             kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(".count_gapped_kmers_numeric")]]
 Rcpp::List count_gapped_kmers_numeric(
         Rcpp::NumericMatrix &sequenceMatrix,
         Rcpp::NumericVector &alphabet,
@@ -89,7 +89,7 @@ Rcpp::List count_gapped_kmers_numeric(
             kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(".count_gapped_kmers_list")]]
 Rcpp::List count_gapped_kmers_list(
         Rcpp::List &sq,
         Rcpp::StringVector &alphabet,

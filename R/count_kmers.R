@@ -52,7 +52,7 @@ count_kmers <- function(sequences,
   alphabet <- unique(alphabet)
   
   if(length(kmer_gaps) == 0) {
-    invoke_contiguous_kmer_function(
+    .invoke_contiguous_kmer_function(
       sequences=sequences,
       alphabet=alphabet,
       k=k,
@@ -64,7 +64,7 @@ count_kmers <- function(sequences,
       verbose=verbose,
       parallelMode=parallel_mode)
   } else {
-    invoke_gapped_kmer_function(
+    .invoke_gapped_kmer_function(
       sequences=sequences,
       alphabet=alphabet,
       gaps=rep(kmer_gaps, length.out=k-1),
