@@ -2,10 +2,10 @@
 #include <Rcpp.h>
 #include <memory>
 #include "hash/primes.h"
-#include "find_kmers_specific/find_kmers_integer_matrix.h"
-#include "find_kmers_specific/find_kmers_string_matrix.h"
-#include "find_kmers_specific/find_kmers_numeric_matrix.h"
-#include "find_kmers_specific/find_kmers_string_list.h"
+#include "count_kmers_specific/count_kmers_integer_matrix.h"
+#include "count_kmers_specific/count_kmers_string_matrix.h"
+#include "count_kmers_specific/count_kmers_numeric_matrix.h"
+#include "count_kmers_specific/count_kmers_string_list.h"
 
 inline std::vector<hashing::PolynomialSingleHasherConfig> getGappedKMerHasherConfigs(int hashDim) {
     std::vector<hashing::PolynomialSingleHasherConfig> res;
@@ -30,7 +30,7 @@ Rcpp::List countGappedKMers(
         bool verbose,
         bool parallelMode) {
     auto hasherConfigs = std::move(getGappedKMerHasherConfigs(hashDim));
-    return findKMersSpecific<decltype(hasherConfigs)>(
+    return countKMersSpecific<decltype(hasherConfigs)>(
             sequences, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
             batchSize,
             verbose,

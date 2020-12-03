@@ -1,5 +1,5 @@
-#ifndef SEQR_FIND_KMERS_STRING_LIST_H
-#define SEQR_FIND_KMERS_STRING_LIST_H
+#ifndef SEQR_COUNT_KMERS_STRING_LIST_H
+#define SEQR_COUNT_KMERS_STRING_LIST_H
 
 #include <Rcpp.h>
 #include <vector>
@@ -74,7 +74,7 @@ inline InputToStringItemConverter_t<char> getCharToStringConverter() {
 
 template<class algorithm_params_t>
 inline
-Rcpp::List findKMersSpecific(Rcpp::List &sequences,
+Rcpp::List countKMersSpecific(Rcpp::List &sequences,
                              Rcpp::StringVector &alphabet,
                              std::vector<int> &gaps,
                              bool positionalKMers,
@@ -121,4 +121,4 @@ Rcpp::List findKMersSpecific(Rcpp::List &sequences,
 }
 
 
-#endif //SEQR_FIND_KMERS_STRING_LIST_H
+#endif //SEQR_COUNT_KMERS_STRING_LIST_H

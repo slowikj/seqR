@@ -19,6 +19,6 @@ add_library(seqR
         src/contiguous_kmer_counter.h
         src/gapped_kmer_counter.h
         src/kmer_strings_creator.h
-        src/find_kmers_specific/rmatrix_row_getter.h
+        src/count_kmers_specific/rmatrix_row_getter.h
         src/proxy_count_gapped_kmers.cpp
-        src/proxy_count_contiguous_kmers.cpp src/find_kmers_specific/safe_sequences_wrapper.h src/dictionary/iterator.h src/dictionary/linear_list_dictionary.h src/dictionary/supported_dict_names.h src/kmer_task_config.h src/kmer_task_solver.h src/kmer_counting_result.h src/hash/primes.h src/find_kmers_specific/find_kmers_string_matrix.h src/find_kmers_specific/find_kmers_integer_matrix.h src/find_kmers_specific/find_kmers_numeric_matrix.h src/find_kmers_specific/find_kmers_string_list.h src/hash/custom_vector_int_hasher.h src/common_config.h src/alphabet_encoder/identity_alphabet_encoder.h src/find_kmers_specific/encoded_sequence_row.h)
+        src/proxy_count_contiguous_kmers.cpp src/count_kmers_specific/safe_sequences_wrapper.h src/dictionary/iterator.h src/dictionary/linear_list_dictionary.h src/dictionary/supported_dict_names.h src/kmer_task_config.h src/kmer_task_solver.h src/kmer_counting_result.h src/hash/primes.h src/count_kmers_specific/count_kmers_string_matrix.h src/count_kmers_specific/count_kmers_integer_matrix.h src/count_kmers_specific/count_kmers_numeric_matrix.h src/count_kmers_specific/count_kmers_string_list.h src/hash/custom_vector_int_hasher.h src/common_config.h src/alphabet_encoder/identity_alphabet_encoder.h src/count_kmers_specific/encoded_sequence_row.h)

@@ -3,10 +3,10 @@
 #include <memory>
 #include <vector>
 #include "hash/primes.h"
-#include "find_kmers_specific/find_kmers_integer_matrix.h"
-#include "find_kmers_specific/find_kmers_string_matrix.h"
-#include "find_kmers_specific/find_kmers_numeric_matrix.h"
-#include "find_kmers_specific/find_kmers_string_list.h"
+#include "count_kmers_specific/count_kmers_integer_matrix.h"
+#include "count_kmers_specific/count_kmers_string_matrix.h"
+#include "count_kmers_specific/count_kmers_numeric_matrix.h"
+#include "count_kmers_specific/count_kmers_string_list.h"
 #include "hash/polynomial_single_hasher.h"
 
 inline hashing::ComplexHasher createKMerComplexHasher(int hashDim) {
@@ -38,7 +38,7 @@ Rcpp::List countContiguousKMers(
         return createKMerComplexHasher(hashDim);
     };
     std::vector<int> gaps(k - 1);
-    return findKMersSpecific<decltype(algorithmParams)>(
+    return countKMersSpecific<decltype(algorithmParams)>(
             sequences, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
             batchSize,
             verbose,

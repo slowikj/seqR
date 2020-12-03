@@ -1,5 +1,5 @@
-#ifndef SEQR_FIND_KMERS_STRING_MATRIX_H
-#define SEQR_FIND_KMERS_STRING_MATRIX_H
+#ifndef SEQR_COUNT_KMERS_STRING_MATRIX_H
+#define SEQR_COUNT_KMERS_STRING_MATRIX_H
 
 #include <Rcpp.h>
 #include <vector>
@@ -54,7 +54,7 @@ getFastEncodedMatrixGetter(EncodedStringMatrix<encoded_elem_t> &wrapper, int row
 
 template<class algorithm_params_t>
 inline
-Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
+Rcpp::List countKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                              Rcpp::StringVector &alphabet,
                              std::vector<int> &gaps,
                              bool positionalKMers,
@@ -107,4 +107,4 @@ Rcpp::List findKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
 }
 
 
-#endif //SEQR_FIND_KMERS_STRING_MATRIX_H
+#endif //SEQR_COUNT_KMERS_STRING_MATRIX_H

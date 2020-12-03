@@ -10,7 +10,6 @@
 #include <functional>
 #include <algorithm>
 #include "hash/complex_hasher.h"
-#include "find_kmers_specific/rmatrix_row_getter.h"
 #include "utils.h"
 #include "kmer_task_config.h"
 
