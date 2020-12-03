@@ -5,39 +5,6 @@
 
 using namespace Rcpp;
 
-// encode_integer_alphabet
-Rcpp::IntegerVector encode_integer_alphabet(Rcpp::IntegerVector& input);
-RcppExport SEXP _seqR_encode_integer_alphabet(SEXP inputSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector& >::type input(inputSEXP);
-    rcpp_result_gen = Rcpp::wrap(encode_integer_alphabet(input));
-    return rcpp_result_gen;
-END_RCPP
-}
-// encode_numeric_alphabet
-Rcpp::IntegerVector encode_numeric_alphabet(Rcpp::NumericVector& input);
-RcppExport SEXP _seqR_encode_numeric_alphabet(SEXP inputSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type input(inputSEXP);
-    rcpp_result_gen = Rcpp::wrap(encode_numeric_alphabet(input));
-    return rcpp_result_gen;
-END_RCPP
-}
-// encode_string_alphabet
-Rcpp::IntegerVector encode_string_alphabet(Rcpp::StringVector& input);
-RcppExport SEXP _seqR_encode_string_alphabet(SEXP inputSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type input(inputSEXP);
-    rcpp_result_gen = Rcpp::wrap(encode_string_alphabet(input));
-    return rcpp_result_gen;
-END_RCPP
-}
 // count_contiguous_kmers_string
 Rcpp::List count_contiguous_kmers_string(Rcpp::StringMatrix& sequenceMatrix, Rcpp::StringVector& alphabet, int k, bool positionalKMers, bool withKMerCounts, const std::string& kmerDictionaryName, int batchSize, int hashDim, bool verbose, bool parallelMode);
 RcppExport SEXP _seqR_count_contiguous_kmers_string(SEXP sequenceMatrixSEXP, SEXP alphabetSEXP, SEXP kSEXP, SEXP positionalKMersSEXP, SEXP withKMerCountsSEXP, SEXP kmerDictionaryNameSEXP, SEXP batchSizeSEXP, SEXP hashDimSEXP, SEXP verboseSEXP, SEXP parallelModeSEXP) {
@@ -115,17 +82,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
     Rcpp::traits::input_parameter< bool >::type parallelMode(parallelModeSEXP);
     rcpp_result_gen = Rcpp::wrap(count_contiguous_kmers_list(sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode));
-    return rcpp_result_gen;
-END_RCPP
-}
-// get_contiguous_intervals_matrix
-Rcpp::IntegerMatrix get_contiguous_intervals_matrix(const Rcpp::IntegerVector& gaps);
-RcppExport SEXP _seqR_get_contiguous_intervals_matrix(SEXP gapsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::IntegerVector& >::type gaps(gapsSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_contiguous_intervals_matrix(gaps));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -209,51 +165,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// compute_polynomial_hash
-int compute_polynomial_hash(int P, int M, Rcpp::IntegerVector items, int begin);
-RcppExport SEXP _seqR_compute_polynomial_hash(SEXP PSEXP, SEXP MSEXP, SEXP itemsSEXP, SEXP beginSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type P(PSEXP);
-    Rcpp::traits::input_parameter< int >::type M(MSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type items(itemsSEXP);
-    Rcpp::traits::input_parameter< int >::type begin(beginSEXP);
-    rcpp_result_gen = Rcpp::wrap(compute_polynomial_hash(P, M, items, begin));
-    return rcpp_result_gen;
-END_RCPP
-}
-// compute_polynomial_multihash
-std::vector<int> compute_polynomial_multihash(Rcpp::IntegerVector P, Rcpp::IntegerVector M, Rcpp::IntegerVector items, int begin, int position);
-RcppExport SEXP _seqR_compute_polynomial_multihash(SEXP PSEXP, SEXP MSEXP, SEXP itemsSEXP, SEXP beginSEXP, SEXP positionSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type P(PSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type M(MSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type items(itemsSEXP);
-    Rcpp::traits::input_parameter< int >::type begin(beginSEXP);
-    Rcpp::traits::input_parameter< int >::type position(positionSEXP);
-    rcpp_result_gen = Rcpp::wrap(compute_polynomial_multihash(P, M, items, begin, position));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_seqR_encode_integer_alphabet", (DL_FUNC) &_seqR_encode_integer_alphabet, 1},
-    {"_seqR_encode_numeric_alphabet", (DL_FUNC) &_seqR_encode_numeric_alphabet, 1},
-    {"_seqR_encode_string_alphabet", (DL_FUNC) &_seqR_encode_string_alphabet, 1},
     {"_seqR_count_contiguous_kmers_string", (DL_FUNC) &_seqR_count_contiguous_kmers_string, 10},
     {"_seqR_count_contiguous_kmers_integer", (DL_FUNC) &_seqR_count_contiguous_kmers_integer, 10},
     {"_seqR_count_contiguous_kmers_numeric", (DL_FUNC) &_seqR_count_contiguous_kmers_numeric, 10},
     {"_seqR_count_contiguous_kmers_list", (DL_FUNC) &_seqR_count_contiguous_kmers_list, 10},
-    {"_seqR_get_contiguous_intervals_matrix", (DL_FUNC) &_seqR_get_contiguous_intervals_matrix, 1},
     {"_seqR_count_gapped_kmers_string", (DL_FUNC) &_seqR_count_gapped_kmers_string, 10},
     {"_seqR_count_gapped_kmers_integer", (DL_FUNC) &_seqR_count_gapped_kmers_integer, 10},
     {"_seqR_count_gapped_kmers_numeric", (DL_FUNC) &_seqR_count_gapped_kmers_numeric, 10},
     {"_seqR_count_gapped_kmers_list", (DL_FUNC) &_seqR_count_gapped_kmers_list, 10},
-    {"_seqR_compute_polynomial_hash", (DL_FUNC) &_seqR_compute_polynomial_hash, 4},
-    {"_seqR_compute_polynomial_multihash", (DL_FUNC) &_seqR_compute_polynomial_multihash, 5},
     {NULL, NULL, 0}
 };
 

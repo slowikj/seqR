@@ -1,4 +1,3 @@
-#' @export
 convert_seqR_list_to_slam_matrix <- function(seqR_list) {
   if (length(seqR_list$i) == 0) {
     slam::as.simple_triplet_matrix(matrix(nrow = seqR_list$seqNum,
