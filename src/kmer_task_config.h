@@ -3,6 +3,7 @@
 
 #include <utility>
 #include <vector>
+#include "user_params.h"
 
 template<class input_vector_t>
 using SequenceGetter_t = std::function<input_vector_t(int)>;
@@ -14,34 +15,25 @@ template<class vector_t, class elem_t>
 struct KMerTaskConfig {
     int sequencesNum;
     SequenceGetter_t<vector_t> sequenceGetter;
-    int k;
-    bool positionalKMers;
-    bool withKMerCounts;
-    bool parallelMode;
     InputToStringItemConverter_t<elem_t> inputToStringItemConverter;
-    std::vector<int> gaps;
+
     std::string kMerItemSeparator;
     std::string kMerSectionSeparator;
 
+    const UserParams &userParams;
+
     KMerTaskConfig(int sequencesNum,
                    SequenceGetter_t<vector_t> sequenceGetter,
-                   std::vector<int> &gaps,
-                   bool positionalKMers,
-                   bool withKMerCounts,
-                   bool parallelMode,
                    InputToStringItemConverter_t<elem_t> inputToStringItemConverter,
                    std::string kmerItemSeparator,
-                   std::string kmerSectionSeparator) :
+                   std::string kmerSectionSeparator,
+                   const UserParams &userParams) :
             sequencesNum(sequencesNum),
             sequenceGetter(sequenceGetter),
-            k(static_cast<int>(gaps.size()) + 1),
-            gaps(gaps),
-            positionalKMers(positionalKMers),
-            withKMerCounts(withKMerCounts),
-            parallelMode(parallelMode),
             inputToStringItemConverter(inputToStringItemConverter),
             kMerItemSeparator(std::move(kmerItemSeparator)),
-            kMerSectionSeparator(std::move(kmerSectionSeparator)) {
+            kMerSectionSeparator(std::move(kmerSectionSeparator)),
+            userParams(userParams) {
     }
 
 };

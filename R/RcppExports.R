@@ -10,35 +10,35 @@ NULL
 #' @importFrom  RcppParallel RcppParallelLibs
 NULL
 
-.count_contiguous_kmers_string <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode) {
-    .Call('_seqR_count_contiguous_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode)
+.count_contiguous_kmers_string <- function(sequenceMatrix, alphabet, rcppParams) {
+    .Call('_seqR_count_contiguous_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
 }
 
-.count_contiguous_kmers_integer <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode) {
-    .Call('_seqR_count_contiguous_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode)
+.count_contiguous_kmers_integer <- function(sequenceMatrix, alphabet, rcppParams) {
+    .Call('_seqR_count_contiguous_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
 }
 
-.count_contiguous_kmers_numeric <- function(sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode) {
-    .Call('_seqR_count_contiguous_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode)
+.count_contiguous_kmers_numeric <- function(sequenceMatrix, alphabet, rcppParams) {
+    .Call('_seqR_count_contiguous_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
 }
 
-.count_contiguous_kmers_list <- function(sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode) {
-    .Call('_seqR_count_contiguous_kmers_list', PACKAGE = 'seqR', sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode)
+.count_contiguous_kmers_list <- function(sq, alphabet, rcppParams) {
+    .Call('_seqR_count_contiguous_kmers_list', PACKAGE = 'seqR', sq, alphabet, rcppParams)
 }
 
-.count_gapped_kmers_string <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode) {
-    .Call('_seqR_count_gapped_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode)
+.count_gapped_kmers_string <- function(sequenceMatrix, alphabet, rcppParams) {
+    .Call('_seqR_count_gapped_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
 }
 
-.count_gapped_kmers_integer <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode) {
-    .Call('_seqR_count_gapped_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode)
+.count_gapped_kmers_integer <- function(sequenceMatrix, alphabet, rcppParams) {
+    .Call('_seqR_count_gapped_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
 }
 
-.count_gapped_kmers_numeric <- function(sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode) {
-    .Call('_seqR_count_gapped_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode)
+.count_gapped_kmers_numeric <- function(sequenceMatrix, alphabet, rcppParams) {
+    .Call('_seqR_count_gapped_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
 }
 
-.count_gapped_kmers_list <- function(sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode) {
-    .Call('_seqR_count_gapped_kmers_list', PACKAGE = 'seqR', sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim, verbose, parallelMode)
+.count_gapped_kmers_list <- function(sq, alphabet, rcppParams) {
+    .Call('_seqR_count_gapped_kmers_list', PACKAGE = 'seqR', sq, alphabet, rcppParams)
 }
 

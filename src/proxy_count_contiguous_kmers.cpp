@@ -26,45 +26,22 @@ template<class sequences_t,
 Rcpp::List countContiguousKMers(
         sequences_t &sequences,
         alphabet_t &alphabet,
-        int k,
-        bool positionalKMers,
-        bool withKMerCounts,
-        const std::string &kmerDictionaryName,
-        int batchSize,
-        int hashDim,
-        bool verbose,
-        bool parallelMode) {
-    std::function<hashing::ComplexHasher()> algorithmParams = [hashDim]() -> hashing::ComplexHasher {
-        return createKMerComplexHasher(hashDim);
+        Rcpp::Environment &rcppParams) {
+    auto userParams = UserParams::createForContiguous(rcppParams);
+    std::function<hashing::ComplexHasher()> algorithmParams = [&userParams]() -> hashing::ComplexHasher {
+        return createKMerComplexHasher(userParams.hashDim);
     };
-    std::vector<int> gaps(k - 1);
     return countKMersSpecific<decltype(algorithmParams)>(
-            sequences, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
-            batchSize,
-            verbose,
-            parallelMode,
-            algorithmParams);
+            sequences, alphabet, userParams, algorithmParams);
 }
 
 // [[Rcpp::export(".count_contiguous_kmers_string")]]
 Rcpp::List count_contiguous_kmers_string(
         Rcpp::StringMatrix &sequenceMatrix,
         Rcpp::StringVector &alphabet,
-        int k,
-        bool positionalKMers,
-        bool withKMerCounts,
-        const std::string &kmerDictionaryName,
-        int batchSize,
-        int hashDim,
-        bool verbose,
-        bool parallelMode) {
+        Rcpp::Environment &rcppParams) {
     return countContiguousKMers(
-            sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts,
-            kmerDictionaryName,
-            batchSize,
-            hashDim,
-            verbose,
-            parallelMode
+            sequenceMatrix, alphabet, rcppParams
     );
 }
 
@@ -72,21 +49,9 @@ Rcpp::List count_contiguous_kmers_string(
 Rcpp::List count_contiguous_kmers_integer(
         Rcpp::IntegerMatrix &sequenceMatrix,
         Rcpp::IntegerVector &alphabet,
-        int k,
-        bool positionalKMers,
-        bool withKMerCounts,
-        const std::string &kmerDictionaryName,
-        int batchSize,
-        int hashDim,
-        bool verbose,
-        bool parallelMode) {
+        Rcpp::Environment &rcppParams) {
     return countContiguousKMers(
-            sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts,
-            kmerDictionaryName,
-            batchSize,
-            hashDim,
-            verbose,
-            parallelMode
+            sequenceMatrix, alphabet, rcppParams
     );
 }
 
@@ -94,21 +59,9 @@ Rcpp::List count_contiguous_kmers_integer(
 Rcpp::List count_contiguous_kmers_numeric(
         Rcpp::NumericMatrix &sequenceMatrix,
         Rcpp::NumericVector &alphabet,
-        int k,
-        bool positionalKMers,
-        bool withKMerCounts,
-        const std::string &kmerDictionaryName,
-        int batchSize,
-        int hashDim,
-        bool verbose,
-        bool parallelMode) {
+        Rcpp::Environment &rcppParams) {
     return countContiguousKMers(
-            sequenceMatrix, alphabet, k, positionalKMers, withKMerCounts,
-            kmerDictionaryName,
-            batchSize,
-            hashDim,
-            verbose,
-            parallelMode
+            sequenceMatrix, alphabet, rcppParams
     );
 }
 
@@ -116,17 +69,7 @@ Rcpp::List count_contiguous_kmers_numeric(
 Rcpp::List count_contiguous_kmers_list(
         Rcpp::List &sq,
         Rcpp::StringVector &alphabet,
-        int k,
-        bool positionalKMers,
-        bool withKMerCounts,
-        const std::string &kmerDictionaryName,
-        int batchSize,
-        int hashDim,
-        bool verbose,
-        bool parallelMode) {
+        Rcpp::Environment& rcppParams) {
     return countContiguousKMers(
-            sq, alphabet, k, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize,
-            hashDim,
-            verbose,
-            parallelMode);
+            sq, alphabet, rcppParams);
 }

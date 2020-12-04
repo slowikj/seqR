@@ -20,13 +20,7 @@ template<class algorithm_params_t>
 inline
 Rcpp::List countKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
                              Rcpp::IntegerVector &alphabet,
-                             std::vector<int> &gaps,
-                             bool positionalKMers,
-                             bool withKMerCounts,
-                             const std::string &kmerDictionaryName,
-                             int batchSize,
-                             bool verbose,
-                             bool parallelMode,
+                             const UserParams &userParams,
                              algorithm_params_t &algorithmParams) {
     using encoded_elem_t = config::encoded_elem_t ;
     auto alphabetEncoding = std::move(
@@ -36,25 +30,21 @@ Rcpp::List countKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
         KMerTaskConfig<RcppParallel::RMatrix<int>::Row, int> kMerTaskConfig(
                 (seqEnd - seqBegin),
                 getRMatrixRowGetter<Rcpp::IntegerMatrix, decltype(alphabetEncoding)::input_elem_t>(sequenceMatrix, seqBegin),
-                gaps,
-                positionalKMers,
-                withKMerCounts,
-                parallelMode,
                 getIntToStringConverter(),
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
-                config::DEFAULT_KMER_SECTION_SEPARATOR);
+                config::DEFAULT_KMER_SECTION_SEPARATOR,
+                userParams);
         updateKMerCountingResult<
                 RcppParallel::RMatrix<int>::Row,
                 decltype(alphabetEncoding)::input_elem_t,
                 decltype(alphabetEncoding),
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoding,
-                                    kmerDictionaryName,
                                     algorithmParams,
                                     kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize, verbose);
+    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), userParams);
 }
 
 #endif //SEQR_COUNT_KMERS_INTEGER_MATRIX_H

@@ -20,7 +20,8 @@ License: MIT + file LICENSE
 Imports:
     Rcpp (>= 1.0.4),
     RcppParallel,
-    slam
+    slam,
+    rlang
 Depends:
     R(>= 3.6)
 LinkingTo:
