@@ -20,42 +20,34 @@ inline InputToStringItemConverter_t<double> getDoubleToStringConverter(int decim
 template<class algorithm_params_t>
 inline
 Rcpp::List countKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
-                             Rcpp::NumericVector &alphabet,
-                             std::vector<int> &gaps,
-                             bool positionalKMers,
-                             bool withKMerCounts,
-                             const std::string &kmerDictionaryName,
-                             int batchSize,
-                             bool verbose,
-                             bool parallelMode,
-                             algorithm_params_t &algorithmParams) {
+                              Rcpp::NumericVector &alphabet,
+                              const UserParams &userParams,
+                              algorithm_params_t &algorithmParams) {
     using encoded_elem_t = config::encoded_elem_t;
     auto alphabetEncoding = std::move(
-            alphabetEncoding::getDefaultAlphabetEncoder<Rcpp::NumericVector, double, encoded_elem_t, dictionary::UnorderedMapWrapper>(alphabet));
+            alphabetEncoding::getDefaultAlphabetEncoder<Rcpp::NumericVector, double, encoded_elem_t, dictionary::UnorderedMapWrapper>(
+                    alphabet));
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         KMerTaskConfig<RcppParallel::RMatrix<double>::Row, double> kMerTaskConfig(
                 (seqEnd - seqBegin),
-                getRMatrixRowGetter<Rcpp::NumericMatrix, decltype(alphabetEncoding)::input_elem_t>(sequenceMatrix, seqBegin),
-                gaps,
-                positionalKMers,
-                withKMerCounts,
-                parallelMode,
+                getRMatrixRowGetter<Rcpp::NumericMatrix, decltype(alphabetEncoding)::input_elem_t>(sequenceMatrix,
+                                                                                                   seqBegin),
                 getDoubleToStringConverter(3),
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
-                config::DEFAULT_KMER_SECTION_SEPARATOR);
+                config::DEFAULT_KMER_SECTION_SEPARATOR,
+                userParams);
         updateKMerCountingResult<
                 RcppParallel::RMatrix<double>::Row,
                 decltype(alphabetEncoding)::input_elem_t,
                 decltype(alphabetEncoding),
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoding,
-                                    kmerDictionaryName,
                                     algorithmParams,
                                     kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), batchSize, verbose);
+    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), userParams);
 }
 
 #endif //SEQR_COUNT_KMERS_NUMERIC_MATRIX_H

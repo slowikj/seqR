@@ -2,16 +2,16 @@
 #' @include kmer_functions_provider.R
 #' @export
 count_kmers <- function(sequences,
-                       k = length(kmer_gaps) + 1,
-                       alphabet,
-                       positional = FALSE,
-                       kmer_gaps = c(),
-                       with_kmer_counts = TRUE,
-                       kmer_dictionary_name = "unordered_map",
-                       batch_size = 100,
-                       hash_dim = 2,
-                       verbose = FALSE,
-                       parallel_mode = TRUE) {
+                        k = length(kmer_gaps) + 1,
+                        alphabet,
+                        positional = FALSE,
+                        kmer_gaps = c(),
+                        with_kmer_counts = TRUE,
+                        kmer_dictionary_name = "unordered_map",
+                        batch_size = 100,
+                        hash_dim = 2,
+                        verbose = FALSE,
+                        parallel_mode = TRUE) {
   if (is_empty(alphabet)) {
     stop("alphabet param is empty")
   }
@@ -51,29 +51,26 @@ count_kmers <- function(sequences,
   
   alphabet <- unique(alphabet)
   
-  if(length(kmer_gaps) == 0) {
+  params <- rlang::env(
+    alphabet=alphabet,
+    positional=positional,
+    with_kmer_counts=with_kmer_counts,
+    kmer_dictionary_name=kmer_dictionary_name,
+    batch_size=batch_size,
+    hash_dim=hash_dim,
+    verbose=verbose,
+    parallel_mode=parallel_mode,
+    k=k
+  )
+  
+  if(sum(kmer_gaps) == 0) {
     .invoke_contiguous_kmer_function(
       sequences=sequences,
-      alphabet=alphabet,
-      k=k,
-      positionalKMers=positional,
-      withKMerCounts=with_kmer_counts,
-      kmerDictionaryName=kmer_dictionary_name,
-      batchSize=batch_size,
-      hashDim=hash_dim,
-      verbose=verbose,
-      parallelMode=parallel_mode)
+      params=params)
   } else {
+    params$gaps = rep(kmer_gaps, length.out=k-1)
     .invoke_gapped_kmer_function(
       sequences=sequences,
-      alphabet=alphabet,
-      gaps=rep(kmer_gaps, length.out=k-1),
-      positionalKMers=positional,
-      withKMerCounts=with_kmer_counts,
-      kmerDictionaryName=kmer_dictionary_name,
-      batchSize=batch_size,
-      hashDim=hash_dim,
-      verbose=verbose,
-      parallelMode=parallel_mode)
+      params)
   }
 }

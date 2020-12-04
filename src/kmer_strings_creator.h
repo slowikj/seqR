@@ -34,7 +34,7 @@ namespace stringsCreator {
             KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
             std::vector<std::string> &resultStrings) {
         KMerStringsCreatorWorker<input_vector_t, input_elem_t> worker(indexedKMers, kMerTaskConfig, resultStrings);
-        if (kMerTaskConfig.parallelMode) {
+        if (kMerTaskConfig.userParams.parallelMode) {
             RcppParallel::parallelFor(0, indexedKMers.size(), worker);
         } else {
             worker(0, indexedKMers.size());
@@ -65,7 +65,7 @@ namespace stringsCreator {
                                  std::vector<std::string> &resultStrings) :
                 kMersToGenerate(kMersToGenerate),
                 kMerTaskConfig(kMerTaskConfig),
-                gapsAccumulated(std::move(util::getGapsAccumulated(kMerTaskConfig.gaps))),
+                gapsAccumulated(std::move(util::getGapsAccumulated(kMerTaskConfig.userParams.gaps))),
                 resultOffset(resultStrings.size()),
                 resultStrings(resultStrings) {
             resultStrings.resize(resultOffset + kMersToGenerate.size());
@@ -95,22 +95,22 @@ namespace stringsCreator {
                 auto seq = std::move(kMerTaskConfig.sequenceGetter(i));
                 this->kmerStringCreators.emplace_back(
                         std::move(seq),
-                        kMerTaskConfig.gaps, gapsAccumulated,
+                        kMerTaskConfig.userParams.gaps, gapsAccumulated,
                         kMerTaskConfig.kMerItemSeparator, kMerTaskConfig.kMerSectionSeparator,
                         kMerTaskConfig.inputToStringItemConverter);
             }
         }
 
         inline void prepareCreateKMerFunc() {
-            this->createKMerFunc = kMerTaskConfig.positionalKMers ?
-                                   static_cast<std::function<std::string(int, int)>>(
-                                           [this](int seqNum, int pos) {
-                                               return kmerStringCreators[seqNum].getPositional(pos);
-                                           }) :
-                                   static_cast<std::function<std::string(int, int)>>(
-                                           [this](int seqNum, int pos) {
-                                               return kmerStringCreators[seqNum].get(pos);
-                                           });
+            if (kMerTaskConfig.userParams.positional) {
+                this->createKMerFunc = [this](int seqNum, int pos) -> std::string {
+                    return kmerStringCreators[seqNum].getPositional(pos);
+                };
+            } else {
+                this->createKMerFunc = [this](int seqNum, int pos) -> std::string {
+                    return kmerStringCreators[seqNum].get(pos);
+                };
+            }
         }
 
     };

@@ -75,15 +75,9 @@ inline InputToStringItemConverter_t<char> getCharToStringConverter() {
 template<class algorithm_params_t>
 inline
 Rcpp::List countKMersSpecific(Rcpp::List &sequences,
-                             Rcpp::StringVector &alphabet,
-                             std::vector<int> &gaps,
-                             bool positionalKMers,
-                             bool withKMerCounts,
-                             const std::string &kmerDictionaryName,
-                             int batchSize,
-                             bool verbose,
-                             bool parallelMode,
-                             algorithm_params_t &algorithmParams) {
+                              Rcpp::StringVector &alphabet,
+                              const UserParams &userParams,
+                              algorithm_params_t &algorithmParams) {
     std::string alphabetStr("", alphabet.size());
     for (int i = 0; i < alphabet.size(); ++i) {
         alphabetStr[i] = Rcpp::as<char>(alphabet[i]);
@@ -99,25 +93,21 @@ Rcpp::List countKMersSpecific(Rcpp::List &sequences,
         KMerTaskConfig<SafeStringListWrapper::Row, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
                 getStringSequenceGetter(sequenceWrapper),
-                gaps,
-                positionalKMers,
-                withKMerCounts,
-                parallelMode,
                 getCharToStringConverter(),
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
-                config::DEFAULT_KMER_SECTION_SEPARATOR);
+                config::DEFAULT_KMER_SECTION_SEPARATOR,
+                userParams);
         updateKMerCountingResult<
                 SafeStringListWrapper::Row,
                 decltype(alphabetEncoder)::input_elem_t,
                 decltype(alphabetEncoder),
                 algorithm_params_t>(kMerTaskConfig,
                                     alphabetEncoder,
-                                    kmerDictionaryName,
                                     algorithmParams,
                                     kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequences.size(), batchSize, verbose);
+    return computeKMersInBatches(batchFunc, sequences.size(), userParams);
 }
 
 

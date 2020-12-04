@@ -21,87 +21,45 @@ inline
 Rcpp::List countGappedKMers(
         sequences_t &sequences,
         alphabet_t &alphabet,
-        std::vector<int> &gaps,
-        bool positionalKMers,
-        bool withKMerCounts,
-        const std::string &kmerDictionaryName,
-        int batchSize,
-        int hashDim,
-        bool verbose,
-        bool parallelMode) {
-    auto hasherConfigs = std::move(getGappedKMerHasherConfigs(hashDim));
+        Rcpp::Environment &rcppParams) {
+    auto userParams = std::move(UserParams::createForGapped(rcppParams));
+    auto hasherConfigs = std::move(getGappedKMerHasherConfigs(userParams.hashDim));
     return countKMersSpecific<decltype(hasherConfigs)>(
-            sequences, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName,
-            batchSize,
-            verbose,
-            parallelMode,
-            hasherConfigs);
+            sequences, alphabet, userParams, hasherConfigs);
 }
 
 // [[Rcpp::export(".count_gapped_kmers_string")]]
 Rcpp::List count_gapped_kmers_string(
         Rcpp::StringMatrix &sequenceMatrix,
         Rcpp::StringVector &alphabet,
-        std::vector<int> &gaps,
-        bool positionalKMers,
-        bool withKMerCounts,
-        const std::string &kmerDictionaryName,
-        int batchSize,
-        int hashDim,
-        bool verbose,
-        bool parallelMode) {
+        Rcpp::Environment &rcppParams) {
     return countGappedKMers(
-            sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts,
-            kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
+            sequenceMatrix, alphabet, rcppParams);
 }
 
 // [[Rcpp::export(".count_gapped_kmers_integer")]]
 Rcpp::List count_gapped_kmers_integer(
         Rcpp::IntegerMatrix &sequenceMatrix,
         Rcpp::IntegerVector &alphabet,
-        std::vector<int> &gaps,
-        bool positionalKMers,
-        bool withKMerCounts,
-        const std::string &kmerDictionaryName,
-        int batchSize,
-        int hashDim,
-        bool verbose,
-        bool parallelMode) {
+        Rcpp::Environment &rcppParams) {
     return countGappedKMers(
-            sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts,
-            kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
+            sequenceMatrix, alphabet, rcppParams);
 }
 
 // [[Rcpp::export(".count_gapped_kmers_numeric")]]
 Rcpp::List count_gapped_kmers_numeric(
         Rcpp::NumericMatrix &sequenceMatrix,
         Rcpp::NumericVector &alphabet,
-        std::vector<int> &gaps,
-        bool positionalKMers,
-        bool withKMerCounts,
-        const std::string &kmerDictionaryName,
-        int batchSize,
-        int hashDim,
-        bool verbose,
-        bool parallelMode) {
+        Rcpp::Environment &rcppParams) {
     return countGappedKMers(
-            sequenceMatrix, alphabet, gaps, positionalKMers, withKMerCounts,
-            kmerDictionaryName, batchSize, hashDim, verbose, parallelMode);
+            sequenceMatrix, alphabet, rcppParams);
 }
 
 // [[Rcpp::export(".count_gapped_kmers_list")]]
 Rcpp::List count_gapped_kmers_list(
         Rcpp::List &sq,
         Rcpp::StringVector &alphabet,
-        std::vector<int> &gaps,
-        bool positionalKMers,
-        bool withKMerCounts,
-        const std::string &kmerDictionaryName,
-        int batchSize,
-        int hashDim,
-        bool verbose,
-        bool parallelMode) {
+        Rcpp::Environment &rcppParams) {
     return countGappedKMers(
-            sq, alphabet, gaps, positionalKMers, withKMerCounts, kmerDictionaryName, batchSize, hashDim,
-            verbose, parallelMode);
+            sq, alphabet, rcppParams);
 }
