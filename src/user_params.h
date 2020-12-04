@@ -35,7 +35,7 @@ private:
             positional(Rcpp::as<bool>(params.get("positional"))),
             withKMerCounts(Rcpp::as<bool>(params.get("with_kmer_counts"))),
             kMerDictionaryName(Rcpp::as<std::string>(params.get("kmer_dictionary_name"))),
-            batchSize(Rcpp::as<bool>(params.get("batch_size"))),
+            batchSize(Rcpp::as<int>(params.get("batch_size"))),
             hashDim(Rcpp::as<int>(params.get("hash_dim"))),
             verbose(Rcpp::as<bool>(params.get("verbose"))),
             parallelMode(Rcpp::as<bool>(params.get("parallel_mode"))) {
