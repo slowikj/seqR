@@ -2,16 +2,16 @@
 #' @include kmer_functions_provider.R
 #' @export
 count_kmers <- function(sequences,
-                       k = length(kmer_gaps) + 1,
-                       alphabet,
-                       positional = FALSE,
-                       kmer_gaps = c(),
-                       with_kmer_counts = TRUE,
-                       kmer_dictionary_name = "unordered_map",
-                       batch_size = 100,
-                       hash_dim = 2,
-                       verbose = FALSE,
-                       parallel_mode = TRUE) {
+                        k = length(kmer_gaps) + 1,
+                        alphabet,
+                        positional = FALSE,
+                        kmer_gaps = c(),
+                        with_kmer_counts = TRUE,
+                        kmer_dictionary_name = "unordered_map",
+                        batch_size = 100,
+                        hash_dim = 2,
+                        verbose = FALSE,
+                        parallel_mode = TRUE) {
   if (is_empty(alphabet)) {
     stop("alphabet param is empty")
   }
@@ -51,7 +51,7 @@ count_kmers <- function(sequences,
   
   alphabet <- unique(alphabet)
   
-  if(length(kmer_gaps) == 0) {
+  if(sum(kmer_gaps) == 0) {
     .invoke_contiguous_kmer_function(
       sequences=sequences,
       alphabet=alphabet,
