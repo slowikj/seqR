@@ -102,15 +102,15 @@ namespace stringsCreator {
         }
 
         inline void prepareCreateKMerFunc() {
-            this->createKMerFunc = kMerTaskConfig.userParams.positional ?
-                                   static_cast<std::function<std::string(int, int)>>(
-                                           [this](int seqNum, int pos) {
-                                               return kmerStringCreators[seqNum].getPositional(pos);
-                                           }) :
-                                   static_cast<std::function<std::string(int, int)>>(
-                                           [this](int seqNum, int pos) {
-                                               return kmerStringCreators[seqNum].get(pos);
-                                           });
+            if (kMerTaskConfig.userParams.positional) {
+                this->createKMerFunc = [this](int seqNum, int pos) -> std::string {
+                    return kmerStringCreators[seqNum].getPositional(pos);
+                };
+            } else {
+                this->createKMerFunc = [this](int seqNum, int pos) -> std::string {
+                    return kmerStringCreators[seqNum].get(pos);
+                };
+            }
         }
 
     };
