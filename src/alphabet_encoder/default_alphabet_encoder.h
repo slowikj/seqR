@@ -63,7 +63,8 @@ namespace alphabetEncoding {
             template<typename key, typename value, typename...> class dictionary_t>
     inline
     DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t> getDefaultAlphabetEncoder(input_t &input) {
-        encoded_elem_t currentNum = 2;
+        const encoded_elem_t notAllowedElemNum = 1;
+        encoded_elem_t currentNum = notAllowedElemNum + 1;
         dictionary_t<input_elem_t, encoded_elem_t> encoder;
         for (const auto &inputElem: input) {
             if (!encoder.isPresent(inputElem)) {
@@ -72,7 +73,7 @@ namespace alphabetEncoding {
         }
         return DefaultAlphabetEncoder<input_elem_t, encoded_elem_t, dictionary_t>(
                 std::move(encoder),
-                1
+                notAllowedElemNum
         );
     }
 }

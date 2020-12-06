@@ -34,8 +34,9 @@ public:
     using encoded_elem_t = char;
     using input_elem_t = char;
 
-    explicit StringListAlphabetEncoder(std::array<bool, CHAR_MAX> &isElementAllowed, std::size_t size) :
-            isElementAllowed(isElementAllowed), size_(size) {
+    explicit StringListAlphabetEncoder(Rcpp::StringVector &alphabet) :
+            size_(alphabet.size()) {
+        prepareIsElementAllowed(alphabet);
     }
 
     inline encoded_elem_t encode(const input_elem_t &inputElem) const {
@@ -55,12 +56,18 @@ public:
     }
 
 private:
-    std::array<bool, CHAR_MAX> &isElementAllowed;
+    std::array<bool, CHAR_MAX> isElementAllowed{};
     std::size_t size_;
+
+    inline void prepareIsElementAllowed(Rcpp::StringVector &alphabet) {
+        for (const auto &allowedElem: alphabet) {
+            isElementAllowed[Rcpp::as<char>(allowedElem)] = true;
+        }
+    }
 };
 
 inline SequenceGetter_t<typename SafeStringListWrapper::Row>
-getStringSequenceGetter(SafeStringListWrapper &sequencesWrapper, int rowOffset = 0) {
+getCppStringSequenceGetter(SafeStringListWrapper &sequencesWrapper, int rowOffset = 0) {
     return [&sequencesWrapper, rowOffset](int rowNum) -> typename SafeStringListWrapper::Row {
         return std::move(sequencesWrapper.row(rowNum + rowOffset));
     };
@@ -72,27 +79,20 @@ inline InputToStringItemConverter_t<char> getCharToStringConverter() {
     };
 }
 
-template<class algorithm_params_t>
+template<class algorithm_params_t,
+        template<typename key, typename value, class...> class kmer_dictionary_t>
 inline
-Rcpp::List countKMersSpecific(Rcpp::List &sequences,
-                              Rcpp::StringVector &alphabet,
-                              const UserParams &userParams,
-                              algorithm_params_t &algorithmParams) {
-    std::string alphabetStr("", alphabet.size());
-    for (int i = 0; i < alphabet.size(); ++i) {
-        alphabetStr[i] = Rcpp::as<char>(alphabet[i]);
-    }
-    std::array<bool, CHAR_MAX> isElementAllowed{};
-    for (const char &allowedElem: alphabetStr) {
-        isElementAllowed[allowedElem] = true;
-    }
-    StringListAlphabetEncoder alphabetEncoder(isElementAllowed, alphabet.size());
+Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
+                                    Rcpp::StringVector &alphabet,
+                                    const UserParams &userParams,
+                                    algorithm_params_t &algorithmParams) {
+    StringListAlphabetEncoder alphabetEncoder(alphabet);
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         SafeStringListWrapper sequenceWrapper(sequences, seqBegin, seqEnd);
         KMerTaskConfig<SafeStringListWrapper::Row, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
-                getStringSequenceGetter(sequenceWrapper),
+                getCppStringSequenceGetter(sequenceWrapper),
                 getCharToStringConverter(),
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
                 config::DEFAULT_KMER_SECTION_SEPARATOR,
@@ -101,13 +101,35 @@ Rcpp::List countKMersSpecific(Rcpp::List &sequences,
                 SafeStringListWrapper::Row,
                 decltype(alphabetEncoder)::input_elem_t,
                 decltype(alphabetEncoder),
-                algorithm_params_t>(kMerTaskConfig,
-                                    alphabetEncoder,
-                                    algorithmParams,
-                                    kMerCountingResult);
+                kmer_dictionary_t>(kMerTaskConfig,
+                                   alphabetEncoder,
+                                   algorithmParams,
+                                   kMerCountingResult);
     };
 
     return computeKMersInBatches(batchFunc, sequences.size(), userParams);
+}
+
+template<class algorithm_params_t,
+        template<typename key, typename value, class...> class kmer_dictionary_t>
+inline
+Rcpp::List parallelCountKMersSpecific(Rcpp::List &sequences,
+                                      Rcpp::StringVector &alphabet,
+                                      const UserParams &userParams,
+                                      algorithm_params_t &algorithmParams) {
+    return commonCountKMersSpecific<algorithm_params_t, kmer_dictionary_t>(
+            sequences, alphabet, userParams, algorithmParams);
+}
+
+template<class algorithm_params_t,
+        template<typename key, typename value, class...> class kmer_dictionary_t>
+inline
+Rcpp::List sequentialCountKMersSpecific(Rcpp::List &sequences,
+                                        Rcpp::StringVector &alphabet,
+                                        const UserParams &userParams,
+                                        algorithm_params_t &algorithmParams) {
+    return commonCountKMersSpecific<algorithm_params_t, kmer_dictionary_t>(
+            sequences, alphabet, userParams, algorithmParams);
 }
 
 
