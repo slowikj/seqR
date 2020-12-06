@@ -4,6 +4,7 @@
 #include<queue>
 #include<functional>
 #include<utility>
+#include "types.h"
 
 namespace hashing {
 
@@ -14,7 +15,7 @@ namespace hashing {
 
         virtual void removeFirst(const int &elem) = 0;
 
-        virtual int getHash() const {
+        virtual single_hash_t getHash() const {
             return currentHash;
         }
 
@@ -25,7 +26,7 @@ namespace hashing {
         virtual ~SingleHasher() = default;
 
     protected:
-        int currentHash = 0;
+        single_hash_t currentHash = 0;
 
     };
 }
