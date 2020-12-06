@@ -1,11 +1,7 @@
 // [[Rcpp::plugins("cpp17")]]
 #include <Rcpp.h>
-#include <memory>
 #include "hash/primes.h"
-#include "count_kmers_specific/count_kmers_integer_matrix.h"
-#include "count_kmers_specific/count_kmers_string_matrix.h"
-#include "count_kmers_specific/count_kmers_numeric_matrix.h"
-#include "count_kmers_specific/count_kmers_string_list.h"
+#include "kmer_task_param_dispatcher.h"
 
 inline std::vector<hashing::PolynomialSingleHasherConfig> getGappedKMerHasherConfigs(int hashDim) {
     std::vector<hashing::PolynomialSingleHasherConfig> res;
@@ -24,7 +20,7 @@ Rcpp::List countGappedKMers(
         Rcpp::Environment &rcppParams) {
     auto userParams = std::move(UserParams::createForGapped(rcppParams));
     auto hasherConfigs = std::move(getGappedKMerHasherConfigs(userParams.hashDim));
-    return countKMersSpecific<decltype(hasherConfigs)>(
+    return countKMers<sequences_t, alphabet_t, decltype(hasherConfigs)>(
             sequences, alphabet, userParams, hasherConfigs);
 }
 

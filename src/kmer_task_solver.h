@@ -8,12 +8,11 @@
 #include "kmer_manager.h"
 #include "kmer_strings_creator.h"
 #include "kmer_counting_result.h"
-#include "dictionary/supported_dict_names.h"
-#include "dictionary/linear_list_dictionary.h"
-#include "dictionary/unordered_map_wrapper.h"
 #include "gapped_kmer_counter.h"
 #include "contiguous_kmer_counter.h"
 #include "kmer_task_config.h"
+#include "dictionary/supported_dict_names.h"
+#include "dictionary/linear_list_dictionary.h"
 #include <functional>
 #include <vector>
 
@@ -25,18 +24,8 @@ inline Rcpp::List computeKMersInBatches(
 template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
-        class algorithm_params_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline void updateKMerCountingResult(
-        KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
-        alphabet_encoding_t &alphabetEncoding,
-        algorithm_params_t &algorithmParams,
-        KMerCountingResult &kMerCountingResult);
-
-template<class input_vector_t,
-        class input_elem_t,
-        class alphabet_encoding_t,
-        template<typename key, typename value> class kmer_dictionary_t>
-inline void updateKMerCountingResultSpecifiedKMerDict(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs,
@@ -45,8 +34,8 @@ inline void updateKMerCountingResultSpecifiedKMerDict(
 template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
-        template<typename key, typename value> class kmer_dictionary_t>
-inline void updateKMerCountingResultSpecifiedKMerDict(
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
+inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::function<hashing::ComplexHasher()> &complexHasherFactory,
@@ -63,7 +52,7 @@ class KMerCounterWorker;
 template<class input_vector_t, class input_elem_t,
         class alphabet_encoding_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
-inline void updateKMerCountingResultSpecifiedKMerDict(
+inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         CountingKMersProc_t<input_vector_t, kmer_dictionary_t> countingProc,
         KMerCountingResult &kMerCountingResult);
@@ -98,35 +87,14 @@ inline Rcpp::List computeKMersInBatches(
 template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
-        class algorithm_params_t>
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline void updateKMerCountingResult(
-        KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
-        alphabet_encoding_t &alphabetEncoding,
-        algorithm_params_t &algorithmParams,
-        KMerCountingResult &kMerCountingResult) {
-    if (kMerTaskConfig.userParams.kMerDictionaryName == dictionary::names::UNORDERED_MAP_NAME) {
-        updateKMerCountingResultSpecifiedKMerDict<input_vector_t, input_elem_t, alphabet_encoding_t, dictionary::UnorderedMapWrapper>(
-                kMerTaskConfig, alphabetEncoding, algorithmParams, kMerCountingResult);
-    } else if (kMerTaskConfig.userParams.kMerDictionaryName == dictionary::names::LINEAR_LIST_NAME) {
-        updateKMerCountingResultSpecifiedKMerDict<input_vector_t, input_elem_t, alphabet_encoding_t, dictionary::LinearListDictionary>(
-                kMerTaskConfig, alphabetEncoding, algorithmParams, kMerCountingResult);
-    } else {
-        std::string errorMessage = "unsupported k-mer dictionary name: " + kMerTaskConfig.userParams.kMerDictionaryName;
-        throw Rcpp::exception(errorMessage.c_str());
-    }
-}
-
-template<class input_vector_t,
-        class input_elem_t,
-        class alphabet_encoding_t,
-        template<typename key, typename value> class kmer_dictionary_t>
-inline void updateKMerCountingResultSpecifiedKMerDict(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs,
         KMerCountingResult &kMerCountingResult) {
     std::size_t totalKMerSize = util::getKMerRange(kMerTaskConfig.userParams.gaps);
-    updateKMerCountingResultSpecifiedKMerDict<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
+    updateKMerCountingResult<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
             kMerTaskConfig,
             [&kMerTaskConfig, &alphabetEncoding, &totalKMerSize, &hasherConfigs]
                     (input_vector_t &v) -> KMerManager<kmer_dictionary_t> {
@@ -147,13 +115,13 @@ inline void updateKMerCountingResultSpecifiedKMerDict(
 template<class input_vector_t,
         class input_elem_t,
         class alphabet_encoding_t,
-        template<typename key, typename value> class kmer_dictionary_t>
-inline void updateKMerCountingResultSpecifiedKMerDict(
+        template<typename key, typename value, typename...> class kmer_dictionary_t>
+inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::function<hashing::ComplexHasher()> &complexHasherFactory,
         KMerCountingResult &kMerCountingResult) {
-    updateKMerCountingResultSpecifiedKMerDict<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
+    updateKMerCountingResult<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
             kMerTaskConfig,
             [&kMerTaskConfig, &complexHasherFactory, &alphabetEncoding]
                     (input_vector_t &v) -> KMerManager<kmer_dictionary_t> {
@@ -173,7 +141,7 @@ inline void updateKMerCountingResultSpecifiedKMerDict(
 template<class input_vector_t, class input_elem_t,
         class alphabet_encoding_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
-inline void updateKMerCountingResultSpecifiedKMerDict(
+inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         CountingKMersProc_t<input_vector_t, kmer_dictionary_t> countingProc,
         KMerCountingResult &kMerCountingResult) {

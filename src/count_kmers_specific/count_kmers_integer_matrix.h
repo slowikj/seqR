@@ -16,20 +16,22 @@ inline InputToStringItemConverter_t<int> getIntToStringConverter() {
     };
 }
 
-template<class algorithm_params_t>
+template<class algorithm_params_t,
+        template<typename key, typename value, class...> class kmer_dictionary_t>
 inline
-Rcpp::List countKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
-                             Rcpp::IntegerVector &alphabet,
-                             const UserParams &userParams,
-                             algorithm_params_t &algorithmParams) {
-    using encoded_elem_t = config::encoded_elem_t ;
-    auto alphabetEncoding = std::move(
-            alphabetEncoding::getDefaultAlphabetEncoder<Rcpp::IntegerVector, int, encoded_elem_t, dictionary::UnorderedMapWrapper>(alphabet));
+Rcpp::List commonCountKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
+                                    Rcpp::IntegerVector &alphabet,
+                                    const UserParams &userParams,
+                                    algorithm_params_t &algorithmParams) {
+    using encoded_elem_t = config::encoded_elem_t;
+    auto alphabetEncoding = alphabetEncoding::getDefaultAlphabetEncoder<Rcpp::IntegerVector, int, encoded_elem_t, dictionary::UnorderedMapWrapper>(
+            alphabet);
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
         KMerTaskConfig<RcppParallel::RMatrix<int>::Row, int> kMerTaskConfig(
                 (seqEnd - seqBegin),
-                getRMatrixRowGetter<Rcpp::IntegerMatrix, decltype(alphabetEncoding)::input_elem_t>(sequenceMatrix, seqBegin),
+                getRMatrixRowGetter<Rcpp::IntegerMatrix, decltype(alphabetEncoding)::input_elem_t>(
+                        sequenceMatrix, seqBegin),
                 getIntToStringConverter(),
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
                 config::DEFAULT_KMER_SECTION_SEPARATOR,
@@ -38,13 +40,36 @@ Rcpp::List countKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
                 RcppParallel::RMatrix<int>::Row,
                 decltype(alphabetEncoding)::input_elem_t,
                 decltype(alphabetEncoding),
-                algorithm_params_t>(kMerTaskConfig,
-                                    alphabetEncoding,
-                                    algorithmParams,
-                                    kMerCountingResult);
+                kmer_dictionary_t>(kMerTaskConfig,
+                                   alphabetEncoding,
+                                   algorithmParams,
+                                   kMerCountingResult);
     };
 
     return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), userParams);
 }
+
+template<class algorithm_params_t,
+        template<typename key, typename value, class...> class kmer_dictionary_t>
+inline
+Rcpp::List parallelCountKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
+                                      Rcpp::IntegerVector &alphabet,
+                                      const UserParams &userParams,
+                                      algorithm_params_t &algorithmParams) {
+    return commonCountKMersSpecific<algorithm_params_t, kmer_dictionary_t>(
+            sequenceMatrix, alphabet, userParams, algorithmParams);
+}
+
+template<class algorithm_params_t,
+        template<typename key, typename value, class...> class kmer_dictionary_t>
+inline
+Rcpp::List sequentialCountKMersSpecific(Rcpp::IntegerMatrix &sequenceMatrix,
+                                        Rcpp::IntegerVector &alphabet,
+                                        const UserParams &userParams,
+                                        algorithm_params_t &algorithmParams) {
+    return commonCountKMersSpecific<algorithm_params_t, kmer_dictionary_t>(
+            sequenceMatrix, alphabet, userParams, algorithmParams);
+}
+
 
 #endif //SEQR_COUNT_KMERS_INTEGER_MATRIX_H

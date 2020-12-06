@@ -3,11 +3,9 @@
 #include <memory>
 #include <vector>
 #include "hash/primes.h"
-#include "count_kmers_specific/count_kmers_integer_matrix.h"
-#include "count_kmers_specific/count_kmers_string_matrix.h"
-#include "count_kmers_specific/count_kmers_numeric_matrix.h"
-#include "count_kmers_specific/count_kmers_string_list.h"
 #include "hash/polynomial_single_hasher.h"
+#include "kmer_task_param_dispatcher.h"
+#include "hash/complex_hasher.h"
 
 inline hashing::ComplexHasher createKMerComplexHasher(int hashDim) {
     std::vector<std::unique_ptr<hashing::SingleHasher>> singleHashers;
@@ -31,7 +29,7 @@ Rcpp::List countContiguousKMers(
     std::function<hashing::ComplexHasher()> algorithmParams = [&userParams]() -> hashing::ComplexHasher {
         return createKMerComplexHasher(userParams.hashDim);
     };
-    return countKMersSpecific<decltype(algorithmParams)>(
+    return countKMers<sequences_t, alphabet_t, decltype(algorithmParams)>(
             sequences, alphabet, userParams, algorithmParams);
 }
 
