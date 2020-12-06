@@ -3,6 +3,7 @@
 
 #include "single_hasher.h"
 #include "../utils.h"
+#include "types.h"
 
 namespace hashing {
 
@@ -37,15 +38,13 @@ namespace hashing {
         }
 
         inline void removeFirst(const int &elem) override {
-            this->currentHash = static_cast<int>(
-                    (this->currentHash -
-                     ((static_cast<long long>(elem) * this->currentPowerP) % config.M) + config.M) % config.M
-            );
+            this->currentHash = ((this->currentHash -
+                     (this->currentPowerP * elem) % config.M) + config.M) % config.M;
             this->nextPowerP = this->computePreviousPowerP(this->nextPowerP);
             this->currentPowerP = this->computePreviousPowerP(this->currentPowerP);
         }
 
-        inline int getHash() const override {
+        inline single_hash_t getHash() const override {
             return SingleHasher::getHash();
         }
 
@@ -54,35 +53,29 @@ namespace hashing {
             this->initPowersP();
         }
 
-        inline int getCurrentPowerP() const {
+        inline single_hash_t getCurrentPowerP() const {
             return this->currentPowerP;
         }
 
     private:
         PolynomialSingleHasherConfig config;
-        int P_M_2; // P^(M-2) MOD M
-        int nextPowerP;
-        int currentPowerP;
+        single_hash_t P_M_2; // P^(M-2) MOD M
+        single_hash_t nextPowerP;
+        single_hash_t currentPowerP;
 
-        [[nodiscard]] inline int computeHash(int currentHash, const int &elem) const {
-            return static_cast<int>(
-                    (static_cast<long long>(this->currentHash) * config.P + elem) % config.M
-            );
+        [[nodiscard]] inline single_hash_t computeHash(single_hash_t currentHash, const int &elem) const {
+            return (this->currentHash * config.P + elem) % config.M;
         }
 
-        [[nodiscard]] inline int computeNextPowerP(int currentPowerP) const {
-            return static_cast<int>(
-                    (static_cast<long long>(currentPowerP) * config.P) % config.M
-            );
+        [[nodiscard]] inline single_hash_t computeNextPowerP(single_hash_t currentPowerP) const {
+            return (currentPowerP * config.P) % config.M;
         }
 
-        [[nodiscard]] inline int computePreviousPowerP(int currentPowerP) const {
+        [[nodiscard]] inline single_hash_t computePreviousPowerP(single_hash_t currentPowerP) const {
             if (currentPowerP == 1) {
                 return 0;
             }
-            return static_cast<int>(
-                    (static_cast<long long>(currentPowerP) * this->P_M_2) % config.M
-            );
+            return (currentPowerP * this->P_M_2) % config.M;
         }
 
         inline void initPowersP() {

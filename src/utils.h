@@ -13,7 +13,8 @@ namespace util {
         std::swap(q, empty);
     }
 
-    inline int computePowerFast(unsigned int base, unsigned int power, unsigned int modulo) {
+    inline unsigned long long
+    computePowerFast(unsigned long long base, unsigned long long power, unsigned long long modulo) {
         long long res = 1;
         long long current_base_power = base;
         while (power > 0) {
@@ -23,7 +24,7 @@ namespace util {
             power >>= 1;
             current_base_power = (current_base_power * current_base_power) % modulo;
         }
-        return static_cast<int>(res);
+        return res;
     }
 
     inline std::vector<int> getGapsAccumulated(const std::vector<int> &v) {

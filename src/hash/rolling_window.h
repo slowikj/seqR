@@ -2,6 +2,7 @@
 #define ROLLING_WINDOW_H
 
 #include <memory>
+#include "types.h"
 #include "../hash/complex_hasher.h"
 #include "../utils.h"
 
@@ -52,11 +53,11 @@ namespace hashing {
             return this->sequence.size();
         }
 
-        inline std::vector<int> getWindowedHashes() const {
+        inline hashing::multidim_hash_t getWindowedHashes() const {
             return this->hasher.getHashes();
         }
 
-        inline std::vector<int> getWindowedPositionedHashes() const {
+        inline hashing::multidim_hash_t getWindowedPositionedHashes() const {
             return this->hasher.getHashes(this->nextElementIndex);
         }
 
