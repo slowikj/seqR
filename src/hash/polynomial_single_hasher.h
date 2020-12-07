@@ -9,10 +9,11 @@
 namespace hashing {
 
     struct PolynomialSingleHasherConfig {
-        config::single_hash_t P;
-        config::single_hash_t M;
+        using elem_t = config::single_hash_t;
 
-        PolynomialSingleHasherConfig(config::single_hash_t P, config::single_hash_t M) :
+        elem_t P, M;
+
+        PolynomialSingleHasherConfig(elem_t P, elem_t M) :
                 P(P), M(M) {
         }
 
@@ -25,7 +26,7 @@ namespace hashing {
 
     class PolynomialSingleHasher : public SingleHasher {
     public:
-        PolynomialSingleHasher(PolynomialSingleHasherConfig &&config) :
+        explicit PolynomialSingleHasher(PolynomialSingleHasherConfig &&config) :
                 config(config) {
             this->P_M_2 = util::computePowerFast(config.P, config.M - 2, config.M);
             this->initPowersP();
@@ -90,7 +91,7 @@ namespace hashing {
             this->currentPowerP = 0;
         }
 
-        inline uint64_t getModuloM(uint64_t a) const {
+        [[nodiscard]] inline uint64_t getModuloM(uint64_t a) const {
             return fastmod::fastmod_u64(a, fastMod_M_conv, fastMod_M);
         }
     };
