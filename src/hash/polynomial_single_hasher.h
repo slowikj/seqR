@@ -9,10 +9,10 @@
 namespace hashing {
 
     struct PolynomialSingleHasherConfig {
-        int P;
-        int M;
+        config::single_hash_t P;
+        config::single_hash_t M;
 
-        PolynomialSingleHasherConfig(int P, int M) :
+        PolynomialSingleHasherConfig(config::single_hash_t P, config::single_hash_t M) :
                 P(P), M(M) {
         }
 
@@ -21,7 +21,6 @@ namespace hashing {
         PolynomialSingleHasherConfig(const PolynomialSingleHasherConfig &) = default;
 
         PolynomialSingleHasherConfig &operator=(const PolynomialSingleHasherConfig &) = default;
-
     };
 
     class PolynomialSingleHasher : public SingleHasher {
@@ -34,13 +33,13 @@ namespace hashing {
             this->fastMod_M_conv = fastmod::computeM_u64(this->fastMod_M);
         }
 
-        inline void append(const int &elem) override {
+        inline void append(elem_t elem) override {
             this->currentHash = this->computeHash(this->currentHash, elem);
             this->currentPowerP = this->nextPowerP;
             this->nextPowerP = this->computeNextPowerP(this->nextPowerP);
         }
 
-        inline void removeFirst(const int &elem) override {
+        inline void removeFirst(elem_t elem) override {
             this->currentHash = this->currentHash + fastMod_M - getModuloM(this->currentPowerP * elem);
             if (this->currentHash > config.M) {
                 this->currentHash -= config.M;
@@ -71,7 +70,7 @@ namespace hashing {
         __uint128_t fastMod_M_conv;
 
         [[nodiscard]] inline config::single_hash_t
-        computeHash(config::single_hash_t currentHash, const int &elem) const {
+        computeHash(config::single_hash_t currentHash, elem_t elem) const {
             return getModuloM(this->currentHash * config.P + elem);
         }
 
@@ -79,8 +78,7 @@ namespace hashing {
             return getModuloM(currentPowerP * config.P);
         }
 
-        [[nodiscard]] inline config::single_hash_t
-        computePreviousPowerP(config::single_hash_t currentPowerP) const {
+        [[nodiscard]] inline config::single_hash_t computePreviousPowerP(config::single_hash_t currentPowerP) const {
             if (currentPowerP == 1) {
                 return 0;
             }

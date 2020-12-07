@@ -12,7 +12,7 @@ namespace hashing {
 
     class ComplexHasher {
     public:
-        using elem_t = uint32_t;
+        using elem_t = SingleHasher::elem_t;
 
         explicit ComplexHasher(std::vector<std::unique_ptr<SingleHasher>> &&singleHashers) :
                 singleHashers(std::move(singleHashers)) {

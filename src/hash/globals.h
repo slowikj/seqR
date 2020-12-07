@@ -10,7 +10,7 @@ namespace hashing::config {
 
     using multidim_hash_t = std::vector<single_hash_t>;
 
-    using multidim_hasher_t = LLVectorHasher;
+    using multidim_hasher_t = std::hash<multidim_hash_t>;
 
     const static std::vector<std::pair<int, int>> hashPrimes = {
             {101, 1e9 + 7},

@@ -10,10 +10,11 @@ namespace hashing {
 
     class SingleHasher {
     public:
+        using elem_t = uint32_t;
 
-        virtual void append(const int &elem) = 0;
+        virtual void append(elem_t elem) = 0;
 
-        virtual void removeFirst(const int &elem) = 0;
+        virtual void removeFirst(elem_t elem) = 0;
 
         virtual config::single_hash_t getHash() const {
             return currentHash;
