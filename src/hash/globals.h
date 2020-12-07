@@ -6,7 +6,7 @@
 
 namespace hashing::config {
 
-    using single_hash_t = long long;
+    using single_hash_t = uint64_t;
 
     using multidim_hash_t = std::vector<single_hash_t>;
 

@@ -49,7 +49,7 @@ public:
     KMerManager<kmer_dictionary_t> &
     operator=(KMerManager<kmer_dictionary_t> &&) noexcept = default;
 
-    inline void add(hashing::config::multidim_hash_t &&hash, int position) {
+    inline void add(hash_t &&hash, int position) {
         if (kMerWithCounts) {
             handleWithCounts(std::move(hash), position);
         } else {

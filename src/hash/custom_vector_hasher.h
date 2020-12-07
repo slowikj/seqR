@@ -18,15 +18,8 @@ namespace hashing::internal {
 namespace std {
 
     template<>
-    struct hash<vector<int>> {
-        size_t operator()(const vector<int> &c) const {
-            return hashing::internal::computeHash(c);
-        }
-    };
-
-    template<>
-    struct hash<vector<long long>> {
-        inline size_t operator()(const vector<long long> &c) const {
+    struct hash<vector<uint32_t>> {
+        size_t operator()(const vector<uint32_t> &c) const {
             return hashing::internal::computeHash(c);
         }
     };

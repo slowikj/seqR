@@ -17,6 +17,7 @@ namespace hashing {
                                        alphabet_encoding_t &alphabetEncoding,
                                        const std::vector<PolynomialSingleHasherConfig> &polynomialHasherConfigs)
                 : polynomialHasherConfigs(polynomialHasherConfigs) {
+            initModuloMComputers(polynomialHasherConfigs);
             computePrefixValues(sequence, alphabetEncoding);
         }
 
@@ -24,9 +25,9 @@ namespace hashing {
             hash_t res(polynomialHasherConfigs.size());
             for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
                 auto M = polynomialHasherConfigs[hasherInd].M;
-                res[hasherInd] = ((prefixComplexHashes[end + 1][hasherInd]
-                                   - (prefixComplexHashes[begin][hasherInd] *
-                                      prefixP[end - begin + 1][hasherInd])) % M + M) % M;
+                res[hasherInd] = moduloMComputers[hasherInd].get(
+                        M + prefixComplexHashes[end + 1][hasherInd] - moduloMComputers[hasherInd].get(
+                                prefixComplexHashes[begin][hasherInd] * prefixP[end - begin + 1][hasherInd]));
             }
             return std::move(res);
         }
@@ -43,7 +44,8 @@ namespace hashing {
                 for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
                     int powerP = this->getHasherP(hasherInd, intervalLength);
                     int M = this->getHasherM(hasherInd);
-                    res[hasherInd] = (((res[hasherInd]) * powerP + intervalHash[hasherInd]) % M + M) % M;
+                    res[hasherInd] = moduloMComputers[hasherInd].get(
+                            res[hasherInd] * powerP + intervalHash[hasherInd]);
                 }
             }
             return std::move(res);
@@ -53,6 +55,13 @@ namespace hashing {
         const std::vector<PolynomialSingleHasherConfig> &polynomialHasherConfigs;
         std::vector<hash_t> prefixP;
         std::vector<hash_t> prefixComplexHashes;
+        std::vector<util::ModuloComputer> moduloMComputers;
+
+        void initModuloMComputers(const std::vector<PolynomialSingleHasherConfig> &configs) {
+            for (const auto &config : configs) {
+                moduloMComputers.emplace_back(config.M);
+            }
+        }
 
         inline void computePrefixValues(input_vector_t &sequence,
                                         alphabet_encoding_t &alphabetEncoding) {
@@ -88,7 +97,8 @@ namespace hashing {
             for (int hasherInd = 0; hasherInd < prefixHash.size(); ++hasherInd) {
                 auto P = polynomialHasherConfigs[hasherInd].P;
                 auto M = polynomialHasherConfigs[hasherInd].M;
-                prefixHash[hasherInd] = ((prefixComplexHashes.back()[hasherInd]) * P + encodedElem) % M;
+                prefixHash[hasherInd] = moduloMComputers[hasherInd].get(
+                        prefixComplexHashes.back()[hasherInd] * P + encodedElem);
             }
             prefixComplexHashes.push_back(std::move(prefixHash));
         }
@@ -98,7 +108,7 @@ namespace hashing {
             for (int hasherInd = 0; hasherInd < powersP.size(); ++hasherInd) {
                 auto P = polynomialHasherConfigs[hasherInd].P;
                 auto M = polynomialHasherConfigs[hasherInd].M;
-                powersP[hasherInd] = (prefixP.back()[hasherInd] * P) % M;
+                powersP[hasherInd] = moduloMComputers[hasherInd].get(prefixP.back()[hasherInd] * P);
             }
             prefixP.push_back(std::move(powersP));
         }

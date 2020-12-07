@@ -26,12 +26,11 @@ namespace hashing {
 
     class PolynomialSingleHasher : public SingleHasher {
     public:
-        explicit PolynomialSingleHasher(PolynomialSingleHasherConfig &&config):
-                config(config) {
+        explicit PolynomialSingleHasher(PolynomialSingleHasherConfig &&config) :
+                config(config), moduloMComputer(config.M) {
             this->P_M_2 = util::computePowerFast(config.P, config.M - 2, config.M);
             this->initPowersP();
-            this->fastMod_M = config.M;
-            this->fastMod_M_conv = fastmod::computeM_u64(this->fastMod_M);
+            this->M = config.M;
         }
 
         inline void append(elem_t elem) override {
@@ -41,7 +40,7 @@ namespace hashing {
         }
 
         inline void removeFirst(elem_t elem) override {
-            this->currentHash = this->currentHash + fastMod_M - getModuloM(this->currentPowerP * elem);
+            this->currentHash = this->currentHash + M - moduloMComputer.get(this->currentPowerP * elem);
             if (this->currentHash > config.M) {
                 this->currentHash -= config.M;
             }
@@ -67,22 +66,22 @@ namespace hashing {
         hash_t P_M_2; // P^(M-2) MOD M
         hash_t nextPowerP;
         hash_t currentPowerP;
-        uint64_t fastMod_M;
-        __uint128_t fastMod_M_conv;
+        uint64_t M;
+        util::ModuloComputer moduloMComputer;
 
         [[nodiscard]] inline hash_t computeHash(hash_t currentHash, elem_t elem) const {
-            return getModuloM(this->currentHash * config.P + elem);
+            return moduloMComputer.get(this->currentHash * config.P + elem);
         }
 
         [[nodiscard]] inline hash_t computeNextPowerP(hash_t currentPowerP) const {
-            return getModuloM(currentPowerP * config.P);
+            return moduloMComputer.get(currentPowerP * config.P);
         }
 
         [[nodiscard]] inline hash_t computePreviousPowerP(hash_t currentPowerP) const {
             if (currentPowerP == 1) {
                 return 0;
             }
-            return getModuloM(currentPowerP * this->P_M_2);
+            return moduloMComputer.get(currentPowerP * this->P_M_2);
         }
 
         inline void initPowersP() {
@@ -90,9 +89,6 @@ namespace hashing {
             this->currentPowerP = 0;
         }
 
-        [[nodiscard]] inline uint64_t getModuloM(uint64_t a) const {
-            return fastmod::fastmod_u64(a, fastMod_M_conv, fastMod_M);
-        }
     };
 }
 
