@@ -47,13 +47,13 @@ namespace hashing {
                     });
         }
 
-        [[nodiscard]] inline config::multidim_hash_t getHashes(std::size_t position) const {
+        [[nodiscard]] inline hash_t getHashes(std::size_t position) const {
             auto res = getHashes();
             res.push_back(position);
             return res;
         }
 
-        [[nodiscard]] inline config::multidim_hash_t getHashes() const {
+        [[nodiscard]] inline hash_t getHashes() const {
             return prepareResultHashes(
                     [](const std::unique_ptr<SingleHasher> &singleHasher) -> config::single_hash_t {
                         return singleHasher->getHash();
