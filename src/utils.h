@@ -78,6 +78,8 @@ namespace util {
         inline uint64_t get(uint64_t a) const {
             return a % M;
         }
+    private:
+        uint64_t M;
     };
 #endif
 
