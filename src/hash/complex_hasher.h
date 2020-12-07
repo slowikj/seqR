@@ -17,25 +17,31 @@ namespace hashing {
         }
 
         inline void clear() {
-            std::for_each(std::begin(this->singleHashers), std::end(this->singleHashers),
-                          [](std::unique_ptr<SingleHasher> &singleHasher) {
-                              singleHasher->clear();
-                          }
+            std::for_each(
+                    std::begin(this->singleHashers),
+                    std::end(this->singleHashers),
+                    [](std::unique_ptr<SingleHasher> &singleHasher) {
+                        singleHasher->clear();
+                    }
             );
         }
 
         inline void append(const int &elem) {
-            std::for_each(std::begin(this->singleHashers), std::end(this->singleHashers),
-                          [&elem](std::unique_ptr<SingleHasher> &singleHasher) {
-                              singleHasher->append(elem);
-                          });
+            std::for_each(
+                    std::begin(this->singleHashers),
+                    std::end(this->singleHashers),
+                    [&elem](std::unique_ptr<SingleHasher> &singleHasher) {
+                        singleHasher->append(elem);
+                    });
         }
 
         inline void removeFirst(const int &elem) {
-            std::for_each(std::begin(this->singleHashers), std::end(this->singleHashers),
-                          [&elem](std::unique_ptr<SingleHasher> &singleHasher) {
-                              singleHasher->removeFirst(elem);
-                          });
+            std::for_each(
+                    std::begin(this->singleHashers),
+                    std::end(this->singleHashers),
+                    [&elem](std::unique_ptr<SingleHasher> &singleHasher) {
+                        singleHasher->removeFirst(elem);
+                    });
         }
 
         [[nodiscard]] inline std::vector<config::single_hash_t> getHashes(int position) const {
@@ -58,9 +64,11 @@ namespace hashing {
         inline std::vector<config::single_hash_t> prepareResultHashes(
                 std::function<config::single_hash_t(const std::unique_ptr<SingleHasher> &)> &&transformFunc) const {
             std::vector<config::single_hash_t> resultHashes;
-            std::transform(std::begin(singleHashers), std::end(singleHashers),
-                           std::back_inserter(resultHashes),
-                           transformFunc);
+            std::transform(
+                    std::begin(singleHashers),
+                    std::end(singleHashers),
+                    std::back_inserter(resultHashes),
+                    transformFunc);
             return resultHashes;
         }
 
