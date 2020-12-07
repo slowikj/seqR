@@ -2,7 +2,7 @@
 #define GAPPED_KMER_COUNTER_H
 
 #include "hash/polynomial_single_hasher.h"
-#include "hash/types.h"
+#include "hash/globals.h"
 #include "kmer_manager.h"
 #include <vector>
 #include <memory>

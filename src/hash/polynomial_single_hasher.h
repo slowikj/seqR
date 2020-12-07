@@ -3,7 +3,7 @@
 
 #include "single_hasher.h"
 #include "../utils.h"
-#include "types.h"
+#include "globals.h"
 #include "../../inst/include/fast_modulo.h"
 
 namespace hashing {

@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <numeric>
 #include "single_hasher.h"
-#include "types.h"
+#include "globals.h"
 
 namespace hashing {
 

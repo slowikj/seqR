@@ -4,7 +4,7 @@
 #include<queue>
 #include<functional>
 #include<utility>
-#include "types.h"
+#include "globals.h"
 
 namespace hashing {
 

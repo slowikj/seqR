@@ -1,5 +1,5 @@
-#ifndef SEQR_TYPES_H
-#define SEQR_TYPES_H
+#ifndef SEQR_GLOBALS_H
+#define SEQR_GLOBALS_H
 
 #include "custom_vector_hasher.h"
 #include <vector>
@@ -12,4 +12,4 @@ namespace hashing {
     using multidim_hasher_t = LLVectorHasher;
 }
 
-#endif //SEQR_TYPES_H
+#endif //SEQR_GLOBALS_H

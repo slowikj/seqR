@@ -2,7 +2,7 @@
 #define KMER_COUNTS_MANAGER_H
 
 #include "hash/custom_vector_hasher.h"
-#include "hash/types.h"
+#include "hash/globals.h"
 #include <vector>
 #include <memory>
 

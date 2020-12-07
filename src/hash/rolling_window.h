@@ -2,7 +2,7 @@
 #define ROLLING_WINDOW_H
 
 #include <memory>
-#include "types.h"
+#include "globals.h"
 #include "../hash/complex_hasher.h"
 #include "../utils.h"
 
