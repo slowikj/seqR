@@ -12,6 +12,8 @@ namespace hashing {
 
     class ComplexHasher {
     public:
+        using elem_t = uint32_t;
+
         explicit ComplexHasher(std::vector<std::unique_ptr<SingleHasher>> &&singleHashers) :
                 singleHashers(std::move(singleHashers)) {
         }
@@ -26,7 +28,7 @@ namespace hashing {
             );
         }
 
-        inline void append(const int &elem) {
+        inline void append(elem_t elem) {
             std::for_each(
                     std::begin(this->singleHashers),
                     std::end(this->singleHashers),
@@ -35,7 +37,7 @@ namespace hashing {
                     });
         }
 
-        inline void removeFirst(const int &elem) {
+        inline void removeFirst(elem_t elem) {
             std::for_each(
                     std::begin(this->singleHashers),
                     std::end(this->singleHashers),
@@ -44,15 +46,15 @@ namespace hashing {
                     });
         }
 
-        [[nodiscard]] inline std::vector<config::single_hash_t> getHashes(int position) const {
+        [[nodiscard]] inline config::multidim_hash_t getHashes(std::size_t position) const {
             auto res = getHashes();
             res.push_back(position);
             return res;
         }
 
-        [[nodiscard]] inline std::vector<config::single_hash_t> getHashes() const {
+        [[nodiscard]] inline config::multidim_hash_t getHashes() const {
             return prepareResultHashes(
-                    [](const std::unique_ptr<SingleHasher> &singleHasher) -> int {
+                    [](const std::unique_ptr<SingleHasher> &singleHasher) -> config::single_hash_t {
                         return singleHasher->getHash();
                     }
             );
@@ -61,7 +63,7 @@ namespace hashing {
     private:
         std::vector<std::unique_ptr<SingleHasher>> singleHashers;
 
-        inline std::vector<config::single_hash_t> prepareResultHashes(
+        inline config::multidim_hash_t prepareResultHashes(
                 std::function<config::single_hash_t(const std::unique_ptr<SingleHasher> &)> &&transformFunc) const {
             std::vector<config::single_hash_t> resultHashes;
             std::transform(
@@ -71,7 +73,6 @@ namespace hashing {
                     transformFunc);
             return resultHashes;
         }
-
     };
 }
 
