@@ -11,6 +11,8 @@ namespace hashing {
             class alphabet_encoding_t>
     class PrefixSequencePolynomialHasher {
     public:
+        using hash_t = config::multidim_hash_t;
+
         PrefixSequencePolynomialHasher(input_vector_t &sequence,
                                        alphabet_encoding_t &alphabetEncoding,
                                        const std::vector<PolynomialSingleHasherConfig> &polynomialHasherConfigs)
@@ -18,8 +20,8 @@ namespace hashing {
             computePrefixValues(sequence, alphabetEncoding);
         }
 
-        [[nodiscard]] inline config::multidim_hash_t getHash(int begin, int end) const {
-            config::multidim_hash_t res(polynomialHasherConfigs.size());
+        [[nodiscard]] inline hash_t getHash(int begin, int end) const {
+            hash_t res(polynomialHasherConfigs.size());
             for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
                 auto M = polynomialHasherConfigs[hasherInd].M;
                 res[hasherInd] = ((prefixComplexHashes[end + 1][hasherInd]
@@ -29,10 +31,10 @@ namespace hashing {
             return std::move(res);
         }
 
-        [[nodiscard]] inline config::multidim_hash_t getHashForSeveralIntervals(
+        [[nodiscard]] inline hash_t getHashForSeveralIntervals(
                 int beginPosition,
                 const std::vector<std::pair<int, int>> &contiguousIntervals) const {
-            config::multidim_hash_t res(this->getHashersNum());
+            hash_t res(this->getHashersNum());
             for (const auto &interval: contiguousIntervals) {
                 auto intervalHash = std::move(this->getHash(
                         interval.first + beginPosition,
@@ -49,8 +51,8 @@ namespace hashing {
 
     private:
         const std::vector<PolynomialSingleHasherConfig> &polynomialHasherConfigs;
-        std::vector<std::vector<config::single_hash_t>> prefixP;
-        std::vector<config::multidim_hash_t> prefixComplexHashes;
+        std::vector<hash_t> prefixP;
+        std::vector<hash_t> prefixComplexHashes;
 
         inline void computePrefixValues(input_vector_t &sequence,
                                         alphabet_encoding_t &alphabetEncoding) {
@@ -63,13 +65,13 @@ namespace hashing {
 
         inline void initPrefixP(int sequenceLength, int hashersNum) {
             prefixP.reserve(sequenceLength);
-            prefixP.push_back(std::move(config::multidim_hash_t(hashersNum, 1)));
+            prefixP.push_back(std::move(hash_t(hashersNum, 1)));
         }
 
         inline void initPrefixComplexHashes(int sequenceLength, int hashersNum) {
             prefixComplexHashes.reserve(sequenceLength);
             prefixComplexHashes.push_back(
-                    std::move(config::multidim_hash_t(hashersNum))
+                    std::move(hash_t(hashersNum))
             );
         }
 
@@ -82,7 +84,7 @@ namespace hashing {
         }
 
         inline void appendCurrentComplexHash(const typename alphabet_encoding_t::encoded_elem_t &encodedElem) {
-            config::multidim_hash_t prefixHash(polynomialHasherConfigs.size());
+            hash_t prefixHash(polynomialHasherConfigs.size());
             for (int hasherInd = 0; hasherInd < prefixHash.size(); ++hasherInd) {
                 auto P = polynomialHasherConfigs[hasherInd].P;
                 auto M = polynomialHasherConfigs[hasherInd].M;
@@ -92,7 +94,7 @@ namespace hashing {
         }
 
         inline void appendCurrentPowerP() {
-            config::multidim_hash_t powersP(polynomialHasherConfigs.size());
+            hash_t powersP(polynomialHasherConfigs.size());
             for (int hasherInd = 0; hasherInd < powersP.size(); ++hasherInd) {
                 auto P = polynomialHasherConfigs[hasherInd].P;
                 auto M = polynomialHasherConfigs[hasherInd].M;

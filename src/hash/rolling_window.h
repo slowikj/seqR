@@ -12,6 +12,7 @@ namespace hashing {
     class RollingWindow {
     public:
         using encoded_elem_t = typename alphabet_encoding_t::encoded_elem_t;
+        using hash_t = ComplexHasher::hash_t;
 
         RollingWindow(input_vector_t &sequence,
                       ComplexHasher &&hasher,
@@ -32,8 +33,7 @@ namespace hashing {
 
         inline void append() {
             encoded_elem_t encodedElem = this->alphabetEncoding.encodeUnsafe(
-                    this->sequence[this->nextElementIndex]
-            );
+                    this->sequence[this->nextElementIndex]);
             this->window.push(encodedElem);
             this->hasher.append(encodedElem);
             ++this->nextElementIndex;
@@ -53,11 +53,11 @@ namespace hashing {
             return this->sequence.size();
         }
 
-        inline hashing::config::multidim_hash_t getWindowedHashes() const {
+        inline hash_t getWindowedHashes() const {
             return this->hasher.getHashes();
         }
 
-        inline hashing::config::multidim_hash_t getWindowedPositionedHashes() const {
+        inline hash_t getWindowedPositionedHashes() const {
             return this->hasher.getHashes(this->nextElementIndex);
         }
 

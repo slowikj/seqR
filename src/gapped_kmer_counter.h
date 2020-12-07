@@ -40,7 +40,8 @@ namespace gappedKMers {
             const std::vector<int> &notAllowedItemsPrefixCount);
 
     template<class input_vector_t, class alphabet_encoding_t>
-    inline hashing::config::multidim_hash_t getGappedKMerHash(
+    inline typename hashing::PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t>::hash_t
+    getGappedKMerHash(
             int beginPosition,
             const hashing::PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
             const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
@@ -138,13 +139,13 @@ namespace gappedKMers {
     }
 
     template<class input_vector_t, class alphabet_encoding_t>
-    inline hashing::config::multidim_hash_t getGappedKMerHash(
+    inline typename hashing::PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t>::hash_t
+    getGappedKMerHash(
             int beginPosition,
             const hashing::PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
             const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
             bool isPositionalKMer) {
-        hashing::config::multidim_hash_t res = std::move(
-                seqHasher.getHashForSeveralIntervals(beginPosition, contiguousKMerIntervals));
+        auto res = std::move(seqHasher.getHashForSeveralIntervals(beginPosition, contiguousKMerIntervals));
         if (isPositionalKMer) {
             res.push_back(beginPosition);
         }

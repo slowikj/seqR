@@ -13,6 +13,7 @@ namespace hashing {
     class ComplexHasher {
     public:
         using elem_t = SingleHasher::elem_t;
+        using hash_t = config::multidim_hash_t;
 
         explicit ComplexHasher(std::vector<std::unique_ptr<SingleHasher>> &&singleHashers) :
                 singleHashers(std::move(singleHashers)) {
@@ -63,9 +64,9 @@ namespace hashing {
     private:
         std::vector<std::unique_ptr<SingleHasher>> singleHashers;
 
-        inline config::multidim_hash_t prepareResultHashes(
+        inline hash_t prepareResultHashes(
                 std::function<config::single_hash_t(const std::unique_ptr<SingleHasher> &)> &&transformFunc) const {
-            std::vector<config::single_hash_t> resultHashes;
+            hash_t resultHashes;
             std::transform(
                     std::begin(singleHashers),
                     std::end(singleHashers),

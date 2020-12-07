@@ -30,7 +30,8 @@ template<
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 class KMerManager {
 public:
-    using dict_t = kmer_dictionary_t<hashing::config::multidim_hash_t, KMerHashInfo, hashing::config::multidim_hasher_t>;
+    using hash_t = hashing::config::multidim_hash_t;
+    using dict_t = kmer_dictionary_t<hash_t, KMerHashInfo, hashing::config::multidim_hasher_t>;
 
     explicit KMerManager(bool kmerWithCounts) :
             kMerWithCounts(kmerWithCounts) {

@@ -9,7 +9,7 @@
 namespace hashing {
 
     struct PolynomialSingleHasherConfig {
-        using elem_t = config::single_hash_t;
+        using elem_t = SingleHasher::hash_t;
 
         elem_t P, M;
 
@@ -26,7 +26,7 @@ namespace hashing {
 
     class PolynomialSingleHasher : public SingleHasher {
     public:
-        explicit PolynomialSingleHasher(PolynomialSingleHasherConfig &&config) :
+        explicit PolynomialSingleHasher(PolynomialSingleHasherConfig &&config):
                 config(config) {
             this->P_M_2 = util::computePowerFast(config.P, config.M - 2, config.M);
             this->initPowersP();
@@ -49,7 +49,7 @@ namespace hashing {
             this->currentPowerP = this->computePreviousPowerP(this->currentPowerP);
         }
 
-        inline config::single_hash_t getHash() const override {
+        [[nodiscard]] inline hash_t getHash() const override {
             return SingleHasher::getHash();
         }
 
@@ -58,28 +58,27 @@ namespace hashing {
             this->initPowersP();
         }
 
-        inline config::single_hash_t getCurrentPowerP() const {
+        [[nodiscard]] inline hash_t getCurrentPowerP() const {
             return this->currentPowerP;
         }
 
     private:
         PolynomialSingleHasherConfig config;
-        config::single_hash_t P_M_2; // P^(M-2) MOD M
-        config::single_hash_t nextPowerP;
-        config::single_hash_t currentPowerP;
+        hash_t P_M_2; // P^(M-2) MOD M
+        hash_t nextPowerP;
+        hash_t currentPowerP;
         uint64_t fastMod_M;
         __uint128_t fastMod_M_conv;
 
-        [[nodiscard]] inline config::single_hash_t
-        computeHash(config::single_hash_t currentHash, elem_t elem) const {
+        [[nodiscard]] inline hash_t computeHash(hash_t currentHash, elem_t elem) const {
             return getModuloM(this->currentHash * config.P + elem);
         }
 
-        [[nodiscard]] inline config::single_hash_t computeNextPowerP(config::single_hash_t currentPowerP) const {
+        [[nodiscard]] inline hash_t computeNextPowerP(hash_t currentPowerP) const {
             return getModuloM(currentPowerP * config.P);
         }
 
-        [[nodiscard]] inline config::single_hash_t computePreviousPowerP(config::single_hash_t currentPowerP) const {
+        [[nodiscard]] inline hash_t computePreviousPowerP(hash_t currentPowerP) const {
             if (currentPowerP == 1) {
                 return 0;
             }
