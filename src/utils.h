@@ -51,6 +51,8 @@ namespace util {
         return interval.second - interval.first + 1;
     }
 
+#ifdef __SIZEOF_INT128__
+
     class ModuloComputer {
     public:
         explicit ModuloComputer(uint64_t M) :
@@ -66,6 +68,19 @@ namespace util {
         uint64_t M;
         __uint128_t fastMod_M_conv;
     };
+
+#else
+    class ModuloComputer {
+    public:
+        explicit MoModuloComputer(uintuint64_t M) : M(M) {}
+
+        inline uint64_t get(uintuint64_t a) const {
+            return a % M;
+        }
+    };
+#endif
+
+
 }
 
 #endif
