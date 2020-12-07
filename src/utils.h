@@ -72,9 +72,9 @@ namespace util {
 #else
     class ModuloComputer {
     public:
-        explicit MoModuloComputer(uintuint64_t M) : M(M) {}
+        explicit ModuloComputer(uint64_t M) : M(M) {}
 
-        inline uint64_t get(uintuint64_t a) const {
+        inline uint64_t get(uint64_t a) const {
             return a % M;
         }
     };
