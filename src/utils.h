@@ -13,10 +13,10 @@ namespace util {
         std::swap(q, empty);
     }
 
-    inline unsigned long long
-    computePowerFast(unsigned long long base, unsigned long long power, unsigned long long modulo) {
-        long long res = 1;
-        long long current_base_power = base;
+    template<class T>
+    inline T computePowerFast(T base, T power, T modulo) {
+        T res = 1;
+        T current_base_power = base;
         while (power > 0) {
             if (power & 1) {
                 res = (res * current_base_power) % modulo;
@@ -49,6 +49,41 @@ namespace util {
     inline int getIntervalLength(const std::pair<int, int> &interval) {
         return interval.second - interval.first + 1;
     }
+
+#ifdef __SIZEOF_INT128__
+
+#include "../inst/include/fast_modulo.h"
+
+    class ModuloComputer {
+    public:
+        explicit ModuloComputer(uint64_t M) :
+                M(M),
+                fastMod_M_conv(fastmod::computeM_u64(M)) {
+        }
+
+        inline uint64_t get(uint64_t a) const {
+            return fastmod::fastmod_u64(a, fastMod_M_conv, M);
+        }
+
+    private:
+        uint64_t M;
+        __uint128_t fastMod_M_conv;
+    };
+
+#else
+    class ModuloComputer {
+    public:
+        explicit ModuloComputer(uint64_t M) : M(M) {}
+
+        inline uint64_t get(uint64_t a) const {
+            return a % M;
+        }
+    private:
+        uint64_t M;
+    };
+#endif
+
+
 }
 
 #endif

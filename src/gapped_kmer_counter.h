@@ -2,8 +2,9 @@
 #define GAPPED_KMER_COUNTER_H
 
 #include "hash/polynomial_single_hasher.h"
-#include "hash/types.h"
+#include "hash/globals.h"
 #include "kmer_manager.h"
+#include "hash/prefix_sequence_polynomial_hasher.h"
 #include <vector>
 #include <memory>
 #include <utility>
@@ -25,10 +26,6 @@ namespace gappedKMers {
 
     template<class input_vector_t,
             class alphabet_encoding_t>
-    class PrefixSequencePolynomialHasher;
-
-    template<class input_vector_t,
-            class alphabet_encoding_t>
     inline std::vector<int> prepareNotAllowedItemsPrefixCount(
             input_vector_t &sequence,
             alphabet_encoding_t &alphabetEncoding);
@@ -43,15 +40,10 @@ namespace gappedKMers {
             const std::vector<int> &notAllowedItemsPrefixCount);
 
     template<class input_vector_t, class alphabet_encoding_t>
-    inline hashing::multidim_hash_t getGappedKMerHashNotPositional(
+    inline typename hashing::PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t>::hash_t
+    getGappedKMerHash(
             int beginPosition,
-            const PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
-            const std::vector<std::pair<int, int>> &contiguousKMerIntervals);
-
-    template<class input_vector_t, class alphabet_encoding_t>
-    inline hashing::multidim_hash_t getGappedKMerHash(
-            int beginPosition,
-            const PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
+            const hashing::PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
             const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
             bool isPositionalKMer);
 
@@ -69,7 +61,7 @@ namespace gappedKMers {
                                          bool withKMerCounts,
                                          const std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs) {
         std::vector<std::pair<int, int>> contiguousIntervals = getContiguousIntervals(gaps);
-        PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> sequenceHasher(
+        hashing::PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> sequenceHasher(
                 sequence, alphabetEncoding, hasherConfigs
         );
 
@@ -116,97 +108,6 @@ namespace gappedKMers {
         return res;
     }
 
-    template<class input_vector_t,
-            class alphabet_encoding_t>
-    class PrefixSequencePolynomialHasher {
-    public:
-        PrefixSequencePolynomialHasher(input_vector_t &sequence,
-                                       alphabet_encoding_t &alphabetEncoding,
-                                       const std::vector<hashing::PolynomialSingleHasherConfig> &polynomialHasherConfigs)
-                :
-                polynomialHasherConfigs(polynomialHasherConfigs) {
-            computePrefixValues(sequence, alphabetEncoding);
-        }
-
-        inline hashing::multidim_hash_t getHash(int begin, int end) const {
-            hashing::multidim_hash_t res(polynomialHasherConfigs.size());
-            for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
-                int M = polynomialHasherConfigs[hasherInd].M;
-                res[hasherInd] = ((prefixComplexHashes[end + 1][hasherInd]
-                                   - (prefixComplexHashes[begin][hasherInd] *
-                                      prefixP[end - begin + 1][hasherInd])) % M + M) % M;
-            }
-            return std::move(res);
-        }
-
-        inline int getHasherP(int hasherIndex, int power = 1) const {
-            return this->prefixP[power][hasherIndex];
-        }
-
-        inline int getHasherM(int hasherIndex) const {
-            return this->polynomialHasherConfigs[hasherIndex].M;
-        }
-
-        inline int getHashersNum() const {
-            return this->polynomialHasherConfigs.size();
-        }
-
-    private:
-        const std::vector<hashing::PolynomialSingleHasherConfig> &polynomialHasherConfigs;
-        std::vector<std::vector<int>> prefixP;
-        std::vector<hashing::multidim_hash_t> prefixComplexHashes;
-
-        inline void computePrefixValues(input_vector_t &sequence,
-                                        alphabet_encoding_t &alphabetEncoding) {
-            initPrefixP(sequence.size(), polynomialHasherConfigs.size());
-            initPrefixComplexHashes(sequence.size(), polynomialHasherConfigs.size());
-            for (int seqInd = 0; seqInd < sequence.size(); ++seqInd) {
-                appendPrefixValues(sequence, alphabetEncoding, seqInd);
-            }
-        }
-
-        inline void initPrefixP(int sequenceLength, int hashersNum) {
-            prefixP.reserve(sequenceLength);
-            prefixP.push_back(std::move(std::vector<int>(hashersNum, 1)));
-        }
-
-        inline void initPrefixComplexHashes(int sequenceLength, int hashersNum) {
-            prefixComplexHashes.reserve(sequenceLength);
-            prefixComplexHashes.push_back(
-                    std::move(hashing::multidim_hash_t(hashersNum))
-            );
-        }
-
-        inline void appendPrefixValues(input_vector_t &sequence,
-                                       alphabet_encoding_t &alphabetEncoding,
-                                       int seqInd) {
-            typename alphabet_encoding_t::encoded_elem_t encodedElem = alphabetEncoding.encode(sequence[seqInd]);
-            appendCurrentComplexHash(encodedElem);
-            appendCurrentPowerP();
-        }
-
-        inline void appendCurrentComplexHash(const typename alphabet_encoding_t::encoded_elem_t &encodedElem) {
-            hashing::multidim_hash_t prefixHash(polynomialHasherConfigs.size());
-            for (int hasherInd = 0; hasherInd < prefixHash.size(); ++hasherInd) {
-                int P = polynomialHasherConfigs[hasherInd].P;
-                int M = polynomialHasherConfigs[hasherInd].M;
-                prefixHash[hasherInd] = ((prefixComplexHashes.back()[hasherInd]) * P + encodedElem) % M;
-            }
-            prefixComplexHashes.push_back(std::move(prefixHash));
-        }
-
-        inline void appendCurrentPowerP() {
-            std::vector<int> powersP(polynomialHasherConfigs.size());
-            for (int hasherInd = 0; hasherInd < powersP.size(); ++hasherInd) {
-                int P = polynomialHasherConfigs[hasherInd].P;
-                int M = polynomialHasherConfigs[hasherInd].M;
-                powersP[hasherInd] = static_cast<int>(
-                        (static_cast<long long>(prefixP.back()[hasherInd]) * P) % M);
-            }
-            prefixP.push_back(std::move(powersP));
-        }
-    };
-
     inline bool isGappedKMerAllowed(
             int seqBegin,
             const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
@@ -238,42 +139,18 @@ namespace gappedKMers {
     }
 
     template<class input_vector_t, class alphabet_encoding_t>
-    inline hashing::multidim_hash_t getGappedKMerHash(
+    inline typename hashing::PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t>::hash_t
+    getGappedKMerHash(
             int beginPosition,
-            const PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
+            const hashing::PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
             const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
             bool isPositionalKMer) {
-        hashing::multidim_hash_t res = std::move(
-                getGappedKMerHashNotPositional<input_vector_t, alphabet_encoding_t>(
-                        beginPosition, seqHasher, contiguousKMerIntervals)
-        );
+        auto res = std::move(seqHasher.getHashForSeveralIntervals(beginPosition, contiguousKMerIntervals));
         if (isPositionalKMer) {
             res.push_back(beginPosition);
         }
         return std::move(res);
     }
-
-    template<class input_vector_t, class alphabet_encoding_t>
-    inline
-    hashing::multidim_hash_t getGappedKMerHashNotPositional(
-            int beginPosition,
-            const PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
-            const std::vector<std::pair<int, int>> &contiguousKMerIntervals) {
-        hashing::multidim_hash_t res(seqHasher.getHashersNum());
-        for (const auto &kmerInterval: contiguousKMerIntervals) {
-            auto intervalHash = std::move(seqHasher.getHash(
-                    kmerInterval.first + beginPosition,
-                    kmerInterval.second + beginPosition));
-            int intervalLength = util::getIntervalLength(kmerInterval);
-            for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
-                int powerP = seqHasher.getHasherP(hasherInd, intervalLength);
-                int M = seqHasher.getHasherM(hasherInd);
-                res[hasherInd] = (((res[hasherInd]) * powerP + intervalHash[hasherInd]) % M + M) % M;
-            }
-        }
-        return std::move(res);
-    }
-
 }
 
 #endif

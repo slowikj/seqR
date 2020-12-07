@@ -7,10 +7,12 @@
 #include <unordered_map>
 #include <tuple>
 #include "hash/custom_vector_hasher.h"
-#include "hash/types.h"
+#include "hash/globals.h"
 
 class KMerCountingResult {
 public:
+    using hash_t = hashing::config::multidim_hash_t;
+    using hasher_t = hashing::config::multidim_hasher_t;
 
     std::vector<std::string> kMerStrings;
 
@@ -18,7 +20,7 @@ public:
         this->processedSequencesNum += cnt;
     }
 
-    inline bool addKMer(const hashing::multidim_hash_t &kMerHash,
+    inline bool addKMer(const hashing::config::multidim_hash_t &kMerHash,
                         int sequenceNum,
                         int count) {
         if (kMerHash2ColumnIndex.find(kMerHash) != kMerHash2ColumnIndex.end()) {
@@ -59,7 +61,7 @@ private:
 
     std::vector<int> kMerCounts;
 
-    std::unordered_map<hashing::multidim_hash_t, int, hashing::multidim_hasher_t> kMerHash2ColumnIndex;
+    std::unordered_map<hash_t, int, hasher_t> kMerHash2ColumnIndex;
 
     int processedSequencesNum = 0;
 

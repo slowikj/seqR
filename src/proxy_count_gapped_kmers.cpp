@@ -1,12 +1,12 @@
 // [[Rcpp::plugins("cpp17")]]
 #include <Rcpp.h>
-#include "hash/primes.h"
+#include "hash/globals.h"
 #include "kmer_task_param_dispatcher.h"
 
 inline std::vector<hashing::PolynomialSingleHasherConfig> getGappedKMerHasherConfigs(int hashDim) {
     std::vector<hashing::PolynomialSingleHasherConfig> res;
     for (int i = 0; i < hashDim; ++i) {
-        res.emplace_back(hashing::hashPrimes[i].first, hashing::hashPrimes[i].second);
+        res.emplace_back(hashing::config::hashPrimes[i].first, hashing::config::hashPrimes[i].second);
     }
     return std::move(res);
 }
