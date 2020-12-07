@@ -11,6 +11,8 @@
 
 class KMerCountingResult {
 public:
+    using hash_t = hashing::config::multidim_hash_t;
+    using hasher_t = hashing::config::multidim_hasher_t;
 
     std::vector<std::string> kMerStrings;
 
@@ -59,7 +61,7 @@ private:
 
     std::vector<int> kMerCounts;
 
-    std::unordered_map<hashing::config::multidim_hash_t, int, hashing::config::multidim_hasher_t> kMerHash2ColumnIndex;
+    std::unordered_map<hash_t, int, hasher_t> kMerHash2ColumnIndex;
 
     int processedSequencesNum = 0;
 

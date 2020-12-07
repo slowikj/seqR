@@ -28,7 +28,7 @@ namespace hashing {
         virtual ~SingleHasher() = default;
 
     protected:
-        config::single_hash_t currentHash = 0;
+        hash_t currentHash = 0;
 
     };
 }
