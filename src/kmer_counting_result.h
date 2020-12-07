@@ -18,7 +18,7 @@ public:
         this->processedSequencesNum += cnt;
     }
 
-    inline bool addKMer(const hashing::multidim_hash_t &kMerHash,
+    inline bool addKMer(const hashing::config::multidim_hash_t &kMerHash,
                         int sequenceNum,
                         int count) {
         if (kMerHash2ColumnIndex.find(kMerHash) != kMerHash2ColumnIndex.end()) {
@@ -59,7 +59,7 @@ private:
 
     std::vector<int> kMerCounts;
 
-    std::unordered_map<hashing::multidim_hash_t, int, hashing::multidim_hasher_t> kMerHash2ColumnIndex;
+    std::unordered_map<hashing::config::multidim_hash_t, int, hashing::config::multidim_hasher_t> kMerHash2ColumnIndex;
 
     int processedSequencesNum = 0;
 

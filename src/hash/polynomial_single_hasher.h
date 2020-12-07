@@ -49,7 +49,7 @@ namespace hashing {
             this->currentPowerP = this->computePreviousPowerP(this->currentPowerP);
         }
 
-        inline single_hash_t getHash() const override {
+        inline config::single_hash_t getHash() const override {
             return SingleHasher::getHash();
         }
 
@@ -58,27 +58,29 @@ namespace hashing {
             this->initPowersP();
         }
 
-        inline single_hash_t getCurrentPowerP() const {
+        inline config::single_hash_t getCurrentPowerP() const {
             return this->currentPowerP;
         }
 
     private:
         PolynomialSingleHasherConfig config;
-        single_hash_t P_M_2; // P^(M-2) MOD M
-        single_hash_t nextPowerP;
-        single_hash_t currentPowerP;
+        config::single_hash_t P_M_2; // P^(M-2) MOD M
+        config::single_hash_t nextPowerP;
+        config::single_hash_t currentPowerP;
         uint64_t fastMod_M;
         __uint128_t fastMod_M_conv;
 
-        [[nodiscard]] inline single_hash_t computeHash(single_hash_t currentHash, const int &elem) const {
+        [[nodiscard]] inline config::single_hash_t
+        computeHash(config::single_hash_t currentHash, const int &elem) const {
             return getModuloM(this->currentHash * config.P + elem);
         }
 
-        [[nodiscard]] inline single_hash_t computeNextPowerP(single_hash_t currentPowerP) const {
+        [[nodiscard]] inline config::single_hash_t computeNextPowerP(config::single_hash_t currentPowerP) const {
             return getModuloM(currentPowerP * config.P);
         }
 
-        [[nodiscard]] inline single_hash_t computePreviousPowerP(single_hash_t currentPowerP) const {
+        [[nodiscard]] inline config::single_hash_t
+        computePreviousPowerP(config::single_hash_t currentPowerP) const {
             if (currentPowerP == 1) {
                 return 0;
             }

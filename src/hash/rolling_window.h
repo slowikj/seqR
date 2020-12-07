@@ -53,11 +53,11 @@ namespace hashing {
             return this->sequence.size();
         }
 
-        inline hashing::multidim_hash_t getWindowedHashes() const {
+        inline hashing::config::multidim_hash_t getWindowedHashes() const {
             return this->hasher.getHashes();
         }
 
-        inline hashing::multidim_hash_t getWindowedPositionedHashes() const {
+        inline hashing::config::multidim_hash_t getWindowedPositionedHashes() const {
             return this->hasher.getHashes(this->nextElementIndex);
         }
 

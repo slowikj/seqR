@@ -30,7 +30,7 @@ template<
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 class KMerManager {
 public:
-    using dict_t = kmer_dictionary_t<hashing::multidim_hash_t, KMerHashInfo, hashing::multidim_hasher_t>;
+    using dict_t = kmer_dictionary_t<hashing::config::multidim_hash_t, KMerHashInfo, hashing::config::multidim_hasher_t>;
 
     explicit KMerManager(bool kmerWithCounts) :
             kMerWithCounts(kmerWithCounts) {
@@ -48,7 +48,7 @@ public:
     KMerManager<kmer_dictionary_t> &
     operator=(KMerManager<kmer_dictionary_t> &&) noexcept = default;
 
-    inline void add(hashing::multidim_hash_t &&hash, int position) {
+    inline void add(hashing::config::multidim_hash_t &&hash, int position) {
         if (kMerWithCounts) {
             handleWithCounts(std::move(hash), position);
         } else {
@@ -64,7 +64,7 @@ private:
     dict_t dictionary;
     bool kMerWithCounts;
 
-    inline void handleWithCounts(hashing::multidim_hash_t &&hash, int position) {
+    inline void handleWithCounts(hashing::config::multidim_hash_t &&hash, int position) {
         if (!dictionary.isPresent(hash)) {
             dictionary[std::move(hash)] = KMerHashInfo(position, 1);
         } else {
@@ -72,7 +72,7 @@ private:
         }
     }
 
-    inline void handleWithoutCounts(hashing::multidim_hash_t &&hash, int position) {
+    inline void handleWithoutCounts(hashing::config::multidim_hash_t &&hash, int position) {
         dictionary[std::move(hash)] = KMerHashInfo(position, 1);
     }
 

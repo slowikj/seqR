@@ -15,7 +15,7 @@ namespace hashing {
 
         virtual void removeFirst(const int &elem) = 0;
 
-        virtual single_hash_t getHash() const {
+        virtual config::single_hash_t getHash() const {
             return currentHash;
         }
 
@@ -26,7 +26,7 @@ namespace hashing {
         virtual ~SingleHasher() = default;
 
     protected:
-        single_hash_t currentHash = 0;
+        config::single_hash_t currentHash = 0;
 
     };
 }

@@ -38,13 +38,13 @@ namespace hashing {
                           });
         }
 
-        [[nodiscard]] inline std::vector<single_hash_t> getHashes(int position) const {
+        [[nodiscard]] inline std::vector<config::single_hash_t> getHashes(int position) const {
             auto res = getHashes();
             res.push_back(position);
             return res;
         }
 
-        [[nodiscard]] inline std::vector<single_hash_t> getHashes() const {
+        [[nodiscard]] inline std::vector<config::single_hash_t> getHashes() const {
             return prepareResultHashes(
                     [](const std::unique_ptr<SingleHasher> &singleHasher) -> int {
                         return singleHasher->getHash();
@@ -55,9 +55,9 @@ namespace hashing {
     private:
         std::vector<std::unique_ptr<SingleHasher>> singleHashers;
 
-        inline std::vector<single_hash_t> prepareResultHashes(
-                std::function<single_hash_t(const std::unique_ptr<SingleHasher> &)> &&transformFunc) const {
-            std::vector<single_hash_t> resultHashes;
+        inline std::vector<config::single_hash_t> prepareResultHashes(
+                std::function<config::single_hash_t(const std::unique_ptr<SingleHasher> &)> &&transformFunc) const {
+            std::vector<config::single_hash_t> resultHashes;
             std::transform(std::begin(singleHashers), std::end(singleHashers),
                            std::back_inserter(resultHashes),
                            transformFunc);
