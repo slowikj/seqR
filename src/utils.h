@@ -4,7 +4,6 @@
 #include <queue>
 #include <vector>
 #include <algorithm>
-#include "../inst/include/fast_modulo.h"
 
 namespace util {
 
@@ -52,6 +51,8 @@ namespace util {
     }
 
 #ifdef __SIZEOF_INT128__
+
+#include "../inst/include/fast_modulo.h"
 
     class ModuloComputer {
     public:
