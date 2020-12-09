@@ -14,7 +14,6 @@ namespace dictionary {
     template<class K, class V, class Hash=std::hash<K>>
     class UnorderedMapWrapper {
     public:
-
         using iterator = iterator_t<std::pair<const K &, V>, typename std::unordered_map<K, V, Hash>::iterator>;
         using const_iterator = iterator_t<const std::pair<const K &, V>, typename std::unordered_map<K, V, Hash>::const_iterator>;
 
