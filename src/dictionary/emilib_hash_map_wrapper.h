@@ -1,21 +1,16 @@
-#ifndef CUSTOM_DICTIONARY_H
-#define CUSTOM_DICTIONARY_H
+#ifndef SEQR_EMILIB_HASH_MAP_WRAPPER_H
+#define SEQR_EMILIB_HASH_MAP_WRAPPER_H
 
-#include <vector>
-#include <memory>
-#include <iterator>
-#include <unordered_map>
 #include <functional>
-#include <algorithm>
 #include "dict_iterator.h"
+#include "../../inst/include/emilib/hash_map.hpp"
 
 namespace dictionary {
-
     template<class K, class V, class Hash=std::hash<K>>
-    class UnorderedMapWrapper {
+    class EmilibHashMapWrapper {
     public:
-        using iterator = iterator_t<std::pair<const K &, V>, typename std::unordered_map<K, V, Hash>::iterator>;
-        using const_iterator = iterator_t<const std::pair<const K &, V>, typename std::unordered_map<K, V, Hash>::const_iterator>;
+        using iterator = iterator_t<std::pair<const K &, V>, typename emilib::HashMap<K, V, Hash>::iterator>;
+        using const_iterator = iterator_t<const std::pair<const K &, V>, typename emilib::HashMap<K, V, Hash>::const_iterator>;
 
         inline V &operator[](const K &key) {
             return this->inner_map_[key];
@@ -49,21 +44,21 @@ namespace dictionary {
             return const_iterator(this->inner_map_.end());
         }
 
-        UnorderedMapWrapper() = default;
+        EmilibHashMapWrapper() = default;
 
-        UnorderedMapWrapper(const UnorderedMapWrapper<K, V, Hash> &) = default;
+        EmilibHashMapWrapper(const EmilibHashMapWrapper &) = default;
 
-        UnorderedMapWrapper<K, V, Hash> &operator=(const UnorderedMapWrapper<K, V, Hash> &) = default;
+        EmilibHashMapWrapper &operator=(const EmilibHashMapWrapper &) = default;
 
-        UnorderedMapWrapper(UnorderedMapWrapper<K, V, Hash> &&) noexcept = default;
+        EmilibHashMapWrapper(EmilibHashMapWrapper &&) noexcept = default;
 
-        UnorderedMapWrapper<K, V, Hash> &operator=(UnorderedMapWrapper<K, V, Hash> &&) noexcept = default;
+        EmilibHashMapWrapper &operator=(EmilibHashMapWrapper &&) noexcept = default;
 
-        ~UnorderedMapWrapper() = default;
+        ~EmilibHashMapWrapper() = default;
 
     private:
-        std::unordered_map<K, V, Hash> inner_map_;
+        emilib::HashMap<K, V, Hash> inner_map_;
     };
 }
 
-#endif
+#endif //SEQR_EMILIB_HASH_MAP_WRAPPER_H
