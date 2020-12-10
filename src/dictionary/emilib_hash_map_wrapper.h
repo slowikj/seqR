@@ -1,5 +1,5 @@
-#ifndef SEQR_EMILIBHASHMAPWRAPPER_H
-#define SEQR_EMILIBHASHMAPWRAPPER_H
+#ifndef SEQR_EMILIB_HASH_MAP_WRAPPER_H
+#define SEQR_EMILIB_HASH_MAP_WRAPPER_H
 
 #include <functional>
 #include "dict_iterator.h"
@@ -61,4 +61,4 @@ namespace dictionary {
     };
 }
 
-#endif //SEQR_EMILIBHASHMAPWRAPPER_H
+#endif //SEQR_EMILIB_HASH_MAP_WRAPPER_H

@@ -11,7 +11,7 @@
 #include "count_kmers_specific/count_kmers_string_matrix.h"
 #include "count_kmers_specific/count_kmers_string_list.h"
 #include "dictionary/ordered_map_wrapper.h"
-#include "dictionary/EmilibHashMapWrapper.h"
+#include "dictionary/emilib_hash_map_wrapper.h"
 
 template<class sequences_t,
         class alphabet_t,
