@@ -10,6 +10,7 @@
 #include "count_kmers_specific/count_kmers_numeric_matrix.h"
 #include "count_kmers_specific/count_kmers_string_matrix.h"
 #include "count_kmers_specific/count_kmers_string_list.h"
+#include "dictionary/ordered_map_wrapper.h"
 
 template<class sequences_t,
         class alphabet_t,
@@ -66,6 +67,9 @@ inline Rcpp::List countKMersDictionaryDispatch(
                 sequences, alphabet, userParams, algorithmParams);
     } else if (userParams.kMerDictionaryName == dictionary::names::LINEAR_LIST_NAME) {
         return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::LinearListDictionary>(
+                sequences, alphabet, userParams, algorithmParams);
+    } else if(userParams.kMerDictionaryName == dictionary::names::ORDERED_MAP_NAME) {
+        return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::OrderedMapWrapper>(
                 sequences, alphabet, userParams, algorithmParams);
     } else {
         std::string errorMessage = "unsupported k-mer dictionary name: " + userParams.kMerDictionaryName;
