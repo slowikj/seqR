@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <functional>
 #include <algorithm>
-#include "stl_dictionary_wrapper.h"
+#include "helper/stl_dictionary_wrapper.h"
 
 namespace dictionary {
 

@@ -2,7 +2,7 @@
 #define SEQR_ORDERED_MAP_WRAPPER_H
 
 #include <map>
-#include "./stl_dictionary_wrapper.h"
+#include "helper/stl_dictionary_wrapper.h"
 
 namespace dictionary {
 

@@ -3,11 +3,17 @@
 
 #include <functional>
 #include "../../inst/thirdparty/emilib/hash_map.hpp"
+#include "./helper/stl_dictionary_wrapper.h"
 
 namespace dictionary {
 
+    namespace internal {
+        template<class K, class V, class H>
+        using emilib_unordered_map = robin_hood::unordered_map<K, V, H>;
+    }
+
     template<class K, class V, class Hash=std::hash<K>>
-    class EmilibHashMapWrapper : public StlDictionaryWrapper<K, V, emilib::HashMap, Hash> {
+    class EmilibHashMapWrapper : public StlDictionaryWrapper<K, V, internal::emilib_unordered_map, Hash> {
     };
 
 }

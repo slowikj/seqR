@@ -85,7 +85,6 @@ inline Rcpp::List countKMersDictionaryDispatch(
     }
 }
 
-
 template<class sequences_t, class alphabet_t, class algorithm_params_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
 inline Rcpp::List countKMersParallelModeDispatch(

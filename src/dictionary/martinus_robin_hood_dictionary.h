@@ -2,7 +2,7 @@
 #define SEQR_MARTINUS_ROBIN_HOOD_DICTIONARY_H
 
 #include "../../inst/thirdparty/robin_hood_martinus.h"
-#include "stl_dictionary_wrapper.h"
+#include "helper/stl_dictionary_wrapper.h"
 
 namespace dictionary {
 
