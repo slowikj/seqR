@@ -3,7 +3,7 @@
 
 #include <functional>
 #include "dict_iterator.h"
-#include "../../inst/include/emilib/hash_map.hpp"
+#include "../../inst/thirdparty/emilib/hash_map.hpp"
 
 namespace dictionary {
     template<class K, class V, class Hash=std::hash<K>>
