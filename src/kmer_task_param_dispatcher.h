@@ -10,6 +10,7 @@
 #include "count_kmers_specific/count_kmers_numeric_matrix.h"
 #include "count_kmers_specific/count_kmers_string_matrix.h"
 #include "count_kmers_specific/count_kmers_string_list.h"
+#include "dictionary/martinus_robin_hood_dictionary.h"
 #include "dictionary/ordered_map_wrapper.h"
 #include "dictionary/emilib_hash_map_wrapper.h"
 
@@ -75,11 +76,15 @@ inline Rcpp::List countKMersDictionaryDispatch(
     } else if (userParams.kMerDictionaryName == dictionary::names::EMILIB_HASH_MAP_WRAPPER) {
         return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::EmilibHashMapWrapper>(
                 sequences, alphabet, userParams, algorithmParams);
+    } else if (userParams.kMerDictionaryName == dictionary::names::MARTINUS_ROBIN_HOOD_DICTIONARY) {
+        return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::MartinusRobinHoodDictionary>(
+                sequences, alphabet, userParams, algorithmParams);
     } else {
         std::string errorMessage = "unsupported k-mer dictionary name: " + userParams.kMerDictionaryName;
         throw Rcpp::exception(errorMessage.c_str());
     }
 }
+
 
 template<class sequences_t, class alphabet_t, class algorithm_params_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
