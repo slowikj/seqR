@@ -7,15 +7,14 @@
 #include <unordered_map>
 #include <functional>
 #include <algorithm>
-#include "dict_iterator.h"
 
 namespace dictionary {
 
     template<class K, class V, class Hash=std::hash<K>>
     class UnorderedMapWrapper {
     public:
-        using iterator = iterator_t<std::pair<const K &, V>, typename std::unordered_map<K, V, Hash>::iterator>;
-        using const_iterator = iterator_t<const std::pair<const K &, V>, typename std::unordered_map<K, V, Hash>::const_iterator>;
+        using iterator = typename std::unordered_map<K, V, Hash>::iterator;
+        using const_iterator = typename std::unordered_map<K, V, Hash>::const_iterator;
 
         inline V &operator[](const K &key) {
             return this->inner_map_[key];

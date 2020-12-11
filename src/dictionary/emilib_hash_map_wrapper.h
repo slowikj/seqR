@@ -2,15 +2,14 @@
 #define SEQR_EMILIB_HASH_MAP_WRAPPER_H
 
 #include <functional>
-#include "dict_iterator.h"
 #include "../../inst/thirdparty/emilib/hash_map.hpp"
 
 namespace dictionary {
     template<class K, class V, class Hash=std::hash<K>>
     class EmilibHashMapWrapper {
     public:
-        using iterator = iterator_t<std::pair<const K &, V>, typename emilib::HashMap<K, V, Hash>::iterator>;
-        using const_iterator = iterator_t<const std::pair<const K &, V>, typename emilib::HashMap<K, V, Hash>::const_iterator>;
+        using iterator = typename emilib::HashMap<K, V, Hash>::iterator;
+        using const_iterator = typename emilib::HashMap<K, V, Hash>::const_iterator;
 
         inline V &operator[](const K &key) {
             return this->inner_map_[key];

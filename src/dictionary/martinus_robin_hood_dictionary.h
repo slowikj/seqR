@@ -1,7 +1,6 @@
 #ifndef SEQR_MARTINUS_ROBIN_HOOD_DICTIONARY_H
 #define SEQR_MARTINUS_ROBIN_HOOD_DICTIONARY_H
 
-#include "dict_iterator.h"
 #include "../../inst/thirdparty/robin_hood_martinus.h"
 #include <map>
 
