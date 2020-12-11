@@ -4,7 +4,7 @@
 #include <Rcpp.h>
 #include <vector>
 #include "../alphabet_encoder/default_alphabet_encoder.h"
-#include "../dictionary/unordered_map_wrapper.h"
+#include "../dictionary/stl_unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
 #include "safe_sequences_wrapper.h"

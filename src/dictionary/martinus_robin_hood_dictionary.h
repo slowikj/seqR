@@ -2,7 +2,7 @@
 #define SEQR_MARTINUS_ROBIN_HOOD_DICTIONARY_H
 
 #include "../../inst/thirdparty/robin_hood_martinus.h"
-#include "helper/stl_dictionary_wrapper.h"
+#include "helper/stl_like_dictionary_wrapper.h"
 
 namespace dictionary {
 
@@ -12,7 +12,7 @@ namespace dictionary {
     }
 
     template<class K, class V, class Hash=std::hash<K>>
-    class MartinusRobinHoodDictionary : public StlDictionaryWrapper<K, V, internal::martinus_unordered_map, Hash> {
+    class MartinusRobinHoodDictionary : public StlLikeDictionaryWrapper<K, V, internal::martinus_unordered_map, Hash> {
     };
 
 }

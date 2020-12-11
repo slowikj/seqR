@@ -4,14 +4,14 @@
 #include <Rcpp.h>
 #include "user_params.h"
 #include "dictionary/supported_dict_names.h"
-#include "dictionary/unordered_map_wrapper.h"
+#include "dictionary/stl_unordered_map_wrapper.h"
 #include "dictionary/linear_list_dictionary.h"
 #include "count_kmers_specific/count_kmers_integer_matrix.h"
 #include "count_kmers_specific/count_kmers_numeric_matrix.h"
 #include "count_kmers_specific/count_kmers_string_matrix.h"
 #include "count_kmers_specific/count_kmers_string_list.h"
 #include "dictionary/martinus_robin_hood_dictionary.h"
-#include "dictionary/ordered_map_wrapper.h"
+#include "dictionary/stl_ordered_map_wrapper.h"
 #include "dictionary/emilib_hash_map_wrapper.h"
 
 template<class sequences_t,
@@ -65,13 +65,13 @@ inline Rcpp::List countKMersDictionaryDispatch(
         const UserParams &userParams,
         algorithm_params_t &algorithmParams) {
     if (userParams.kMerDictionaryName == dictionary::names::UNORDERED_MAP_NAME) {
-        return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::UnorderedMapWrapper>(
+        return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::StlUnorderedMapWrapper>(
                 sequences, alphabet, userParams, algorithmParams);
     } else if (userParams.kMerDictionaryName == dictionary::names::LINEAR_LIST_NAME) {
         return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::LinearListDictionary>(
                 sequences, alphabet, userParams, algorithmParams);
     } else if (userParams.kMerDictionaryName == dictionary::names::ORDERED_MAP_NAME) {
-        return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::OrderedMapWrapper>(
+        return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::StlOrderedMapWrapper>(
                 sequences, alphabet, userParams, algorithmParams);
     } else if (userParams.kMerDictionaryName == dictionary::names::EMILIB_HASH_MAP_WRAPPER) {
         return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::EmilibHashMapWrapper>(

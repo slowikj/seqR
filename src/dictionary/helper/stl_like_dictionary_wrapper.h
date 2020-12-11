@@ -4,9 +4,9 @@
 namespace dictionary {
 
     template<class K, class V,
-            template <typename K_, typename V_, typename H > class container_t,
+            template <typename K_, typename V_, typename...> class container_t,
             class ...WArgs>
-    class StlDictionaryWrapper {
+    class StlLikeDictionaryWrapper {
     public:
         using iterator = typename container_t<K, V, WArgs...>::iterator;
         using const_iterator = typename container_t<K, V, WArgs...>::const_iterator;
@@ -43,18 +43,18 @@ namespace dictionary {
             return const_iterator(this->inner_map_.end());
         }
 
-        StlDictionaryWrapper() = default;
+        StlLikeDictionaryWrapper() = default;
 
-        StlDictionaryWrapper(const StlDictionaryWrapper &) = default;
+        StlLikeDictionaryWrapper(const StlLikeDictionaryWrapper &) = default;
 
-        StlDictionaryWrapper &operator=(const StlDictionaryWrapper &) = default;
+        StlLikeDictionaryWrapper &operator=(const StlLikeDictionaryWrapper &) = default;
 
-        StlDictionaryWrapper(StlDictionaryWrapper
+        StlLikeDictionaryWrapper(StlLikeDictionaryWrapper
         &&) noexcept = default;
 
-        StlDictionaryWrapper &operator=(StlDictionaryWrapper &&) noexcept = default;
+        StlLikeDictionaryWrapper &operator=(StlLikeDictionaryWrapper &&) noexcept = default;
 
-        ~StlDictionaryWrapper() = default;
+        ~StlLikeDictionaryWrapper() = default;
 
     private:
         container_t<K, V, WArgs...> inner_map_;

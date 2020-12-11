@@ -3,7 +3,7 @@
 
 #include <functional>
 #include "../../inst/thirdparty/emilib/hash_map.hpp"
-#include "./helper/stl_dictionary_wrapper.h"
+#include "helper/stl_like_dictionary_wrapper.h"
 
 namespace dictionary {
 
@@ -13,7 +13,7 @@ namespace dictionary {
     }
 
     template<class K, class V, class Hash=std::hash<K>>
-    class EmilibHashMapWrapper : public StlDictionaryWrapper<K, V, internal::emilib_unordered_map, Hash> {
+    class EmilibHashMapWrapper : public StlLikeDictionaryWrapper<K, V, internal::emilib_unordered_map, Hash> {
     };
 
 }

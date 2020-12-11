@@ -4,7 +4,7 @@
 #include <Rcpp.h>
 #include <vector>
 #include "../alphabet_encoder/default_alphabet_encoder.h"
-#include "../dictionary/unordered_map_wrapper.h"
+#include "../dictionary/stl_unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
 
@@ -26,7 +26,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
                                     algorithm_params_t &algorithmParams) {
     using encoded_elem_t = config::encoded_elem_t;
     auto alphabetEncoding = std::move(
-            alphabetEncoding::getDefaultAlphabetEncoder<Rcpp::NumericVector, double, encoded_elem_t, dictionary::UnorderedMapWrapper>(
+            alphabetEncoding::getDefaultAlphabetEncoder<Rcpp::NumericVector, double, encoded_elem_t, dictionary::StlUnorderedMapWrapper>(
                     alphabet));
 
     auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
