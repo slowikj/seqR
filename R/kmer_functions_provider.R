@@ -7,7 +7,9 @@
 }
 
 .get_kmer_function <- function(sequences) {
-  if (is.vector(sequences)) {
+  if(tidysq::is.sq(sequences)) {
+    .kmer_functions_map[["tidysq"]]
+  } else if (is.vector(sequences)) {
     .kmer_functions_map[["string_vector"]]
   } else if (has_integers_only(sequences)) {
     .kmer_functions_map[["integer"]]
@@ -25,5 +27,6 @@
   "integer" = list(.count_contiguous_kmers_integer_proxy, .count_gapped_kmers_integer_proxy),
   "string" = list(.count_contiguous_kmers_string_proxy, .count_gapped_kmers_string_proxy),
   "numeric" = list(.count_contiguous_kmers_numeric_proxy, .count_gapped_kmers_numeric_proxy),
-  "string_vector" = list(.count_contiguous_kmers_string_vector_proxy, .count_gapped_kmers_string_vector_proxy)
+  "string_vector" = list(.count_contiguous_kmers_string_vector_proxy, .count_gapped_kmers_string_vector_proxy),
+  "tidysq" = list(.count_contiguous_kmers_tidysq_proxy, .count_gapped_kmers_tidysq_proxy)
 )
