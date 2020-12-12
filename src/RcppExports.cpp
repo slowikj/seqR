@@ -44,16 +44,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// count_contiguous_kmers_list
-Rcpp::List count_contiguous_kmers_list(Rcpp::List& sq, Rcpp::StringVector& alphabet, Rcpp::Environment& rcppParams);
-RcppExport SEXP _seqR_count_contiguous_kmers_list(SEXP sqSEXP, SEXP alphabetSEXP, SEXP rcppParamsSEXP) {
+// count_contiguous_kmers_string_vector
+Rcpp::List count_contiguous_kmers_string_vector(Rcpp::StringVector& sq, Rcpp::StringVector& alphabet, Rcpp::Environment& rcppParams);
+RcppExport SEXP _seqR_count_contiguous_kmers_string_vector(SEXP sqSEXP, SEXP alphabetSEXP, SEXP rcppParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List& >::type sq(sqSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type sq(sqSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::Environment& >::type rcppParams(rcppParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_contiguous_kmers_list(sq, alphabet, rcppParams));
+    rcpp_result_gen = Rcpp::wrap(count_contiguous_kmers_string_vector(sq, alphabet, rcppParams));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -96,16 +96,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// count_gapped_kmers_list
-Rcpp::List count_gapped_kmers_list(Rcpp::List& sq, Rcpp::StringVector& alphabet, Rcpp::Environment& rcppParams);
-RcppExport SEXP _seqR_count_gapped_kmers_list(SEXP sqSEXP, SEXP alphabetSEXP, SEXP rcppParamsSEXP) {
+// count_gapped_kmers_string_vector
+Rcpp::List count_gapped_kmers_string_vector(Rcpp::StringVector& sq, Rcpp::StringVector& alphabet, Rcpp::Environment& rcppParams);
+RcppExport SEXP _seqR_count_gapped_kmers_string_vector(SEXP sqSEXP, SEXP alphabetSEXP, SEXP rcppParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List& >::type sq(sqSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector& >::type sq(sqSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector& >::type alphabet(alphabetSEXP);
     Rcpp::traits::input_parameter< Rcpp::Environment& >::type rcppParams(rcppParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers_list(sq, alphabet, rcppParams));
+    rcpp_result_gen = Rcpp::wrap(count_gapped_kmers_string_vector(sq, alphabet, rcppParams));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -114,11 +114,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_seqR_count_contiguous_kmers_string", (DL_FUNC) &_seqR_count_contiguous_kmers_string, 3},
     {"_seqR_count_contiguous_kmers_integer", (DL_FUNC) &_seqR_count_contiguous_kmers_integer, 3},
     {"_seqR_count_contiguous_kmers_numeric", (DL_FUNC) &_seqR_count_contiguous_kmers_numeric, 3},
-    {"_seqR_count_contiguous_kmers_list", (DL_FUNC) &_seqR_count_contiguous_kmers_list, 3},
+    {"_seqR_count_contiguous_kmers_string_vector", (DL_FUNC) &_seqR_count_contiguous_kmers_string_vector, 3},
     {"_seqR_count_gapped_kmers_string", (DL_FUNC) &_seqR_count_gapped_kmers_string, 3},
     {"_seqR_count_gapped_kmers_integer", (DL_FUNC) &_seqR_count_gapped_kmers_integer, 3},
     {"_seqR_count_gapped_kmers_numeric", (DL_FUNC) &_seqR_count_gapped_kmers_numeric, 3},
-    {"_seqR_count_gapped_kmers_list", (DL_FUNC) &_seqR_count_gapped_kmers_list, 3},
+    {"_seqR_count_gapped_kmers_string_vector", (DL_FUNC) &_seqR_count_gapped_kmers_string_vector, 3},
     {NULL, NULL, 0}
 };
 

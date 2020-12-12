@@ -151,10 +151,10 @@ test_that("(numeric) the k-mer is longer than the sequence", {
               with_kmer_counts=TRUE)
 })
 
-# LIST INPUT TESTS ----
+# STRING VECTOR INPUT TESTS ----
 
 test_that("(list input) count non positional k-mers (0, 1)", {
-  sequences <- list("AAAAAC", "AAA", "AAAC")
+  sequences <- c("AAAAAC", "AAA", "AAAC")
   expected_res <- matrix(c(
     2, 1,
     0, 0,
@@ -169,7 +169,7 @@ test_that("(list input) count non positional k-mers (0, 1)", {
 })
 
 test_that("(list input) count non positional k-mers (0, 1); some items are not allowed", {
-  sequences <- list("AAAACAAAAC", "AACTAAAA", "AACTAAAAC")
+  sequences <- c("AAAACAAAAC", "AACTAAAA", "AACTAAAAC")
   expected_res <- matrix(c(
     3, 0, 0,
     1, 1, 1,
@@ -185,7 +185,7 @@ test_that("(list input) count non positional k-mers (0, 1); some items are not a
 })
 
 test_that("(list input) the k-mer is longer than the sequence", {
-  sequences <- list("AAAACAAAAC", "AACTAAAA", "AACTAAAAC")
+  sequences <- c("AAAACAAAAC", "AACTAAAA", "AACTAAAAC")
   expected_res <- matrix(nrow=3, ncol=0)
   invoke_test(expected_res = expected_res,
               alphabet=c("A", "T"),

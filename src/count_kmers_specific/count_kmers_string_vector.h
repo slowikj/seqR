@@ -1,5 +1,5 @@
-#ifndef SEQR_COUNT_KMERS_STRING_LIST_H
-#define SEQR_COUNT_KMERS_STRING_LIST_H
+#ifndef SEQR_COUNT_KMERS_STRING_VECTOR_H
+#define SEQR_COUNT_KMERS_STRING_VECTOR_H
 
 #include <Rcpp.h>
 #include <vector>
@@ -10,21 +10,20 @@
 #include "safe_sequences_wrapper.h"
 #include <limits>
 
-class SafeStringListWrapper : public BaseSequencesWrapper<std::string, char> {
+class SafeStringVectorWrapper : public BaseSequencesWrapper<std::string, char> {
 public:
-    explicit SafeStringListWrapper(const Rcpp::List &inputVector)
-            : SafeStringListWrapper(inputVector, 0, inputVector.size()) {}
+    explicit SafeStringVectorWrapper(const Rcpp::StringVector &inputVector)
+            : SafeStringVectorWrapper(inputVector, 0, inputVector.size()) {}
 
-    SafeStringListWrapper(const Rcpp::List &inputVector, std::size_t begin, std::size_t end) {
+    SafeStringVectorWrapper(const Rcpp::StringVector &inputVector, std::size_t begin, std::size_t end) {
         this->initSequences(inputVector, begin, end);
     }
 
 private:
-    void initSequences(const Rcpp::List &inputList, int begin, int end) {
+    void initSequences(const Rcpp::StringVector &inputVector, int begin, int end) {
         this->sequences_.resize(end - begin);
         for (int i = begin; i < end; ++i) {
-            Rcpp::StringVector listElem = inputList[i];
-            this->sequences_[i - begin] = std::move(Rcpp::as<std::string>(listElem[0]));
+            this->sequences_[i - begin] = std::move(Rcpp::as<std::string>(inputVector[i]));
         }
     }
 };
@@ -66,9 +65,9 @@ private:
     }
 };
 
-inline SequenceGetter_t<typename SafeStringListWrapper::Row>
-getCppStringSequenceGetter(SafeStringListWrapper &sequencesWrapper, int rowOffset = 0) {
-    return [&sequencesWrapper, rowOffset](int rowNum) -> typename SafeStringListWrapper::Row {
+inline SequenceGetter_t<typename SafeStringVectorWrapper::Row>
+getCppStringSequenceGetter(SafeStringVectorWrapper &sequencesWrapper, int rowOffset = 0) {
+    return [&sequencesWrapper, rowOffset](int rowNum) -> typename SafeStringVectorWrapper::Row {
         return std::move(sequencesWrapper.row(rowNum + rowOffset));
     };
 }
@@ -82,15 +81,15 @@ inline InputToStringItemConverter_t<char> getCharToStringConverter() {
 template<class algorithm_params_t,
         template<typename key, typename value, class...> class kmer_dictionary_t>
 inline
-Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
+Rcpp::List commonCountKMersSpecific(Rcpp::StringVector &sequences,
                                     Rcpp::StringVector &alphabet,
                                     const UserParams &userParams,
                                     algorithm_params_t &algorithmParams) {
     StringListAlphabetEncoder alphabetEncoder(alphabet);
 
     auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
-        SafeStringListWrapper sequenceWrapper(sequences, seqBegin, seqEnd);
-        KMerTaskConfig<SafeStringListWrapper::Row, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
+        SafeStringVectorWrapper sequenceWrapper(sequences, seqBegin, seqEnd);
+        KMerTaskConfig<SafeStringVectorWrapper::Row, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
                 getCppStringSequenceGetter(sequenceWrapper),
                 getCharToStringConverter(),
@@ -98,7 +97,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
                 config::DEFAULT_KMER_SECTION_SEPARATOR,
                 userParams);
         updateKMerCountingResult<
-                SafeStringListWrapper::Row,
+                SafeStringVectorWrapper::Row,
                 decltype(alphabetEncoder)::input_elem_t,
                 decltype(alphabetEncoder),
                 kmer_dictionary_t>(kMerTaskConfig,
@@ -113,7 +112,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
 template<class algorithm_params_t,
         template<typename key, typename value, class...> class kmer_dictionary_t>
 inline
-Rcpp::List parallelCountKMersSpecific(Rcpp::List &sequences,
+Rcpp::List parallelCountKMersSpecific(Rcpp::StringVector &sequences,
                                       Rcpp::StringVector &alphabet,
                                       const UserParams &userParams,
                                       algorithm_params_t &algorithmParams) {
@@ -124,7 +123,7 @@ Rcpp::List parallelCountKMersSpecific(Rcpp::List &sequences,
 template<class algorithm_params_t,
         template<typename key, typename value, class...> class kmer_dictionary_t>
 inline
-Rcpp::List sequentialCountKMersSpecific(Rcpp::List &sequences,
+Rcpp::List sequentialCountKMersSpecific(Rcpp::StringVector &sequences,
                                         Rcpp::StringVector &alphabet,
                                         const UserParams &userParams,
                                         algorithm_params_t &algorithmParams) {
@@ -133,4 +132,4 @@ Rcpp::List sequentialCountKMersSpecific(Rcpp::List &sequences,
 }
 
 
-#endif //SEQR_COUNT_KMERS_STRING_LIST_H
+#endif //SEQR_COUNT_KMERS_STRING_VECTOR_H

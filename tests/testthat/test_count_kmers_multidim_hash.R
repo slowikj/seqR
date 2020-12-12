@@ -7,7 +7,7 @@ invoke_test <- function(hash_dim, expected_res, ...) {
 }
 
 invoke_dim_test <- function(hash_dim) {
-  sq <- list("AAAAAABABA", "AAAABBAABABABABAB", "AAAA")
+  sq <- c("AAAAAABABA", "AAAABBAABABABABAB", "AAAA")
   expected_res <- matrix(c(
     1, 2, 4, 1, 0, 0, 0,
     4, 4, 2, 2, 1, 1, 1,

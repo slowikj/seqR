@@ -6,7 +6,7 @@
 #include "count_kmers_specific/count_kmers_integer_matrix.h"
 #include "count_kmers_specific/count_kmers_numeric_matrix.h"
 #include "count_kmers_specific/count_kmers_string_matrix.h"
-#include "count_kmers_specific/count_kmers_string_list.h"
+#include "count_kmers_specific/count_kmers_string_vector.h"
 #include "dictionary/dictionaries.h"
 
 template<class sequences_t,

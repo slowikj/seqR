@@ -37,10 +37,6 @@ count_kmers <- function(sequences,
     stop("batch size field must be a positive integer number")
   }
   
-  if(is.vector(sequences)) {
-    sequences <- matrix(data=sequences, nrow=1)
-  }
-  
   if(!is_positive_integer(hash_dim) || hash_dim > 8) {
     stop("hash_dim is a single integer number from the range [1, 8]")
   }

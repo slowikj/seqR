@@ -22,8 +22,8 @@
                         params=params)
 }
 
-.count_contiguous_kmers_list_proxy <- function(sequences, params) {
-  .invoke_kmer_function(rcpp_counting_function=.count_contiguous_kmers_list,
+.count_contiguous_kmers_string_vector_proxy <- function(sequences, params) {
+  .invoke_kmer_function(rcpp_counting_function=.count_contiguous_kmers_string_vector,
                         alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)
@@ -50,8 +50,8 @@
                         params=params)
 }
 
-.count_gapped_kmers_list_proxy <- function(sequences, params) {
-  .invoke_kmer_function(rcpp_counting_function=.count_gapped_kmers_list,
+.count_gapped_kmers_string_vector_proxy <- function(sequences, params) {
+  .invoke_kmer_function(rcpp_counting_function=.count_gapped_kmers_string_vector,
                         alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)

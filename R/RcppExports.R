@@ -22,8 +22,8 @@ NULL
     .Call('_seqR_count_contiguous_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
 }
 
-.count_contiguous_kmers_list <- function(sq, alphabet, rcppParams) {
-    .Call('_seqR_count_contiguous_kmers_list', PACKAGE = 'seqR', sq, alphabet, rcppParams)
+.count_contiguous_kmers_string_vector <- function(sq, alphabet, rcppParams) {
+    .Call('_seqR_count_contiguous_kmers_string_vector', PACKAGE = 'seqR', sq, alphabet, rcppParams)
 }
 
 .count_gapped_kmers_string <- function(sequenceMatrix, alphabet, rcppParams) {
@@ -38,7 +38,7 @@ NULL
     .Call('_seqR_count_gapped_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
 }
 
-.count_gapped_kmers_list <- function(sq, alphabet, rcppParams) {
-    .Call('_seqR_count_gapped_kmers_list', PACKAGE = 'seqR', sq, alphabet, rcppParams)
+.count_gapped_kmers_string_vector <- function(sq, alphabet, rcppParams) {
+    .Call('_seqR_count_gapped_kmers_string_vector', PACKAGE = 'seqR', sq, alphabet, rcppParams)
 }
 

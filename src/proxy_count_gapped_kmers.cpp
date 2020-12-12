@@ -29,8 +29,7 @@ Rcpp::List count_gapped_kmers_string(
         Rcpp::StringMatrix &sequenceMatrix,
         Rcpp::StringVector &alphabet,
         Rcpp::Environment &rcppParams) {
-    return countGappedKMers(
-            sequenceMatrix, alphabet, rcppParams);
+    return countGappedKMers(sequenceMatrix, alphabet, rcppParams);
 }
 
 // [[Rcpp::export(".count_gapped_kmers_integer")]]
@@ -38,8 +37,7 @@ Rcpp::List count_gapped_kmers_integer(
         Rcpp::IntegerMatrix &sequenceMatrix,
         Rcpp::IntegerVector &alphabet,
         Rcpp::Environment &rcppParams) {
-    return countGappedKMers(
-            sequenceMatrix, alphabet, rcppParams);
+    return countGappedKMers(sequenceMatrix, alphabet, rcppParams);
 }
 
 // [[Rcpp::export(".count_gapped_kmers_numeric")]]
@@ -47,15 +45,13 @@ Rcpp::List count_gapped_kmers_numeric(
         Rcpp::NumericMatrix &sequenceMatrix,
         Rcpp::NumericVector &alphabet,
         Rcpp::Environment &rcppParams) {
-    return countGappedKMers(
-            sequenceMatrix, alphabet, rcppParams);
+    return countGappedKMers(sequenceMatrix, alphabet, rcppParams);
 }
 
-// [[Rcpp::export(".count_gapped_kmers_list")]]
-Rcpp::List count_gapped_kmers_list(
-        Rcpp::List &sq,
+// [[Rcpp::export(".count_gapped_kmers_string_vector")]]
+Rcpp::List count_gapped_kmers_string_vector(
+        Rcpp::StringVector &sq,
         Rcpp::StringVector &alphabet,
         Rcpp::Environment &rcppParams) {
-    return countGappedKMers(
-            sq, alphabet, rcppParams);
+    return countGappedKMers(sq, alphabet, rcppParams);
 }
