@@ -4,7 +4,7 @@
 #include <Rcpp.h>
 #include <vector>
 #include "../alphabet_encoder/default_alphabet_encoder.h"
-#include "../dictionary/unordered_map_wrapper.h"
+#include "../dictionary/stl_unordered_map_wrapper.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
 #include "safe_sequences_wrapper.h"
@@ -88,7 +88,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
                                     algorithm_params_t &algorithmParams) {
     StringListAlphabetEncoder alphabetEncoder(alphabet);
 
-    auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
+    auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
         SafeStringListWrapper sequenceWrapper(sequences, seqBegin, seqEnd);
         KMerTaskConfig<SafeStringListWrapper::Row, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
@@ -107,7 +107,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
                                    kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequences.size(), userParams);
+    return computeKMersInBatches<kmer_dictionary_t>(batchFunc, sequences.size(), userParams);
 }
 
 template<class algorithm_params_t,

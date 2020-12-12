@@ -16,8 +16,9 @@
 #include <functional>
 #include <vector>
 
+template <template <class K, class V, class...> class kmer_dictionary_t>
 inline Rcpp::List computeKMersInBatches(
-        const std::function<void(KMerCountingResult &, int, int)> &batchFunc,
+        const std::function<void(KMerCountingResult<kmer_dictionary_t> &, int, int)> &batchFunc,
         int sequencesNum,
         const UserParams &userParams);
 
@@ -29,7 +30,7 @@ inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs,
-        KMerCountingResult &kMerCountingResult);
+        KMerCountingResult<kmer_dictionary_t> &kMerCountingResult);
 
 template<class input_vector_t,
         class input_elem_t,
@@ -39,7 +40,7 @@ inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::function<hashing::ComplexHasher()> &complexHasherFactory,
-        KMerCountingResult &kMerCountingResult);
+        KMerCountingResult<kmer_dictionary_t> &kMerCountingResult);
 
 template<class input_vector_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
@@ -55,7 +56,7 @@ template<class input_vector_t, class input_elem_t,
 inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         CountingKMersProc_t<input_vector_t, kmer_dictionary_t> countingProc,
-        KMerCountingResult &kMerCountingResult);
+        KMerCountingResult<kmer_dictionary_t> &kMerCountingResult);
 
 template<class input_vector_t,
         template<typename key, typename value, typename...> class kmer_dictionary_t>
@@ -70,11 +71,12 @@ inline void printSequenceProcessingLogIfVerbose(
 
 // ------------------ IMPLEMENTATION ------------------
 
+template <template <class K, class V, class...> class kmer_dictionary_t>
 inline Rcpp::List computeKMersInBatches(
-        const std::function<void(KMerCountingResult &, int, int)> &batchFunc,
+        const std::function<void(KMerCountingResult<kmer_dictionary_t> &, int, int)> &batchFunc,
         int sequencesNum,
         const UserParams &userParams) {
-    KMerCountingResult kMerCountingResult;
+    KMerCountingResult<kmer_dictionary_t> kMerCountingResult;
     for (int begin = 0; begin < sequencesNum; begin += userParams.batchSize) {
         int end = std::min(begin + userParams.batchSize, sequencesNum);
         printSequenceProcessingLogIfVerbose(userParams.verbose, begin, end);
@@ -92,7 +94,7 @@ inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs,
-        KMerCountingResult &kMerCountingResult) {
+        KMerCountingResult<kmer_dictionary_t> &kMerCountingResult) {
     std::size_t totalKMerSize = util::getKMerRange(kMerTaskConfig.userParams.gaps);
     updateKMerCountingResult<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
             kMerTaskConfig,
@@ -120,7 +122,7 @@ inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         alphabet_encoding_t &alphabetEncoding,
         std::function<hashing::ComplexHasher()> &complexHasherFactory,
-        KMerCountingResult &kMerCountingResult) {
+        KMerCountingResult<kmer_dictionary_t> &kMerCountingResult) {
     updateKMerCountingResult<input_vector_t, input_elem_t, alphabet_encoding_t, kmer_dictionary_t>(
             kMerTaskConfig,
             [&kMerTaskConfig, &complexHasherFactory, &alphabetEncoding]
@@ -144,7 +146,7 @@ template<class input_vector_t, class input_elem_t,
 inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         CountingKMersProc_t<input_vector_t, kmer_dictionary_t> countingProc,
-        KMerCountingResult &kMerCountingResult) {
+        KMerCountingResult<kmer_dictionary_t> &kMerCountingResult) {
     auto kMersManagers = std::move(computeKMersForAllSequences<input_vector_t, kmer_dictionary_t>(
             kMerTaskConfig.sequencesNum,
             countingProc,
