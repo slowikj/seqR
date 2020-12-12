@@ -10,7 +10,7 @@
 
 #include <cstdio>
 
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 namespace emilib {
 namespace magica_voxel {

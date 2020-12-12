@@ -6,7 +6,7 @@
 // HISTORY:
 //   Created in 2014 for Ghostel
 
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 #include <emilib/gl_lib.hpp>
 

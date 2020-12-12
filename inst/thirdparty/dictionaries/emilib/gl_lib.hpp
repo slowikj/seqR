@@ -16,7 +16,7 @@
 #include <utility>
 #include <vector>
 
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 #include "gl_lib_fwd.hpp"
 

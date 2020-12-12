@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include <string>
 
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 namespace emilib {
 

@@ -16,7 +16,7 @@
 #include <sys/types.h>
 
 #define LOGURU_WITH_STREAMS 1 // For loguru::strprintf
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 namespace fs {
 

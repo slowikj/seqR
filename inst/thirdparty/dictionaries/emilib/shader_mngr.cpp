@@ -10,7 +10,7 @@
 #include <unordered_map>
 
 #include <configuru.hpp>
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 #include <emilib/dir_watcher.hpp>
 #include <emilib/file_system.hpp>

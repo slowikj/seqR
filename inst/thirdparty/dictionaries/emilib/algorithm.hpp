@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <numeric>
 
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 namespace emilib {
 

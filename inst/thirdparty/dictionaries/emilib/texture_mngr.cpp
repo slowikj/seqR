@@ -15,7 +15,7 @@
 #include <emilib/mem_map.hpp>
 #include <emilib/pvr.hpp>
 #include <emilib/thread_pool.hpp>
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 namespace emilib {
 

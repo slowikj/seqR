@@ -6,7 +6,7 @@
 
 #include "utf8.hpp"
 
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 namespace emilib {
 namespace utf8 {

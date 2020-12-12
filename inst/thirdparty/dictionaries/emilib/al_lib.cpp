@@ -12,7 +12,7 @@
 #include <OpenAL/al.h>
 #include <OpenAL/alc.h>
 
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 #include "file_system.hpp"
 #include "mem_map.hpp"

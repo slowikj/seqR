@@ -10,7 +10,7 @@
 #include <thread>
 
 #define LOGURU_WITH_STREAMS 1
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 namespace emilib {
 namespace cr {

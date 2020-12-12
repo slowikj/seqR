@@ -11,7 +11,7 @@
 #include <cstring>
 
 #define LOGURU_WITH_STREAMS 1
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 #include "gl_lib_opengl.hpp"
 

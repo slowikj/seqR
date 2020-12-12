@@ -11,7 +11,7 @@
 #include <unordered_map>
 
 #include <imgui/imgui.h>
-#include <loguru.hpp>
+#include "loguru.hpp"
 
 #include <util/profiler.hpp>
 

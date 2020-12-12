@@ -12,7 +12,7 @@
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <loguru.hpp>  // LOGURU_ANONYMOUS_VARIABLE
+#include "loguru.hpp"  // LOGURU_ANONYMOUS_VARIABLE
 
 namespace profiler {
 
