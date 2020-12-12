@@ -88,7 +88,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
                                     algorithm_params_t &algorithmParams) {
     StringListAlphabetEncoder alphabetEncoder(alphabet);
 
-    auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
+    auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
         SafeStringListWrapper sequenceWrapper(sequences, seqBegin, seqEnd);
         KMerTaskConfig<SafeStringListWrapper::Row, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
@@ -107,7 +107,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
                                    kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequences.size(), userParams);
+    return computeKMersInBatches<kmer_dictionary_t>(batchFunc, sequences.size(), userParams);
 }
 
 template<class algorithm_params_t,

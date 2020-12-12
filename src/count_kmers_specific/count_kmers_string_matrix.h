@@ -64,7 +64,7 @@ Rcpp::List parallelCountKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
     }
     alphabetEncoding::IdentityAlphabetEncoder<encoded_elem_t> alphabetEncoder(alphabetBeginCnt, alphabetCnt - 1);
 
-    auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
+    auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
         EncodedStringMatrix<encoded_elem_t> safeMatrixWrapper(sequenceMatrix,
                                                               stringAlphabetEncoder,
                                                               alphabetBeginCnt - 1,
@@ -90,7 +90,7 @@ Rcpp::List parallelCountKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                                    kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), userParams);
+    return computeKMersInBatches<kmer_dictionary_t>(batchFunc, sequenceMatrix.nrow(), userParams);
 }
 
 template<class algorithm_params_t,
@@ -105,7 +105,7 @@ Rcpp::List sequentialCountKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
             Rcpp::StringVector, Rcpp::StringVector::stored_type, encoded_elem_t, dictionary::StlUnorderedMapWrapper>(
             alphabet);
 
-    auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
+    auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
         KMerTaskConfig<typename Rcpp::StringMatrix::Row, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
                 [&](int index) -> typename Rcpp::StringMatrix::Row {
@@ -127,7 +127,7 @@ Rcpp::List sequentialCountKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                                    kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), userParams);
+    return computeKMersInBatches<kmer_dictionary_t>(batchFunc, sequenceMatrix.nrow(), userParams);
 }
 
 #endif //SEQR_COUNT_KMERS_STRING_MATRIX_H

@@ -29,7 +29,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
             alphabetEncoding::getDefaultAlphabetEncoder<Rcpp::NumericVector, double, encoded_elem_t, dictionary::StlUnorderedMapWrapper>(
                     alphabet));
 
-    auto batchFunc = [&](KMerCountingResult &kMerCountingResult, int seqBegin, int seqEnd) {
+    auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
         KMerTaskConfig<RcppParallel::RMatrix<double>::Row, double> kMerTaskConfig(
                 (seqEnd - seqBegin),
                 getRMatrixRowGetter<Rcpp::NumericMatrix, decltype(alphabetEncoding)::input_elem_t>(
@@ -48,7 +48,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
                                    kMerCountingResult);
     };
 
-    return computeKMersInBatches(batchFunc, sequenceMatrix.nrow(), userParams);
+    return computeKMersInBatches<kmer_dictionary_t>(batchFunc, sequenceMatrix.nrow(), userParams);
 }
 
 template<class algorithm_params_t,

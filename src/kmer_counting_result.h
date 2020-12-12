@@ -4,11 +4,11 @@
 #include <Rcpp.h>
 #include <vector>
 #include <string>
-#include <unordered_map>
 #include <tuple>
 #include "hash/custom_vector_hasher.h"
 #include "hash/globals.h"
 
+template<template<class K, class V, class...> class kmer_dictionary_t>
 class KMerCountingResult {
 public:
     using hash_t = hashing::config::multidim_hash_t;
@@ -23,7 +23,7 @@ public:
     inline bool addKMer(const hashing::config::multidim_hash_t &kMerHash,
                         int sequenceNum,
                         int count) {
-        if (kMerHash2ColumnIndex.find(kMerHash) != kMerHash2ColumnIndex.end()) {
+        if (kMerHash2ColumnIndex.isPresent(kMerHash)) {
             addKMerCountsInfo(kMerHash2ColumnIndex[kMerHash], sequenceNum, count);
             return false;
         } else {
@@ -61,7 +61,7 @@ private:
 
     std::vector<int> kMerCounts;
 
-    std::unordered_map<hash_t, int, hasher_t> kMerHash2ColumnIndex;
+    kmer_dictionary_t<hash_t, int, hasher_t> kMerHash2ColumnIndex;
 
     int processedSequencesNum = 0;
 
