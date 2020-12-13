@@ -41,7 +41,7 @@ jobs:
 
       - name: Install github dependencies
         run: |
-          install.packages("devtools")
+          install.packages('devtools')
           devtools:install_github("BioGenes/tidysq")
 
       - name: Query dependencies
