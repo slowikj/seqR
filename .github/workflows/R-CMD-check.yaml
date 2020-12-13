@@ -42,7 +42,7 @@ jobs:
       - name: Install github dependencies
         run: |
           Rscript -e "install.packages('devtools')"
-          Rscript -e "devtools::install_github('BioGenes/tidysq')"
+          Rscript -e "devtools::install_github('BioGenies/tidysq')"
 
       - name: Query dependencies
         run: |
