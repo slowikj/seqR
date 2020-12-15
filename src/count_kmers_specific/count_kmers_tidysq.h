@@ -3,6 +3,7 @@
 
 #include <Rcpp/vector/instantiation.h>
 #include "../user_params.h"
+// [[Rcpp::depends(tidysq)]]
 #include <tidysq.h>
 #include "../kmer_counting_result.h"
 #include "../kmer_task_config.h"
@@ -13,7 +14,7 @@
 class TidysqAlphabetEncoder {
 public:
     using input_elem_t = tidysq::LetterValue;
-    using encoded_elem_t = tidysq::LetterValue;
+    using encoded_elem_t = uint16_t;
 
     explicit TidysqAlphabetEncoder(
             const tidysq::Alphabet &sqAlphabet,
@@ -23,11 +24,11 @@ public:
     }
 
     [[nodiscard]] inline encoded_elem_t encode(const input_elem_t &inputElem) const {
-        return inputElem;
+        return static_cast<encoded_elem_t>(inputElem);
     }
 
     [[nodiscard]] inline encoded_elem_t encodeUnsafe(const input_elem_t &inputElem) const {
-        return inputElem;
+        return encode(inputElem);
     }
 
     [[nodiscard]] inline bool isAllowed(const input_elem_t &inputElem) const {
@@ -60,7 +61,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
                                     const UserParams &userParams,
                                     algorithm_params_t &algorithmParams) {
     auto sq = tidysq::import_from_R(sequences, tidysq::constants::DEFAULT_NA_LETTER);
-    const auto &sqAlphabet = sq.alphabet();
+    auto sqAlphabet = sq.alphabet();
     TidysqAlphabetEncoder alphabetEncoder(sqAlphabet, kMerAlphabet);
 
     auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
@@ -71,7 +72,7 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
                 [&sqUnpackedInts, seqBegin](int index) -> decltype(sqUnpackedInts)::ElementType {
                     return sqUnpackedInts[seqBegin + index];
                 },
-                [&sqAlphabet](const tidysq::LetterValue& elem) -> std::string { return sqAlphabet[elem]; },
+                [&sqAlphabet](const tidysq::LetterValue &elem) -> std::string { return sqAlphabet[elem]; },
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
                 config::DEFAULT_KMER_SECTION_SEPARATOR,
                 userParams);
