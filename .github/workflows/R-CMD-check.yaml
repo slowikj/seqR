@@ -43,7 +43,7 @@ jobs:
 
       - name: Install github dependencies
         run: |
-          install.packages('remotes')
+          Rscript -e "install.packages('remotes')"
           Rscript -e "remotes::install_github('BioGenies/tidysq')"
 
       - name: Query dependencies
