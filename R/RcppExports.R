@@ -11,42 +11,42 @@ NULL
 NULL
 
 .count_contiguous_kmers_string <- function(sequenceMatrix, alphabet, rcppParams) {
-    .Call('_seqR_count_contiguous_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
+    .Call('_seqRNoFastMod_count_contiguous_kmers_string', PACKAGE = 'seqRNoFastMod', sequenceMatrix, alphabet, rcppParams)
 }
 
 .count_contiguous_kmers_integer <- function(sequenceMatrix, alphabet, rcppParams) {
-    .Call('_seqR_count_contiguous_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
+    .Call('_seqRNoFastMod_count_contiguous_kmers_integer', PACKAGE = 'seqRNoFastMod', sequenceMatrix, alphabet, rcppParams)
 }
 
 .count_contiguous_kmers_numeric <- function(sequenceMatrix, alphabet, rcppParams) {
-    .Call('_seqR_count_contiguous_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
+    .Call('_seqRNoFastMod_count_contiguous_kmers_numeric', PACKAGE = 'seqRNoFastMod', sequenceMatrix, alphabet, rcppParams)
 }
 
 .count_contiguous_kmers_string_vector <- function(sq, alphabet, rcppParams) {
-    .Call('_seqR_count_contiguous_kmers_string_vector', PACKAGE = 'seqR', sq, alphabet, rcppParams)
+    .Call('_seqRNoFastMod_count_contiguous_kmers_string_vector', PACKAGE = 'seqRNoFastMod', sq, alphabet, rcppParams)
 }
 
 .count_contiguous_kmers_tidysq <- function(sq, alphabet, rcppParams) {
-    .Call('_seqR_count_contiguous_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, rcppParams)
+    .Call('_seqRNoFastMod_count_contiguous_kmers_tidysq', PACKAGE = 'seqRNoFastMod', sq, alphabet, rcppParams)
 }
 
 .count_gapped_kmers_string <- function(sequenceMatrix, alphabet, rcppParams) {
-    .Call('_seqR_count_gapped_kmers_string', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
+    .Call('_seqRNoFastMod_count_gapped_kmers_string', PACKAGE = 'seqRNoFastMod', sequenceMatrix, alphabet, rcppParams)
 }
 
 .count_gapped_kmers_integer <- function(sequenceMatrix, alphabet, rcppParams) {
-    .Call('_seqR_count_gapped_kmers_integer', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
+    .Call('_seqRNoFastMod_count_gapped_kmers_integer', PACKAGE = 'seqRNoFastMod', sequenceMatrix, alphabet, rcppParams)
 }
 
 .count_gapped_kmers_numeric <- function(sequenceMatrix, alphabet, rcppParams) {
-    .Call('_seqR_count_gapped_kmers_numeric', PACKAGE = 'seqR', sequenceMatrix, alphabet, rcppParams)
+    .Call('_seqRNoFastMod_count_gapped_kmers_numeric', PACKAGE = 'seqRNoFastMod', sequenceMatrix, alphabet, rcppParams)
 }
 
 .count_gapped_kmers_string_vector <- function(sq, alphabet, rcppParams) {
-    .Call('_seqR_count_gapped_kmers_string_vector', PACKAGE = 'seqR', sq, alphabet, rcppParams)
+    .Call('_seqRNoFastMod_count_gapped_kmers_string_vector', PACKAGE = 'seqRNoFastMod', sq, alphabet, rcppParams)
 }
 
 .count_gapped_kmers_tidysq <- function(sq, alphabet, rcppParams) {
-    .Call('_seqR_count_gapped_kmers_tidysq', PACKAGE = 'seqR', sq, alphabet, rcppParams)
+    .Call('_seqRNoFastMod_count_gapped_kmers_tidysq', PACKAGE = 'seqRNoFastMod', sq, alphabet, rcppParams)
 }
 

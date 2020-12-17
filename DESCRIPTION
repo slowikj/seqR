@@ -1,4 +1,4 @@
-Package: seqR
+Package: seqRNoFastMod
 Type: Package
 Title: k-mer counting package
 Version: 0.4.0

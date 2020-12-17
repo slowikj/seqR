@@ -1,3 +1,3 @@
-#' @useDynLib seqR
+#' @useDynLib seqRNoFastMod
 #' @importFrom Rcpp sourceCpp
 NULL
