@@ -71,8 +71,8 @@ Rcpp::List parallelCountKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
                                                               seqBegin, seqEnd);
         KMerTaskConfig<typename decltype(safeMatrixWrapper)::Row, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
-                [&safeMatrixWrapper, seqBegin](int rowNum) -> typename EncodedStringMatrix<encoded_elem_t>::Row {
-                    return safeMatrixWrapper.row(rowNum + seqBegin);
+                [&safeMatrixWrapper](int rowNum) -> typename EncodedStringMatrix<encoded_elem_t>::Row {
+                    return safeMatrixWrapper.row(rowNum);
                 },
                 [&alphabetStrings](const encoded_elem_t &encodedElem) -> std::string {
                     return alphabetStrings[encodedElem - 1];

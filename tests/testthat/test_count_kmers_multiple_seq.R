@@ -82,3 +82,20 @@ test_that("find non positional 5-mers for 100 sequences (10^6 each) (without k-m
               positional=FALSE,
               with_kmer_counts=FALSE)
 })
+
+test_that("find non positional 5-mers for 100 sequences (10^6 each) (without k-mer counts), batch_size=20", {
+  nrow <- 100
+  ncol <- 1000000
+  sequence_matrix <- matrix(rep(rep("A", ncol), nrow), byrow=TRUE, nrow=nrow)
+  
+  expected_res <- matrix(rep(1, nrow),
+                         nrow=nrow)
+  colnames(expected_res) <- c("A.A.A.A.A_0.0.0.0")
+  invoke_test(expected_res=expected_res,
+              alphabet=c("A"),
+              sequences=sequence_matrix,
+              k=5,
+              positional=FALSE,
+              with_kmer_counts=FALSE,
+              batch_size=20)
+})
