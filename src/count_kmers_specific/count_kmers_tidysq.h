@@ -66,6 +66,24 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
 
     auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
         auto sqUnpackedInts = sq.unpack<tidysq::STD_IT, tidysq::INTS_PT>(seqBegin, seqEnd);
+
+        KMerTaskConfig<decltype(sqUnpackedInts)::ElementType, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
+                (seqEnd - seqBegin),
+                [&sqUnpackedInts, seqBegin](int index) -> decltype(sqUnpackedInts)::ElementType {
+                    return sqUnpackedInts[seqBegin + index];
+                },
+                [&sqAlphabet](const tidysq::LetterValue &elem) -> std::string { return sqAlphabet[elem]; },
+                config::DEFAULT_KMER_ITEM_SEPARATOR,
+                config::DEFAULT_KMER_SECTION_SEPARATOR,
+                userParams);
+        updateKMerCountingResult<
+                decltype(sqUnpackedInts)::ElementType,
+                decltype(alphabetEncoder)::input_elem_t,
+                decltype(alphabetEncoder),
+                kmer_dictionary_t>(kMerTaskConfig,
+                                   alphabetEncoder,
+                                   algorithmParams,
+                                   kMerCountingResult);
     };
 
     return computeKMersInBatches<kmer_dictionary_t>(batchFunc, sq.size(), userParams);
