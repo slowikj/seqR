@@ -69,8 +69,8 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
 
         KMerTaskConfig<decltype(sqUnpackedInts)::ElementType, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
-                [&sqUnpackedInts, seqBegin](int index) -> decltype(sqUnpackedInts)::ElementType {
-                    return sqUnpackedInts[seqBegin + index];
+                [&sqUnpackedInts](int index) -> decltype(sqUnpackedInts)::ElementType {
+                    return sqUnpackedInts[index];
                 },
                 [&sqAlphabet](const tidysq::LetterValue &elem) -> std::string { return sqAlphabet[elem]; },
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
