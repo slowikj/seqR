@@ -93,9 +93,9 @@ jobs:
         uses: r-lib/actions/setup-pandoc@master
 
       - name: Install github dependencies
-          run: |
-            Rscript -e "install.packages('remotes')"
-            Rscript -e "remotes::install_github('BioGenies/tidysq')"
+        run: |
+          Rscript -e "install.packages('remotes')"
+          Rscript -e "remotes::install_github('BioGenies/tidysq')"
 
       - name: Query dependencies
         run: |
