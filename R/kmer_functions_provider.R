@@ -9,7 +9,7 @@
 .get_kmer_function <- function(sequences) {
   if(tidysq::is.sq(sequences)) {
     .kmer_functions_map[["tidysq"]]
-  } else if (is.vector(sequences)) {
+  } else if (is.vector(sequences) & is.character(sequences)) {
     .kmer_functions_map[["string_vector"]]
   } else if (has_integers_only(sequences)) {
     .kmer_functions_map[["integer"]]
