@@ -11,13 +11,15 @@
 #include "../common_config.h"
 #include <vector>
 
+using namespace tidysq;
+
 class TidysqAlphabetEncoder {
 public:
-    using input_elem_t = tidysq::LetterValue;
+    using input_elem_t = LetterValue;
     using encoded_elem_t = uint16_t;
 
     explicit TidysqAlphabetEncoder(
-            const tidysq::Alphabet &sqAlphabet,
+            const Alphabet &sqAlphabet,
             const Rcpp::StringVector &kMerAlphabet) :
             size_(kMerAlphabet.size()) {
         prepareIsAllowedArray(sqAlphabet, kMerAlphabet);
@@ -44,7 +46,7 @@ private:
     std::size_t size_;
 
     void prepareIsAllowedArray(
-            const tidysq::Alphabet &sqAlphabet,
+            const Alphabet &sqAlphabet,
             const Rcpp::StringVector &kMerAlphabet) {
         for (const auto &kMerAlphabetElem: kMerAlphabet) {
             auto elem = Rcpp::as<std::string>(kMerAlphabetElem);
@@ -60,19 +62,19 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
                                     Rcpp::StringVector &kMerAlphabet,
                                     const UserParams &userParams,
                                     algorithm_params_t &algorithmParams) {
-    auto sq = tidysq::import_from_R(sequences, tidysq::constants::DEFAULT_NA_LETTER);
+    auto sq = import_from_R(sequences, constants::DEFAULT_NA_LETTER);
     auto sqAlphabet = sq.alphabet();
     TidysqAlphabetEncoder alphabetEncoder(sqAlphabet, kMerAlphabet);
 
     auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
-        auto sqUnpackedInts = sq.unpack<tidysq::STD_IT, tidysq::INTS_PT>(seqBegin, seqEnd);
+        auto sqUnpackedInts = sq.unpack<STD_IT, INTS_PT>(seqBegin, seqEnd);
 
         KMerTaskConfig<decltype(sqUnpackedInts)::ElementType, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
                 (seqEnd - seqBegin),
                 [&sqUnpackedInts](int index) -> decltype(sqUnpackedInts)::ElementType {
                     return sqUnpackedInts[index];
                 },
-                [&sqAlphabet](const tidysq::LetterValue &elem) -> std::string { return sqAlphabet[elem]; },
+                [&sqAlphabet](const LetterValue &elem) -> std::string { return sqAlphabet[elem]; },
                 config::DEFAULT_KMER_ITEM_SEPARATOR,
                 config::DEFAULT_KMER_SECTION_SEPARATOR,
                 userParams);

@@ -7,5 +7,6 @@
 #include "stl_unordered_map_wrapper.h"
 #include "stl_ordered_map_wrapper.h"
 #include "supported_dict_names.h"
+#include "flat_hashmap_wrapper.h"
 
 #endif //SEQR_DICTIONARIES_H

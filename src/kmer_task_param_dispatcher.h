@@ -71,6 +71,9 @@ inline Rcpp::List countKMersDictionaryDispatch(
     } else if (userParams.kMerDictionaryName == dictionary::names::MARTINUS_ROBIN_HOOD_DICTIONARY) {
         return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::MartinusRobinHoodDictionary>(
                 sequences, alphabet, userParams, algorithmParams);
+    } else if (userParams.kMerDictionaryName == dictionary::names::FLAT_HASHMAP) {
+        return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::FlatHashMapWrapper>(
+                sequences, alphabet, userParams, algorithmParams);
     } else {
         std::string errorMessage = "unsupported k-mer dictionary name: " + userParams.kMerDictionaryName;
         throw Rcpp::exception(errorMessage.c_str());
