@@ -1,5 +1,4 @@
-#ifndef SEQR_SAFE_SEQUENCES_WRAPPER_H
-#define SEQR_SAFE_SEQUENCES_WRAPPER_H
+#pragma once
 
 #include <utility>
 #include <vector>
@@ -67,5 +66,3 @@ public:
 
     SafeSequencesVectorWrapper() = delete;
 };
-
-#endif //SEQR_SAFE_SEQUENCES_WRAPPER_H

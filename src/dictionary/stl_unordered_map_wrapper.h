@@ -1,5 +1,4 @@
-#ifndef CUSTOM_DICTIONARY_H
-#define CUSTOM_DICTIONARY_H
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -15,5 +14,3 @@ namespace dictionary {
     class StlUnorderedMapWrapper : public StlLikeDictionaryWrapper<K, V, std::unordered_map, Hash> {
     };
 }
-
-#endif

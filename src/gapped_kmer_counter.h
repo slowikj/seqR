@@ -1,5 +1,4 @@
-#ifndef GAPPED_KMER_COUNTER_H
-#define GAPPED_KMER_COUNTER_H
+#pragma once
 
 #include "hash/polynomial_single_hasher.h"
 #include "hash/globals.h"
@@ -152,5 +151,3 @@ namespace gappedKMers {
         return std::move(res);
     }
 }
-
-#endif

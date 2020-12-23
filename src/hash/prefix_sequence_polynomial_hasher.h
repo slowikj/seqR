@@ -1,5 +1,4 @@
-#ifndef SEQR_PREFIX_SEQUENCE_POLYNOMIAL_HASHER_H
-#define SEQR_PREFIX_SEQUENCE_POLYNOMIAL_HASHER_H
+#pragma once
 
 #include <vector>
 #include "polynomial_single_hasher.h"
@@ -127,4 +126,3 @@ namespace hashing {
     };
 }
 
-#endif //SEQR_PREFIX_SEQUENCE_POLYNOMIAL_HASHER_H

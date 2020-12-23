@@ -1,5 +1,4 @@
-#ifndef SEQR_STL_ORDERED_MAP_WRAPPER_H
-#define SEQR_STL_ORDERED_MAP_WRAPPER_H
+#pragma once
 
 #include <map>
 #include "helper/stl_like_dictionary_wrapper.h"
@@ -11,4 +10,3 @@ namespace dictionary {
     };
 }
 
-#endif //SEQR_STL_ORDERED_MAP_WRAPPER_H

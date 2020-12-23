@@ -1,5 +1,4 @@
-#ifndef SEQR_COUNT_KMERS_TIDYSQ_H
-#define SEQR_COUNT_KMERS_TIDYSQ_H
+#pragma once
 
 #include <Rcpp/vector/instantiation.h>
 #include "../user_params.h"
@@ -112,5 +111,3 @@ Rcpp::List sequentialCountKMersSpecific(Rcpp::List &sequences,
     return commonCountKMersSpecific<algorithm_params_t, kmer_dictionary_t>(
             sequences, alphabet, userParams, algorithmParams);
 }
-
-#endif //SEQR_COUNT_KMERS_TIDYSQ_H

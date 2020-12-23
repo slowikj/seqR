@@ -1,5 +1,4 @@
-#ifndef SEQR_COUNT_KMERS_STRING_VECTOR_H
-#define SEQR_COUNT_KMERS_STRING_VECTOR_H
+#pragma once
 
 #include <Rcpp.h>
 #include <vector>
@@ -130,6 +129,3 @@ Rcpp::List sequentialCountKMersSpecific(Rcpp::StringVector &sequences,
     return commonCountKMersSpecific<algorithm_params_t, kmer_dictionary_t>(
             sequences, alphabet, userParams, algorithmParams);
 }
-
-
-#endif //SEQR_COUNT_KMERS_STRING_VECTOR_H

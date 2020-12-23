@@ -1,5 +1,4 @@
-#ifndef KMER_STRINGS_CREATOR_H
-#define KMER_STRINGS_CREATOR_H
+#pragma once
 
 #include<string>
 #include<memory>
@@ -187,5 +186,3 @@ namespace stringsCreator {
     };
 
 }
-
-#endif

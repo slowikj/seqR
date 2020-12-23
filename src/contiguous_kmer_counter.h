@@ -1,5 +1,4 @@
-#ifndef KMER_COUNTER_H
-#define KMER_COUNTER_H
+#pragma once
 
 #include<Rcpp.h>
 // [[Rcpp::depends(RcppParallel)]]
@@ -132,5 +131,3 @@ namespace contiguousKMer {
     }
 
 }
-
-#endif //KMER_COUNTER_H

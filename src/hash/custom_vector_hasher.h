@@ -1,5 +1,4 @@
-#ifndef SEQR_CUSTOM_VECTOR_HASHER_H
-#define SEQR_CUSTOM_VECTOR_HASHER_H
+#pragma once
 
 // [[Rcpp::depends(BH)]]
 #include <Rcpp.h>
@@ -32,5 +31,3 @@ namespace std {
     };
 
 }
-
-#endif //SEQR_CUSTOM_VECTOR_HASHER_H

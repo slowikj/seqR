@@ -1,5 +1,4 @@
-#ifndef SEQR_PARALLEL_HASHMAP_WRAPPER_H
-#define SEQR_PARALLEL_HASHMAP_WRAPPER_H
+#pragma once
 
 #include "../../inst/thirdparty/dictionaries/parallel_hashmap/phmap.h"
 
@@ -10,4 +9,3 @@ namespace dictionary {
     };
 
 }
-#endif //SEQR_PARALLEL_HASHMAP_WRAPPER_H

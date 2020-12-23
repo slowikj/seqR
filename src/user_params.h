@@ -1,5 +1,4 @@
-#ifndef SEQR_USER_PARAMS_H
-#define SEQR_USER_PARAMS_H
+#pragma once
 
 #include "Rcpp.h"
 #include <string>
@@ -41,6 +40,3 @@ private:
             parallelMode(Rcpp::as<bool>(params.get("parallel_mode"))) {
     }
 };
-
-
-#endif //SEQR_USER_PARAMS_H

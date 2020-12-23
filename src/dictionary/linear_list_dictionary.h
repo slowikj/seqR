@@ -1,5 +1,4 @@
-#ifndef SEQR_LINEAR_LIST_DICTIONARY_H
-#define SEQR_LINEAR_LIST_DICTIONARY_H
+#pragma once
 
 #include <vector>
 #include <utility>
@@ -78,4 +77,3 @@ namespace dictionary {
     };
 
 }
-#endif //SEQR_LINEAR_LIST_DICTIONARY_H

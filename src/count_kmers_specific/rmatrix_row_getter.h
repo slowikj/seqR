@@ -1,5 +1,4 @@
-#ifndef SEQUENCE_GETTER_H
-#define SEQUENCE_GETTER_H
+#pragma once
 
 #include <Rcpp.h>
 // [[Rcpp::depends(RcppParallel)]]
@@ -19,4 +18,3 @@ getRMatrixRowGetter(rcpp_matrix_t &rcppMatrix, int rowOffset = 0) {
     };
 }
 
-#endif

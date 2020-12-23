@@ -1,5 +1,4 @@
-#ifndef SECOND_POLYNOMIAL_SINGLE_HASHER_H
-#define SECOND_POLYNOMIAL_SINGLE_HASHER_H
+#pragma once
 
 #include "single_hasher.h"
 #include "../utils.h"
@@ -90,6 +89,3 @@ namespace hashing {
 
     };
 }
-
-
-#endif

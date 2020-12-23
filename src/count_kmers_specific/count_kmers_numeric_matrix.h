@@ -1,5 +1,4 @@
-#ifndef SEQR_COUNT_KMERS_NUMERIC_MATRIX_H
-#define SEQR_COUNT_KMERS_NUMERIC_MATRIX_H
+#pragma once
 
 #include <Rcpp.h>
 #include <vector>
@@ -73,4 +72,3 @@ Rcpp::List sequentialCountKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
             sequenceMatrix, alphabet, userParams, algorithmParams);
 }
 
-#endif //SEQR_COUNT_KMERS_NUMERIC_MATRIX_H

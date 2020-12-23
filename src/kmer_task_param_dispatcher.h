@@ -1,5 +1,4 @@
-#ifndef SEQR_KMER_TASK_PARAM_DISPATCHER_H
-#define SEQR_KMER_TASK_PARAM_DISPATCHER_H
+#pragma once
 
 #include <Rcpp.h>
 #include "user_params.h"
@@ -95,5 +94,3 @@ inline Rcpp::List countKMersParallelModeDispatch(
                 sequences, alphabet, userParams, algorithmParams);
     }
 }
-
-#endif //SEQR_KMER_TASK_PARAM_DISPATCHER_H

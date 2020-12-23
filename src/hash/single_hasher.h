@@ -1,5 +1,4 @@
-#ifndef SECOND_SINGLE_HASHER_H
-#define SECOND_SINGLE_HASHER_H
+#pragma once
 
 #include<queue>
 #include<functional>
@@ -32,5 +31,3 @@ namespace hashing {
 
     };
 }
-
-#endif

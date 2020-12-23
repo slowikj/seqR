@@ -1,5 +1,4 @@
-#ifndef ALPHABET_ENCODER_H
-#define ALPHABET_ENCODER_H
+#pragma once
 
 #include <functional>
 #include <memory>
@@ -78,4 +77,3 @@ namespace alphabetEncoding {
     }
 }
 
-#endif

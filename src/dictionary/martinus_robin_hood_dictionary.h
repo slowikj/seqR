@@ -1,5 +1,4 @@
-#ifndef SEQR_MARTINUS_ROBIN_HOOD_DICTIONARY_H
-#define SEQR_MARTINUS_ROBIN_HOOD_DICTIONARY_H
+#pragma once
 
 #include "../../inst/thirdparty/dictionaries/robin_hood_martinus.h"
 #include "helper/stl_like_dictionary_wrapper.h"
@@ -16,5 +15,3 @@ namespace dictionary {
     };
 
 }
-
-#endif //SEQR_MARTINUS_ROBIN_HOOD_DICTIONARY_H

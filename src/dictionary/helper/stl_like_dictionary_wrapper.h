@@ -1,5 +1,4 @@
-#ifndef SEQR_STL_DICTIONARY_TEMPLATE_H
-#define SEQR_STL_DICTIONARY_TEMPLATE_H
+#pragma once
 
 namespace dictionary {
 
@@ -61,5 +60,3 @@ namespace dictionary {
     };
 
 }
-
-#endif //SEQR_STL_DICTIONARY_TEMPLATE_H

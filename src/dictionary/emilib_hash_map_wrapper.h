@@ -1,5 +1,4 @@
-#ifndef SEQR_EMILIB_HASH_MAP_WRAPPER_H
-#define SEQR_EMILIB_HASH_MAP_WRAPPER_H
+#pragma once
 
 #include <functional>
 #include "../../inst/thirdparty/dictionaries/emilib/hash_map.hpp"
@@ -18,4 +17,3 @@ namespace dictionary {
 
 }
 
-#endif //SEQR_EMILIB_HASH_MAP_WRAPPER_H

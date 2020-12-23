@@ -1,5 +1,4 @@
-#ifndef KMER_COUNTS_MANAGER_H
-#define KMER_COUNTS_MANAGER_H
+#pragma once
 
 #include "hash/custom_vector_hasher.h"
 #include "hash/globals.h"
@@ -78,5 +77,3 @@ private:
     }
 
 };
-
-#endif // KMER_COUNTS_MANAGER_H

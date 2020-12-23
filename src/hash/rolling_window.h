@@ -1,5 +1,4 @@
-#ifndef ROLLING_WINDOW_H
-#define ROLLING_WINDOW_H
+#pragma once
 
 #include <memory>
 #include "globals.h"
@@ -78,4 +77,3 @@ namespace hashing {
     };
 }
 
-#endif

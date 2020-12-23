@@ -1,5 +1,4 @@
-#ifndef SEQR_COUNT_KMERS_STRING_MATRIX_H
-#define SEQR_COUNT_KMERS_STRING_MATRIX_H
+#pragma once
 
 #include <Rcpp.h>
 #include <vector>
@@ -130,4 +129,3 @@ Rcpp::List sequentialCountKMersSpecific(Rcpp::StringMatrix &sequenceMatrix,
     return computeKMersInBatches<kmer_dictionary_t>(batchFunc, sequenceMatrix.nrow(), userParams);
 }
 
-#endif //SEQR_COUNT_KMERS_STRING_MATRIX_H

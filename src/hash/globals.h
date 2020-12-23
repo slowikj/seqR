@@ -1,5 +1,4 @@
-#ifndef SEQR_GLOBALS_H
-#define SEQR_GLOBALS_H
+#pragma once
 
 #include "custom_vector_hasher.h"
 #include <vector>
@@ -23,5 +22,3 @@ namespace hashing::config {
             {53,  1065433423}
     };
 }
-
-#endif //SEQR_GLOBALS_H

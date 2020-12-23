@@ -1,5 +1,4 @@
-#ifndef SECOND_COMPLEX_HASHER_H
-#define SECOND_COMPLEX_HASHER_H
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -76,5 +75,3 @@ namespace hashing {
         }
     };
 }
-
-#endif

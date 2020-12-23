@@ -1,5 +1,4 @@
-#ifndef SEQR_IDENTITY_ALPHABET_ENCODER_H
-#define SEQR_IDENTITY_ALPHABET_ENCODER_H
+#pragma once
 
 #include <utility>
 
@@ -37,4 +36,3 @@ namespace alphabetEncoding {
     };
 
 }
-#endif //SEQR_IDENTITY_ALPHABET_ENCODER_H

@@ -1,5 +1,4 @@
-#ifndef SEQR_SUPPORTED_DICT_NAMES_H
-#define SEQR_SUPPORTED_DICT_NAMES_H
+#pragma once
 
 #include <string>
 
@@ -11,6 +10,3 @@ namespace dictionary::names {
     inline const std::string MARTINUS_ROBIN_HOOD_DICTIONARY = "robin_hood_map";
     inline const std::string FLAT_HASHMAP = "flat_hash_map";
 }
-
-
-#endif //SEQR_SUPPORTED_DICT_NAMES_H

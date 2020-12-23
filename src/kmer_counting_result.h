@@ -1,5 +1,4 @@
-#ifndef SEQR_KMER_COUNTING_RESULT_H
-#define SEQR_KMER_COUNTING_RESULT_H
+#pragma once
 
 #include <Rcpp.h>
 #include <vector>
@@ -72,5 +71,3 @@ private:
     }
 
 };
-
-#endif //SEQR_KMER_COUNTING_RESULT_H

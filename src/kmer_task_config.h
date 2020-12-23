@@ -1,5 +1,4 @@
-#ifndef SEQR_KMER_TASK_CONFIG_H
-#define SEQR_KMER_TASK_CONFIG_H
+#pragma once
 
 #include <utility>
 #include <vector>
@@ -37,5 +36,3 @@ struct KMerTaskConfig {
     }
 
 };
-
-#endif //SEQR_KMER_TASK_CONFIG_H

@@ -1,5 +1,4 @@
-#ifndef SEQR_KMER_TASK_SOLVER_H
-#define SEQR_KMER_TASK_SOLVER_H
+#pragma once
 
 #include <Rcpp.h>
 // [[Rcpp::depends(RcppParallel)]]
@@ -220,5 +219,3 @@ inline void printSequenceProcessingLogIfVerbose(bool verbose, int begin, int end
         Rcpp::Rcout << "Start processing sequences (batch: [" << begin + 1 << "-" << end << "])..." << std::endl;
     }
 }
-
-#endif //SEQR_KMER_TASK_SOLVER_H

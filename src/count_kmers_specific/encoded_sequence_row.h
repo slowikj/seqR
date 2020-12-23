@@ -1,5 +1,4 @@
-#ifndef SEQR_ENCODED_SEQUENCE_ROW_H
-#define SEQR_ENCODED_SEQUENCE_ROW_H
+#pragma once
 
 #include <utility>
 #include <memory>
@@ -22,5 +21,3 @@ private:
     std::shared_ptr<encoded_elem_t[]> encoded_;
     std::size_t begin_, size_;
 };
-
-#endif //SEQR_ENCODED_SEQUENCE_ROW_H

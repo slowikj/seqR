@@ -1,5 +1,4 @@
-#ifndef SEQR_DICTIONARIES_H
-#define SEQR_DICTIONARIES_H
+#pragma once
 
 #include "emilib_hash_map_wrapper.h"
 #include "linear_list_dictionary.h"
@@ -9,4 +8,3 @@
 #include "supported_dict_names.h"
 #include "flat_hashmap_wrapper.h"
 
-#endif //SEQR_DICTIONARIES_H

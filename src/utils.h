@@ -1,5 +1,4 @@
-#ifndef UTILS_H
-#define UTILS_H
+#pragma once
 
 #include <queue>
 #include <vector>
@@ -85,5 +84,3 @@ namespace util {
 
 
 }
-
-#endif

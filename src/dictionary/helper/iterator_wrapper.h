@@ -1,5 +1,4 @@
-#ifndef SEQR_ITERATOR_WRAPPER_H
-#define SEQR_ITERATOR_WRAPPER_H
+#pragma once
 
 #include <iterator>
 
@@ -48,6 +47,3 @@ namespace dictionary {
 
     };
 }
-
-
-#endif //SEQR_ITERATOR_WRAPPER_H
