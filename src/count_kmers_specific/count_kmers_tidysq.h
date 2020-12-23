@@ -61,7 +61,33 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
                                     Rcpp::StringVector &kMerAlphabet,
                                     const UserParams &userParams,
                                     algorithm_params_t &algorithmParams) {
-    return Rcpp::List();
+    auto sq = import_from_R(sequences, constants::DEFAULT_NA_LETTER);
+    auto sqAlphabet = sq.alphabet();
+    TidysqAlphabetEncoder alphabetEncoder(sqAlphabet, kMerAlphabet);
+
+    auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
+        auto sqUnpackedInts = sq.unpack<STD_IT, INTS_PT>(seqBegin, seqEnd);
+
+        KMerTaskConfig<decltype(sqUnpackedInts)::ElementType, decltype(alphabetEncoder)::input_elem_t> kMerTaskConfig(
+                (seqEnd - seqBegin),
+                [&sqUnpackedInts](int index) -> decltype(sqUnpackedInts)::ElementType {
+                    return sqUnpackedInts[index];
+                },
+                [&sqAlphabet](const LetterValue &elem) -> std::string { return sqAlphabet[elem]; },
+                config::DEFAULT_KMER_ITEM_SEPARATOR,
+                config::DEFAULT_KMER_SECTION_SEPARATOR,
+                userParams);
+        updateKMerCountingResult<
+                decltype(sqUnpackedInts)::ElementType,
+                decltype(alphabetEncoder)::input_elem_t,
+                decltype(alphabetEncoder),
+                kmer_dictionary_t>(kMerTaskConfig,
+                                   alphabetEncoder,
+                                   algorithmParams,
+                                   kMerCountingResult);
+    };
+
+    return computeKMersInBatches<kmer_dictionary_t>(batchFunc, sq.size(), userParams);
 }
 
 template<class algorithm_params_t,
