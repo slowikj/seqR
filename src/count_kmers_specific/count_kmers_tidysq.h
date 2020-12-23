@@ -3,7 +3,7 @@
 #include <Rcpp/vector/instantiation.h>
 #include "../user_params.h"
 // [[Rcpp::depends(tidysq)]]
-#include <tidysq.h>
+#include "tidysq.h"
 #include "../kmer_counting_result.h"
 #include "../kmer_task_config.h"
 #include "../kmer_task_solver.h"
@@ -61,7 +61,6 @@ Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
                                     Rcpp::StringVector &kMerAlphabet,
                                     const UserParams &userParams,
                                     algorithm_params_t &algorithmParams) {
-    auto sq = import_from_R(sequences, constants::DEFAULT_NA_LETTER);
     return Rcpp::List();
 }
 
