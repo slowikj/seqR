@@ -29,13 +29,6 @@
                         params=params)
 }
 
-.count_contiguous_kmers_tidysq_proxy <- function(sequences, params) {
-  .invoke_kmer_function(rcpp_counting_function=.count_contiguous_kmers_tidysq,
-                        alphabet_validator=validate_string,
-                        sequences=sequences,
-                        params=params)
-}
-
 .count_gapped_kmers_integer_proxy <- function(sequences, params) {
   .invoke_kmer_function(rcpp_counting_function=.count_gapped_kmers_integer,
                         alphabet_validator=validate_integer,
@@ -59,13 +52,6 @@
 
 .count_gapped_kmers_string_vector_proxy <- function(sequences, params) {
   .invoke_kmer_function(rcpp_counting_function=.count_gapped_kmers_string_vector,
-                        alphabet_validator=validate_string,
-                        sequences=sequences,
-                        params=params)
-}
-
-.count_gapped_kmers_tidysq_proxy <- function(sequences, params) {
-  .invoke_kmer_function(rcpp_counting_function=.count_gapped_kmers_tidysq,
                         alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)

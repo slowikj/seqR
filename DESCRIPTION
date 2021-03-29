@@ -21,15 +21,13 @@ Imports:
     Rcpp (>= 1.0.4),
     RcppParallel,
     slam,
-    rlang,
-    tidysq
+    rlang
 Depends:
     R(>= 3.6)
 LinkingTo:
     Rcpp,
     RcppParallel,
-    BH,
-    tidysq
+    BH
 SystemRequirements: c++17
 RoxygenNote: 7.1.0
 Encoding: UTF-8

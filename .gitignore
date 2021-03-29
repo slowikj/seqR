@@ -18,3 +18,7 @@ cmake-build-debug/*
 config.log
 config.status
 src/Makevars
+
+build/CMakeFiles/cmake.check_cache
+
+build/CMakeCache.txt
