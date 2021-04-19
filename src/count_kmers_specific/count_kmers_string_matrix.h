@@ -18,7 +18,7 @@ public:
 
     EncodedStringMatrix(Rcpp::StringMatrix &matrix,
                         std::unordered_map<Rcpp::StringMatrix::stored_type, encoded_elem_t> &encoder,
-                        int notAllowedEncodingNum,
+                        encoded_elem_t notAllowedEncodingNum,
                         int begin, int end) :
             nrow(end - begin), ncol(matrix.ncol()) {
         this->encoded = std::move(std::shared_ptr<encoded_elem_t[]>(new encoded_elem_t[nrow * ncol]));
