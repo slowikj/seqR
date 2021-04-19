@@ -40,13 +40,13 @@ public:
 
     KMerManager() = default;
 
-    KMerManager(KMerManager<kmer_dictionary_t> &&) noexcept = default;
+    KMerManager(KMerManager<kmer_dictionary_t> &&) = default;
 
     KMerManager<kmer_dictionary_t> &
     operator=(const KMerManager<kmer_dictionary_t> &) = default;
 
     KMerManager<kmer_dictionary_t> &
-    operator=(KMerManager<kmer_dictionary_t> &&) noexcept = default;
+    operator=(KMerManager<kmer_dictionary_t> &&) = default;
 
     inline void add(hash_t &&hash, int position) {
         if (kMerWithCounts) {

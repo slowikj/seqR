@@ -49,9 +49,9 @@ namespace dictionary {
         StlLikeDictionaryWrapper &operator=(const StlLikeDictionaryWrapper &) = default;
 
         StlLikeDictionaryWrapper(StlLikeDictionaryWrapper
-        &&) noexcept = default;
+        &&) = default;
 
-        StlLikeDictionaryWrapper &operator=(StlLikeDictionaryWrapper &&) noexcept = default;
+        StlLikeDictionaryWrapper &operator=(StlLikeDictionaryWrapper &&) = default;
 
         ~StlLikeDictionaryWrapper() = default;
 
