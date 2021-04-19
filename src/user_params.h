@@ -19,13 +19,13 @@ struct UserParams {
     static UserParams createForContiguous(Rcpp::Environment &params) {
         UserParams res(params);
         res.gaps.resize(res.k - 1, 0);
-        return std::move(res);
+        return res;
     }
 
     static UserParams createForGapped(Rcpp::Environment &params) {
         UserParams res(params);
         res.gaps = std::move(Rcpp::as<std::vector<int>>(params.get("gaps")));
-        return std::move(res);
+        return res;
     }
 
 private:

@@ -34,7 +34,7 @@ namespace util {
                 res[v_i] = res[v_i - 1] + v[v_i] + 1;
             }
         }
-        return std::move(res);
+        return res;
     }
 
     inline int getSum(const std::vector<int> &v) {

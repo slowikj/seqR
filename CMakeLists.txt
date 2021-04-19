@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(seqR)
 set(CMAKE_CXX_STANDARD 17)
 
-set(R_LIBRARY "~/R/x86_64-pc-linux-gnu-library/3.6/")
+set(R_LIBRARY "~/R/x86_64-pc-linux-gnu-library/4.0/")
 set(R_INCLUDE "/usr/share/R/include/")
 include_directories(${R_LIBRARY}/Rcpp/include)
 include_directories(${R_LIBRARY}/RcppParallel/include)
