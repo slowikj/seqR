@@ -49,28 +49,8 @@ namespace util {
         return interval.second - interval.first + 1;
     }
 
-#ifdef __SIZEOF_INT128__
-
-#include "../inst/thirdparty/fast_modulo.h"
-
-    class ModuloComputer {
-    public:
-        explicit ModuloComputer(uint64_t M) :
-                M(M),
-                fastMod_M_conv(fastmod::computeM_u64(M)) {
-        }
-
-        inline uint64_t get(uint64_t a) const {
-            return fastmod::fastmod_u64(a, fastMod_M_conv, M);
-        }
-
-    private:
-        uint64_t M;
-        __uint128_t fastMod_M_conv;
-    };
-
-#else
-    class ModuloComputer {
+// encapsulated for further optimizations (e.g., a custom, optimized modulo operation)
+class ModuloComputer {
     public:
         explicit ModuloComputer(uint64_t M) : M(M) {}
 
@@ -79,8 +59,7 @@ namespace util {
         }
     private:
         uint64_t M;
-    };
-#endif
+};
 
 
 }
