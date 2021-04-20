@@ -75,7 +75,7 @@ namespace gappedKMers {
         int limitSequenceIndex = static_cast<int>(sequence.size()) - totalKMerSize + 1;
         for (int seqInd = 0; seqInd < limitSequenceIndex; ++seqInd) {
             if (isGappedKMerAllowed(seqInd, contiguousIntervals, notAllowedItemsPrefixCount)) {
-                auto hash = std::move(getGappedKMerHash(seqInd, sequenceHasher, contiguousIntervals, isPositionalKMer));
+                auto hash = getGappedKMerHash(seqInd, sequenceHasher, contiguousIntervals, isPositionalKMer);
                 kMerManager.add(std::move(hash), seqInd);
             }
         }
@@ -134,7 +134,7 @@ namespace gappedKMers {
                      isNotPresent :
                      res[i - 1] + isNotPresent;
         }
-        return std::move(res);
+        return res;
     }
 
     template<class input_vector_t, class alphabet_encoding_t>
@@ -144,10 +144,10 @@ namespace gappedKMers {
             const hashing::PrefixSequencePolynomialHasher<input_vector_t, alphabet_encoding_t> &seqHasher,
             const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
             bool isPositionalKMer) {
-        auto res = std::move(seqHasher.getHashForSeveralIntervals(beginPosition, contiguousKMerIntervals));
+        auto res = seqHasher.getHashForSeveralIntervals(beginPosition, contiguousKMerIntervals);
         if (isPositionalKMer) {
             res.push_back(beginPosition);
         }
-        return std::move(res);
+        return res;
     }
 }

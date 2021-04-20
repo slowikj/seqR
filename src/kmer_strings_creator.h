@@ -64,7 +64,7 @@ namespace stringsCreator {
                                  std::vector<std::string> &resultStrings) :
                 kMersToGenerate(kMersToGenerate),
                 kMerTaskConfig(kMerTaskConfig),
-                gapsAccumulated(std::move(util::getGapsAccumulated(kMerTaskConfig.userParams.gaps))),
+                gapsAccumulated(util::getGapsAccumulated(kMerTaskConfig.userParams.gaps)),
                 resultOffset(resultStrings.size()),
                 resultStrings(resultStrings) {
             resultStrings.resize(resultOffset + kMersToGenerate.size());
@@ -74,8 +74,8 @@ namespace stringsCreator {
 
         inline void operator()(std::size_t begin, std::size_t end) override {
             for (int i = begin; i < end; ++i) {
-                this->resultStrings[i + resultOffset] = std::move(
-                        createKMerFunc(this->kMersToGenerate[i].seqNum, this->kMersToGenerate[i].position));
+                this->resultStrings[i + resultOffset] = createKMerFunc(
+                    this->kMersToGenerate[i].seqNum, this->kMersToGenerate[i].position);
             }
         }
 
@@ -91,7 +91,7 @@ namespace stringsCreator {
         inline void prepareKMerStringsCreators() {
             this->kmerStringCreators.reserve(kMerTaskConfig.sequencesNum);
             for (int i = 0; i < kMerTaskConfig.sequencesNum; ++i) {
-                auto seq = std::move(kMerTaskConfig.sequenceGetter(i));
+                auto seq = kMerTaskConfig.sequenceGetter(i);
                 this->kmerStringCreators.emplace_back(
                         std::move(seq),
                         kMerTaskConfig.userParams.gaps, gapsAccumulated,

@@ -24,9 +24,8 @@ Rcpp::List commonCountKMersSpecific(Rcpp::NumericMatrix &sequenceMatrix,
                                     const UserParams &userParams,
                                     algorithm_params_t &algorithmParams) {
     using encoded_elem_t = config::encoded_elem_t;
-    auto alphabetEncoding = std::move(
-            alphabetEncoding::getDefaultAlphabetEncoder<Rcpp::NumericVector, double, encoded_elem_t, dictionary::StlUnorderedMapWrapper>(
-                    alphabet));
+    auto alphabetEncoding = alphabetEncoding::getDefaultAlphabetEncoder<Rcpp::NumericVector, double, encoded_elem_t, dictionary::StlUnorderedMapWrapper>(
+                    alphabet);
 
     auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult, int seqBegin, int seqEnd) {
         KMerTaskConfig<RcppParallel::RMatrix<double>::Row, double> kMerTaskConfig(

@@ -28,7 +28,7 @@ namespace hashing {
                         M + prefixComplexHashes[end + 1][hasherInd] - moduloMComputers[hasherInd].get(
                                 prefixComplexHashes[begin][hasherInd] * prefixP[end - begin + 1][hasherInd]));
             }
-            return std::move(res);
+            return res;
         }
 
         [[nodiscard]] inline hash_t getHashForSeveralIntervals(
@@ -36,9 +36,9 @@ namespace hashing {
                 const std::vector<std::pair<int, int>> &contiguousIntervals) const {
             hash_t res(this->getHashersNum());
             for (const auto &interval: contiguousIntervals) {
-                auto intervalHash = std::move(this->getHash(
+                auto intervalHash = this->getHash(
                         interval.first + beginPosition,
-                        interval.second + beginPosition));
+                        interval.second + beginPosition);
                 int intervalLength = util::getIntervalLength(interval);
                 for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
                     int powerP = this->getHasherP(hasherInd, intervalLength);
@@ -47,7 +47,7 @@ namespace hashing {
                             res[hasherInd] * powerP + intervalHash[hasherInd]);
                 }
             }
-            return std::move(res);
+            return res;
         }
 
     private:

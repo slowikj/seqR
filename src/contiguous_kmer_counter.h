@@ -76,7 +76,7 @@ namespace contiguousKMer {
                 );
             }
         }
-        return std::move(kMerManager);
+        return kMerManager;
     }
 
     template<class input_vector_t,

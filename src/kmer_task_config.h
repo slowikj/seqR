@@ -30,8 +30,8 @@ struct KMerTaskConfig {
             sequencesNum(sequencesNum),
             sequenceGetter(sequenceGetter),
             inputToStringItemConverter(inputToStringItemConverter),
-            kMerItemSeparator(std::move(kmerItemSeparator)),
-            kMerSectionSeparator(std::move(kmerSectionSeparator)),
+            kMerItemSeparator(kmerItemSeparator),
+            kMerSectionSeparator(kmerSectionSeparator),
             userParams(userParams) {
     }
 

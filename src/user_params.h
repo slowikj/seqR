@@ -24,7 +24,7 @@ struct UserParams {
 
     static UserParams createForGapped(Rcpp::Environment &params) {
         UserParams res(params);
-        res.gaps = std::move(Rcpp::as<std::vector<int>>(params.get("gaps")));
+        res.gaps = Rcpp::as<std::vector<int>>(params.get("gaps"));
         return res;
     }
 

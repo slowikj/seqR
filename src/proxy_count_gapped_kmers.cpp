@@ -8,7 +8,7 @@ inline std::vector<hashing::PolynomialSingleHasherConfig> getGappedKMerHasherCon
     for (int i = 0; i < hashDim; ++i) {
         res.emplace_back(hashing::config::hashPrimes[i].first, hashing::config::hashPrimes[i].second);
     }
-    return std::move(res);
+    return res;
 }
 
 template<class sequences_t,
@@ -18,8 +18,8 @@ Rcpp::List countGappedKMers(
         sequences_t &sequences,
         alphabet_t &alphabet,
         Rcpp::Environment &rcppParams) {
-    auto userParams = std::move(UserParams::createForGapped(rcppParams));
-    auto hasherConfigs = std::move(getGappedKMerHasherConfigs(userParams.hashDim));
+    auto userParams = UserParams::createForGapped(rcppParams);
+    auto hasherConfigs = getGappedKMerHasherConfigs(userParams.hashDim);
     return countKMers<sequences_t, alphabet_t, decltype(hasherConfigs)>(
             sequences, alphabet, userParams, hasherConfigs);
 }

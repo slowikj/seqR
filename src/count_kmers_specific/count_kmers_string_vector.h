@@ -67,7 +67,7 @@ private:
 inline SequenceGetter_t<typename SafeStringVectorWrapper::Row>
 getCppStringSequenceGetter(SafeStringVectorWrapper &sequencesWrapper, int rowOffset = 0) {
     return [&sequencesWrapper, rowOffset](int rowNum) -> typename SafeStringVectorWrapper::Row {
-        return std::move(sequencesWrapper.row(rowNum + rowOffset));
+        return sequencesWrapper.row(rowNum + rowOffset);
     };
 }
 

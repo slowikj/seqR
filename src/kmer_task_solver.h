@@ -146,11 +146,11 @@ inline void updateKMerCountingResult(
         KMerTaskConfig<input_vector_t, input_elem_t> &kMerTaskConfig,
         CountingKMersProc_t<input_vector_t, kmer_dictionary_t> countingProc,
         KMerCountingResult<kmer_dictionary_t> &kMerCountingResult) {
-    auto kMersManagers = std::move(computeKMersForAllSequences<input_vector_t, kmer_dictionary_t>(
+    auto kMersManagers = computeKMersForAllSequences<input_vector_t, kmer_dictionary_t>(
             kMerTaskConfig.sequencesNum,
             countingProc,
             kMerTaskConfig.sequenceGetter,
-            kMerTaskConfig.userParams.parallelMode)
+            kMerTaskConfig.userParams.parallelMode
     );
 
     std::vector<stringsCreator::KMerPositionInfo> kMersToCreate;
@@ -184,7 +184,7 @@ inline std::vector<KMerManager<kmer_dictionary_t>> computeKMersForAllSequences(
     } else {
         worker(0, rowsNum);
     }
-    return std::move(worker.kMers);
+    return worker.kMers;
 }
 
 template<class input_vector_t,
@@ -201,8 +201,8 @@ public:
 
     inline void operator()(size_t begin, size_t end) override {
         for (int rowNum = begin; rowNum < end; ++rowNum) {
-            auto row = std::move(sequenceGetter(rowNum));
-            kMers[rowNum] = std::move(countingKMersProc(row));
+            auto row = sequenceGetter(rowNum);
+            kMers[rowNum] = countingKMersProc(row);
         }
     }
 
