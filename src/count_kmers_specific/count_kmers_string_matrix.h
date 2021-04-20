@@ -20,9 +20,9 @@ public:
                         std::unordered_map<Rcpp::StringMatrix::stored_type, encoded_elem_t> &encoder,
                         encoded_elem_t notAllowedEncodingNum,
                         int begin, int end) :
-            nrow(end - begin), ncol(matrix.ncol()) {
-        this->encoded = std::move(std::shared_ptr<encoded_elem_t[]>(new encoded_elem_t[nrow * ncol]));
-
+            nrow(end - begin),
+            ncol(matrix.ncol()),
+            encoded(nrow * ncol) {
         for (int r = begin; r < end; ++r) {
             for (int c = 0; c < ncol; ++c) {
                 int encodedIndex = (r - begin) * ncol + c;
@@ -35,12 +35,12 @@ public:
     }
 
     inline Row row(int index) {
-        return std::move(Row(encoded, index * ncol, ncol));
+        return Row(encoded, index * ncol, ncol);
     }
 
 private:
-    std::shared_ptr<encoded_elem_t[]> encoded;
     int ncol, nrow;
+    std::vector<encoded_elem_t> encoded;
 };
 
 template<class algorithm_params_t,

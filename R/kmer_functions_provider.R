@@ -19,7 +19,7 @@
     stop("sequences param has unsupported type")
   }
 }
-
+  
 #' @include kmer_typed_functions.R
 .kmer_functions_map <- list(
   "integer" = list(.count_contiguous_kmers_integer_proxy, .count_gapped_kmers_integer_proxy),

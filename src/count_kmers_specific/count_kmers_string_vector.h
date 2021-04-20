@@ -22,7 +22,7 @@ private:
     void initSequences(const Rcpp::StringVector &inputVector, int begin, int end) {
         this->sequences_.resize(end - begin);
         for (int i = begin; i < end; ++i) {
-            this->sequences_[i - begin] = std::move(Rcpp::as<std::string>(inputVector[i]));
+            this->sequences_[i - begin] = Rcpp::as<std::string>(inputVector[i]);
         }
     }
 };
