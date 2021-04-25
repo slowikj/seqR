@@ -14,6 +14,16 @@ public:
     {
     }
 
+    _EncodedSequence() = delete;
+
+    _EncodedSequence(const _EncodedSequence &) = default;
+
+    _EncodedSequence &operator=(const _EncodedSequence &) = default;
+
+    _EncodedSequence(_EncodedSequence &&) = default;
+
+    _EncodedSequence &operator=(_EncodedSequence &&) = default;
+
     inline encoded_elem_t operator[](std::size_t index) const
     {
         return _encodedSequences.getElem(_sequenceNum, index);
