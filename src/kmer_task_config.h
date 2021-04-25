@@ -3,33 +3,22 @@
 #include <utility>
 #include <vector>
 #include "user_params.h"
+#include "encoded_sequence.h"
 
-template<class input_vector_t>
-using SequenceGetter_t = std::function<input_vector_t(int)>;
-
-template<class input_elem_t>
-using InputToStringItemConverter_t = std::function<std::string(const input_elem_t &)>;
-
-template<class vector_t, class elem_t>
+template<class init_elem_t, class encoded_elem_t>
 struct KMerTaskConfig {
-    int sequencesNum;
-    SequenceGetter_t<vector_t> sequenceGetter;
-    InputToStringItemConverter_t<elem_t> inputToStringItemConverter;
+    EncodedSequences<init_elem_t, encoded_elem_t> encodedSequences;
 
     std::string kMerItemSeparator;
     std::string kMerSectionSeparator;
 
     const UserParams &userParams;
 
-    KMerTaskConfig(int sequencesNum,
-                   SequenceGetter_t<vector_t> sequenceGetter,
-                   InputToStringItemConverter_t<elem_t> inputToStringItemConverter,
+    KMerTaskConfig(EncodedSequences<init_elem_t, encoded_elem_t> &&encodedSequences,
                    std::string kmerItemSeparator,
                    std::string kmerSectionSeparator,
                    const UserParams &userParams) :
-            sequencesNum(sequencesNum),
-            sequenceGetter(sequenceGetter),
-            inputToStringItemConverter(inputToStringItemConverter),
+            encodedSequences(std::move(encodedSequences)),
             kMerItemSeparator(kmerItemSeparator),
             kMerSectionSeparator(kmerSectionSeparator),
             userParams(userParams) {
