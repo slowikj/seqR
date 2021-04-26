@@ -2,10 +2,15 @@
 
 #include <vector>
 
-template <class init_elem_t, class encoded_elem_t>
+template <class init_elem_t_, class encoded_elem_t_>
 class _EncodedSequence
 {
 public:
+    using init_elem_t = init_elem_t_;
+    using encoded_elem_t = encoded_elem_t_;
+
+    const static std::size INVALID_ELEM = EncodedSequences<init_elem_t, encoded_elem_t>::INVALID_ELEM;
+
     _EncodedSequence(
         std::size_t sequenceNum,
         const EncodedSequences<init_elem_t, encoded_elem_t> &encodedSequences)
@@ -39,16 +44,25 @@ public:
         return _encodedSequences.getSequenceSize(_sequenceNum);
     }
 
+    inline bool isAllowed(std::size_t index) const
+    {
+        return _encodedSequences.isAllowed(_sequenceNum, index);
+    }
+
 private:
     std::size_t _sequenceNum;
     const EncodedSequences<init_elem_t, encoded_elem_t> &_encodedSequences;
 };
 
-template <class init_elem_t, class encoded_elem_t>
+template <class init_elem_t_, class encoded_elem_t_>
 class EncodedSequences
 {
 public:
+    using init_elem_t = init_elem_t_;
+    using encoded_elem_t = encoded_elem_t_;
     using Entry = EncodedSequence<init_elem_t, encoded_elem_t>;
+
+    const static std::size_t INVALID_ELEM = 1;
 
     EncodedSequences(
         std::vector<encoded_elem_t> &&items,
@@ -97,6 +111,12 @@ public:
     inline std::size_t size() const
     {
         return _sequenceStarts.size() - 1;
+    }
+
+    inline bool isAllowed(std::size_t sequenceNum,
+                          std::size_t offset) const
+    {
+        return getElem(sequenceNum, offset) != INVALID_ELEM;
     }
 
 private:

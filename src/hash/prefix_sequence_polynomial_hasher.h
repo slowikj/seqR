@@ -6,18 +6,16 @@
 
 namespace hashing {
 
-    template<class input_vector_t,
-            class alphabet_encoding_t>
+    template<class encoded_sequence_t>
     class PrefixSequencePolynomialHasher {
     public:
         using hash_t = config::multidim_hash_t;
 
-        PrefixSequencePolynomialHasher(input_vector_t &sequence,
-                                       alphabet_encoding_t &alphabetEncoding,
+        PrefixSequencePolynomialHasher(const encoded_sequence_t &sequence,
                                        const std::vector<PolynomialSingleHasherConfig> &polynomialHasherConfigs)
                 : polynomialHasherConfigs(polynomialHasherConfigs) {
             initModuloMComputers(polynomialHasherConfigs);
-            computePrefixValues(sequence, alphabetEncoding);
+            computePrefixValues(sequence);
         }
 
         [[nodiscard]] inline hash_t getHash(int begin, int end) const {
@@ -62,12 +60,11 @@ namespace hashing {
             }
         }
 
-        inline void computePrefixValues(input_vector_t &sequence,
-                                        alphabet_encoding_t &alphabetEncoding) {
+        inline void computePrefixValues(const input_vector_t &sequence) {
             initPrefixP(sequence.size(), polynomialHasherConfigs.size());
             initPrefixComplexHashes(sequence.size(), polynomialHasherConfigs.size());
             for (int seqInd = 0; seqInd < sequence.size(); ++seqInd) {
-                appendPrefixValues(sequence, alphabetEncoding, seqInd);
+                appendPrefixValues(sequence, seqInd);
             }
         }
 
@@ -83,15 +80,13 @@ namespace hashing {
             );
         }
 
-        inline void appendPrefixValues(input_vector_t &sequence,
-                                       alphabet_encoding_t &alphabetEncoding,
+        inline void appendPrefixValues(const input_vector_t &sequence,
                                        int seqInd) {
-            typename alphabet_encoding_t::encoded_elem_t encodedElem = alphabetEncoding.encode(sequence[seqInd]);
-            appendCurrentComplexHash(encodedElem);
+            appendCurrentComplexHash(sequence[seqInd]);
             appendCurrentPowerP();
         }
 
-        inline void appendCurrentComplexHash(const typename alphabet_encoding_t::encoded_elem_t &encodedElem) {
+        inline void appendCurrentComplexHash(const typename encoded_sequence_t::encoded_elem_t &encodedElem) {
             hash_t prefixHash(polynomialHasherConfigs.size());
             for (int hasherInd = 0; hasherInd < prefixHash.size(); ++hasherInd) {
                 auto P = polynomialHasherConfigs[hasherInd].P;
@@ -125,4 +120,3 @@ namespace hashing {
         }
     };
 }
-
