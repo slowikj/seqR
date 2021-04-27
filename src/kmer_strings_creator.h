@@ -102,11 +102,11 @@ namespace stringsCreator
 
         inline void prepareKMerStringsCreators()
         {
-            std::size_t sequencesNum = kMerTaskConfig.EncodedSequencesList.size();
+            std::size_t sequencesNum = kMerTaskConfig.encodedSequencesList.size();
             this->kmerStringCreators.reserve(sequencesNum);
             for (int i = 0; i < sequencesNum; ++i)
             {
-                auto seq = kMerTaskConfig.EncodedSequencesList[i];
+                auto seq = kMerTaskConfig.encodedSequencesList[i];
                 this->kmerStringCreators.emplace_back(
                     std::move(seq),
                     kMerTaskConfig.userParams.gaps, gapsAccumulated,

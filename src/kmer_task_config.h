@@ -7,7 +7,7 @@
 template <class encoded_sequences_list_t>
 struct KMerTaskConfig
 {
-    encoded_sequences_list_t EncodedSequencesList;
+    encoded_sequences_list_t encodedSequencesList;
 
     std::string kMerItemSeparator;
     std::string kMerSectionSeparator;
@@ -15,11 +15,11 @@ struct KMerTaskConfig
     const UserParams &userParams;
 
     KMerTaskConfig(
-        encoded_sequences_list_t &&EncodedSequencesList,
+        encoded_sequences_list_t &&encodedSequencesList,
         std::string kmerItemSeparator,
         std::string kmerSectionSeparator,
         const UserParams &userParams)
-        : EncodedSequencesList(std::move(EncodedSequencesList)),
+        : encodedSequencesList(std::move(encodedSequencesList)),
           kMerItemSeparator(kmerItemSeparator),
           kMerSectionSeparator(kmerSectionSeparator),
           userParams(userParams)

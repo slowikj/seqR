@@ -13,9 +13,9 @@ public:
 
     _EncodedSequence(
         std::size_t sequenceNum,
-        const EncodedSequencesList<init_elem_t, encoded_elem_t> &EncodedSequencesList)
+        const EncodedSequencesList<init_elem_t, encoded_elem_t> &encodedSequencesList)
         : _sequenceNum(sequenceNum),
-          _EncodedSequencesList(EncodedSequencesList)
+          _encodedSequencesList(encodedSequencesList)
     {
     }
 
@@ -31,27 +31,27 @@ public:
 
     inline encoded_elem_t operator[](std::size_t index) const
     {
-        return _EncodedSequencesList.getElem(_sequenceNum, index);
+        return _encodedSequencesList.getElem(_sequenceNum, index);
     }
 
     inline init_elem_t decode(std::size_t index) const
     {
-        return _EncodedSequencesList.decode(_sequenceNum, index);
+        return _encodedSequencesList.decode(_sequenceNum, index);
     }
 
     inline std::size_t size() const
     {
-        return _EncodedSequencesList.getSequenceSize(_sequenceNum);
+        return _encodedSequencesList.getSequenceSize(_sequenceNum);
     }
 
     inline bool isAllowed(std::size_t index) const
     {
-        return _EncodedSequencesList.isAllowed(_sequenceNum, index);
+        return _encodedSequencesList.isAllowed(_sequenceNum, index);
     }
 
 private:
     std::size_t _sequenceNum;
-    const EncodedSequencesList<init_elem_t, encoded_elem_t> &_EncodedSequencesList;
+    const EncodedSequencesList<init_elem_t, encoded_elem_t> &_encodedSequencesList;
 };
 
 template <class init_elem_t_, class encoded_elem_t_>
