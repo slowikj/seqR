@@ -7,60 +7,40 @@
 #include "kmer_task_param_dispatcher.h"
 #include "hash/complex_hasher.h"
 
-inline hashing::ComplexHasher createKMerComplexHasher(int hashDim) {
+inline hashing::ComplexHasher createKMerComplexHasher(int hashDim)
+{
     std::vector<std::unique_ptr<hashing::SingleHasher>> singleHashers;
-    for (int i = 0; i < hashDim; ++i) {
+    for (int i = 0; i < hashDim; ++i)
+    {
         singleHashers.emplace_back(new hashing::PolynomialSingleHasher(
-                hashing::PolynomialSingleHasherConfig(
-                        hashing::config::hashPrimes[i].first,
-                        hashing::config::hashPrimes[i].second)));
+            hashing::PolynomialSingleHasherConfig(
+                hashing::config::hashPrimes[i].first,
+                hashing::config::hashPrimes[i].second)));
     }
     hashing::ComplexHasher complexHasher(std::move(singleHashers));
     return complexHasher;
 }
 
-template<class sequences_t,
-        class alphabet_t>
+template <class sequences_t,
+          class alphabet_t>
 Rcpp::List countContiguousKMers(
-        sequences_t &sequences,
-        alphabet_t &alphabet,
-        Rcpp::Environment &rcppParams) {
+    sequences_t &sequences,
+    alphabet_t &alphabet,
+    Rcpp::Environment &rcppParams)
+{
     auto userParams = UserParams::createForContiguous(rcppParams);
     std::function<hashing::ComplexHasher()> algorithmParams = [&userParams]() -> hashing::ComplexHasher {
         return createKMerComplexHasher(userParams.hashDim);
     };
     return countKMers<sequences_t, alphabet_t, decltype(algorithmParams)>(
-            sequences, alphabet, userParams, algorithmParams);
-}
-
-// [[Rcpp::export(".count_contiguous_kmers_string")]]
-Rcpp::List count_contiguous_kmers_string(
-        Rcpp::StringMatrix &sequenceMatrix,
-        Rcpp::StringVector &alphabet,
-        Rcpp::Environment &rcppParams) {
-    return countContiguousKMers(sequenceMatrix, alphabet, rcppParams);
-}
-
-// [[Rcpp::export(".count_contiguous_kmers_integer")]]
-Rcpp::List count_contiguous_kmers_integer(
-        Rcpp::IntegerMatrix &sequenceMatrix,
-        Rcpp::IntegerVector &alphabet,
-        Rcpp::Environment &rcppParams) {
-    return countContiguousKMers(sequenceMatrix, alphabet, rcppParams);
-}
-
-// [[Rcpp::export(".count_contiguous_kmers_numeric")]]
-Rcpp::List count_contiguous_kmers_numeric(
-        Rcpp::NumericMatrix &sequenceMatrix,
-        Rcpp::NumericVector &alphabet,
-        Rcpp::Environment &rcppParams) {
-    return countContiguousKMers(sequenceMatrix, alphabet, rcppParams);
+        sequences, alphabet, userParams, algorithmParams);
 }
 
 // [[Rcpp::export(".count_contiguous_kmers_string_vector")]]
 Rcpp::List count_contiguous_kmers_string_vector(
-        Rcpp::StringVector &sq,
-        Rcpp::StringVector &alphabet,
-        Rcpp::Environment &rcppParams) {
+    Rcpp::StringVector &sq,
+    Rcpp::StringVector &alphabet,
+    Rcpp::Environment &rcppParams)
+{
     return countContiguousKMers(sq, alphabet, rcppParams);
 }
