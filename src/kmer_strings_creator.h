@@ -19,24 +19,24 @@ namespace stringsCreator
     template <class encoded_sequence_t>
     class KMerStringCreatorForSequence;
 
-    template <class encoded_sequences_t>
+    template <class encoded_sequences_list_t>
     class KMerStringsCreatorWorker;
 
-    template <class encoded_sequences_t>
+    template <class encoded_sequences_list_t>
     inline void generate(
         const std::vector<KMerPositionInfo> &indexedKMers,
-        const KMerTaskConfig<encoded_sequences_t> &kMerTaskConfig,
+        const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
         std::vector<std::string> &resultStrings);
 
     // ------------------ IMPLEMENTATION ------------------
 
-    template <class encoded_sequences_t>
+    template <class encoded_sequences_list_t>
     inline void generate(
         const std::vector<KMerPositionInfo> &indexedKMers,
-        const KMerTaskConfig<encoded_sequences_t> &kMerTaskConfig,
+        const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
         std::vector<std::string> &resultStrings)
     {
-        KMerStringsCreatorWorker<encoded_sequences_t> worker(indexedKMers, kMerTaskConfig, resultStrings);
+        KMerStringsCreatorWorker<encoded_sequences_list_t> worker(indexedKMers, kMerTaskConfig, resultStrings);
         if (kMerTaskConfig.userParams.parallelMode)
         {
             RcppParallel::parallelFor(0, indexedKMers.size(), worker);
@@ -63,13 +63,13 @@ namespace stringsCreator
         KMerPositionInfo &operator=(const KMerPositionInfo &) = default;
     };
 
-    template <class encoded_sequences_t>
+    template <class encoded_sequences_list_t>
     class KMerStringsCreatorWorker : public RcppParallel::Worker
     {
     public:
         KMerStringsCreatorWorker(
             const std::vector<KMerPositionInfo> &kMersToGenerate,
-            const KMerTaskConfig<encoded_sequences_t> &kMerTaskConfig,
+            const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
             std::vector<std::string> &resultStrings)
             : kMersToGenerate(kMersToGenerate),
               kMerTaskConfig(kMerTaskConfig),
@@ -93,8 +93,8 @@ namespace stringsCreator
 
     private:
         const std::vector<KMerPositionInfo> &kMersToGenerate;
-        const KMerTaskConfig<encoded_sequences_t> &kMerTaskConfig;
-        std::vector<KMerStringCreatorForSequence<encoded_sequences_t>> kmerStringCreators;
+        const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig;
+        std::vector<KMerStringCreatorForSequence<encoded_sequences_list_t>> kmerStringCreators;
         std::function<std::string(int, int)> createKMerFunc;
         std::vector<int> gapsAccumulated;
         std::vector<std::string> &resultStrings;
@@ -102,11 +102,11 @@ namespace stringsCreator
 
         inline void prepareKMerStringsCreators()
         {
-            std::size_t sequencesNum = kMerTaskConfig.encodedSequences.size();
+            std::size_t sequencesNum = kMerTaskConfig.EncodedSequencesList.size();
             this->kmerStringCreators.reserve(sequencesNum);
             for (int i = 0; i < sequencesNum; ++i)
             {
-                auto seq = kMerTaskConfig.encodedSequences[i];
+                auto seq = kMerTaskConfig.EncodedSequencesList[i];
                 this->kmerStringCreators.emplace_back(
                     std::move(seq),
                     kMerTaskConfig.userParams.gaps, gapsAccumulated,

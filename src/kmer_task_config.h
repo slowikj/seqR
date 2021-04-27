@@ -4,10 +4,10 @@
 #include <vector>
 #include "user_params.h"
 
-template <class encoded_sequences_t>
+template <class encoded_sequences_list_t>
 struct KMerTaskConfig
 {
-    encoded_sequences_t encodedSequences;
+    encoded_sequences_list_t EncodedSequencesList;
 
     std::string kMerItemSeparator;
     std::string kMerSectionSeparator;
@@ -15,11 +15,11 @@ struct KMerTaskConfig
     const UserParams &userParams;
 
     KMerTaskConfig(
-        encoded_sequences_t &&encodedSequences,
+        encoded_sequences_list_t &&EncodedSequencesList,
         std::string kmerItemSeparator,
         std::string kmerSectionSeparator,
         const UserParams &userParams)
-        : encodedSequences(std::move(encodedSequences)),
+        : EncodedSequencesList(std::move(EncodedSequencesList)),
           kMerItemSeparator(kmerItemSeparator),
           kMerSectionSeparator(kmerSectionSeparator),
           userParams(userParams)

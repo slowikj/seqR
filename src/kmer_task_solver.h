@@ -21,17 +21,17 @@ inline Rcpp::List computeKMersInBatches(
 	int sequencesNum,
 	const UserParams &userParams);
 
-template <class encoded_sequences_t,
+template <class encoded_sequences_list_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 inline void updateKMerCountingResult(
-	const KMerTaskConfig<encoded_sequences_t> &kMerTaskConfig,
+	const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
 	std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs,
 	KMerCountingResult<kmer_dictionary_t> &kMerCountingResult);
 
-template <class encoded_sequences_t,
+template <class encoded_sequences_list_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 inline void updateKMerCountingResult(
-	const KMerTaskConfig<encoded_sequences_t> &kMerTaskConfig,
+	const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
 	std::function<hashing::ComplexHasher()> &complexHasherFactory,
 	KMerCountingResult<kmer_dictionary_t> &kMerCountingResult);
 
@@ -39,22 +39,22 @@ template <class encoded_sequence_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 using CountingKMersProc_t = std::function<KMerManager<kmer_dictionary_t>(const encoded_sequence_t &)>;
 
-template <class encoded_sequences_t,
+template <class encoded_sequences_list_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 class KMerCounterWorker;
 
-template <class encoded_sequences_t,
+template <class encoded_sequences_list_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 inline void updateKMerCountingResult(
-	const KMerTaskConfig<encoded_sequences_t> &kMerTaskConfig,
-	CountingKMersProc_t<typename encoded_sequences_t::Entry, kmer_dictionary_t> countingProc,
+	const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
+	CountingKMersProc_t<typename encoded_sequences_list_t::Entry, kmer_dictionary_t> countingProc,
 	KMerCountingResult<kmer_dictionary_t> &kMerCountingResult);
 
-template <class encoded_sequences_t,
+template <class encoded_sequences_list_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 inline std::vector<KMerManager<kmer_dictionary_t>> computeKMersForAllSequences(
-	CountingKMersProc_t<typename encoded_sequences_t::Entry, kmer_dictionary_t> countingProc,
-	const encoded_sequences_t &encodedSequences,
+	CountingKMersProc_t<typename encoded_sequences_list_t::Entry, kmer_dictionary_t> countingProc,
+	const encoded_sequences_list_t &EncodedSequencesList,
 	bool parallelMode);
 
 inline void printSequenceProcessingLogIfVerbose(
@@ -79,14 +79,14 @@ inline Rcpp::List computeKMersInBatches(
 	return kMerCountingResult.toRcppList();
 }
 
-template <class encoded_sequences_t,
+template <class encoded_sequences_list_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 inline void updateKMerCountingResult(
-	const KMerTaskConfig<encoded_sequences_t> &kMerTaskConfig,
+	const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
 	std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs,
 	KMerCountingResult<kmer_dictionary_t> &kMerCountingResult)
 {
-	using sequenceEntry = typename encoded_sequences_t::Entry;
+	using sequenceEntry = typename encoded_sequences_list_t::Entry;
 	std::size_t totalKMerSize = util::getKMerRange(kMerTaskConfig.userParams.gaps);
 	updateKMerCountingResult<sequenceEntry, kmer_dictionary_t>(
 		kMerTaskConfig,
@@ -103,14 +103,14 @@ inline void updateKMerCountingResult(
 		kMerCountingResult);
 }
 
-template <class encoded_sequences_t,
+template <class encoded_sequences_list_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 inline void updateKMerCountingResult(
-	const KMerTaskConfig<encoded_sequences_t> &kMerTaskConfig,
+	const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
 	std::function<hashing::ComplexHasher()> &complexHasherFactory,
 	KMerCountingResult<kmer_dictionary_t> &kMerCountingResult)
 {
-	using sequenceEntry = typename encoded_sequences_t::Entry;
+	using sequenceEntry = typename encoded_sequences_list_t::Entry;
 	updateKMerCountingResult<sequenceEntry, kmer_dictionary_t>(
 		kMerTaskConfig,
 		[&kMerTaskConfig, &complexHasherFactory](sequenceEntry &seq)
@@ -125,17 +125,17 @@ inline void updateKMerCountingResult(
 		kMerCountingResult);
 }
 
-template <class encoded_sequences_t,
+template <class encoded_sequences_list_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 inline void updateKMerCountingResult(
-	const KMerTaskConfig<encoded_sequences_t> &kMerTaskConfig,
-	CountingKMersProc_t<typename encoded_sequences_t::Entry, kmer_dictionary_t> countingProc,
+	const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
+	CountingKMersProc_t<typename encoded_sequences_list_t::Entry, kmer_dictionary_t> countingProc,
 	KMerCountingResult<kmer_dictionary_t> &kMerCountingResult)
 {
-	auto sequencesNum = kMerTaskConfig.encodedSequences.size();
-	auto kMersManagers = computeKMersForAllSequences<encoded_sequences_t, kmer_dictionary_t>(
+	auto sequencesNum = kMerTaskConfig.EncodedSequencesList.size();
+	auto kMersManagers = computeKMersForAllSequences<encoded_sequences_list_t, kmer_dictionary_t>(
 		countingProc,
-		kMerTaskConfig.encodedSequences,
+		kMerTaskConfig.EncodedSequencesList,
 		kMerTaskConfig.userParams.parallelMode);
 
 	std::vector<stringsCreator::KMerPositionInfo> kMersToCreate;
@@ -155,7 +155,7 @@ inline void updateKMerCountingResult(
 		}
 	}
 
-	stringsCreator::generate<encoded_sequences_t>(
+	stringsCreator::generate<encoded_sequences_list_t>(
 		kMersToCreate,
 		kMerTaskConfig,
 		kMerCountingResult.kMerStrings);
@@ -163,14 +163,14 @@ inline void updateKMerCountingResult(
 	kMerCountingResult.increaseProcessSequencesNum(sequencesNum);
 }
 
-template <class encoded_sequences_t,
+template <class encoded_sequences_list_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 inline std::vector<KMerManager<kmer_dictionary_t>> computeKMersForAllSequences(
-	CountingKMersProc_t<typename encoded_sequences_t::Entry, kmer_dictionary_t> countingProc,
-	const encoded_sequences_t &encodedSequences,
+	CountingKMersProc_t<typename encoded_sequences_list_t::Entry, kmer_dictionary_t> countingProc,
+	const encoded_sequences_list_t &EncodedSequencesList,
 	bool parallelMode)
 {
-	KMerCounterWorker<encoded_sequences_t, kmer_dictionary_t> worker(countingProc, encodedSequences);
+	KMerCounterWorker<encoded_sequences_list_t, kmer_dictionary_t> worker(countingProc, EncodedSequencesList);
 	if (parallelMode)
 	{
 		RcppParallel::parallelFor(0, rowsNum, worker);
@@ -182,16 +182,16 @@ inline std::vector<KMerManager<kmer_dictionary_t>> computeKMersForAllSequences(
 	return worker.kMers;
 }
 
-template <class encoded_sequences_t,
+template <class encoded_sequences_list_t,
 		  template <typename key, typename value, typename...> class kmer_dictionary_t>
 class KMerCounterWorker : public RcppParallel::Worker
 {
 public:
 	KMerCounterWorker(
-		CountingKMersProc_t<typename encoded_sequences_t::Entry, kmer_dictionary_t> countingKMersProc,
-		const encoded_sequences_t &encodedSequences)
+		CountingKMersProc_t<typename encoded_sequences_list_t::Entry, kmer_dictionary_t> countingKMersProc,
+		const encoded_sequences_list_t &EncodedSequencesList)
 		: countingKMersProc(countingKMersProc),
-		  encodedSequences(encodedSequences)
+		  EncodedSequencesList(EncodedSequencesList)
 	{
 		kMers.resize(rowsNum);
 	}
@@ -200,14 +200,14 @@ public:
 	{
 		for (int rowNum = begin; rowNum < end; ++rowNum)
 		{
-			auto row = encodedSequences[rowNum];
+			auto row = EncodedSequencesList[rowNum];
 			kMers[rowNum] = countingKMersProc(row);
 		}
 	}
 
 private:
-	CountingKMersProc_t<typename encoded_sequences_t::Entry, kmer_dictionary_t> countingKMersProc;
-	const encoded_sequences_t &encodedSequences
+	CountingKMersProc_t<typename encoded_sequences_list_t::Entry, kmer_dictionary_t> countingKMersProc;
+	const encoded_sequences_list_t &EncodedSequencesList
 
 		public : std::vector<KMerManager<kmer_dictionary_t>>
 					 kMers;

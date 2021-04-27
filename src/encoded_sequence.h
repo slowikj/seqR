@@ -9,13 +9,13 @@ public:
     using init_elem_t = init_elem_t_;
     using encoded_elem_t = encoded_elem_t_;
 
-    const static std::size INVALID_ELEM = EncodedSequences<init_elem_t, encoded_elem_t>::INVALID_ELEM;
+    const static std::size INVALID_ELEM = EncodedSequencesList<init_elem_t, encoded_elem_t>::INVALID_ELEM;
 
     _EncodedSequence(
         std::size_t sequenceNum,
-        const EncodedSequences<init_elem_t, encoded_elem_t> &encodedSequences)
+        const EncodedSequencesList<init_elem_t, encoded_elem_t> &EncodedSequencesList)
         : _sequenceNum(sequenceNum),
-          _encodedSequences(encodedSequences)
+          _EncodedSequencesList(EncodedSequencesList)
     {
     }
 
@@ -31,31 +31,31 @@ public:
 
     inline encoded_elem_t operator[](std::size_t index) const
     {
-        return _encodedSequences.getElem(_sequenceNum, index);
+        return _EncodedSequencesList.getElem(_sequenceNum, index);
     }
 
     inline init_elem_t decode(std::size_t index) const
     {
-        return _encodedSequences.decode(_sequenceNum, index);
+        return _EncodedSequencesList.decode(_sequenceNum, index);
     }
 
     inline std::size_t size() const
     {
-        return _encodedSequences.getSequenceSize(_sequenceNum);
+        return _EncodedSequencesList.getSequenceSize(_sequenceNum);
     }
 
     inline bool isAllowed(std::size_t index) const
     {
-        return _encodedSequences.isAllowed(_sequenceNum, index);
+        return _EncodedSequencesList.isAllowed(_sequenceNum, index);
     }
 
 private:
     std::size_t _sequenceNum;
-    const EncodedSequences<init_elem_t, encoded_elem_t> &_encodedSequences;
+    const EncodedSequencesList<init_elem_t, encoded_elem_t> &_EncodedSequencesList;
 };
 
 template <class init_elem_t_, class encoded_elem_t_>
-class EncodedSequences
+class EncodedSequencesList
 {
 public:
     using init_elem_t = init_elem_t_;
@@ -64,7 +64,7 @@ public:
 
     const static std::size_t INVALID_ELEM = 1;
 
-    EncodedSequences(
+    EncodedSequencesList(
         std::vector<encoded_elem_t> &&items,
         std::vector<std::size_t> &&sequenceStarts,
         std::vector<init_elem_t> &&elemDecoder)
@@ -74,15 +74,15 @@ public:
     {
     }
 
-    EncodedSequences() = delete;
+    EncodedSequencesList() = delete;
 
-    EncodedSequences(const EncodedSequences &) = delete;
+    EncodedSequencesList(const EncodedSequencesList &) = delete;
 
-    EncodedSequences(EncodedSequences &&) = default;
+    EncodedSequencesList(EncodedSequencesList &&) = default;
 
-    EncodedSequences &operator=(const EncodedSequences &other) = default;
+    EncodedSequencesList &operator=(const EncodedSequencesList &other) = default;
 
-    EncodedSequences &operator=(EncodedSequences &&other) = default;
+    EncodedSequencesList &operator=(EncodedSequencesList &&other) = default;
 
     inline Entry operator[](std::size_t sequenceNum) const
     {
