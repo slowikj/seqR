@@ -1,13 +1,15 @@
 #pragma once
 
 #include <vector>
+#include "encoded_sequence_proxy.h"
+
 template <class init_elem_t_, class encoded_elem_t_>
 class RawEncodedSequencesList
 {
 public:
     using init_elem_t = init_elem_t_;
     using encoded_elem_t = encoded_elem_t_;
-    using Entry = EncodedSequence<init_elem_t, encoded_elem_t>;
+    using Entry = EncodedSequenceProxy<init_elem_t, encoded_elem_t>;
 
     RawEncodedSequencesList(
         std::vector<encoded_elem_t> &&items,

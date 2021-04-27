@@ -1,7 +1,5 @@
 #pragma once
 
-#include "encoded_sequence_proxy.h"
-
 template <class sequences_list_t>
 class EncodedSequenceProxy
 {
