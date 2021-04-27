@@ -27,8 +27,7 @@ namespace gappedKMers
 		const encoded_sequence_t &sequence);
 
 	template <class vector_t>
-	inline std::vector<std::pair<int, int>> getContiguousIntervals(
-		const vector_t &gaps);
+	inline std::vector<std::pair<int, int>> getContiguousIntervals(const vector_t &gaps);
 
 	inline bool isGappedKMerAllowed(
 		int seqBegin,
@@ -113,7 +112,8 @@ namespace gappedKMers
 			std::begin(contiguousKMerIntervals),
 			std::end(contiguousKMerIntervals),
 			[&notAllowedItemsPrefixCount, &seqBegin](const std::pair<int, int> &interval) -> bool {
-				return (notAllowedItemsPrefixCount[seqBegin + interval.second] - (seqBegin + interval.first == 0 ? 0 : notAllowedItemsPrefixCount[seqBegin + interval.first - 1])) == 0;
+				return (notAllowedItemsPrefixCount[seqBegin + interval.second] -
+				(seqBegin + interval.first == 0 ? 0 : notAllowedItemsPrefixCount[seqBegin + interval.first - 1])) == 0;
 			});
 	}
 
