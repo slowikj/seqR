@@ -1,13 +1,15 @@
 #pragma once
 
-#include<queue>
-#include<functional>
-#include<utility>
+#include <queue>
+#include <functional>
+#include <utility>
 #include "globals.h"
 
-namespace hashing {
+namespace hashing
+{
 
-    class SingleHasher {
+    class SingleHasher
+    {
     public:
         using elem_t = uint32_t;
         using hash_t = config::single_hash_t;
@@ -16,11 +18,13 @@ namespace hashing {
 
         virtual void removeFirst(elem_t elem) = 0;
 
-        virtual hash_t getHash() const {
+        virtual hash_t getHash() const
+        {
             return currentHash;
         }
 
-        virtual void clear() {
+        virtual void clear()
+        {
             this->currentHash = 0;
         }
 
@@ -28,6 +32,5 @@ namespace hashing {
 
     protected:
         hash_t currentHash = 0;
-
     };
 }
