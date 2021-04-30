@@ -44,3 +44,12 @@ Rcpp::List count_contiguous_kmers_string_vector(
 {
     return countContiguousKMers(sq, alphabet, rcppParams);
 }
+
+// [[Rcpp::export(".count_contiguous_kmers_string_list")]]
+Rcpp::List count_contiguous_kmers_string_list(
+    Rcpp::List &sq,
+    Rcpp::StringVector &alphabet,
+    Rcpp::Environment &rcppParams)
+{
+    return countContiguousKMers(sq, alphabet, rcppParams);
+}

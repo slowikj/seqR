@@ -14,11 +14,11 @@ public:
     RawEncodedSequencesList(
         std::vector<encoded_elem_t> &&items,
         std::vector<std::size_t> &&sequenceStarts,
-        std::vector<init_elem_t> &&elemDecoder,
+        const std::vector<init_elem_t> &elemDecoder,
         encoded_elem_t invalidElemCode)
         : _items(std::move(items)),
           _sequenceStarts(std::move(sequenceStarts)),
-          _elemDecoder(std::move(elemDecoder)),
+          _elemDecoder(elemDecoder),
           _invalidElemCode(invalidElemCode)
     {
     }
@@ -69,7 +69,7 @@ public:
 private:
     std::vector<encoded_elem_t> _items;
     std::vector<std::size_t> _sequenceStarts;
-    std::vector<init_elem_t> _elemDecoder;
+    const std::vector<init_elem_t> &_elemDecoder;
     const encoded_elem_t _invalidElemCode;
 
     inline std::size_t _getRawIndex(std::size_t sequenceNum,

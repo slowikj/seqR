@@ -34,3 +34,12 @@ Rcpp::List count_gapped_kmers_string_vector(
 {
     return countGappedKMers(sq, alphabet, rcppParams);
 }
+
+// [[Rcpp::export(".count_gapped_kmers_string_list")]]
+Rcpp::List count_gapped_kmers_string_list(
+    Rcpp::List &sq,
+    Rcpp::StringVector &alphabet,
+    Rcpp::Environment &rcppParams)
+{
+    return countGappedKMers(sq, alphabet, rcppParams);
+}
