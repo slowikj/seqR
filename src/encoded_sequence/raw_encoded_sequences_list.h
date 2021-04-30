@@ -9,7 +9,7 @@ class RawEncodedSequencesList
 public:
     using init_elem_t = init_elem_t_;
     using encoded_elem_t = encoded_elem_t_;
-    using Entry = EncodedSequenceProxy<init_elem_t, encoded_elem_t>;
+    using Entry = EncodedSequenceProxy<RawEncodedSequencesList>;
 
     RawEncodedSequencesList(
         std::vector<encoded_elem_t> &&items,
@@ -35,9 +35,7 @@ public:
 
     inline Entry operator[](std::size_t sequenceNum) const
     {
-        return Entry(
-            sequenceNum,
-            *this);
+        return Entry(sequenceNum, *this);
     }
 
     inline encoded_elem_t getElem(std::size_t sequenceNum,
@@ -52,7 +50,7 @@ public:
         return _elemDecoder[getElem(sequenceNum, offset)];
     }
 
-    inline std::size_t gSequenceSize(std::size_t sequenceNum) const
+    inline std::size_t getSequenceSize(std::size_t sequenceNum) const
     {
         return _items[sequenceNum + 1] - _items[sequenceNum];
     }
