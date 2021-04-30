@@ -94,7 +94,7 @@ namespace stringsCreator
     private:
         const std::vector<KMerPositionInfo> &kMersToGenerate;
         const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig;
-        std::vector<KMerStringCreatorForSequence<encoded_sequences_list_t>> kmerStringCreators;
+        std::vector<KMerStringCreatorForSequence<typename encoded_sequences_list_t::Entry>> kmerStringCreators;
         std::function<std::string(int, int)> createKMerFunc;
         std::vector<int> gapsAccumulated;
         std::vector<std::string> &resultStrings;
@@ -149,7 +149,7 @@ namespace stringsCreator
             this->kmerInfoSuffix = prepareKMerInfoSuffix(gaps);
         }
 
-        inline std::string get(int begin) const
+        inline std::string get(std::size_t begin) const
         {
             int totalSize = getTotalSize(begin, itemSeparator.size());
             std::string res;
@@ -164,7 +164,7 @@ namespace stringsCreator
                        : res;
         }
 
-        inline std::string getPositional(int begin) const
+        inline std::string getPositional(std::size_t begin) const
         {
             std::string withoutPositionString = this->get(begin);
             return std::to_string(begin + 1) + sectionSeparator + withoutPositionString;
@@ -177,7 +177,7 @@ namespace stringsCreator
         std::string kmerInfoSuffix;
         const std::vector<int> &gapsAccumulated;
 
-        inline std::size_t getTotalSize(int begin, int separatorLength) const
+        inline std::size_t getTotalSize(std::size_t begin, int separatorLength) const
         {
             return std::accumulate(
                 std::begin(this->gapsAccumulated),

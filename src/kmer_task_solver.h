@@ -88,7 +88,7 @@ inline void updateKMerCountingResult(
 {
 	using sequenceEntry = typename encoded_sequences_list_t::Entry;
 	std::size_t totalKMerSize = util::getKMerRange(kMerTaskConfig.userParams.gaps);
-	updateKMerCountingResult<sequenceEntry, kmer_dictionary_t>(
+	updateKMerCountingResult<encoded_sequences_list_t, kmer_dictionary_t>(
 		kMerTaskConfig,
 		[&kMerTaskConfig, &totalKMerSize, &hasherConfigs](const sequenceEntry &seq)
 			-> KMerManager<kmer_dictionary_t> {
@@ -111,9 +111,9 @@ inline void updateKMerCountingResult(
 	KMerCountingResult<kmer_dictionary_t> &kMerCountingResult)
 {
 	using sequenceEntry = typename encoded_sequences_list_t::Entry;
-	updateKMerCountingResult<sequenceEntry, kmer_dictionary_t>(
+	updateKMerCountingResult<encoded_sequences_list_t, kmer_dictionary_t>(
 		kMerTaskConfig,
-		[&kMerTaskConfig, &complexHasherFactory](sequenceEntry &seq)
+		[&kMerTaskConfig, &complexHasherFactory](const sequenceEntry &seq)
 			-> KMerManager<kmer_dictionary_t> {
 			return contiguousKMer::count<sequenceEntry, kmer_dictionary_t>(
 				seq,
@@ -173,11 +173,11 @@ inline std::vector<KMerManager<kmer_dictionary_t>> computeKMersForAllSequences(
 	KMerCounterWorker<encoded_sequences_list_t, kmer_dictionary_t> worker(countingProc, encodedSequencesList);
 	if (parallelMode)
 	{
-		RcppParallel::parallelFor(0, rowsNum, worker);
+		RcppParallel::parallelFor(0, encodedSequencesList.size(), worker);
 	}
 	else
 	{
-		worker(0, rowsNum);
+		worker(0, encodedSequencesList.size());
 	}
 	return worker.kMers;
 }
@@ -193,7 +193,7 @@ public:
 		: countingKMersProc(countingKMersProc),
 		  encodedSequencesList(encodedSequencesList)
 	{
-		kMers.resize(rowsNum);
+		kMers.resize(encodedSequencesList.size());
 	}
 
 	inline void operator()(size_t begin, size_t end) override
@@ -207,10 +207,11 @@ public:
 
 private:
 	CountingKMersProc_t<typename encoded_sequences_list_t::Entry, kmer_dictionary_t> countingKMersProc;
-	const encoded_sequences_list_t &encodedSequencesList
+	const encoded_sequences_list_t &encodedSequencesList;
 
-		public : std::vector<KMerManager<kmer_dictionary_t>>
-					 kMers;
+public:
+	std::vector<KMerManager<kmer_dictionary_t>>
+		kMers;
 };
 
 inline void printSequenceProcessingLogIfVerbose(bool verbose, int begin, int end)

@@ -2,16 +2,18 @@
 
 #include <Rcpp.h>
 #include <vector>
+#include <limits>
+#include <string>
+#include <array>
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
 #include "../encoded_sequence/encoded_sequence_proxy.h"
-#include <limits>
-#include <unordered_map>
+#include "../common_config.h"
 
 class EncodedStringVectorList
 {
 public:
-    using init_elem_t = char;
+    using init_elem_t = std::string;
     using encoded_elem_t = char;
     using Entry = EncodedSequenceProxy<EncodedStringVectorList>;
 
@@ -41,7 +43,7 @@ public:
     inline init_elem_t decode(std::size_t sequenceNum,
                               std::size_t offset) const
     {
-        return _encodedSequences[sequenceNum][offset];
+        return std::string(1, _encodedSequences[sequenceNum][offset]);
     }
 
     inline bool isAllowed(std::size_t sequenceNum,
@@ -81,7 +83,7 @@ inline Rcpp::List commonCountKMersSpecific(Rcpp::StringVector &sequences,
                                            const UserParams &userParams,
                                            algorithm_params_t &algorithmParams)
 {
-    std::array<bool, CHAR_MAX> isAllowedElement{};
+    std::array<bool, CHAR_MAX> isAllowedElem{};
     for (const auto &alphabetElem : alphabet)
     {
         char elem = Rcpp::as<char>(alphabetElem);
@@ -91,14 +93,12 @@ inline Rcpp::List commonCountKMersSpecific(Rcpp::StringVector &sequences,
     auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult,
                          int seqBegin, int seqEnd) {
         KMerTaskConfig<EncodedStringVectorList> kMerTaskConfig(
-            (seqEnd - seqBegin),
             EncodedStringVectorList(isAllowedElem, sequences, seqBegin, seqEnd),
             config::DEFAULT_KMER_ITEM_SEPARATOR,
             config::DEFAULT_KMER_SECTION_SEPARATOR,
             userParams);
         updateKMerCountingResult<EncodedStringVectorList, kmer_dictionary_t>(
             kMerTaskConfig,
-            alphabetEncoder,
             algorithmParams,
             kMerCountingResult);
     };
