@@ -17,7 +17,7 @@
 
 template <template <class K, class V, class...> class kmer_dictionary_t>
 inline Rcpp::List computeKMersInBatches(
-	const std::function<void(KMerCountingResult<kmer_dictionary_t> &, int, int)> &batchFunc,
+	const std::function<void(KMerCountingResult<kmer_dictionary_t> &, std::size_t, std::size_t)> &batchFunc,
 	int sequencesNum,
 	const UserParams &userParams);
 
@@ -64,7 +64,7 @@ inline void printSequenceProcessingLogIfVerbose(
 
 template <template <class K, class V, class...> class kmer_dictionary_t>
 inline Rcpp::List computeKMersInBatches(
-	const std::function<void(KMerCountingResult<kmer_dictionary_t> &, int, int)> &batchFunc,
+	const std::function<void(KMerCountingResult<kmer_dictionary_t> &, std::size_t, std::size_t)> &batchFunc,
 	int sequencesNum,
 	const UserParams &userParams)
 {

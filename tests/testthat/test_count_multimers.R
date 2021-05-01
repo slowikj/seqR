@@ -12,7 +12,7 @@ invoke_test <- function(expected_res,
   expect_matrices_equal(expected_res, as.matrix(triplet_matrix_res))
 }
 
-test_that("count 2-mers and 3-mers for list input (AC){100}", {
+test_that("(string vector) count 2-mers and 3-mers for list input (AC){100}", {
   expected_res <- matrix(c(
     100, 99, 99, 99
   ), nrow=1, byrow=TRUE)
@@ -30,7 +30,7 @@ test_that("count 2-mers and 3-mers for list input (AC){100}", {
   )
 })
 
-test_that("count 2-mers and 3-mers for 2 sequences: (AC){100}, (AD){10}", {
+test_that("(string vector) count 2-mers and 3-mers for 2 sequences: (AC){100}, (AD){10}", {
   expected_res <- matrix(c(
     100, 99, 99, 99, 0, 0, 0, 0,
     0,    0,  0,  0, 10, 9, 9, 9
@@ -49,7 +49,7 @@ test_that("count 2-mers and 3-mers for 2 sequences: (AC){100}, (AD){10}", {
   )
 })
 
-test_that("count 2-mers for 2 sequences: (AC){100}, (AD){10} with defaults", {
+test_that("(string vector) count 2-mers for 2 sequences: (AC){100}, (AD){10} with defaults", {
   expected_res <- matrix(c(
     100, 99, 99, 99, 0, 0, 0, 0,
     0,    0,  0,  0, 10, 9, 9, 9
@@ -62,12 +62,12 @@ test_that("count 2-mers for 2 sequences: (AC){100}, (AD){10} with defaults", {
   expect_matrices_equal(expected_res, as.matrix(res))
 })
 
-test_that("the last sequence do not contain any k-mer", {
+test_that("(string vector) the last sequence do not contain any k-mer", {
   res <- count_multimers(c("aaaaacb", "aa"), c(3, 5), letters)
   expect_equal(nrow(res), 2)
 })
 
-test_that("expect simple_triplet_matrix as an output", {
+test_that("(string vector) expect simple_triplet_matrix as an output", {
   sq <- c(strrep("AC", 100), strrep("AD", 10))
   res <- seqR::count_multimers(sq, c(2,3), alphabet=c("A", "D", "C"))
   

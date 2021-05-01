@@ -91,7 +91,7 @@ inline Rcpp::List commonCountKMersSpecific(Rcpp::StringVector &sequences,
     }
 
     auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult,
-                         int seqBegin, int seqEnd) {
+                         std::size_t seqBegin, std::size_t seqEnd) {
         KMerTaskConfig<EncodedStringVectorList> kMerTaskConfig(
             EncodedStringVectorList(isAllowedElem, sequences, seqBegin, seqEnd),
             config::DEFAULT_KMER_ITEM_SEPARATOR,

@@ -2,7 +2,7 @@ library(testthat)
 source("utils.R")
 
 test_that("null alphabet throws an error", {
-  expect_error(seqR::count_kmers(sequences=to_matrix(c("a", "a", "a")),
+  expect_error(seqR::count_kmers(sequences=list(c("a", "a", "a")),
                                 alphabet=c()),
                "alphabet param is empty")
 })
@@ -16,46 +16,18 @@ test_that("null sequences throws an error", {
 
 # ALPHABET ----
 
-test_that("alphabet has incompatible element (integer) type with sequences' elements (string)", {
-  expect_error(seqR::count_kmers(sequences=to_matrix(c("a", "b")),
+test_that("alphabet has incompatible element (integer) type with sequences' elements (string list)", {
+  expect_error(seqR::count_kmers(sequences=list(c("a", "b")),
                                  alphabet=c(1,2),
                                  k=1),
                "alphabet should contain strings")
 })
 
-test_that("alphabet has incompatible element (string) type with sequences' elements (integer)", {
-  expect_error(seqR::count_kmers(sequences=to_matrix(c(1,2)),
-                                 alphabet=c("a", "b"),
-                                 k=1),
-               "alphabet should contain integers")
-})
-
-test_that("alphabet has incompatible element (numeric) type with sequences' elements (integer)", {
-  expect_error(seqR::count_kmers(sequences=to_matrix(c(1, 2)),
-                                 alphabet=c(1.5, 2.2),
-                                 k=1),
-               "alphabet should contain integers")
-})
-
-test_that("alphabet has incompatible element (integer) type with sequences' elements (numeric)", {
-  expect_error(seqR::count_kmers(sequences=to_matrix(c(1.1, 2.2)),
-                                 alphabet=c(1, 2),
-                                 k=1),
-               "alphabet should contain numerics")
-})
-
 test_that("alphabet has incompatible element (numeric) type with sequences' elements (string)", {
-  expect_error(seqR::count_kmers(sequences=to_matrix(c("aa", "bb")),
+  expect_error(seqR::count_kmers(sequences=list(c("aa", "bb")),
                                  alphabet=c(1.2, 2.2),
                                  k=1),
                "alphabet should contain strings")
-})
-
-test_that("alphabet has incompatile element (string) type with sequences' elements  (numeric)", {
-  expect_error(seqR::count_kmers(sequences=to_matrix(c(1.2, 1.1)),
-                                 alphabet=c("aa", "bb"),
-                                 k=1),
-               "alphabet should contain numerics")
 })
 
 test_that("alphabet has incompatible element (numeric) type with sequences from vector input (string)", {
@@ -71,8 +43,6 @@ test_that("alphabet has incompatible element (integer) type with sequences from 
                                  k=1),
                "alphabet should contain strings")
 })
-
-# SEQUENCE TYPE ----
 
 # INVALID K-MER PARAMS ----
 

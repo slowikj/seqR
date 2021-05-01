@@ -13,8 +13,8 @@
 template <class encoded_elem_t>
 inline RawEncodedSequencesList<std::string, encoded_elem_t> encode(
     Rcpp::List sequences,
-    int seqBegin,
-    int seqEnd,
+    std::size_t seqBegin,
+    std::size_t seqEnd,
     std::unordered_map<std::string, encoded_elem_t> &alphabetEncoder,
     const std::vector<std::string> &alphabetDecoder,
     encoded_elem_t invalidElemCode = 1)
@@ -39,7 +39,7 @@ inline RawEncodedSequencesList<std::string, encoded_elem_t> encode(
         }
         seqStarts.push_back(seqStarts.back() + seq.size());
     }
-
+    
     return RawEncodedSequencesList<std::string, encoded_elem_t>(
         std::move(encodedItems),
         std::move(seqStarts),
@@ -67,7 +67,7 @@ inline Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
     }
 
     auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult,
-                         int seqBegin, int seqEnd) {
+                         std::size_t seqBegin, std::size_t seqEnd) {
         KMerTaskConfig<RawEncodedSequencesList<std::string, encodedElemType>> kMerTaskConfig(
             encode<encodedElemType>(sequences, seqBegin, seqEnd, alphabetEncoder, alphabetDecoder),
             config::DEFAULT_KMER_ITEM_SEPARATOR,
