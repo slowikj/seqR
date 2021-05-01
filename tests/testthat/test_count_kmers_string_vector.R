@@ -9,7 +9,7 @@ invoke_test <- function(expected_res, ...) {
   expect_matrices_equal(as.matrix(res), expected_res)
 }
 
-test_that("count 3-mers for sequences A+ in a list", {
+test_that("(string vector) count 3-mers for sequences A+", {
   sq <- c("AAAAA", "AA", "AAAAAAA")
   expected_res <- matrix(c(
     3,
@@ -27,7 +27,7 @@ test_that("count 3-mers for sequences A+ in a list", {
               batch_size = 200)
 })
 
-test_that("count 3-mers for sequences A+ longer in a list", {
+test_that("(string vector) count 3-mers for sequences A+ longer", {
   sq <- c(strrep("A", 1000000), strrep("A", 1000), strrep("A", 100))
   expected_res <- matrix(c(
     999998,
@@ -45,7 +45,7 @@ test_that("count 3-mers for sequences A+ longer in a list", {
               batch_size = 200)
 })
 
-test_that("count non positional 10-mers sequences A+ longer in a list", {
+test_that("(string vector) count non positional 10-mers sequences A+ longer", {
   sq <- c(strrep("A", 1000000), strrep("A", 100))
   expected_res <- matrix(c(
     999991,
@@ -65,7 +65,7 @@ test_that("count non positional 10-mers sequences A+ longer in a list", {
               batch_size = 200)
 })
 
-test_that("find 3-mers for sequences A+ (without k-mer counts) in a list", {
+test_that("(string vector) find 3-mers for sequences A+ (without k-mer counts)", {
   sq <- c("AAAAA", "AA", "AAAAAAA")
   expected_res <- matrix(c(
     1,
@@ -83,7 +83,7 @@ test_that("find 3-mers for sequences A+ (without k-mer counts) in a list", {
               batch_size = 200)
 })
 
-test_that("find 15-mers for sequences (AC){1000000} in a list", {
+test_that("(string vector) find 15-mers for sequences (AC){1000000}", {
   sq <- sapply(1:5, function(i) strrep("AC", 1000000))
   expected_res <- matrix(c(
     999993, 999993,

@@ -5,69 +5,73 @@
 #include "../hash/complex_hasher.h"
 #include "../utils.h"
 
-namespace hashing {
-
-    template<class input_vector_t, class alphabet_encoding_t>
-    class RollingWindow {
+namespace hashing
+{
+    template <class encoded_sequence_t>
+    class RollingWindow
+    {
     public:
-        using encoded_elem_t = typename alphabet_encoding_t::encoded_elem_t;
+        using encoded_elem_t = typename encoded_sequence_t::encoded_elem_t;
         using hash_t = ComplexHasher::hash_t;
 
-        RollingWindow(input_vector_t &sequence,
-                      ComplexHasher &&hasher,
-                      alphabet_encoding_t &alphabetEncoding) :
-                sequence(sequence),
-                hasher(std::move(hasher)),
-                alphabetEncoding(alphabetEncoding) {
+        RollingWindow(const encoded_sequence_t &sequence,
+                      ComplexHasher &&hasher) : sequence(sequence),
+                                                hasher(std::move(hasher))
+        {
             this->nextElementIndex = 0;
         }
 
         RollingWindow() = delete;
 
-        inline void resetIndex(int nextElementIndex) {
+        inline void resetIndex(int nextElementIndex)
+        {
             this->nextElementIndex = nextElementIndex;
             util::clear<encoded_elem_t>(this->window);
             this->hasher.clear();
         }
 
-        inline void append() {
-            encoded_elem_t encodedElem = this->alphabetEncoding.encodeUnsafe(
-                    this->sequence[this->nextElementIndex]);
+        inline void append()
+        {
+            encoded_elem_t encodedElem = this->sequence[this->nextElementIndex];
             this->window.push(encodedElem);
             this->hasher.append(encodedElem);
             ++this->nextElementIndex;
         }
 
-        inline void moveWindowRight() {
+        inline void moveWindowRight()
+        {
             removeFirst();
             append();
         }
 
-        inline void removeFirst() {
+        inline void removeFirst()
+        {
             this->hasher.removeFirst(this->window.front());
             this->window.pop();
         }
 
-        inline std::size_t sequenceSize() const {
+        inline std::size_t sequenceSize() const
+        {
             return this->sequence.size();
         }
 
-        inline hash_t getWindowedHashes() const {
+        inline hash_t getWindowedHashes() const
+        {
             return this->hasher.getHashes();
         }
 
-        inline hash_t getWindowedPositionedHashes() const {
+        inline hash_t getWindowedPositionedHashes() const
+        {
             return this->hasher.getHashes(this->nextElementIndex);
         }
 
-        inline int currentBeginIndex() const {
+        inline int currentBeginIndex() const
+        {
             return this->nextElementIndex - this->window.size();
         }
 
     private:
-        input_vector_t &sequence;
-
-        alphabet_encoding_t &alphabetEncoding;
+        const encoded_sequence_t &sequence;
 
         ComplexHasher hasher;
 
@@ -76,4 +80,3 @@ namespace hashing {
         int nextElementIndex;
     };
 }
-

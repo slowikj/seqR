@@ -9,12 +9,8 @@
 .get_kmer_function <- function(sequences) {
   if (is.vector(sequences) & is.character(sequences)) {
     .kmer_functions_map[["string_vector"]]
-  } else if (has_integers_only(sequences)) {
-    .kmer_functions_map[["integer"]]
-  } else if (is.numeric(sequences)) {
-    .kmer_functions_map[["numeric"]]
-  } else if (is.character(sequences)) {
-    .kmer_functions_map[["string"]]
+  } else if (is.list(sequences)) {
+    .kmer_functions_map[["string_list"]]
   } else {
     stop("sequences param has unsupported type")
   }
@@ -22,8 +18,6 @@
   
 #' @include kmer_typed_functions.R
 .kmer_functions_map <- list(
-  "integer" = list(.count_contiguous_kmers_integer_proxy, .count_gapped_kmers_integer_proxy),
-  "string" = list(.count_contiguous_kmers_string_proxy, .count_gapped_kmers_string_proxy),
-  "numeric" = list(.count_contiguous_kmers_numeric_proxy, .count_gapped_kmers_numeric_proxy),
+  "string_list" = list(.count_contiguous_kmers_string_list_proxy, .count_gapped_kmers_string_list_proxy),
   "string_vector" = list(.count_contiguous_kmers_string_vector_proxy, .count_gapped_kmers_string_vector_proxy)
 )
