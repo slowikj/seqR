@@ -15,12 +15,35 @@ add_library(seqR
         src/hash/single_hasher.h
         src/hash/polynomial_single_hasher.h
         src/hash/complex_hasher.h
-        src/hash/rolling_window.h src/dictionary/stl_unordered_map_wrapper.h src/alphabet_encoder/default_alphabet_encoder.h
+        src/hash/rolling_window.h
+        src/dictionary/stl_unordered_map_wrapper.h
         src/kmer_manager.h
         src/contiguous_kmer_counter.h
         src/gapped_kmer_counter.h
+        src/count_kmers_specific/count_kmers_string_list.h
+        src/encoded_sequence/encoded_sequence_proxy.h
+        src/encoded_sequence/raw_encoded_sequences_list.h
         src/kmer_strings_creator.h
-        src/count_kmers_specific/rmatrix_row_getter.h
-        src/count_kmers_specific/safe_sequences_wrapper.h src/dictionary/helper/iterator_wrapper.h src/dictionary/linear_list_dictionary.h src/dictionary/supported_dict_names.h src/kmer_task_config.h src/kmer_task_solver.h src/kmer_counting_result.h src/count_kmers_specific/count_kmers_string_matrix.h src/count_kmers_specific/count_kmers_integer_matrix.h src/count_kmers_specific/count_kmers_numeric_matrix.h src/count_kmers_specific/count_kmers_string_vector.h src/hash/custom_vector_hasher.h src/common_config.h src/alphabet_encoder/identity_alphabet_encoder.h src/count_kmers_specific/encoded_sequence_row.h src/user_params.h src/kmer_task_param_dispatcher.h src/hash/globals.h inst/thirdparty/dictionaries/emilib/hash_map.hpp src/hash/prefix_sequence_polynomial_hasher.h src/dictionary/stl_ordered_map_wrapper.h src/dictionary/emilib_hash_map_wrapper.h inst/thirdparty/dictionaries/robin_hood_martinus.h src/dictionary/martinus_robin_hood_dictionary.h src/dictionary/helper/stl_like_dictionary_wrapper.h src/dictionary/dictionaries.h src/dictionary/flat_hashmap_wrapper.h
+        src/dictionary/helper/iterator_wrapper.h
+        src/dictionary/linear_list_dictionary.h
+        src/dictionary/supported_dict_names.h
+        src/kmer_task_config.h
+        src/kmer_task_solver.h
+        src/kmer_counting_result.h
+        src/count_kmers_specific/count_kmers_string_vector.h
+        src/hash/custom_vector_hasher.h
+        src/common_config.h
+        src/user_params.h
+        src/kmer_task_param_dispatcher.h
+        src/hash/globals.h
+        inst/thirdparty/dictionaries/emilib/hash_map.hpp
+        src/hash/prefix_sequence_polynomial_hasher.h
+        src/dictionary/stl_ordered_map_wrapper.h
+        src/dictionary/emilib_hash_map_wrapper.h
+        inst/thirdparty/dictionaries/robin_hood_martinus.h
+        src/dictionary/martinus_robin_hood_dictionary.h
+        src/dictionary/helper/stl_like_dictionary_wrapper.h
+        src/dictionary/dictionaries.h
+        src/dictionary/flat_hashmap_wrapper.h
         src/proxy_count_gapped_kmers.cpp
         src/proxy_count_contiguous_kmers.cpp)
