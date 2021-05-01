@@ -52,7 +52,7 @@ public:
 
     inline std::size_t getSequenceSize(std::size_t sequenceNum) const
     {
-        return _items[sequenceNum + 1] - _items[sequenceNum];
+        return _sequenceStarts[sequenceNum + 1] - _sequenceStarts[sequenceNum];
     }
 
     inline std::size_t size() const

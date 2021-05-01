@@ -28,7 +28,7 @@ inline RawEncodedSequencesList<std::string, encoded_elem_t> encode(
         for (const auto &seqElem : seq)
         {
             std::string cppElem = Rcpp::as<std::string>(seqElem);
-            if (alphabetEncoder.find(cppElem) != alphabetEncoder.end())
+            if (alphabetEncoder.find(cppElem) == alphabetEncoder.end())
             {
                 encodedItems.push_back(invalidElemCode);
             }
