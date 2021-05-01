@@ -136,12 +136,12 @@ namespace stringsCreator
     {
     public:
         KMerStringCreatorForSequence(
-            const encoded_sequence_t &sequence,
+            encoded_sequence_t &&sequence,
             const std::vector<int> &gaps,
             const std::vector<int> &gapsAccumulated,
             const std::string &itemSeparator,
             const std::string &sectionSeparator)
-            : sequence(sequence),
+            : sequence(std::move(sequence)),
               gapsAccumulated(gapsAccumulated),
               itemSeparator(itemSeparator),
               sectionSeparator(sectionSeparator)
@@ -171,7 +171,7 @@ namespace stringsCreator
         }
 
     private:
-        const encoded_sequence_t &sequence;
+        encoded_sequence_t sequence;
         std::string itemSeparator;
         std::string sectionSeparator;
         std::string kmerInfoSuffix;
