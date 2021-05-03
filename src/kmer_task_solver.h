@@ -9,7 +9,6 @@
 #include "contiguous_kmer_counter.h"
 #include "kmer_task_config.h"
 #include "dictionary/supported_dict_names.h"
-#include "dictionary/linear_list_dictionary.h"
 #include <functional>
 #include <vector>
 
