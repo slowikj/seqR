@@ -2,7 +2,6 @@
 
 #include <string>
 #include <memory>
-#include <Rcpp.h>
 // [[Rcpp::depends(RcppParallel)]]
 //' @importFrom  RcppParallel RcppParallelLibs
 #include <RcppParallel.h>

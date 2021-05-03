@@ -1,9 +1,5 @@
 #pragma once
 
-#include <Rcpp.h>
-// [[Rcpp::depends(RcppParallel)]]
-//' @importFrom  RcppParallel RcppParallelLibs
-#include <RcppParallel.h>
 #include "hash/rolling_window.h"
 #include "hash/complex_hasher.h"
 #include <vector>

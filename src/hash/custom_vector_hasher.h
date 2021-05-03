@@ -1,7 +1,6 @@
 #pragma once
 
 // [[Rcpp::depends(BH)]]
-#include <Rcpp.h>
 #include <boost/functional/hash/hash.hpp>
 #include <functional>
 #include <algorithm>
