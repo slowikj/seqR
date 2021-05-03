@@ -15,7 +15,7 @@ public:
 
     std::vector<std::string> kMerStrings;
 
-    inline void increaseProcessSequencesNum(int cnt) {
+    inline void increaseProcessedSequencesNum(int cnt) {
         this->processedSequencesNum += cnt;
     }
 

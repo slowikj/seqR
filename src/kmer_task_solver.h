@@ -149,19 +149,22 @@ inline void updateKMerCountingResult(
 				seqNum,
 				kMerPair.second.cnt);
 
-			if (kMerStringNeedsCreation)
+			if (kMerTaskConfig.userParams.withKMerNames && kMerStringNeedsCreation)
 			{
 				kMersToCreate.emplace_back(seqNum, kMerPair.second.seqStartPosition);
 			}
 		}
 	}
 
-	stringsCreator::generate<encoded_sequences_list_t>(
-		kMersToCreate,
-		kMerTaskConfig,
-		kMerCountingResult.kMerStrings);
+	if (kMerTaskConfig.userParams.withKMerNames)
+	{
+		stringsCreator::generate<encoded_sequences_list_t>(
+			kMersToCreate,
+			kMerTaskConfig,
+			kMerCountingResult.kMerStrings);
+	}
 
-	kMerCountingResult.increaseProcessSequencesNum(sequencesNum);
+	kMerCountingResult.increaseProcessedSequencesNum(sequencesNum);
 }
 
 template <class encoded_sequences_list_t,

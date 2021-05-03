@@ -5,7 +5,8 @@ count_multimers <- function(sequences,
                             alphabet,
                             positional_vector=rep(FALSE, length(k_vector)),
                             kmer_gaps_list=rep(list(c()), length(k_vector)),
-                            with_kmer_counts=TRUE,
+                            with_kmer_counts = TRUE,
+                            with_kmer_names = TRUE,
                             kmer_dictionary_name="unordered_map",
                             batch_size=200,
                             hash_dim=2,
@@ -29,16 +30,18 @@ count_multimers <- function(sequences,
       print(paste0("Processing sequences for ", index, " config"))
     }
     
-    count_kmers(sequences,
-                k_vector[index],
-                alphabet,
-                positional_vector[index],
-                kmer_gaps_list[[index]],
-                with_kmer_counts,
-                kmer_dictionary_name,
-                batch_size,
-                hash_dim,
-                verbose,
-                parallel_mode)
+    count_kmers(
+      sequences = sequences,
+      k = k_vector[index],
+      alphabet = alphabet,
+      positional = positional_vector[index],
+      kmer_gaps = kmer_gaps_list[[index]],
+      with_kmer_counts = with_kmer_counts,
+      with_kmer_names = with_kmer_names,
+      kmer_dictionary_name = kmer_dictionary_name,
+      batch_size = batch_size,
+      hash_dim = hash_dim,
+      verbose = verbose,
+      parallel_mode = parallel_mode)
   }))
 }
