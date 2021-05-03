@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Rcpp.h>
+#include "kmer_manager.h"
 #include "user_params.h"
 #include "count_kmers_specific/count_kmers_specific.h"
 #include "dictionary/dictionaries.h"
