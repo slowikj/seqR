@@ -144,12 +144,12 @@ inline Rcpp::List countKMersParallelModeDispatch(
 {
 	if (userParams.parallelMode)
 	{
-		return parallelCountKMersSpecific<decltype(algorithmParams), kmer_manager_t, result_dictionary_t>(
+		return parallelCountKMersSpecific<algorithm_params_t, kmer_manager_t, result_dictionary_t>(
 			sequences, alphabet, userParams, algorithmParams);
 	}
 	else
 	{
-		return sequentialCountKMersSpecific<decltype(algorithmParams), kmer_manager_t, result_dictionary_t>(
+		return sequentialCountKMersSpecific<algorithm_params_t, kmer_manager_t, result_dictionary_t>(
 			sequences, alphabet, userParams, algorithmParams);
 	}
 }
