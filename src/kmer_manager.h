@@ -5,17 +5,18 @@
 #include <vector>
 #include <memory>
 
-struct KMerHashInfo {
+struct KMerHashInfo
+{
     int cnt;
 
     int seqStartPosition;
 
-    explicit KMerHashInfo(int seqStartPosition) :
-            cnt(0), seqStartPosition(seqStartPosition) {
+    explicit KMerHashInfo(int seqStartPosition) : cnt(0), seqStartPosition(seqStartPosition)
+    {
     }
 
-    KMerHashInfo(int seqStartPosition, int cnt) :
-            cnt(cnt), seqStartPosition(seqStartPosition) {
+    KMerHashInfo(int seqStartPosition, int cnt) : cnt(cnt), seqStartPosition(seqStartPosition)
+    {
     }
 
     KMerHashInfo() = default;
@@ -25,55 +26,77 @@ struct KMerHashInfo {
     ~KMerHashInfo() = default;
 };
 
-template<
-        template<typename key, typename value, typename...> class kmer_dictionary_t>
-class KMerManager {
+template <
+    template <typename key, typename value, typename...> class kmer_dictionary_t_>
+class CountingKMerManager
+{
 public:
     using hash_t = hashing::config::multidim_hash_t;
-    using dict_t = kmer_dictionary_t<hash_t, KMerHashInfo, hashing::config::multidim_hasher_t>;
+    using dict_t = kmer_dictionary_t_<hash_t, KMerHashInfo, hashing::config::multidim_hasher_t>;
 
-    explicit KMerManager(bool kmerWithCounts) :
-            kMerWithCounts(kmerWithCounts) {
-    }
+    CountingKMerManager(const CountingKMerManager &) = default;
 
-    KMerManager(const KMerManager<kmer_dictionary_t> &) = default;
+    CountingKMerManager() = default;
 
-    KMerManager() = default;
+    CountingKMerManager(CountingKMerManager &&) = default;
 
-    KMerManager(KMerManager<kmer_dictionary_t> &&) = default;
+    CountingKMerManager &
+    operator=(const CountingKMerManager &) = default;
 
-    KMerManager<kmer_dictionary_t> &
-    operator=(const KMerManager<kmer_dictionary_t> &) = default;
+    CountingKMerManager &
+    operator=(CountingKMerManager &&) = default;
 
-    KMerManager<kmer_dictionary_t> &
-    operator=(KMerManager<kmer_dictionary_t> &&) = default;
-
-    inline void add(hash_t &&hash, int position) {
-        if (kMerWithCounts) {
-            handleWithCounts(std::move(hash), position);
-        } else {
-            handleWithoutCounts(std::move(hash), position);
+    inline void add(hash_t &&hash, int position)
+    {
+        if (!dictionary.isPresent(hash))
+        {
+            dictionary[std::move(hash)] = KMerHashInfo(position, 1);
+        }
+        else
+        {
+            dictionary[hash].cnt++;
         }
     }
 
-    inline const dict_t &getDictionary() const {
+    inline const dict_t &getDictionary() const
+    {
         return this->dictionary;
     }
 
 private:
     dict_t dictionary;
-    bool kMerWithCounts;
+};
 
-    inline void handleWithCounts(hashing::config::multidim_hash_t &&hash, int position) {
-        if (!dictionary.isPresent(hash)) {
-            dictionary[std::move(hash)] = KMerHashInfo(position, 1);
-        } else {
-            dictionary[hash].cnt++;
-        }
-    }
+template <
+    template <typename key, typename value, typename...> class kmer_dictionary_t_>
+class PresenceKMerManager
+{
+public:
+    using hash_t = hashing::config::multidim_hash_t;
+    using dict_t = kmer_dictionary_t_<hash_t, KMerHashInfo, hashing::config::multidim_hasher_t>;
 
-    inline void handleWithoutCounts(hashing::config::multidim_hash_t &&hash, int position) {
+    PresenceKMerManager(const PresenceKMerManager &) = default;
+
+    PresenceKMerManager() = default;
+
+    PresenceKMerManager(PresenceKMerManager &&) = default;
+
+    PresenceKMerManager &
+    operator=(const PresenceKMerManager &) = default;
+
+    PresenceKMerManager &
+    operator=(PresenceKMerManager &&) = default;
+
+    inline void add(hash_t &&hash, int position)
+    {
         dictionary[std::move(hash)] = KMerHashInfo(position, 1);
     }
 
+    inline const dict_t &getDictionary() const
+    {
+        return this->dictionary;
+    }
+
+private:
+    dict_t dictionary;
 };

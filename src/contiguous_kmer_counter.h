@@ -6,7 +6,6 @@
 #include <RcppParallel.h>
 #include "hash/rolling_window.h"
 #include "hash/complex_hasher.h"
-#include "kmer_manager.h"
 #include <vector>
 #include <memory>
 #include <functional>
@@ -15,8 +14,8 @@ namespace contiguousKMer
 {
 
 	template <class encoded_sequence_t,
-			  template <typename key, typename value, typename...> class kmer_dictionary_t>
-	inline KMerManager<kmer_dictionary_t> count(
+			  class kmer_manager_t>
+	inline kmer_manager_t count(
 		const encoded_sequence_t &sequence,
 		int k,
 		bool isPositionalKMer,
@@ -27,34 +26,33 @@ namespace contiguousKMer
 	inline std::vector<int> computeNotAllowedPositions(const encoded_sequence_t &sequence);
 
 	template <class encoded_sequence_t,
-			  template <typename key, typename value, typename...> class kmer_dictionary_t>
+			  class kmer_manager_t>
 	inline void countKMersForContiguousSeq(
 		hashing::RollingWindow<encoded_sequence_t> &rollingWindow,
-		KMerManager<kmer_dictionary_t> &kMerManager,
+		kmer_manager_t &kMerManager,
 		int k,
 		int begin,
 		int end,
 		bool isPositionalKMer);
 
 	template <class encoded_sequence_t,
-			  template <typename key, typename value, typename...> class kmer_dictionary_t>
+			  class kmer_manager_t>
 	inline void updateKMers(
 		hashing::RollingWindow<encoded_sequence_t> &rollingWindow,
-		KMerManager<kmer_dictionary_t> &kMerManager,
+		kmer_manager_t &kMerManager,
 		bool isPositionalKMer);
 
 	// ------------------ IMPLEMENTATION ------------------
 
 	template <class encoded_sequence_t,
-			  template <typename key, typename value, typename...> class kmer_dictionary_t>
-	inline KMerManager<kmer_dictionary_t> count(
+			  class kmer_manager_t>
+	inline kmer_manager_t count(
 		const encoded_sequence_t &sequence,
 		int k,
 		bool isPositionalKMer,
-		bool withKMerCounts,
 		hashing::ComplexHasher &&complexHasher)
 	{
-		KMerManager<kmer_dictionary_t> kMerManager(withKMerCounts);
+		kmer_manager_t kMerManager;
 		hashing::RollingWindow<encoded_sequence_t> rollingWindow(
 			sequence,
 			std::move(complexHasher));
@@ -66,7 +64,7 @@ namespace contiguousKMer
 			{
 				int begin = notAllowedSequencePositions[i] + 1;
 				int end = notAllowedSequencePositions[i + 1] - 1;
-				countKMersForContiguousSeq<encoded_sequence_t, kmer_dictionary_t>(
+				countKMersForContiguousSeq<encoded_sequence_t, kmer_manager_t>(
 					rollingWindow, kMerManager, k, begin, end, isPositionalKMer);
 			}
 		}
@@ -91,10 +89,10 @@ namespace contiguousKMer
 	}
 
 	template <class encoded_sequence_t,
-			  template <typename key, typename value, typename...> class kmer_dictionary_t>
+			  class kmer_manager_t>
 	inline void countKMersForContiguousSeq(
 		hashing::RollingWindow<encoded_sequence_t> &rollingWindow,
-		KMerManager<kmer_dictionary_t> &kMerManager,
+		kmer_manager_t &kMerManager,
 		int k,
 		int begin,
 		int end,
@@ -114,10 +112,10 @@ namespace contiguousKMer
 	}
 
 	template <class encoded_sequence_t,
-			  template <typename key, typename value, typename...> class kmer_dictionary_t>
+			  class kmer_manager_t>
 	inline void updateKMers(
 		hashing::RollingWindow<encoded_sequence_t> &rollingWindow,
-		KMerManager<kmer_dictionary_t> &kMerManager,
+		kmer_manager_t &kMerManager,
 		bool isPositionalKMer)
 	{
 		kMerManager.add(

@@ -77,7 +77,8 @@ private:
 };
 
 template <class algorithm_params_t,
-          template <typename key, typename value, class...> class kmer_dictionary_t>
+          class kmer_manager_t,
+          template <typename key, typename value, class...> class result_dictionary_t>
 inline Rcpp::List commonCountKMersSpecific(Rcpp::StringVector &sequences,
                                            Rcpp::StringVector &alphabet,
                                            const UserParams &userParams,
@@ -90,40 +91,42 @@ inline Rcpp::List commonCountKMersSpecific(Rcpp::StringVector &sequences,
         isAllowedElem[elem] = true;
     }
 
-    auto batchFunc = [&](KMerCountingResult<kmer_dictionary_t> &kMerCountingResult,
+    auto batchFunc = [&](KMerCountingResult<result_dictionary_t> &kMerCountingResult,
                          std::size_t seqBegin, std::size_t seqEnd) {
         KMerTaskConfig<EncodedStringVector> kMerTaskConfig(
             EncodedStringVector(isAllowedElem, sequences, seqBegin, seqEnd),
             config::DEFAULT_KMER_ITEM_SEPARATOR,
             config::DEFAULT_KMER_SECTION_SEPARATOR,
             userParams);
-        updateKMerCountingResult<EncodedStringVector, kmer_dictionary_t>(
+        updateKMerCountingResult<EncodedStringVector, kmer_manager_t, result_dictionary_t>(
             kMerTaskConfig,
             algorithmParams,
             kMerCountingResult);
     };
 
-    return computeKMersInBatches<kmer_dictionary_t>(batchFunc, sequences.size(), userParams);
+    return computeKMersInBatches<result_dictionary_t>(batchFunc, sequences.size(), userParams);
 }
 
 template <class algorithm_params_t,
-          template <typename key, typename value, class...> class kmer_dictionary_t>
+          class kmer_manager_t,
+          template <typename key, typename value, class...> class result_dictionary_t>
 inline Rcpp::List parallelCountKMersSpecific(Rcpp::StringVector &sequences,
                                              Rcpp::StringVector &alphabet,
                                              const UserParams &userParams,
                                              algorithm_params_t &algorithmParams)
 {
-    return commonCountKMersSpecific<algorithm_params_t, kmer_dictionary_t>(
+    return commonCountKMersSpecific<algorithm_params_t, kmer_manager_t, result_dictionary_t>(
         sequences, alphabet, userParams, algorithmParams);
 }
 
 template <class algorithm_params_t,
-          template <typename key, typename value, class...> class kmer_dictionary_t>
+          class kmer_manager_t,
+          template <typename key, typename value, class...> class result_dictionary_t>
 inline Rcpp::List sequentialCountKMersSpecific(Rcpp::StringVector &sequences,
                                                Rcpp::StringVector &alphabet,
                                                const UserParams &userParams,
                                                algorithm_params_t &algorithmParams)
 {
-    return commonCountKMersSpecific<algorithm_params_t, kmer_dictionary_t>(
+    return commonCountKMersSpecific<algorithm_params_t, kmer_manager_t, result_dictionary_t>(
         sequences, alphabet, userParams, algorithmParams);
 }
