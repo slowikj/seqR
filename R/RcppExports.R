@@ -7,9 +7,6 @@ NULL
 #' @importFrom  RcppParallel RcppParallelLibs
 NULL
 
-#' @importFrom  RcppParallel RcppParallelLibs
-NULL
-
 .count_contiguous_kmers_string_vector <- function(sq, alphabet, rcppParams) {
     .Call('_seqR_count_contiguous_kmers_string_vector', PACKAGE = 'seqR', sq, alphabet, rcppParams)
 }

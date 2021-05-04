@@ -7,25 +7,31 @@
 #include "hash/custom_vector_hasher.h"
 #include "hash/globals.h"
 
-template<template<class K, class V, class...> class kmer_dictionary_t>
-class KMerCountingResult {
+template <template <class K, class V, class...> class kmer_dictionary_t>
+class KMerCountingResult
+{
 public:
     using hash_t = hashing::config::multidim_hash_t;
     using hasher_t = hashing::config::multidim_hasher_t;
 
     std::vector<std::string> kMerStrings;
 
-    inline void increaseProcessSequencesNum(int cnt) {
+    inline void increaseProcessedSequencesNum(int cnt)
+    {
         this->processedSequencesNum += cnt;
     }
 
     inline bool addKMer(const hashing::config::multidim_hash_t &kMerHash,
                         int sequenceNum,
-                        int count) {
-        if (kMerHash2ColumnIndex.isPresent(kMerHash)) {
+                        int count)
+    {
+        if (kMerHash2ColumnIndex.isPresent(kMerHash))
+        {
             addKMerCountsInfo(kMerHash2ColumnIndex[kMerHash], sequenceNum, count);
             return false;
-        } else {
+        }
+        else
+        {
             int kMerIndex = kMerHash2ColumnIndex.size();
             kMerHash2ColumnIndex[kMerHash] = kMerIndex;
             addKMerCountsInfo(kMerIndex, sequenceNum, count);
@@ -33,18 +39,18 @@ public:
         }
     }
 
-    inline Rcpp::List toRcppList() const {
+    inline Rcpp::List toRcppList() const
+    {
         Rcpp::IntegerVector rcppSequenceNums = Rcpp::wrap(this->sequenceNums);
         Rcpp::IntegerVector rcppKMerIndices = Rcpp::wrap(this->kMerIndices);
         Rcpp::IntegerVector rcppKmerCounts = Rcpp::wrap(this->kMerCounts);
         Rcpp::StringVector rcppKMerStrings = Rcpp::wrap(this->kMerStrings);
         return Rcpp::List::create(
-                Rcpp::Named(PROXY_ROWS_NAME) = rcppSequenceNums + 1,
-                Rcpp::Named(PROXY_COLUMNS_NAME) = rcppKMerIndices + 1,
-                Rcpp::Named(PROXY_VALUES_NAME) = rcppKmerCounts,
-                Rcpp::Named(PROXY_COLUMN_NAMES_NAME) = rcppKMerStrings,
-                Rcpp::Named(PROXY_PROCESSED_SEQUENCES_NUM_NAME) = this->processedSequencesNum);
-
+            Rcpp::Named(PROXY_ROWS_NAME) = rcppSequenceNums + 1,
+            Rcpp::Named(PROXY_COLUMNS_NAME) = rcppKMerIndices + 1,
+            Rcpp::Named(PROXY_VALUES_NAME) = rcppKmerCounts,
+            Rcpp::Named(PROXY_COLUMN_NAMES_NAME) = rcppKMerStrings,
+            Rcpp::Named(PROXY_PROCESSED_SEQUENCES_NUM_NAME) = this->processedSequencesNum);
     }
 
 private:
@@ -64,10 +70,10 @@ private:
 
     int processedSequencesNum = 0;
 
-    inline void addKMerCountsInfo(int kMerIndex, int sequenceNum, int kMerCount) {
+    inline void addKMerCountsInfo(int kMerIndex, int sequenceNum, int kMerCount)
+    {
         sequenceNums.push_back(sequenceNum + processedSequencesNum);
         kMerIndices.push_back(kMerIndex);
         kMerCounts.push_back(kMerCount);
     }
-
 };

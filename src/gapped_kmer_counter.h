@@ -2,7 +2,6 @@
 
 #include "hash/polynomial_single_hasher.h"
 #include "hash/globals.h"
-#include "kmer_manager.h"
 #include "hash/prefix_sequence_polynomial_hasher.h"
 #include <vector>
 #include <memory>
@@ -13,8 +12,8 @@ namespace gappedKMers
 {
 
 	template <class encoded_sequence_t,
-			  template <typename key, typename value, typename...> class kmer_dictionary_t>
-	inline KMerManager<kmer_dictionary_t> count(
+			  class kmer_manager_t>
+	inline kmer_manager_t count(
 		const encoded_sequence_t &sequence,
 		const std::vector<int> &gaps,
 		std::size_t totalKMerSize,
@@ -45,13 +44,12 @@ namespace gappedKMers
 	// ------------------ IMPLEMENTATION ------------------
 
 	template <class encoded_sequence_t,
-			  template <typename key, typename value, typename...> class kmer_dictionary_t>
-	inline KMerManager<kmer_dictionary_t> count(
+			  class kmer_manager_t>
+	inline kmer_manager_t count(
 		const encoded_sequence_t &sequence,
 		const std::vector<int> &gaps,
 		std::size_t totalKMerSize,
 		bool isPositionalKMer,
-		bool withKMerCounts,
 		const std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs)
 	{
 		std::vector<std::pair<int, int>> contiguousIntervals = getContiguousIntervals(gaps);
@@ -60,7 +58,7 @@ namespace gappedKMers
 
 		auto notAllowedItemsPrefixCount = prepareNotAllowedItemsPrefixCount<encoded_sequence_t>(sequence);
 
-		KMerManager<kmer_dictionary_t> kMerManager(withKMerCounts);
+		kmer_manager_t kMerManager;
 		int lastSequenceIndex = static_cast<int>(sequence.size()) - totalKMerSize + 1;
 		for (int seqInd = 0; seqInd < lastSequenceIndex; ++seqInd)
 		{
@@ -112,8 +110,11 @@ namespace gappedKMers
 			std::begin(contiguousKMerIntervals),
 			std::end(contiguousKMerIntervals),
 			[&notAllowedItemsPrefixCount, &seqBegin](const std::pair<int, int> &interval) -> bool {
-				return (notAllowedItemsPrefixCount[seqBegin + interval.second] -
-				(seqBegin + interval.first == 0 ? 0 : notAllowedItemsPrefixCount[seqBegin + interval.first - 1])) == 0;
+				int notAllowedItems = (notAllowedItemsPrefixCount[seqBegin + interval.second] -
+									   ((seqBegin + interval.first) == 0
+											? 0
+											: notAllowedItemsPrefixCount[seqBegin + interval.first - 1]));
+				return notAllowedItems == 0;
 			});
 	}
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Rcpp.h>
+#include "kmer_manager.h"
 #include "user_params.h"
 #include "count_kmers_specific/count_kmers_specific.h"
 #include "dictionary/dictionaries.h"
@@ -23,10 +23,18 @@ inline Rcpp::List countKMersDictionaryDispatch(
 	const UserParams &userParams,
 	algorithm_params_t &algorithmParams);
 
+template <class sequences_t, class alphabet_t, class algorithm_params_t,
+		  template <typename key, typename value, typename...> class result_dictionary_t>
+inline Rcpp::List countKMersKMerManagerDispatch(
+	sequences_t &sequences,
+	alphabet_t &alphabet,
+	const UserParams &userParams,
+	algorithm_params_t &algorithmParams);
+
 template <class sequences_t,
 		  class alphabet_t,
 		  class algorithm_params_t,
-		  template <typename key, typename value, typename...> class kmer_dictionary_t>
+		  template <typename key, typename value, typename...> class result_dictionary_t>
 inline Rcpp::List countKMersParallelModeDispatch(
 	sequences_t &sequences,
 	alphabet_t &alphabet,
@@ -59,32 +67,38 @@ inline Rcpp::List countKMersDictionaryDispatch(
 {
 	if (userParams.kMerDictionaryName == dictionary::names::STL_UNORDERED_MAP)
 	{
-		return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::StlUnorderedMapWrapper>(
+		return countKMersKMerManagerDispatch<sequences_t, alphabet_t, algorithm_params_t,
+											 dictionary::StlUnorderedMapWrapper>(
 			sequences, alphabet, userParams, algorithmParams);
 	}
 	else if (userParams.kMerDictionaryName == dictionary::names::LINEAR_LIST)
 	{
-		return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::LinearListDictionary>(
+		return countKMersKMerManagerDispatch<sequences_t, alphabet_t, algorithm_params_t,
+											 dictionary::LinearListDictionary>(
 			sequences, alphabet, userParams, algorithmParams);
 	}
 	else if (userParams.kMerDictionaryName == dictionary::names::STL_ORDERED_MAP)
 	{
-		return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::StlOrderedMapWrapper>(
+		return countKMersKMerManagerDispatch<sequences_t, alphabet_t, algorithm_params_t,
+											 dictionary::StlOrderedMapWrapper>(
 			sequences, alphabet, userParams, algorithmParams);
 	}
 	else if (userParams.kMerDictionaryName == dictionary::names::EMILIB_HASH_MAP)
 	{
-		return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::EmilibHashMapWrapper>(
+		return countKMersKMerManagerDispatch<sequences_t, alphabet_t, algorithm_params_t,
+											 dictionary::EmilibHashMapWrapper>(
 			sequences, alphabet, userParams, algorithmParams);
 	}
 	else if (userParams.kMerDictionaryName == dictionary::names::MARTINUS_ROBIN_HOOD_DICTIONARY)
 	{
-		return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::MartinusRobinHoodDictionary>(
+		return countKMersKMerManagerDispatch<sequences_t, alphabet_t, algorithm_params_t,
+											 dictionary::MartinusRobinHoodDictionary>(
 			sequences, alphabet, userParams, algorithmParams);
 	}
 	else if (userParams.kMerDictionaryName == dictionary::names::FLAT_HASHMAP)
 	{
-		return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t, dictionary::FlatHashMapWrapper>(
+		return countKMersKMerManagerDispatch<sequences_t, alphabet_t, algorithm_params_t,
+											 dictionary::FlatHashMapWrapper>(
 			sequences, alphabet, userParams, algorithmParams);
 	}
 	else
@@ -95,7 +109,32 @@ inline Rcpp::List countKMersDictionaryDispatch(
 }
 
 template <class sequences_t, class alphabet_t, class algorithm_params_t,
-		  template <typename key, typename value, typename...> class kmer_dictionary_t>
+		  template <typename key, typename value, typename...> class result_dictionary_t>
+inline Rcpp::List countKMersKMerManagerDispatch(
+	sequences_t &sequences,
+	alphabet_t &alphabet,
+	const UserParams &userParams,
+	algorithm_params_t &algorithmParams)
+{
+	if (userParams.withKMerCounts)
+	{
+		return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t,
+			CountingKMerManager<result_dictionary_t>,
+			result_dictionary_t>(
+			sequences, alphabet, userParams, algorithmParams);
+	}
+	else
+	{
+		return countKMersParallelModeDispatch<sequences_t, alphabet_t, algorithm_params_t,
+			PresenceKMerManager<result_dictionary_t>,
+			result_dictionary_t>(
+			sequences, alphabet, userParams, algorithmParams);
+	}
+}
+
+template <class sequences_t, class alphabet_t, class algorithm_params_t,
+		  class kmer_manager_t,
+		  template <typename key, typename value, typename...> class result_dictionary_t>
 inline Rcpp::List countKMersParallelModeDispatch(
 	sequences_t &sequences,
 	alphabet_t &alphabet,
@@ -104,12 +143,12 @@ inline Rcpp::List countKMersParallelModeDispatch(
 {
 	if (userParams.parallelMode)
 	{
-		return parallelCountKMersSpecific<decltype(algorithmParams), kmer_dictionary_t>(
+		return parallelCountKMersSpecific<algorithm_params_t, kmer_manager_t, result_dictionary_t>(
 			sequences, alphabet, userParams, algorithmParams);
 	}
 	else
 	{
-		return sequentialCountKMersSpecific<decltype(algorithmParams), kmer_dictionary_t>(
+		return sequentialCountKMersSpecific<algorithm_params_t, kmer_manager_t, result_dictionary_t>(
 			sequences, alphabet, userParams, algorithmParams);
 	}
 }
