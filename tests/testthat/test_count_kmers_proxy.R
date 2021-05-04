@@ -303,7 +303,21 @@ test_that("count positional gapped 2-mers (gap == 1) for one-dimensional hash 1_
   expect_matrices_equal(as.matrix(res), expected_res)
 })
 
-test_that("count 3-mers without k-mer names", {
+test_that("count 3-mers without k-mer names, one sequence", {
+  sq <- c("AAAAAAAAA")
+  
+  res <- seqR::count_kmers(sequences = sq,
+                           alphabet = LETTERS,
+                           k = 3,
+                           with_kmer_names = FALSE)
+  
+  
+  
+  expect_true(is.null(res$dimnames[[2]]))
+  expect_equal(as.matrix(res), matrix(c(7)))
+})
+
+test_that("count 3-mers without k-mer names, multiple sequences", {
   sq <- c("AAAAAAAAA", "ACADSDSA", "AAABBB")
   
   res <- seqR::count_kmers(sequences = sq,
