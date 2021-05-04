@@ -2,7 +2,8 @@
 
 #include <string>
 
-namespace dictionary::names {
+namespace dictionary::names
+{
     inline const std::string STL_UNORDERED_MAP = "unordered_map";
     inline const std::string LINEAR_LIST = "linear_list";
     inline const std::string STL_ORDERED_MAP = "ordered_map";
