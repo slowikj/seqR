@@ -345,6 +345,24 @@ test_that("(string vector) count 2-mers with alphabet = all", {
   expect_matrices_equal(as.matrix(res), expected_res)
 })
 
+test_that("(string vector) count 2-mers with alphabet = all, batch size = 1", {
+  sq <- c("XXXX", "XAXA", "ABC")
+  
+  expected_res <- matrix(c(
+    3, 0, 0, 0, 0,
+    0, 2, 1, 0, 0,
+    0, 0, 0, 1, 1
+  ), byrow=TRUE, nrow=3)
+  colnames(expected_res) <- c("X.X_0", "X.A_0", "A.X_0", "A.B_0", "B.C_0")
+  
+  res <- seqR::count_kmers(sequences = sq,
+                           alphabet = "all",
+                           batch_size = 1,
+                           k = 2)
+  
+  expect_matrices_equal(as.matrix(res), expected_res)
+})
+
 test_that("(string list) count 2-mers with alphabet = all", {
   sq <- list(c("X", "X", "X", "X"),
              c("X", "A", "X", "A"),
@@ -359,6 +377,26 @@ test_that("(string list) count 2-mers with alphabet = all", {
   
   res <- seqR::count_kmers(sequences = sq,
                            alphabet = "all",
+                           k = 2)
+  
+  expect_matrices_equal(as.matrix(res), expected_res)
+})
+
+test_that("(string list) count 2-mers with alphabet = all, batch_size = 1", {
+  sq <- list(c("X", "X", "X", "X"),
+             c("X", "A", "X", "A"),
+             c("A", "B", "C"))
+  
+  expected_res <- matrix(c(
+    3, 0, 0, 0, 0,
+    0, 2, 1, 0, 0,
+    0, 0, 0, 1, 1
+  ), byrow=TRUE, nrow=3)
+  colnames(expected_res) <- c("X.X_0", "X.A_0", "A.X_0", "A.B_0", "B.C_0")
+  
+  res <- seqR::count_kmers(sequences = sq,
+                           alphabet = "all",
+                           batch_size = 1,
                            k = 2)
   
   expect_matrices_equal(as.matrix(res), expected_res)
