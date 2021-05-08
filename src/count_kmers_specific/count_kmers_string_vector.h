@@ -2,6 +2,7 @@
 
 #include <Rcpp.h>
 #include <vector>
+#include <algorithm>
 #include <limits>
 #include <string>
 #include <array>
@@ -22,7 +23,10 @@ public:
         Rcpp::StringVector sequences,
         std::size_t seqBegin,
         std::size_t seqEnd)
-        : _isAllowed(isAllowed)
+        : _isAllowed(isAllowed),
+          _allElementsAllowed(std::all_of(std::begin(isAllowed),
+                                          std::end(isAllowed),
+                                          [](bool x) { return x; }))
     {
         _encode(sequences, seqBegin, seqEnd);
     }
@@ -52,6 +56,11 @@ public:
         return _isAllowed[_encodedSequences[sequenceNum][offset]];
     }
 
+    inline bool areAllElementsAllowed() const
+    {
+        return _allElementsAllowed;
+    }
+
     inline std::size_t getSequenceSize(std::size_t sequenceNum) const
     {
         return _encodedSequences[sequenceNum].size();
@@ -64,6 +73,7 @@ public:
 
 private:
     const std::array<bool, CHAR_MAX> &_isAllowed;
+    bool _allElementsAllowed;
     std::vector<std::string> _encodedSequences;
 
     void _encode(Rcpp::StringVector sequences, std::size_t seqBegin, std::size_t seqEnd)
@@ -76,6 +86,25 @@ private:
     }
 };
 
+inline std::array<bool, CHAR_MAX> getIsAllowedArray(Rcpp::StringVector &alphabet)
+{
+    std::array<bool, CHAR_MAX> isAllowedElem;
+    if (alphabet[0] == config::ALPHABET_ALL_LABEL)
+    {
+        isAllowedElem.fill(true);
+    }
+    else
+    {
+        isAllowedElem.fill(false);
+        for (const auto &alphabetElem : alphabet)
+        {
+            char elem = Rcpp::as<char>(alphabetElem);
+            isAllowedElem[elem] = true;
+        }
+    }
+    return isAllowedElem;
+}
+
 template <class algorithm_params_t,
           class kmer_manager_t,
           template <typename key, typename value, class...> class result_dictionary_t>
@@ -84,12 +113,7 @@ inline Rcpp::List commonCountKMersSpecific(Rcpp::StringVector &sequences,
                                            const UserParams &userParams,
                                            algorithm_params_t &algorithmParams)
 {
-    std::array<bool, CHAR_MAX> isAllowedElem{};
-    for (const auto &alphabetElem : alphabet)
-    {
-        char elem = Rcpp::as<char>(alphabetElem);
-        isAllowedElem[elem] = true;
-    }
+    auto isAllowedElem = getIsAllowedArray(alphabet);
 
     auto batchFunc = [&](KMerCountingResult<result_dictionary_t> &kMerCountingResult,
                          std::size_t seqBegin, std::size_t seqEnd) {
