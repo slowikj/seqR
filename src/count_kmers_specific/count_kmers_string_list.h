@@ -7,8 +7,37 @@
 #include <array>
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
-#include "../encoded_sequence/raw_encoded_sequences_list.h"
+#include "./encoded_sequence/raw_encoded_sequences_list.h"
 #include "../common_config.h"
+
+template <class encoded_elem_t>
+inline void addNewElement(
+    const std::string &element,
+    std::vector<encoded_elem_t> &encodedItems,
+    std::unordered_map<std::string, encoded_elem_t> &alphabetEncoder,
+    std::vector<std::string> &alphabetDecoder,
+    encoded_elem_t invalidElemCode,
+    encoded_elem_t &lastCnt,
+    bool allElementsAllowed)
+{
+    if (alphabetEncoder.find(element) != alphabetEncoder.end())
+    {
+        encodedItems.push_back(alphabetEncoder[element]);
+    }
+    else
+    {
+        if (allElementsAllowed)
+        {
+            alphabetEncoder[element] = ++lastCnt;
+            alphabetDecoder.push_back(element);
+            encodedItems.push_back(lastCnt);
+        }
+        else
+        {
+            encodedItems.push_back(invalidElemCode);
+        }
+    }
+}
 
 template <class encoded_elem_t>
 inline RawEncodedSequencesList<std::string, encoded_elem_t> encode(
@@ -16,8 +45,10 @@ inline RawEncodedSequencesList<std::string, encoded_elem_t> encode(
     std::size_t seqBegin,
     std::size_t seqEnd,
     std::unordered_map<std::string, encoded_elem_t> &alphabetEncoder,
-    const std::vector<std::string> &alphabetDecoder,
-    encoded_elem_t invalidElemCode = 1)
+    std::vector<std::string> &alphabetDecoder,
+    encoded_elem_t invalidElemCode,
+    encoded_elem_t &lastCnt,
+    bool allElementsAllowed)
 {
     std::vector<encoded_elem_t> encodedItems{};
     std::vector<std::size_t> seqStarts{0};
@@ -28,14 +59,10 @@ inline RawEncodedSequencesList<std::string, encoded_elem_t> encode(
         for (const auto &seqElem : seq)
         {
             std::string cppElem = Rcpp::as<std::string>(seqElem);
-            if (alphabetEncoder.find(cppElem) == alphabetEncoder.end())
-            {
-                encodedItems.push_back(invalidElemCode);
-            }
-            else
-            {
-                encodedItems.push_back(alphabetEncoder[cppElem]);
-            }
+            addNewElement(cppElem,
+                          encodedItems,
+                          alphabetEncoder, alphabetDecoder,
+                          invalidElemCode, lastCnt, allElementsAllowed);
         }
         seqStarts.push_back(seqStarts.back() + seq.size());
     }
@@ -44,7 +71,8 @@ inline RawEncodedSequencesList<std::string, encoded_elem_t> encode(
         std::move(encodedItems),
         std::move(seqStarts),
         alphabetDecoder,
-        invalidElemCode);
+        invalidElemCode,
+        allElementsAllowed);
 }
 
 template <class algorithm_params_t,
@@ -58,18 +86,26 @@ inline Rcpp::List commonCountKMersSpecific(Rcpp::List &sequences,
     using encodedElemType = uint8_t;
     std::unordered_map<std::string, encodedElemType> alphabetEncoder{};
     std::vector<std::string> alphabetDecoder{"", ""};
-    encodedElemType cnt = 1;
-    for (const auto &elem : alphabet)
+    encodedElemType invalidElemCode = 1;
+    encodedElemType encodingCnt = 1;
+    bool allElementsAllowed = (alphabet[0] == config::ALPHABET_ALL_LABEL);
+    if (!allElementsAllowed)
     {
-        std::string cppElem = Rcpp::as<std::string>(elem);
-        alphabetEncoder[cppElem] = ++cnt;
-        alphabetDecoder.push_back(cppElem);
+        for (const auto &elem : alphabet)
+        {
+            std::string cppElem = Rcpp::as<std::string>(elem);
+            alphabetEncoder[cppElem] = ++encodingCnt;
+            alphabetDecoder.push_back(cppElem);
+        }
     }
 
     auto batchFunc = [&](KMerCountingResult<result_dictionary_t> &kMerCountingResult,
                          std::size_t seqBegin, std::size_t seqEnd) {
         KMerTaskConfig<RawEncodedSequencesList<std::string, encodedElemType>> kMerTaskConfig(
-            encode<encodedElemType>(sequences, seqBegin, seqEnd, alphabetEncoder, alphabetDecoder),
+            encode<encodedElemType>(sequences, seqBegin, seqEnd,
+                                    alphabetEncoder, alphabetDecoder,
+                                    invalidElemCode, encodingCnt,
+                                    allElementsAllowed),
             config::DEFAULT_KMER_ITEM_SEPARATOR,
             config::DEFAULT_KMER_SECTION_SEPARATOR,
             userParams);

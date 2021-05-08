@@ -45,6 +45,11 @@ public:
         return _encodedSequencesList.isAllowed(_sequenceIndex, index);
     }
 
+    inline bool areAllElementsAllowed() const
+    {
+        return _encodedSequencesList.areAllElementsAllowed();
+    }
+
 private:
     std::size_t _sequenceIndex;
     const sequences_list_t &_encodedSequencesList;

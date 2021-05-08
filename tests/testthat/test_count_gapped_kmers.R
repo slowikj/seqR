@@ -40,6 +40,15 @@ test_that("(string list) test one sequence with gapps (1,0) not positional", {
               with_kmer_counts=TRUE)
 })
 
+test_that("(string list) test one sequence with gapps (1,0) not positional, alphabet all", {
+  invoke_test(expected_res=to_matrix(c("b.b.a_1.0"=1, "a.a.b_1.0"=2, "a.b.a_1.0"=1)),
+              alphabet="all",
+              sequences=list(c("a", "a", "a", "b", "a", "b", "a")),
+              kmer_gaps=c(1, 0),
+              positional=FALSE,
+              with_kmer_counts=TRUE)
+})
+
 test_that("(string list) test 2 sequences with kmer_gaps (1,1) positional; some items are not from alphabet", {
   sequences <- list(
     c("a", "b", "c", "c", "as", "b", "c", "a", "a", "b", "a"),
@@ -83,6 +92,21 @@ test_that("(string vector) count non positional k-mers (0, 1)", {
   colnames(expected_res) <- c("A.A.A_0.1", "A.A.C_0.1")
   invoke_test(expected_res = expected_res,
               alphabet=c("A", "C"),
+              sequences = sequences,
+              kmer_gaps = c(0,1),
+              positional = FALSE,
+              with_kmer_counts=TRUE)
+})
+
+test_that("(string vector) count non positional k-mers (0, 1), alphabet all", {
+  sequences <- c("AAAAAC", "AAA", "AAAC")
+  expected_res <- matrix(c(
+    2, 1,
+    0, 0,
+    0, 1), nrow = 3, byrow=TRUE)
+  colnames(expected_res) <- c("A.A.A_0.1", "A.A.C_0.1")
+  invoke_test(expected_res = expected_res,
+              alphabet="all",
               sequences = sequences,
               kmer_gaps = c(0,1),
               positional = FALSE,
