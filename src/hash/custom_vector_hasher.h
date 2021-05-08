@@ -1,7 +1,5 @@
 #pragma once
 
-// [[Rcpp::depends(BH)]]
-#include <boost/functional/hash/hash.hpp>
 #include <functional>
 #include <algorithm>
 
@@ -11,7 +9,13 @@ namespace hashing::internal
     template <class elem_t>
     inline std::size_t computeHash(const std::vector<elem_t> &v)
     {
-        return boost::hash_range(v.begin(), v.end());
+        // implementation: boost::hash_range(v.begin(), v.end());
+        std::size_t res = 0;
+        for(const auto& elem: v)
+        {
+            res ^= elem + 0x9e3779b9 + (res << 6) + (res >> 2);
+        }
+        return res;
     }
 }
 
