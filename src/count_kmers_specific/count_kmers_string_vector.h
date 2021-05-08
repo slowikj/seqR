@@ -8,7 +8,7 @@
 #include <array>
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
-#include "../encoded_sequence/encoded_sequence_proxy.h"
+#include "./encoded_sequence/encoded_sequence_proxy.h"
 #include "../common_config.h"
 
 class EncodedStringVectorList

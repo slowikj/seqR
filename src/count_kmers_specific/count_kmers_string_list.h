@@ -7,7 +7,7 @@
 #include <array>
 #include "../kmer_counting_result.h"
 #include "../kmer_task_solver.h"
-#include "../encoded_sequence/raw_encoded_sequences_list.h"
+#include "./encoded_sequence/raw_encoded_sequences_list.h"
 #include "../common_config.h"
 
 template <class encoded_elem_t>
