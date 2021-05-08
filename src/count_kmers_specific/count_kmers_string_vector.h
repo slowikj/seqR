@@ -10,14 +10,14 @@
 #include "../encoded_sequence/encoded_sequence_proxy.h"
 #include "../common_config.h"
 
-class EncodedStringVector
+class EncodedStringVectorList
 {
 public:
     using init_elem_t = std::string;
     using encoded_elem_t = char;
-    using Entry = EncodedSequenceProxy<EncodedStringVector>;
+    using Entry = EncodedSequenceProxy<EncodedStringVectorList>;
 
-    EncodedStringVector(
+    EncodedStringVectorList(
         const std::array<bool, CHAR_MAX> &isAllowed,
         Rcpp::StringVector sequences,
         std::size_t seqBegin,
@@ -27,7 +27,7 @@ public:
         _encode(sequences, seqBegin, seqEnd);
     }
 
-    EncodedStringVector() = delete;
+    EncodedStringVectorList() = delete;
 
     inline Entry operator[](std::size_t sequenceNum) const
     {
@@ -93,12 +93,12 @@ inline Rcpp::List commonCountKMersSpecific(Rcpp::StringVector &sequences,
 
     auto batchFunc = [&](KMerCountingResult<result_dictionary_t> &kMerCountingResult,
                          std::size_t seqBegin, std::size_t seqEnd) {
-        KMerTaskConfig<EncodedStringVector> kMerTaskConfig(
-            EncodedStringVector(isAllowedElem, sequences, seqBegin, seqEnd),
+        KMerTaskConfig<EncodedStringVectorList> kMerTaskConfig(
+            EncodedStringVectorList(isAllowedElem, sequences, seqBegin, seqEnd),
             config::DEFAULT_KMER_ITEM_SEPARATOR,
             config::DEFAULT_KMER_SECTION_SEPARATOR,
             userParams);
-        updateKMerCountingResult<EncodedStringVector, kmer_manager_t, result_dictionary_t>(
+        updateKMerCountingResult<EncodedStringVectorList, kmer_manager_t, result_dictionary_t>(
             kMerTaskConfig,
             algorithmParams,
             kMerCountingResult);
