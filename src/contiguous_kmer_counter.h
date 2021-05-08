@@ -71,8 +71,16 @@ namespace contiguousKMer
 	inline std::vector<int> computeNotAllowedPositions(
 		const encoded_sequence_t &sequence)
 	{
+		int leftSentinel = -1;
+		int rightSentinel = sequence.size();
+
+		if (sequence.areAllElementsAllowed())
+		{
+			return {leftSentinel, rightSentinel};
+		}
+
 		std::vector<int> res;
-		res.push_back(-1); // left sentinel
+		res.push_back(leftSentinel);
 		for (int seq_i = 0; seq_i < sequence.size(); ++seq_i)
 		{
 			if (!sequence.isAllowed(seq_i))
@@ -80,7 +88,7 @@ namespace contiguousKMer
 				res.push_back(seq_i);
 			}
 		}
-		res.push_back(sequence.size()); // right sentinel
+		res.push_back(rightSentinel);
 		return res;
 	}
 
