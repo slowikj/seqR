@@ -2,7 +2,7 @@
 #' @export
 count_multimers <- function(sequences,
                             k_vector,
-                            alphabet,
+                            alphabet = "all",
                             positional_vector=rep(FALSE, length(k_vector)),
                             kmer_gaps_list=rep(list(c()), length(k_vector)),
                             with_kmer_counts = TRUE,

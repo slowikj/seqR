@@ -3,7 +3,7 @@
 #' @export
 count_kmers <- function(sequences,
                         k = length(kmer_gaps) + 1,
-                        alphabet,
+                        alphabet = "all",
                         positional = FALSE,
                         kmer_gaps = c(),
                         with_kmer_counts = TRUE,
