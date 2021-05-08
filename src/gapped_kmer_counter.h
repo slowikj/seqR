@@ -21,25 +21,11 @@ namespace gappedKMers
 		bool withKMerCounts,
 		const std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs);
 
-	template <class encoded_sequence_t>
-	inline std::vector<int> prepareNotAllowedItemsPrefixCount(
-		const encoded_sequence_t &sequence);
-
 	template <class vector_t>
 	inline std::vector<std::pair<int, int>> getContiguousIntervals(const vector_t &gaps);
 
-	inline bool isGappedKMerAllowed(
-		int seqBegin,
-		const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
-		const std::vector<int> &notAllowedItemsPrefixCount);
-
 	template <class encoded_sequence_t>
-	inline typename hashing::PrefixSequencePolynomialHasher<encoded_sequence_t>::hash_t
-	getGappedKMerHash(
-		int beginPosition,
-		const hashing::PrefixSequencePolynomialHasher<encoded_sequence_t> &seqHasher,
-		const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
-		bool isPositionalKMer);
+	class SequenceWrapper;
 
 	// ------------------ IMPLEMENTATION ------------------
 
@@ -52,19 +38,16 @@ namespace gappedKMers
 		bool isPositionalKMer,
 		const std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs)
 	{
+		SequenceWrapper<encoded_sequence_t> sequenceWrapper(sequence, hasherConfigs);
 		std::vector<std::pair<int, int>> contiguousIntervals = getContiguousIntervals(gaps);
-		hashing::PrefixSequencePolynomialHasher<encoded_sequence_t> sequenceHasher(
-			sequence, hasherConfigs);
-
-		auto notAllowedItemsPrefixCount = prepareNotAllowedItemsPrefixCount<encoded_sequence_t>(sequence);
 
 		kmer_manager_t kMerManager;
 		int lastSequenceIndex = static_cast<int>(sequence.size()) - totalKMerSize + 1;
 		for (int seqInd = 0; seqInd < lastSequenceIndex; ++seqInd)
 		{
-			if (isGappedKMerAllowed(seqInd, contiguousIntervals, notAllowedItemsPrefixCount))
+			if (sequenceWrapper.isGappedKMerAllowed(seqInd, contiguousIntervals))
 			{
-				auto hash = getGappedKMerHash(seqInd, sequenceHasher, contiguousIntervals, isPositionalKMer);
+				auto hash = sequenceWrapper.getGappedKMerHash(seqInd, contiguousIntervals, isPositionalKMer);
 				kMerManager.add(std::move(hash), seqInd);
 			}
 		}
@@ -101,50 +84,72 @@ namespace gappedKMers
 		return res;
 	}
 
-	inline bool isGappedKMerAllowed(
-		int seqBegin,
-		const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
-		const std::vector<int> &notAllowedItemsPrefixCount)
-	{
-		return std::all_of(
-			std::begin(contiguousKMerIntervals),
-			std::end(contiguousKMerIntervals),
-			[&notAllowedItemsPrefixCount, &seqBegin](const std::pair<int, int> &interval) -> bool {
-				int notAllowedItems = (notAllowedItemsPrefixCount[seqBegin + interval.second] -
-									   ((seqBegin + interval.first) == 0
-											? 0
-											: notAllowedItemsPrefixCount[seqBegin + interval.first - 1]));
-				return notAllowedItems == 0;
-			});
-	}
-
 	template <class encoded_sequence_t>
-	inline std::vector<int> prepareNotAllowedItemsPrefixCount(
-		const encoded_sequence_t &sequence)
+	class SequenceWrapper
 	{
-		std::vector<int> res;
-		res.reserve(sequence.size());
-		for (int i = 0; i < sequence.size(); ++i)
+	public:
+		SequenceWrapper(const encoded_sequence_t &sequence,
+						const std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs)
+			: _sequence(sequence),
+			  _hasherConfigs(hasherConfigs),
+			  _sequenceHasher(sequence, hasherConfigs)
 		{
-			bool isNotPresent = !sequence.isAllowed(i);
-			res[i] = (i == 0) ? isNotPresent : res[i - 1] + isNotPresent;
+			if (!sequence.areAllElementsAllowed())
+			{
+				_optionalNotAllowedPrefixCount = _prepareNotAllowedItemsPrefixCount(sequence);
+			}
 		}
-		return res;
-	}
 
-	template <class encoded_sequence_t>
-	inline typename hashing::PrefixSequencePolynomialHasher<encoded_sequence_t>::hash_t
-	getGappedKMerHash(
-		int beginPosition,
-		const hashing::PrefixSequencePolynomialHasher<encoded_sequence_t> &seqHasher,
-		const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
-		bool isPositionalKMer)
-	{
-		auto res = seqHasher.getHashForSeveralIntervals(beginPosition, contiguousKMerIntervals);
-		if (isPositionalKMer)
+		inline bool isGappedKMerAllowed(
+			int seqBegin,
+			const std::vector<std::pair<int, int>> &contiguousKMerIntervals) const
 		{
-			res.push_back(beginPosition);
+			return _sequence.areAllElementsAllowed() ||
+				std::all_of(
+				   std::begin(contiguousKMerIntervals),
+				   std::end(contiguousKMerIntervals),
+				   [this, &seqBegin]
+				   (const std::pair<int, int> &interval) -> bool {
+					   int notAllowedItems = (_optionalNotAllowedPrefixCount[seqBegin + interval.second] -
+											  ((seqBegin + interval.first) == 0
+												   ? 0
+												   : _optionalNotAllowedPrefixCount[seqBegin + interval.first - 1]));
+					   return notAllowedItems == 0;
+				   });
 		}
-		return res;
-	}
+
+		inline typename hashing::PrefixSequencePolynomialHasher<encoded_sequence_t>::hash_t
+		getGappedKMerHash(
+			int beginPosition,
+			const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
+			bool isPositionalKMer) const
+		{
+			auto res = _sequenceHasher.getHashForSeveralIntervals(beginPosition, contiguousKMerIntervals);
+			if (isPositionalKMer)
+			{
+				res.push_back(beginPosition);
+			}
+			return res;
+		}
+
+	private:
+		const encoded_sequence_t &_sequence;
+		const std::vector<hashing::PolynomialSingleHasherConfig> &_hasherConfigs;
+		hashing::PrefixSequencePolynomialHasher<encoded_sequence_t> _sequenceHasher;
+		std::vector<int> _optionalNotAllowedPrefixCount;
+
+		inline std::vector<int> _prepareNotAllowedItemsPrefixCount(
+			const encoded_sequence_t &sequence) const
+		{
+			std::vector<int> res;
+			res.reserve(sequence.size());
+			for (int i = 0; i < sequence.size(); ++i)
+			{
+				bool isNotPresent = !sequence.isAllowed(i);
+				res[i] = (i == 0) ? isNotPresent : res[i - 1] + isNotPresent;
+			}
+			return res;
+		}
+	};
+
 }
