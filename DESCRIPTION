@@ -26,8 +26,7 @@ Depends:
     R(>= 3.6)
 LinkingTo:
     Rcpp,
-    RcppParallel,
-    BH
+    RcppParallel
 SystemRequirements: c++17
 RoxygenNote: 7.1.0
 Encoding: UTF-8
