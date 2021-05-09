@@ -21,8 +21,8 @@ add_library(seqR
         src/contiguous_kmer_counter.h
         src/gapped_kmer_counter.h
         src/count_kmers_specific/count_kmers_string_list.h
-        src/encoded_sequence/encoded_sequence_proxy.h
-        src/encoded_sequence/raw_encoded_sequences_list.h
+        src/count_kmers_specific/encoded_sequence/encoded_sequence_proxy.h
+        src/count_kmers_specific/encoded_sequence/raw_encoded_sequences_list.h
         src/kmer_strings_creator.h
         src/dictionary/helper/iterator_wrapper.h
         src/dictionary/linear_list_dictionary.h
