@@ -23,3 +23,7 @@ NULL
     .Call('_seqR_count_gapped_kmers_string_list', PACKAGE = 'seqR', sq, alphabet, rcppParams)
 }
 
+.merge_kmer_results <- function(resLeft, resRight) {
+    .Call('_seqR_mergeKMerResults', PACKAGE = 'seqR', resLeft, resRight)
+}
+

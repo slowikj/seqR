@@ -13,13 +13,23 @@ inline std::tuple<
     Rcpp::StringVector,
     std::size_t>
 getParams(Rcpp::List res) {
-  Rcpp::List dimnames = res["dimnames"];
-  return {
-      res["i"],
-      res["j"],
-      res["v"],
-      dimnames[1],
-      res["nrow"]};
+  Rcpp::Nullable<Rcpp::List> dimnames = res["dimnames"];
+  if (dimnames.isNull()) {
+    return {
+        Rcpp::IntegerVector(),
+        Rcpp::IntegerVector(),
+        Rcpp::IntegerVector(),
+        Rcpp::StringVector(),
+        res["nrow"]};
+  } else {
+    Rcpp::List nonNullDimnames = dimnames.get();
+    return {
+        res["i"],
+        res["j"],
+        res["v"],
+        nonNullDimnames[1],
+        res["nrow"]};
+  }
 }
 
 inline std::tuple<
@@ -36,8 +46,8 @@ initResult(std::size_t entriesNum, std::size_t kMersNum) {
   };
 }
 
-// [[Rcpp::export(".merge_nonempty_kmer_results")]]
-Rcpp::List mergeNonEmptyKMerResults(
+// [[Rcpp::export(".merge_kmer_results")]]
+Rcpp::List mergeKMerResults(
     Rcpp::List resLeft,
     Rcpp::List resRight) {
   auto [leftRows, leftCols, leftCounts, leftKMers, leftNRow] = getParams(resLeft);
@@ -61,31 +71,27 @@ Rcpp::List mergeNonEmptyKMerResults(
       leftRows.size() + rightRows.size(),
       kMerMapper.size());
 
-  int leftRowsNum = leftRows.size();
-  for (std::size_t i = 0; i < leftRowsNum; ++i) {
+  for (std::size_t i = 0; i < leftRows.size(); ++i) {
     rows[i] = leftRows[i];
     cols[i] = leftCols[i];
     counts[i] = leftCounts[i];
   }
 
-  int rightRowsNum = rightRows.size();
-  for (std::size_t i = 0; i < rightRowsNum; ++i) {
-    rows[i + leftRowsNum] = rightRows[i] + leftRowsNum;
-    cols[i + leftRowsNum] = rightKMerIndexMapper[rightCols[i] - 1];
-    counts[i + leftRowsNum] = rightCounts[i];
+  for (std::size_t i = 0; i < rightRows.size(); ++i) {
+    int index = i + leftRows.size();
+    rows[index] = rightRows[i] + leftNRow;
+    cols[index] = rightKMerIndexMapper[rightCols[i] - 1];
+    counts[index] = rightCounts[i];
   }
 
-  for (const auto &mappedKMer : kMerMapper) {
+  for (const auto& mappedKMer : kMerMapper) {
     kMers[mappedKMer.second - 1] = mappedKMer.first;
   }
 
-  auto res = Rcpp::List::create(
+  return Rcpp::List::create(
       Rcpp::Named("i") = rows,
       Rcpp::Named("j") = cols,
       Rcpp::Named("v") = counts,
-      Rcpp::Named("nrow") = leftNRow + rightNRow,
-      Rcpp::Named("ncol") = kMers.size(),
-      Rcpp::Named("dimnames") = Rcpp::List::create(R_NilValue, kMers));
-  res.attr("class") = "simple_triplet_matrix";
-  return res;
+      Rcpp::Named("seqNum") = leftNRow + rightNRow,
+      Rcpp::Named("names") = kMers);
 }

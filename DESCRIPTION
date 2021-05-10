@@ -48,3 +48,4 @@ Collate:
     'count_kmers.R'
     'count_multimers.R'
     'package.R'
+    'result_rbind.R'
