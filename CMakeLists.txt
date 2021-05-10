@@ -46,4 +46,5 @@ add_library(seqR
         src/dictionary/dictionaries.h
         src/dictionary/flat_hashmap_wrapper.h
         src/proxy_count_gapped_kmers.cpp
-        src/proxy_count_contiguous_kmers.cpp)
+        src/proxy_count_contiguous_kmers.cpp
+        src/proxy_merge_kmer_results.cpp)
