@@ -76,6 +76,30 @@ test_that("merge two non empty results with no k-mer in common", {
   expect_matrices_equal(as.matrix(res), expected_res)
 })
 
+test_that("merge two same results", {
+  resL <- slam::simple_triplet_matrix(
+    i=c(1,3,1,1,2),
+    j=c(1,2,3,1,2),
+    v=c(1,2,3,4,5),
+    nrow=3,
+    dimnames = list(NULL, c("A.A_1", "B.A_1", "B.A.A_1.1"))
+  )
+  
+  resR <- resL
+  
+  expected_res <- slam::simple_triplet_matrix(
+    i = c(resL$i, resR$i + resL$nrow),
+    j = c(resL$j, resR$j),
+    v = c(resL$v, resR$v),
+    nrow=resL$nrow + resR$nrow,
+    dimnames = resL$dimnames
+  )
+  
+  res <- seqR::merge_kmer_results(resL, resR)
+  
+  expect_matrices_equal(as.matrix(res), expected_res)
+})
+
 test_that("merge two non empty results that have one k-mer in common", {
   resL <- slam::simple_triplet_matrix(
     i=c(1,3,1,1,2),
