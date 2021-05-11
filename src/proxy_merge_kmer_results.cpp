@@ -2,6 +2,7 @@
 
 #include <Rcpp.h>
 
+#include <algorithm>
 #include <tuple>
 
 #include "dictionary/emilib_hash_map_wrapper.h"
@@ -35,56 +36,68 @@ getParams(Rcpp::List res) {
 inline std::tuple<
     Rcpp::IntegerVector,
     Rcpp::IntegerVector,
-    Rcpp::IntegerVector,
-    Rcpp::StringVector>
-initResult(std::size_t entriesNum, std::size_t kMersNum) {
+    Rcpp::IntegerVector>
+initResultIntVectors(std::size_t entriesNum) {
   return {
       Rcpp::IntegerVector(entriesNum),  // i
       Rcpp::IntegerVector(entriesNum),  // j
-      Rcpp::IntegerVector(entriesNum),  // v
-      Rcpp::StringVector(kMersNum)      // kMers
+      Rcpp::IntegerVector(entriesNum)   // v
   };
 }
 
+inline std::size_t getIntVectorLength(Rcpp::List res) {
+  Rcpp::Nullable<Rcpp::IntegerVector> rows = res["i"];
+  if (rows.isNull()) {
+    return 0;
+  } else {
+    Rcpp::IntegerVector x = rows.get();
+    return x.size();
+  }
+}
+
+inline std::size_t computeResultIntVecLength(Rcpp::List resList) {
+  std::size_t res = 0;
+  for (int i = 0; i < resList.size(); ++i) {
+    Rcpp::List elem = resList[i];
+    res += getIntVectorLength(elem);
+  }
+  return res;
+}
+
 // [[Rcpp::export(".merge_kmer_results")]]
-Rcpp::List mergeKMerResults(
-    Rcpp::List resLeft,
-    Rcpp::List resRight) {
-  auto [leftRows, leftCols, leftCounts, leftKMers, leftNRow] = getParams(resLeft);
-  auto [rightRows, rightCols, rightCounts, rightKMers, rightNRow] = getParams(resRight);
-
+Rcpp::List mergeKMerResults(Rcpp::List resList) {
+  std::size_t processedSeqNum = 0;
+  std::size_t itemsOffset = 0;
+  auto [rows, cols, counts] = initResultIntVectors(computeResultIntVecLength(resList));
   dictionary::EmilibHashMapWrapper<Rcpp::String, uint32_t> kMerMapper;
-  for (std::size_t i = 0; i < leftKMers.size(); ++i) {
-    kMerMapper[leftKMers[i]] = i + 1;
-  }
 
-  std::vector<uint32_t> rightKMerIndexMapper(rightKMers.size());
-  for (std::size_t i = 0; i < rightKMers.size(); ++i) {
-    if (!kMerMapper.isPresent(rightKMers[i])) {
-      int newIndex = kMerMapper.size() + 1;
-      kMerMapper[rightKMers[i]] = newIndex;
+  for (std::size_t resList_i = 0; resList_i < resList.size(); ++resList_i) {
+    Rcpp::List currentRes = resList[resList_i];
+    auto [currentRows, currentCols, currentCounts, currentKMers, currentNRow] = getParams(currentRes);
+
+    std::vector<uint32_t> colMapper(currentKMers.size());
+    for (int i = 0; i < currentKMers.size(); ++i) {
+      auto newKMer = currentKMers[i];
+      if (!kMerMapper.isPresent(newKMer)) {
+        uint32_t newIndex = kMerMapper.size() + 1;
+        kMerMapper[newKMer] = newIndex;
+      }
+      colMapper[i] = kMerMapper[newKMer];
     }
-    rightKMerIndexMapper[i] = kMerMapper[rightKMers[i]];
+
+    for (int i = 0; i < currentRows.size(); ++i) {
+      std::size_t shiftedIndex = i + itemsOffset;
+      rows[shiftedIndex] = currentRows[i] + processedSeqNum;
+      cols[shiftedIndex] = colMapper[currentCols[i] - 1];
+      counts[shiftedIndex] = currentCounts[i];
+    }
+
+    processedSeqNum += currentNRow;
+    itemsOffset += currentRows.size();
   }
 
-  auto [rows, cols, counts, kMers] = initResult(
-      leftRows.size() + rightRows.size(),
-      kMerMapper.size());
-
-  for (std::size_t i = 0; i < leftRows.size(); ++i) {
-    rows[i] = leftRows[i];
-    cols[i] = leftCols[i];
-    counts[i] = leftCounts[i];
-  }
-
-  for (std::size_t i = 0; i < rightRows.size(); ++i) {
-    int index = i + leftRows.size();
-    rows[index] = rightRows[i] + leftNRow;
-    cols[index] = rightKMerIndexMapper[rightCols[i] - 1];
-    counts[index] = rightCounts[i];
-  }
-
-  for (const auto& mappedKMer : kMerMapper) {
+  Rcpp::StringVector kMers(kMerMapper.size());
+  for (const auto &mappedKMer : kMerMapper) {
     kMers[mappedKMer.second - 1] = mappedKMer.first;
   }
 
@@ -92,6 +105,6 @@ Rcpp::List mergeKMerResults(
       Rcpp::Named("i") = rows,
       Rcpp::Named("j") = cols,
       Rcpp::Named("v") = counts,
-      Rcpp::Named("seqNum") = leftNRow + rightNRow,
+      Rcpp::Named("seqNum") = processedSeqNum,
       Rcpp::Named("names") = kMers);
 }

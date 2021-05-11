@@ -58,14 +58,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // mergeKMerResults
-Rcpp::List mergeKMerResults(Rcpp::List resLeft, Rcpp::List resRight);
-RcppExport SEXP _seqR_mergeKMerResults(SEXP resLeftSEXP, SEXP resRightSEXP) {
+Rcpp::List mergeKMerResults(Rcpp::List resList);
+RcppExport SEXP _seqR_mergeKMerResults(SEXP resListSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::List >::type resLeft(resLeftSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type resRight(resRightSEXP);
-    rcpp_result_gen = Rcpp::wrap(mergeKMerResults(resLeft, resRight));
+    Rcpp::traits::input_parameter< Rcpp::List >::type resList(resListSEXP);
+    rcpp_result_gen = Rcpp::wrap(mergeKMerResults(resList));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -75,7 +74,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_seqR_count_contiguous_kmers_string_list", (DL_FUNC) &_seqR_count_contiguous_kmers_string_list, 3},
     {"_seqR_count_gapped_kmers_string_vector", (DL_FUNC) &_seqR_count_gapped_kmers_string_vector, 3},
     {"_seqR_count_gapped_kmers_string_list", (DL_FUNC) &_seqR_count_gapped_kmers_string_list, 3},
-    {"_seqR_mergeKMerResults", (DL_FUNC) &_seqR_mergeKMerResults, 2},
+    {"_seqR_mergeKMerResults", (DL_FUNC) &_seqR_mergeKMerResults, 1},
     {NULL, NULL, 0}
 };
 
