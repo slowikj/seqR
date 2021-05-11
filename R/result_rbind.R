@@ -1,5 +1,5 @@
 #' @include util.R
 #' @export
-merge_kmer_results <- function(...) {
-  .convert_seqR_list_to_slam_matrix(.cpp_merge_kmer_results(list(...)))
+rbind.seqR_simple_triplet_matrix <- function(...) {
+  .convert_seqR_list_to_custom_matrix(.cpp_merge_kmer_results(list(...)))
 }

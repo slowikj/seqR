@@ -18,3 +18,13 @@
     )
   }
 }
+
+.convert_seqR_list_to_custom_matrix <- function(seqR_list) {
+  r <- .convert_seqR_list_to_slam_matrix(seqR_list)
+  class(r) <- c("seqR_simple_triplet_matrix", class(r))
+  r
+}
+
+is.seqR_simple_triplet_matrix <- function(x) {
+  inherits(x, "seqR_simple_triplet_matrix")
+}

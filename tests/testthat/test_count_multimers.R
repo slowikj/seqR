@@ -12,6 +12,11 @@ invoke_test <- function(expected_res,
   expect_matrices_equal(expected_res, as.matrix(triplet_matrix_res))
 }
 
+test_that("check the result type", {
+  res <- seqR::count_multimers("AAAAAAA", k_vector=c(1,2))
+  expect_s3_class(res, "seqR_simple_triplet_matrix")
+})
+
 test_that("(string vector) count 2-mers and 3-mers for list input (AC){100}", {
   expected_res <- matrix(c(
     100, 99, 99, 99

@@ -25,7 +25,7 @@ count_multimers <- function(sequences,
   }
   
   configs_num <- length(k_vector)
-  do.call(cbind, lapply(1:configs_num, function(index) {
+  r <- do.call(cbind, lapply(1:configs_num, function(index) {
     if(verbose) {
       print(paste0("Processing sequences for ", index, " config"))
     }
@@ -44,4 +44,6 @@ count_multimers <- function(sequences,
       verbose = verbose,
       parallel_mode = parallel_mode)
   }))
+  class(r) <- c("seqR_simple_triplet_matrix", class(r))
+  r
 }
