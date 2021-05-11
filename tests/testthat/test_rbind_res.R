@@ -9,6 +9,14 @@ test_that("merge two empty results", {
   expect_matrices_equal(as.matrix(res), matrix(nrow=8, ncol=0))
 })
 
+test_that("merge four empty results", {
+  a <- slam::as.simple_triplet_matrix(matrix(ncol=0, nrow=3))
+  b <- slam::as.simple_triplet_matrix(matrix(ncol=0, nrow=5))
+  
+  res <- seqR::merge_kmer_results(a, a, b, a)
+  expect_matrices_equal(as.matrix(res), matrix(nrow=14, ncol=0))
+})
+
 test_that("merge empty and non empty results", {
   resL <- slam::as.simple_triplet_matrix(matrix(ncol=0, nrow=4))
   resR <- slam::simple_triplet_matrix(
@@ -25,6 +33,30 @@ test_that("merge empty and non empty results", {
   expected_res$i <- expected_res$i + 4;
   expected_res$nrow <- 7
 
+  expect_matrices_equal(as.matrix(res), expected_res)
+})
+
+test_that("merge one non-empty and several empty results", {
+  non_empty_res <- slam::simple_triplet_matrix(
+    i=c(1,1,1,1,2),
+    j=c(1,2,3,1,2),
+    v=c(1,2,3,4,5),
+    nrow=3,
+    dimnames = list(NULL, c("A.A_1", "B.A_1", "B.A.A_1.1"))
+  )
+  
+  empty_res <- slam::as.simple_triplet_matrix(matrix(ncol=0, nrow=5))
+  
+  res <- seqR::merge_kmer_results(non_empty_res, empty_res, empty_res)
+  
+  expected_res <- slam::simple_triplet_matrix(
+    i=c(1,1,1,1,2),
+    j=c(1,2,3,1,2),
+    v=c(1,2,3,4,5),
+    nrow=13,
+    dimnames = list(NULL, c("A.A_1", "B.A_1", "B.A.A_1.1"))
+  )
+  
   expect_matrices_equal(as.matrix(res), expected_res)
 })
 
