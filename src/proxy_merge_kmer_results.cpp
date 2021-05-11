@@ -56,12 +56,12 @@ inline std::size_t getIntVectorLength(Rcpp::List res) {
 }
 
 inline std::size_t computeResultIntVecLength(Rcpp::List resList) {
-  std::size_t res = 0;
+  std::size_t resultLength = 0;
   for (int i = 0; i < resList.size(); ++i) {
     Rcpp::List elem = resList[i];
-    res += getIntVectorLength(elem);
+    resultLength += getIntVectorLength(elem);
   }
-  return res;
+  return resultLength;
 }
 
 // [[Rcpp::export(".cpp_merge_kmer_results")]]
