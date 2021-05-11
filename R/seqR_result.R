@@ -1,3 +1,19 @@
+#' @export
+rbind.seqR_simple_triplet_matrix <- function(...) {
+  .convert_seqR_list_to_custom_matrix(.cpp_merge_kmer_results(list(...)))
+}
+
+#' @export
+is.seqR_simple_triplet_matrix <- function(x) {
+  inherits(x, "seqR_simple_triplet_matrix")
+}
+
+.convert_seqR_list_to_custom_matrix <- function(seqR_list) {
+  r <- .convert_seqR_list_to_slam_matrix(seqR_list)
+  class(r) <- c("seqR_simple_triplet_matrix", class(r))
+  r
+}
+
 .convert_seqR_list_to_slam_matrix <- function(seqR_list) {
   if (length(seqR_list$i) == 0) {
     slam::as.simple_triplet_matrix(matrix(nrow = seqR_list$seqNum,
@@ -19,12 +35,4 @@
   }
 }
 
-.convert_seqR_list_to_custom_matrix <- function(seqR_list) {
-  r <- .convert_seqR_list_to_slam_matrix(seqR_list)
-  class(r) <- c("seqR_simple_triplet_matrix", class(r))
-  r
-}
 
-is.seqR_simple_triplet_matrix <- function(x) {
-  inherits(x, "seqR_simple_triplet_matrix")
-}

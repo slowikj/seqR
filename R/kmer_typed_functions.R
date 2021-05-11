@@ -1,5 +1,5 @@
 #' @include validators.R
-#' @include util.R
+#' @include seqR_result.R
 
 .count_contiguous_kmers_string_vector_proxy <- function(sequences, params) {
   .invoke_kmer_function(rcpp_counting_function=.cpp_count_contiguous_kmers_string_vector,
