@@ -64,7 +64,7 @@ inline std::size_t computeResultIntVecLength(Rcpp::List resList) {
   return res;
 }
 
-// [[Rcpp::export(".merge_kmer_results")]]
+// [[Rcpp::export(".cpp_merge_kmer_results")]]
 Rcpp::List mergeKMerResults(Rcpp::List resList) {
   std::size_t processedSeqNum = 0;
   std::size_t itemsOffset = 0;

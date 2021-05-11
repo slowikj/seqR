@@ -24,7 +24,7 @@ inline Rcpp::List countGappedKMers(
       sequences, alphabet, userParams, hasherConfigs);
 }
 
-// [[Rcpp::export(".count_gapped_kmers_string_vector")]]
+// [[Rcpp::export(".cpp_count_gapped_kmers_string_vector")]]
 Rcpp::List count_gapped_kmers_string_vector(
     Rcpp::StringVector &sq,
     Rcpp::StringVector &alphabet,
@@ -32,7 +32,7 @@ Rcpp::List count_gapped_kmers_string_vector(
   return countGappedKMers(sq, alphabet, rcppParams);
 }
 
-// [[Rcpp::export(".count_gapped_kmers_string_list")]]
+// [[Rcpp::export(".cpp_count_gapped_kmers_string_list")]]
 Rcpp::List count_gapped_kmers_string_list(
     Rcpp::List &sq,
     Rcpp::StringVector &alphabet,

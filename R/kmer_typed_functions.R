@@ -2,28 +2,28 @@
 #' @include util.R
 
 .count_contiguous_kmers_string_vector_proxy <- function(sequences, params) {
-  .invoke_kmer_function(rcpp_counting_function=.count_contiguous_kmers_string_vector,
+  .invoke_kmer_function(rcpp_counting_function=.cpp_count_contiguous_kmers_string_vector,
                         alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)
 }
 
 .count_contiguous_kmers_string_list_proxy <- function(sequences, params) {
-  .invoke_kmer_function(rcpp_counting_function=.count_contiguous_kmers_string_list,
+  .invoke_kmer_function(rcpp_counting_function=.cpp_count_contiguous_kmers_string_list,
                         alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)
 }
 
 .count_gapped_kmers_string_vector_proxy <- function(sequences, params) {
-  .invoke_kmer_function(rcpp_counting_function=.count_gapped_kmers_string_vector,
+  .invoke_kmer_function(rcpp_counting_function=.cpp_count_gapped_kmers_string_vector,
                         alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)
 }
 
 .count_gapped_kmers_string_list_proxy <- function(sequences, params) {
-  .invoke_kmer_function(rcpp_counting_function=.count_gapped_kmers_string_list,
+  .invoke_kmer_function(rcpp_counting_function=.cpp_count_gapped_kmers_string_list,
                         alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)
