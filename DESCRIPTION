@@ -1,13 +1,13 @@
 Package: seqR
 Type: Package
 Title: k-mer counting package
-Version: 0.4.0
-Date: 2020-04-19
+Version: 0.5.0
+Date: 2021-05-12
 Authors@R: c(
     person(given = "Jadwiga",
            family = "Słowik",
            role = c("aut", "cre"),
-           email = "jadwis.slowik@gmail.com"),
+           email = "jadwiga.slowik5@gmail.com"),
     person(given = "Piotr",
            family = "Olesiejuk",
            role = c("ctb"),

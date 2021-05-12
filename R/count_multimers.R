@@ -44,6 +44,5 @@ count_multimers <- function(sequences,
       verbose = verbose,
       parallel_mode = parallel_mode)
   }))
-  class(r) <- c("seqR_simple_triplet_matrix", class(r))
   r
 }
