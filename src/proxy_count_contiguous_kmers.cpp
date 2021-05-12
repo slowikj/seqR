@@ -35,7 +35,7 @@ Rcpp::List countContiguousKMers(
       sequences, alphabet, userParams, algorithmParams);
 }
 
-// [[Rcpp::export(".count_contiguous_kmers_string_vector")]]
+// [[Rcpp::export(".cpp_count_contiguous_kmers_string_vector")]]
 Rcpp::List count_contiguous_kmers_string_vector(
     Rcpp::StringVector &sq,
     Rcpp::StringVector &alphabet,
@@ -43,7 +43,7 @@ Rcpp::List count_contiguous_kmers_string_vector(
   return countContiguousKMers(sq, alphabet, rcppParams);
 }
 
-// [[Rcpp::export(".count_contiguous_kmers_string_list")]]
+// [[Rcpp::export(".cpp_count_contiguous_kmers_string_list")]]
 Rcpp::List count_contiguous_kmers_string_list(
     Rcpp::List &sq,
     Rcpp::StringVector &alphabet,

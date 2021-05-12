@@ -129,6 +129,11 @@ test_that("provided batch size param is NULL", {
 
 # COUNTING ----
 
+test_that("check the result type", {
+  res <- seqR::count_kmers("AAAAAAA")
+  expect_s3_class(res, "seqR_simple_triplet_matrix")
+})
+
 test_that("test list input sequences for gapped k-mers", {
   sq <- c("AAAA", "AAACA")
   expected_res <- matrix(c(
