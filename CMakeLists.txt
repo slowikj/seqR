@@ -38,6 +38,5 @@ add_library(seqR
         inst/thirdparty/dictionaries/robin_hood_martinus.h
         src/dictionary/martinus_robin_hood_dictionary.h
         src/dictionary/dictionaries.h
-        src/proxy_count_gapped_kmers.cpp
-        src/proxy_count_contiguous_kmers.cpp
-        src/proxy_merge_kmer_results.cpp)
+        src/merge_kmer_results.h
+        src/proxy.cpp)

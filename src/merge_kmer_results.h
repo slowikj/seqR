@@ -1,12 +1,10 @@
-// [[Rcpp::plugins("cpp17")]]
+#pragma once
 
 #include <Rcpp.h>
 
-#include <algorithm>
 #include <tuple>
 
-#include "dictionary/martinus_robin_hood_dictionary.h"
-
+namespace resultsMerging {
 inline std::tuple<
     Rcpp::IntegerVector,
     Rcpp::IntegerVector,
@@ -64,8 +62,7 @@ inline std::size_t computeResultIntVecLength(Rcpp::List resList) {
   return resultLength;
 }
 
-// [[Rcpp::export(".cpp_merge_kmer_results")]]
-Rcpp::List mergeKMerResults(Rcpp::List resList) {
+inline Rcpp::List mergeKMerResults(Rcpp::List resList) {
   std::size_t processedSeqNum = 0;
   std::size_t itemsOffset = 0;
   auto [rows, cols, counts] = initResultIntVectors(computeResultIntVecLength(resList));
@@ -108,3 +105,4 @@ Rcpp::List mergeKMerResults(Rcpp::List resList) {
       Rcpp::Named("seqNum") = processedSeqNum,
       Rcpp::Named("names") = kMers);
 }
+}  // namespace resultsMerging
