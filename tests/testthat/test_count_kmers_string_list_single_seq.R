@@ -5,11 +5,9 @@ invoke_test <- function(fun, expected_res, seq, ...) {
   expected_res <- to_matrix(expected_res)
   
   res <- seqR::count_kmers(sequences=seq,
-                           kmer_dictionary_name="unordered_map",
                            batch_size=200,
                            hash_dim=2,
                            verbose=FALSE,
-                           parallel_mode=TRUE,
                            ...)
   
   expect_matrices_equal(as.matrix(res), expected_res)

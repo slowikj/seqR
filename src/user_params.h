@@ -11,11 +11,9 @@ struct UserParams {
   bool positional;
   bool withKMerCounts;
   bool withKMerNames;
-  const std::string kMerDictionaryName;
   int batchSize;
   int hashDim;
   bool verbose;
-  bool parallelMode;
 
   static UserParams createForContiguous(Rcpp::Environment &params) {
     UserParams res(params);
@@ -35,10 +33,8 @@ struct UserParams {
         positional(Rcpp::as<bool>(params.get("positional"))),
         withKMerCounts(Rcpp::as<bool>(params.get("with_kmer_counts"))),
         withKMerNames(Rcpp::as<bool>(params.get("with_kmer_names"))),
-        kMerDictionaryName(Rcpp::as<std::string>(params.get("kmer_dictionary_name"))),
         batchSize(Rcpp::as<int>(params.get("batch_size"))),
         hashDim(Rcpp::as<int>(params.get("hash_dim"))),
-        verbose(Rcpp::as<bool>(params.get("verbose"))),
-        parallelMode(Rcpp::as<bool>(params.get("parallel_mode"))) {
+        verbose(Rcpp::as<bool>(params.get("verbose"))) {
   }
 };

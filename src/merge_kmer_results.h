@@ -1,12 +1,10 @@
-// [[Rcpp::plugins("cpp17")]]
+#pragma once
 
 #include <Rcpp.h>
 
-#include <algorithm>
 #include <tuple>
 
-#include "dictionary/emilib_hash_map_wrapper.h"
-
+namespace resultsMerging {
 inline std::tuple<
     Rcpp::IntegerVector,
     Rcpp::IntegerVector,
@@ -64,12 +62,11 @@ inline std::size_t computeResultIntVecLength(Rcpp::List resList) {
   return resultLength;
 }
 
-// [[Rcpp::export(".cpp_merge_kmer_results")]]
-Rcpp::List mergeKMerResults(Rcpp::List resList) {
+inline Rcpp::List mergeKMerResults(Rcpp::List resList) {
   std::size_t processedSeqNum = 0;
   std::size_t itemsOffset = 0;
   auto [rows, cols, counts] = initResultIntVectors(computeResultIntVecLength(resList));
-  dictionary::EmilibHashMapWrapper<Rcpp::String, uint32_t> kMerMapper;
+  dictionary::MartinusRobinHoodDictionary<Rcpp::String, uint32_t> kMerMapper;
 
   for (std::size_t resList_i = 0; resList_i < resList.size(); ++resList_i) {
     Rcpp::List currentRes = resList[resList_i];
@@ -108,3 +105,4 @@ Rcpp::List mergeKMerResults(Rcpp::List resList) {
       Rcpp::Named("seqNum") = processedSeqNum,
       Rcpp::Named("names") = kMers);
 }
+}  // namespace resultsMerging

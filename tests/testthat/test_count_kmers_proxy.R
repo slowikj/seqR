@@ -3,7 +3,7 @@ source("utils.R")
 
 test_that("null alphabet throws an error", {
   expect_error(seqR::count_kmers(sequences=list(c("a", "a", "a")),
-                                alphabet=c()),
+                                 alphabet=c()),
                "alphabet param is empty")
 })
 
@@ -69,61 +69,53 @@ test_that("kmer gaps length larger than k-1 generates an error", {
                "the length of kmer_gaps vector should be at most k-1")
 })
 
-test_that("unsupported kmer dictionary type raises an error", {
-  expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                alphabet=c("A"),
-                                k=2,
-                                kmer_dictionary_name = "unknown"),
-               "unsupported k-mer dictionary name: unknown")
-})
-
 # BATCH SIZE ----
 
 test_that("provided batch size param is a negative integer", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                alphabet=c("A"),
-                                k=1,
-                                batch_size = -2),
+                                 alphabet=c("A"),
+                                 k=1,
+                                 batch_size = -2),
                "batch size field must be a positive integer number")
 })
 
 test_that("provided batch size param is a positive non integer", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                alphabet=c("A"),
-                                k=1,
-                                batch_size = 2.2),
+                                 alphabet=c("A"),
+                                 k=1,
+                                 batch_size = 2.2),
                "batch size field must be a positive integer number")
 })
 
 test_that("provided batch size param is zero", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                alphabet=c("A"),
-                                k=1,
-                                batch_size = 0),
+                                 alphabet=c("A"),
+                                 k=1,
+                                 batch_size = 0),
                "batch size field must be a positive integer number")
 })
 
 test_that("provided batch size param is a string", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                alphabet=c("A"),
-                                k=1,
-                                batch_size = "aaaa"),
+                                 alphabet=c("A"),
+                                 k=1,
+                                 batch_size = "aaaa"),
                "batch size field must be a positive integer number")
 })
 
 test_that("provided batch size param is an integer vector", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                alphabet=c("A"),
-                                k=1,
-                                batch_size = c(1,2,3)),
+                                 alphabet=c("A"),
+                                 k=1,
+                                 batch_size = c(1,2,3)),
                "batch size field must be a positive integer number")
 })
 
 test_that("provided batch size param is NULL", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                alphabet=c("A"),
-                                k=1,
-                                batch_size = NULL),
+                                 alphabet=c("A"),
+                                 k=1,
+                                 batch_size = NULL),
                "batch size field must be a positive integer number")
 })
 
@@ -142,11 +134,10 @@ test_that("test list input sequences for gapped k-mers", {
   colnames(expected_res) <- c("A.A_1", "A.C_1")
   
   res <- seqR::count_kmers(sequences=sq,
-                          k=2,
-                          alphabet=c("A", "C"),
-                          positional=FALSE,
-                          kmer_gaps=c(1),
-                          kmer_dictionary_name = "unordered_map")
+                           k=2,
+                           alphabet=c("A", "C"),
+                           positional=FALSE,
+                           kmer_gaps=c(1))
   
   expect_equal(expected_res, as.matrix(res))
 })
@@ -155,11 +146,10 @@ test_that("test the case when there is 0 found k-mers", {
   sq <-c("AAAAAA", "AAACA")
   expected_res <- matrix(nrow=2, ncol=0)
   res <- seqR::count_kmers(sequences=sq,
-                          k=100,
-                          alphabet=c("A"),
-                          positional=FALSE,
-                          kmer_gaps=c(1),
-                          kmer_dictionary_name="unordered_map")
+                           k=100,
+                           alphabet=c("A"),
+                           positional=FALSE,
+                           kmer_gaps=c(1))
   
   expect_equal(expected_res, as.matrix(res))
 })
@@ -176,12 +166,11 @@ run_batch_test <- function(batch_size) {
   ), nrow=4, byrow=TRUE)
   colnames(expected_res) <- c("A.A.A_0.0", "A.A.B_0.0", "B.B.B_0.0")
   res <- seqR::count_kmers(sequences = sq,
-                          alphabet=c("A", "B"),
-                          k=3,
-                          positional=FALSE,
-                          with_kmer_counts=TRUE,
-                          kmer_dictionary_name="linear_list",
-                          batch_size = batch_size)
+                           alphabet=c("A", "B"),
+                           k=3,
+                           positional=FALSE,
+                           with_kmer_counts=TRUE,
+                           batch_size = batch_size)
   expect_equal(expected_res, as.matrix(res))
 }
 
@@ -212,7 +201,6 @@ test_that("the last input sequence does not contain any specified k-mer", {
                            k=5,
                            positional=FALSE,
                            with_kmer_counts = FALSE,
-                           kmer_dictionary_name = "unordered_map",
                            batch_size = 100)
   
   expect_matrices_equal(as.matrix(res), expected_res)
@@ -233,7 +221,6 @@ test_that("more than one last input sequences do not contain any specified k-mer
                            k=5,
                            positional=FALSE,
                            with_kmer_counts = FALSE,
-                           kmer_dictionary_name = "unordered_map",
                            batch_size = 100)
   
   expect_matrices_equal(as.matrix(res), expected_res)
@@ -254,7 +241,6 @@ test_that("some input sequences do not contain any specified k-mer", {
                            k=5,
                            positional=FALSE,
                            with_kmer_counts = FALSE,
-                           kmer_dictionary_name = "unordered_map",
                            batch_size = 100)
   
   expect_matrices_equal(as.matrix(res), expected_res)
@@ -268,7 +254,6 @@ test_that("expect simple_triplet_matrix as an output", {
                            k=3,
                            positional=FALSE,
                            with_kmer_counts=TRUE,
-                           kmer_dictionary_name="linear_list",
                            batch_size = 100)
   
   expect_is(res, "simple_triplet_matrix")
@@ -304,7 +289,7 @@ test_that("count positional gapped 2-mers (gap == 1) for one-dimensional hash 1_
                            kmer_gaps = c(1),
                            positional = TRUE,
                            hash_dim = 1)
-
+  
   expect_matrices_equal(as.matrix(res), expected_res)
 })
 

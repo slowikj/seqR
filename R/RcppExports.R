@@ -24,6 +24,6 @@ NULL
 }
 
 .cpp_merge_kmer_results <- function(resList) {
-    .Call('_seqR_mergeKMerResults', PACKAGE = 'seqR', resList)
+    .Call('_seqR_merge_kmer_results', PACKAGE = 'seqR', resList)
 }
 

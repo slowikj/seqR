@@ -36,11 +36,7 @@ inline void generate(
     const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
     std::vector<std::string> &resultStrings) {
   KMerStringsCreatorWorker<encoded_sequences_list_t> worker(indexedKMers, kMerTaskConfig, resultStrings);
-  if (kMerTaskConfig.userParams.parallelMode) {
-    RcppParallel::parallelFor(0, indexedKMers.size(), worker);
-  } else {
-    worker(0, indexedKMers.size());
-  }
+  RcppParallel::parallelFor(0, indexedKMers.size(), worker);
 }
 
 class KMerPositionInfo {
