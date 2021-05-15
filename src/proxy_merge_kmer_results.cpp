@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <tuple>
 
-#include "dictionary/emilib_hash_map_wrapper.h"
+#include "dictionary/martinus_robin_hood_dictionary.h"
 
 inline std::tuple<
     Rcpp::IntegerVector,
@@ -69,7 +69,7 @@ Rcpp::List mergeKMerResults(Rcpp::List resList) {
   std::size_t processedSeqNum = 0;
   std::size_t itemsOffset = 0;
   auto [rows, cols, counts] = initResultIntVectors(computeResultIntVecLength(resList));
-  dictionary::EmilibHashMapWrapper<Rcpp::String, uint32_t> kMerMapper;
+  dictionary::MartinusRobinHoodDictionary<Rcpp::String, uint32_t> kMerMapper;
 
   for (std::size_t resList_i = 0; resList_i < resList.size(); ++resList_i) {
     Rcpp::List currentRes = resList[resList_i];

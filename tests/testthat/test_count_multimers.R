@@ -3,8 +3,7 @@ source("utils.R")
 
 invoke_test <- function(expected_res,
                         ...) {
-  triplet_matrix_res <- seqR::count_multimers(kmer_dictionary_name="unordered_map",
-                                              batch_size=200,
+  triplet_matrix_res <- seqR::count_multimers(batch_size=200,
                                               hash_dim=2,
                                               verbose=FALSE,
                                               parallel_mode=TRUE,

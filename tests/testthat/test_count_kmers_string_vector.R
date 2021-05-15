@@ -23,7 +23,6 @@ test_that("(string vector) count 3-mers for sequences A+", {
               k=3,
               positional=FALSE,
               with_kmer_counts=TRUE,
-              kmer_dictionary_name = "linear_list",
               batch_size = 200)
 })
 
@@ -41,7 +40,6 @@ test_that("(string vector) count 3-mers for sequences A+ longer", {
               k=3,
               positional=FALSE,
               with_kmer_counts=TRUE,
-              kmer_dictionary_name = "linear_list",
               batch_size = 200)
 })
 
@@ -61,7 +59,6 @@ test_that("(string vector) count non positional 10-mers sequences A+ longer", {
               k=10,
               positional=FALSE,
               with_kmer_counts=TRUE,
-              kmer_dictionary_name="unordered_map",
               batch_size = 200)
 })
 
@@ -79,7 +76,6 @@ test_that("(string vector) find 3-mers for sequences A+ (without k-mer counts)",
               k=3,
               positional=FALSE,
               with_kmer_counts=FALSE,
-              kmer_dictionary_name="linear_list",
               batch_size = 200)
 })
 
@@ -100,6 +96,5 @@ test_that("(string vector) find 15-mers for sequences (AC){1000000}", {
               k=15,
               positional=FALSE,
               with_kmer_counts=TRUE,
-              kmer_dictionary_name="unordered_map",
               batch_size = 10)
 })

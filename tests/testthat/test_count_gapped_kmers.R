@@ -2,12 +2,11 @@ library(testthat)
 source("utils.R")
 
 invoke_test <- function(fun, expected_res, ...) {
-  res <- seqR::count_kmers(kmer_dictionary_name="unordered_map",
-                                   batch_size=200,
-                                   hash_dim=2,
-                                   verbose=FALSE,
-                                   parallel_mode=TRUE,
-                                   ...)
+  res <- seqR::count_kmers(batch_size=200,
+                           hash_dim=2,
+                           verbose=FALSE,
+                           parallel_mode=TRUE,
+                           ...)
   expect_matrices_equal(expected_res, as.matrix(res))
 }
 
@@ -58,7 +57,7 @@ test_that("(string list) test 2 sequences with kmer_gaps (1,1) positional; some 
     0, 1, 1
   ), nrow=2, byrow=TRUE)
   colnames(expectedRes) <- c("6_b.a.b_1.1", "7_b.a.a_1.1", "5_a.b.a_1.1")
-
+  
   invoke_test(expected_res=expectedRes,
               alphabet=c("a", "b"),
               sequences=sequences,
@@ -72,7 +71,7 @@ test_that("(string list) the k-mer is longer than a sequence", {
     c("a", "b", "a", "b", "a", "b", "a", "b", "a"),
     c("a", "b", "a", "a", "a", "a", "b", "a", "a"))
   expectedRes <- matrix(nrow=2, ncol=0)
-
+  
   invoke_test(expected_res=expectedRes,
               alphabet=c("a", "b"),
               sequences=sequences,
