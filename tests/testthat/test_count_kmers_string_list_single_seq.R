@@ -8,7 +8,6 @@ invoke_test <- function(fun, expected_res, seq, ...) {
                            batch_size=200,
                            hash_dim=2,
                            verbose=FALSE,
-                           parallel_mode=TRUE,
                            ...)
   
   expect_matrices_equal(as.matrix(res), expected_res)

@@ -10,8 +10,7 @@ count_kmers <- function(sequences,
                         with_kmer_names = TRUE,
                         batch_size = 100,
                         hash_dim = 2,
-                        verbose = FALSE,
-                        parallel_mode = TRUE) {
+                        verbose = FALSE) {
   if (is_empty(alphabet)) {
     stop("alphabet param is empty")
   }
@@ -55,7 +54,6 @@ count_kmers <- function(sequences,
     batch_size=batch_size,
     hash_dim=hash_dim,
     verbose=verbose,
-    parallel_mode=parallel_mode,
     k=k
   )
   

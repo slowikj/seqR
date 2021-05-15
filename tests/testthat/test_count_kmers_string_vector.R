@@ -4,7 +4,6 @@ source("utils.R")
 invoke_test <- function(expected_res, ...) {
   res <- seqR::count_kmers(hash_dim = 2,
                            verbose=FALSE,
-                           parallel_mode=TRUE,
                            ...)
   expect_matrices_equal(as.matrix(res), expected_res)
 }

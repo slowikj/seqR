@@ -56,8 +56,7 @@ template <class encoded_sequences_list_t,
           class kmer_manager_t>
 inline std::vector<kmer_manager_t> computeKMersForAllSequences(
     CountingKMersForOneSeqProc_t<typename encoded_sequences_list_t::Entry, kmer_manager_t> countingProc,
-    const encoded_sequences_list_t &encodedSequencesList,
-    bool parallelMode);
+    const encoded_sequences_list_t &encodedSequencesList);
 
 inline void printSequenceProcessingLogIfVerbose(
     bool verbose, int begin, int end);
@@ -133,8 +132,7 @@ inline void updateKMerCountingResult(
   auto sequencesNum = kMerTaskConfig.encodedSequencesList.size();
   auto kMersManagers = computeKMersForAllSequences<encoded_sequences_list_t, kmer_manager_t>(
       countingProc,
-      kMerTaskConfig.encodedSequencesList,
-      kMerTaskConfig.userParams.parallelMode);
+      kMerTaskConfig.encodedSequencesList);
 
   std::vector<stringsCreator::KMerPositionInfo> kMersToCreate;
   for (int seqNum = 0; seqNum < kMersManagers.size(); ++seqNum) {
@@ -164,14 +162,9 @@ template <class encoded_sequences_list_t,
           class kmer_manager_t>
 inline std::vector<kmer_manager_t> computeKMersForAllSequences(
     CountingKMersForOneSeqProc_t<typename encoded_sequences_list_t::Entry, kmer_manager_t> countingProc,
-    const encoded_sequences_list_t &encodedSequencesList,
-    bool parallelMode) {
+    const encoded_sequences_list_t &encodedSequencesList) {
   KMerCounterWorker<encoded_sequences_list_t, kmer_manager_t> worker(countingProc, encodedSequencesList);
-  if (parallelMode) {
-    RcppParallel::parallelFor(0, encodedSequencesList.size(), worker);
-  } else {
-    worker(0, encodedSequencesList.size());
-  }
+  RcppParallel::parallelFor(0, encodedSequencesList.size(), worker);
   return worker.kMers;
 }
 

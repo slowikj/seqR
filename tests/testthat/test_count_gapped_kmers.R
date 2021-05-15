@@ -5,7 +5,6 @@ invoke_test <- function(fun, expected_res, ...) {
   res <- seqR::count_kmers(batch_size=200,
                            hash_dim=2,
                            verbose=FALSE,
-                           parallel_mode=TRUE,
                            ...)
   expect_matrices_equal(expected_res, as.matrix(res))
 }

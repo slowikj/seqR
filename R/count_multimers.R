@@ -9,8 +9,7 @@ count_multimers <- function(sequences,
                             with_kmer_names = TRUE,
                             batch_size=200,
                             hash_dim=2,
-                            verbose=FALSE,
-                            parallel_mode=TRUE) {
+                            verbose=FALSE) {
   if(length(k_vector) != length(kmer_gaps_list)) {
     stop("the length of 'k_vector' must have equal length to 'kmer_gaps_list' ")
   }
@@ -39,8 +38,7 @@ count_multimers <- function(sequences,
       with_kmer_names = with_kmer_names,
       batch_size = batch_size,
       hash_dim = hash_dim,
-      verbose = verbose,
-      parallel_mode = parallel_mode)
+      verbose = verbose)
   }))
   r
 }
