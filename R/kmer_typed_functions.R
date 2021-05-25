@@ -37,5 +37,5 @@
 }
 
 .prepare_final_result <- function(rcpp_result_list) {
-  .convert_seqR_list_to_custom_matrix(rcpp_result_list)
+  .convert_internal_result_to_seqR_Matrix_class(rcpp_result_list)
 }

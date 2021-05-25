@@ -6,6 +6,7 @@
 #include <tuple>
 #include <vector>
 
+#include "common_config.h"
 #include "hash/custom_vector_hasher.h"
 #include "hash/globals.h"
 
@@ -41,20 +42,15 @@ class KMerCountingResult {
     Rcpp::IntegerVector rcppKmerCounts = Rcpp::wrap(this->kMerCounts);
     Rcpp::StringVector rcppKMerStrings = Rcpp::wrap(this->kMerStrings);
     return Rcpp::List::create(
-        Rcpp::Named(PROXY_ROWS_NAME) = rcppSequenceNums + 1,
-        Rcpp::Named(PROXY_COLUMNS_NAME) = rcppKMerIndices + 1,
-        Rcpp::Named(PROXY_VALUES_NAME) = rcppKmerCounts,
-        Rcpp::Named(PROXY_COLUMN_NAMES_NAME) = rcppKMerStrings,
-        Rcpp::Named(PROXY_PROCESSED_SEQUENCES_NUM_NAME) = this->processedSequencesNum);
+        Rcpp::Named(config::PROXY_ROWS_NAME) = rcppSequenceNums + 1,
+        Rcpp::Named(config::PROXY_COLUMNS_NAME) = rcppKMerIndices + 1,
+        Rcpp::Named(config::PROXY_VALUES_NAME) = rcppKmerCounts,
+        Rcpp::Named(config::PROXY_COLUMN_NAMES_NAME) = rcppKMerStrings,
+        Rcpp::Named(config::PROXY_NROW) = this->processedSequencesNum,
+        Rcpp::Named(config::PROXY_NCOL) = kMerHash2ColumnIndex.size());
   }
 
  private:
-  const Rcpp::String PROXY_ROWS_NAME = "i";
-  const Rcpp::String PROXY_COLUMNS_NAME = "j";
-  const Rcpp::String PROXY_VALUES_NAME = "v";
-  const Rcpp::String PROXY_COLUMN_NAMES_NAME = "names";
-  const Rcpp::String PROXY_PROCESSED_SEQUENCES_NUM_NAME = "seqNum";
-
   std::vector<int> sequenceNums;
 
   std::vector<int> kMerIndices;

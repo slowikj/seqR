@@ -1,7 +1,7 @@
 Package: seqR
 Type: Package
 Title: k-mer counting package
-Version: 0.6.0
+Version: 0.7.0
 Date: 2021-05-12
 Authors@R: c(
     person(given = "Jadwiga",
@@ -13,13 +13,14 @@ Authors@R: c(
            role = c("ctb"),
            email = "piotrek.olesiejuk@gmail.com")
     )
-Maintainer: Jadwiga Słowik <jadwis.slowik@gmail.com>
+Maintainer: Jadwiga Słowik <jadwiga.slowik5@gmail.com>
 Description: seqR is a package providing fast counting of k-mers in sequences. It allows user to specify
   lengths of the k-mers and gaps between elements in the sequence.
 License: MIT + file LICENSE
 Imports:
     Rcpp (>= 1.0.4),
     RcppParallel,
+    Matrix,
     slam,
     rlang
 Depends:

@@ -121,11 +121,6 @@ test_that("provided batch size param is NULL", {
 
 # COUNTING ----
 
-test_that("check the result type", {
-  res <- seqR::count_kmers("AAAAAAA")
-  expect_s3_class(res, "seqR_simple_triplet_matrix")
-})
-
 test_that("test list input sequences for gapped k-mers", {
   sq <- c("AAAA", "AAACA")
   expected_res <- matrix(c(
@@ -246,7 +241,7 @@ test_that("some input sequences do not contain any specified k-mer", {
   expect_matrices_equal(as.matrix(res), expected_res)
 })
 
-test_that("expect simple_triplet_matrix as an output", {
+test_that("expect dgCMatrix as an output", {
   sq <- c("AAAAA", "AA", "AAAAAAAB", "BBB")
   
   res <- seqR::count_kmers(sequences = sq,
@@ -256,7 +251,7 @@ test_that("expect simple_triplet_matrix as an output", {
                            with_kmer_counts=TRUE,
                            batch_size = 100)
   
-  expect_is(res, "simple_triplet_matrix")
+  expect_is(res, "dgCMatrix")
 })
 
 # POSITIONAL K-MERS ----
@@ -301,10 +296,8 @@ test_that("count 3-mers without k-mer names, one sequence", {
                            k = 3,
                            with_kmer_names = FALSE)
   
-  
-  
-  expect_true(is.null(res$dimnames[[2]]))
-  expect_equal(as.matrix(res), matrix(c(7)))
+  expect_true(is.null(dimnames(res)[[2]]))
+  expect_true(as.matrix(res) == as.matrix(c(7)))
 })
 
 test_that("count 3-mers without k-mer names, multiple sequences", {
@@ -315,7 +308,7 @@ test_that("count 3-mers without k-mer names, multiple sequences", {
                            k = 3,
                            with_kmer_names = FALSE)
   
-  expect_true(is.null(res$dimnames[[2]]))
+  expect_true(is.null(dimnames(res)[[2]]))
 })
 
 test_that("(string vector) count 2-mers with alphabet = all", {

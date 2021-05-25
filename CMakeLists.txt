@@ -37,6 +37,7 @@ add_library(seqR
         src/hash/prefix_sequence_polynomial_hasher.h
         inst/thirdparty/dictionaries/robin_hood_martinus.h
         src/dictionary/martinus_robin_hood_dictionary.h
+        src/merge_kmer_results.h
         src/dictionary/dictionaries.h
         src/merge_kmer_results.h
         src/proxy.cpp)
