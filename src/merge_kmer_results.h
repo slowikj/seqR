@@ -4,6 +4,8 @@
 
 #include <tuple>
 
+#include "common_config.h"
+
 namespace resultsMerging {
 inline std::tuple<
     Rcpp::IntegerVector,
@@ -99,10 +101,11 @@ inline Rcpp::List mergeKMerResults(Rcpp::List resList) {
   }
 
   return Rcpp::List::create(
-      Rcpp::Named("i") = rows,
-      Rcpp::Named("j") = cols,
-      Rcpp::Named("v") = counts,
-      Rcpp::Named("seqNum") = processedSeqNum,
-      Rcpp::Named("names") = kMers);
+      Rcpp::Named(config::PROXY_ROWS_NAME) = rows,
+      Rcpp::Named(config::PROXY_COLUMNS_NAME) = cols,
+      Rcpp::Named(config::PROXY_VALUES_NAME) = counts,
+      Rcpp::Named(config::PROXY_NROW) = processedSeqNum,
+      Rcpp::Named(config::PROXY_NCOL) = kMers.size(),
+      Rcpp::Named(config::PROXY_COLUMN_NAMES_NAME) = kMers);
 }
 }  // namespace resultsMerging

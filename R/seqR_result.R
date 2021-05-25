@@ -1,47 +1,32 @@
 #' @export
-rbind.seqR_simple_triplet_matrix <- function(...) {
-  .convert_seqR_list_to_custom_matrix(.cpp_merge_kmer_results(list(...)))
+rbind_columnwise <- function(...) {
+  input <- lapply(list(...),
+                  function(x) slam::as.simple_triplet_matrix(x))
+  .convert_seqR_list_to_Matrix_class(.cpp_merge_kmer_results(input))
 }
 
-#' @export
-is.seqR_simple_triplet_matrix <- function(x) {
-  inherits(x, "seqR_simple_triplet_matrix")
+.convert_internal_result_to_seqR_Matrix_class <- function(seqR_list) {
+  .convert_seqR_list_to_Matrix_class(seqR_list)
 }
 
-#' @export
-cbind.seqR_simple_triplet_matrix <- function(x, ...) {
-  all_classes <- class(x)
-  class(x) <- class(x)[-1]
-  r <- cbind(x, ...)
-  class(r) <- all_classes
-  r
-}
-
-.convert_seqR_list_to_custom_matrix <- function(seqR_list) {
-  r <- .convert_seqR_list_to_slam_matrix(seqR_list)
-  class(r) <- c("seqR_simple_triplet_matrix", class(r))
-  r
-}
-
-.convert_seqR_list_to_slam_matrix <- function(seqR_list) {
+.convert_seqR_list_to_Matrix_class <- function(seqR_list) {
   if (length(seqR_list$i) == 0) {
-    slam::as.simple_triplet_matrix(matrix(nrow = seqR_list$seqNum,
-                                          ncol = 0))
+    Matrix::Matrix(nrow=seqR_list$nrow,
+                   ncol=0,
+                   sparse = TRUE)
   } else {
-    if(length(seqR_list$names) != 0) {
-      dimnames <- list(NULL, seqR_list$names)
-    } else {
-      dimnames <- NULL
-    }
+    dimnames <- .get_dimnames(seqR_list)
     
-    slam::simple_triplet_matrix(
+    Matrix::sparseMatrix(
       i = seqR_list$i,
       j = seqR_list$j,
-      v = seqR_list$v,
-      nrow = seqR_list$seqNum,
+      x = seqR_list$v,
+      dims = c(seqR_list$nrow, seqR_list$ncol),
       dimnames = dimnames
     )
   }
 }
 
-
+.get_dimnames <- function(seqR_list) {
+  list(NULL, seqR_list$names)
+}
