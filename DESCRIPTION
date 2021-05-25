@@ -1,7 +1,7 @@
 Package: seqR
 Type: Package
 Title: k-mer counting package
-Version: 0.7.0
+Version: 0.8.0
 Date: 2021-05-12
 Authors@R: c(
     person(given = "Jadwiga",
@@ -49,3 +49,4 @@ Collate:
     'count_kmers.R'
     'count_multimers.R'
     'package.R'
+    'zzz.R'

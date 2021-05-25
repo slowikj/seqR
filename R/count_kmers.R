@@ -3,14 +3,14 @@
 #' @export
 count_kmers <- function(sequences,
                         k = length(kmer_gaps) + 1,
-                        alphabet = "all",
-                        positional = FALSE,
+                        alphabet = getOption("seqR_alphabet_default"),
+                        positional = getOption("seqR_positional_default"),
                         kmer_gaps = c(),
-                        with_kmer_counts = TRUE,
-                        with_kmer_names = TRUE,
-                        batch_size = 100,
-                        hash_dim = 2,
-                        verbose = FALSE) {
+                        with_kmer_counts = getOption("seqR_with_kmer_counts_default"),
+                        with_kmer_names = getOption("seqR_with_kmer_names_default"),
+                        batch_size = getOption("seqR_batch_size_default"),
+                        hash_dim = getOption("seqR_hash_dim_default"),
+                        verbose = getOption("seqR_verbose_default")) {
   if (is_empty(alphabet)) {
     stop("alphabet param is empty")
   }

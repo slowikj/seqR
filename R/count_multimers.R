@@ -2,14 +2,14 @@
 #' @export
 count_multimers <- function(sequences,
                             k_vector,
-                            alphabet = "all",
-                            positional_vector=rep(FALSE, length(k_vector)),
-                            kmer_gaps_list=rep(list(c()), length(k_vector)),
-                            with_kmer_counts = TRUE,
-                            with_kmer_names = TRUE,
-                            batch_size=200,
-                            hash_dim=2,
-                            verbose=FALSE) {
+                            alphabet = getOption("seqR_alphabet_default"),
+                            positional_vector = rep(getOption("seqR_positional_default"), length(k_vector)),
+                            kmer_gaps_list = rep(list(c()), length(k_vector)),
+                            with_kmer_counts = getOption("seqR_with_kmer_counts_default"),
+                            with_kmer_names = getOption("seqR_with_kmer_names_default"),
+                            batch_size = getOption("seqR_batch_size_default"),
+                            hash_dim = getOption("seqR_hash_dim_default"),
+                            verbose = getOption("seqR_verbose_default")) {
   if(length(k_vector) != length(kmer_gaps_list)) {
     stop("the length of 'k_vector' must have equal length to 'kmer_gaps_list' ")
   }
