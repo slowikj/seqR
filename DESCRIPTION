@@ -1,17 +1,13 @@
 Package: seqR
 Type: Package
 Title: k-mer counting package
-Version: 0.8.0
-Date: 2021-05-12
+Version: 0.9.0
+Date: 2021-06-06
 Authors@R: c(
     person(given = "Jadwiga",
            family = "Słowik",
            role = c("aut", "cre"),
-           email = "jadwiga.slowik5@gmail.com"),
-    person(given = "Piotr",
-           family = "Olesiejuk",
-           role = c("ctb"),
-           email = "piotrek.olesiejuk@gmail.com")
+           email = "jadwiga.slowik5@gmail.com")
     )
 Maintainer: Jadwiga Słowik <jadwiga.slowik5@gmail.com>
 Description: seqR is a package providing fast counting of k-mers in sequences. It allows user to specify
