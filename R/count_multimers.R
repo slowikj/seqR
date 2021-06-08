@@ -79,7 +79,6 @@
 #' 
 #' @seealso \link[seqR]{count_kmers}
 #' @seealso \link[seqR]{rbind_columnwise}
-#' @include count_kmers.R
 #' @md
 #' @export
 count_multimers <- function(sequences,
