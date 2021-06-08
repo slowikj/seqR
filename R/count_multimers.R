@@ -19,7 +19,7 @@
 #' either \code{string vector} or \code{list} of \code{string vectors}
 #' 
 #' @param k_vector an \code{integer vector} that represents the lengths of k-mers.
-#' The i-th element corresponds to the value of \code{k} for the i-th k-mer configuration
+#' The i-th element corresponds to the value of \code{k} for the i-th k-mer configuration.
 #' 
 #' @param kmer_alphabet a \code{string vector} that represents elements of a sequence
 #' that should be considered
@@ -67,7 +67,7 @@
 #' # Counting 1-mers, 2-mers, and gapped 2-mers with the length of the gap = 1
 #' count_multimers(
 #'    c("AAAACFVV", "AAAAAA", "AAAAD"),
-#'    k_vector = c(1, 2)),
+#'    k_vector = c(1, 2, 2),
 #'    kmer_gaps = list(NULL, NULL, c(1)))
 #' 
 #' # Counting 3-mers, positional 3-mers, and positional gapped 2-mers with the length of the gap = 1
@@ -80,10 +80,11 @@
 #' @seealso \link[seqR]{count_kmers}
 #' @seealso \link[seqR]{rbind_columnwise}
 #' @include count_kmers.R
+#' @md
 #' @export
 count_multimers <- function(sequences,
                             k_vector,
-                            kmer_alphabet = getOption("seqR_alphabet_default"),
+                            kmer_alphabet = getOption("seqR_kmer_alphabet_default"),
                             positional_vector = rep(getOption("seqR_positional_default"), length(k_vector)),
                             kmer_gaps_list = rep(list(c()), length(k_vector)),
                             with_kmer_counts = getOption("seqR_with_kmer_counts_default"),

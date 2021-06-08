@@ -248,10 +248,10 @@ count_kmers(c("ACAT", "ACC"), k=2, positional=TRUE)
 count_kmers(list(c("A", "C", "A", "T"), c("A", "C", "C")), k=2, positional=TRUE)
 
 # Counting 3-mers of two DNA sequences, considering only A and C elements
-count_kmers(c("ACAT", "ACC"), k=2, alphabet=c("A", "C"))
+count_kmers(c("ACAT", "ACC"), k=2, kmer_alphabet=c("A", "C"))
 
 # Counting gapped 3-mers with lengths of gaps 1 and 2
-count_kmers(c("ACATACTAT", "ACCCCCC"), gaps=c(1,2))
+count_kmers(c("ACATACTAT", "ACCCCCC"), kmer_gaps=c(1,2))
 
 }
 \seealso{
