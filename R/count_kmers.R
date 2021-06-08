@@ -224,7 +224,7 @@
 #' count_kmers(c("ACAT", "ACC"), k=2, alphabet=c("A", "C"))
 #' 
 #' # Counting gapped 3-mers with lengths of gaps 1 and 2
-#' count_kmers(c("ACATACTAT, "ACCCCCC"), gaps=c(1,2))
+#' count_kmers(c("ACATACTAT", "ACCCCCC"), gaps=c(1,2))
 #' 
 #' @seealso \link[seqR]{count_multimers}
 #' @seealso \link[seqR]{rbind_columnwise}

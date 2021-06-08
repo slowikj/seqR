@@ -233,6 +233,27 @@ In particular, if contiguous k-mers are considered, all elements of this part is
 (e.g., 0.0.0 for 4-mers). Importantly, for 1-mers, this part is not present.
 }
 
+\examples{
+
+# Counting 1-mers af two DNA sequences
+count_kmers(c("ACAT", "ACC"))
+
+# Counting 2-mers of two DNA sequences
+count_kmers(c("ACAT", "ACC"), k=2)
+
+# Counting positional 2-mers of two DNA sequences
+count_kmers(c("ACAT", "ACC"), k=2, positional=TRUE)
+
+# Counting positional 2-mers of two DNA sequences (second representation)
+count_kmers(list(c("A", "C", "A", "T"), c("A", "C", "C")), k=2, positional=TRUE)
+
+# Counting 3-mers of two DNA sequences, considering only A and C elements
+count_kmers(c("ACAT", "ACC"), k=2, alphabet=c("A", "C"))
+
+# Counting gapped 3-mers with lengths of gaps 1 and 2
+count_kmers(c("ACATACTAT", "ACCCCCC"), gaps=c(1,2))
+
+}
 \seealso{
 \link[seqR]{count_multimers}
 
