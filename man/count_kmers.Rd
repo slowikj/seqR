@@ -53,7 +53,7 @@ that is internally used in the algorithm
 extra information on the current state of computations}
 }
 \value{
-a \code{\link[Matrix]{Matrix}} value that represents a resulting k-mer space.
+a \code{\link[Matrix]{Matrix}} value that represents a result k-mer space.
 The result is a sparse matrix in order to reduce memory consumption.
 The i-th row of the matrix represents k-mers found in the i-th input sequence.
 Each column represents a distinct k-mer.
@@ -65,22 +65,26 @@ if param \code{with_kmer_names = TRUE}
 This is a highly-optimized, in-memory, probabilistic
 (with configurable probability of exact results,
 for more detail see section \verb{Configurable dimension of the hash value of a k-mer}),
-multi-threaded implementation of the k-mer counting algorithm.
+and multi-threaded implementation of the k-mer counting algorithm.
 
-The function supports several types of k-mers
-(for more information see section \verb{Supported variants of k-mers})
-and two common representations of input sequences
-(for more information see section \verb{Supported input sequences}).
+The function supports
+\enumerate{
+\item several types of k-mers (for more information see section \verb{Supported variants of k-mers})
+\item all biological sequences (e.g., nucleic acids and proteins)
+\item two common in-memory representations of sequences, i.e., string vectors and list of string vectors
+(for more information see section \verb{Supported input sequences})
+}
 
 Moreover, several extra features are provided
-(for more information see appropriate \code{details}' subsections):
+(for more information see corresponding \code{details}' subsections):
 \enumerate{
 \item custom configuration of the alphabet of k-mers
 (i.e., which elements of a sequence should be considered during the k-mer counting procedure)
-\item verbose mode (a user can get extra information about the current state of computations)
+\item verbose mode
 \item configurable batch size (i.e., how many sequences are processed in a single step)
 \item configurable dimension of the hash value of a k-mer
-\item the choice to compute k-mers with or without their frequency
+\item possibility to compute k-mers with or without their frequency
+\item possibility to compute a result k-mer matrix with or without human-readable k-mer (column) names
 }
 }
 \section{Supported variants of k-mers}{
@@ -103,7 +107,7 @@ AAB and ABC.
 \subsection{gapped k-mers}{
 
 Gapped k-mers can be defined as subsequences (not necessarilly contiguous) of a given sequence.
-In particular, between each two contiguous elements of the sequence there might be a gap
+In particular, between two contiguous elements of the sequence there might be a gap
 of a length specified by a user separately.
 
 A user specifies the length of each gap in \code{kmer_gaps} param.
@@ -169,6 +173,11 @@ to be considered. Otherwise, all k-mers that can be derived from a given collect
 of sequences will be computed.
 }
 
+\section{Verbose mode}{
+Verbose mode allows a user to get extra information about the current state of computations,
+e.g., which batch of sequences is currently processed.
+}
+
 \section{Configurable size of batch of sequences}{
 The internal algorithm processes input sequences in consecutive batches of a given size.
 The larger the size of batch is, the more sequences will be used at a single step
@@ -199,15 +208,23 @@ However, a user must be aware that the more dimensions the vector has,
 both the memory consumption and CPU time increases.
 }
 
+\section{The choice to compute k-mers with or without their frequency}{
+The aim of this feature is to optimize memory consumption and CPU time.
+It is particularly useful when many different k-mer models are tested
+and there is no need to get a human-readable features.
+}
+
 \section{Human-readable representation of k-mers}{
 Each column of the result represent a single k-mer that has the following form:
-\code{[p_]s1.s2....sk_g1.g2...gk-1}.
+\deqn{[p_]s_1.s2....sk_g1.g2...gk-1}
 
 The \code{[p_]} value is an integer that is used only in case of positional k-mers
 (for more information on k-mer variants see section \verb{Supported variants of k-mers})
 and it indicates the exact begin position of the k-mer in a sequence.
 The \code{s1.s2....sk} part represents consecutive elements of the k-mer.
 Finally, the \code{g1.g2...gk-1} part represents the consecutive lengths of gaps.
+In particular, if contiguous k-mers are considered, all elements of this part is equal to 0
+(e.g., 0.0.0 for 4-mers). Importantly, for 1-mers, this part is not present.
 }
 
 \seealso{
