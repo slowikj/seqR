@@ -53,6 +53,7 @@
 #' @inherit count_kmers return
 #' 
 #' @details
+#' 
 #' The comprehensive description of supported features is available
 #' in the documentation of \link[seqR]{count_kmers} function.
 #'  
