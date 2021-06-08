@@ -1,8 +1,13 @@
+#' Count k-mers of various types for a given collection of sequences
+#' 
+#' @description 
+#' 
+#' 
 #' @include count_kmers.R
 #' @export
 count_multimers <- function(sequences,
                             k_vector,
-                            alphabet = getOption("seqR_alphabet_default"),
+                            kmer_alphabet = getOption("seqR_alphabet_default"),
                             positional_vector = rep(getOption("seqR_positional_default"), length(k_vector)),
                             kmer_gaps_list = rep(list(c()), length(k_vector)),
                             with_kmer_counts = getOption("seqR_with_kmer_counts_default"),
@@ -31,7 +36,7 @@ count_multimers <- function(sequences,
     count_kmers(
       sequences = sequences,
       k = k_vector[index],
-      alphabet = alphabet,
+      kmer_alphabet = kmer_alphabet,
       positional = positional_vector[index],
       kmer_gaps = kmer_gaps_list[[index]],
       with_kmer_counts = with_kmer_counts,

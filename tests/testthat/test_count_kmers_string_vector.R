@@ -17,7 +17,7 @@ test_that("(string vector) count 3-mers for sequences A+", {
   ), nrow=3)
   colnames(expected_res) <- c("A.A.A_0.0")
   invoke_test(expected_res=expected_res,
-              alphabet=c("A"),
+              kmer_alphabet=c("A"),
               sequences=sq,
               k=3,
               positional=FALSE,
@@ -34,7 +34,7 @@ test_that("(string vector) count 3-mers for sequences A+ longer", {
   ), nrow=3)
   colnames(expected_res) <- c("A.A.A_0.0")
   invoke_test(expected_res=expected_res,
-              alphabet=c("A"),
+              kmer_alphabet=c("A"),
               sequences=sq,
               k=3,
               positional=FALSE,
@@ -53,7 +53,7 @@ test_that("(string vector) count non positional 10-mers sequences A+ longer", {
     "_",
     paste0(rep("0", 9), collapse="."), collapse="")
   invoke_test(expected_res=expected_res,
-              alphabet=c("A"),
+              kmer_alphabet=c("A"),
               sequences=sq,
               k=10,
               positional=FALSE,
@@ -70,7 +70,7 @@ test_that("(string vector) find 3-mers for sequences A+ (without k-mer counts)",
   ), nrow=3)
   colnames(expected_res) <- c("A.A.A_0.0")
   invoke_test(expected_res=expected_res,
-              alphabet=c("A"),
+              kmer_alphabet=c("A"),
               sequences=sq,
               k=3,
               positional=FALSE,
@@ -90,7 +90,7 @@ test_that("(string vector) find 15-mers for sequences (AC){1000000}", {
   colnames(expected_res) <- c("A.C.A.C.A.C.A.C.A.C.A.C.A.C.A_0.0.0.0.0.0.0.0.0.0.0.0.0.0",
                               "C.A.C.A.C.A.C.A.C.A.C.A.C.A.C_0.0.0.0.0.0.0.0.0.0.0.0.0.0")
   invoke_test(expected_res=expected_res,
-              alphabet=c("A", "C"),
+              kmer_alphabet=c("A", "C"),
               sequences=sq,
               k=15,
               positional=FALSE,

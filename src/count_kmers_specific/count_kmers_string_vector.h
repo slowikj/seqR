@@ -96,10 +96,10 @@ template <class algorithm_params_t,
           template <typename key, typename value, class...> class result_dictionary_t>
 inline Rcpp::List countKMersSpecific(
     Rcpp::StringVector &sequences,
-    Rcpp::StringVector &alphabet,
+    Rcpp::StringVector &kmerAlphabet,
     const UserParams &userParams,
     algorithm_params_t &algorithmParams) {
-  auto isAllowedElem = getIsAllowedArray(alphabet);
+  auto isAllowedElem = getIsAllowedArray(kmerAlphabet);
 
   auto batchFunc = [&](KMerCountingResult<result_dictionary_t> &kMerCountingResult,
                        std::size_t seqBegin, std::size_t seqEnd) {

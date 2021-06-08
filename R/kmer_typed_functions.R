@@ -3,36 +3,36 @@
 
 .count_contiguous_kmers_string_vector_proxy <- function(sequences, params) {
   .invoke_kmer_function(rcpp_counting_function=.cpp_count_contiguous_kmers_string_vector,
-                        alphabet_validator=validate_string,
+                        kmer_alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)
 }
 
 .count_contiguous_kmers_string_list_proxy <- function(sequences, params) {
   .invoke_kmer_function(rcpp_counting_function=.cpp_count_contiguous_kmers_string_list,
-                        alphabet_validator=validate_string,
+                        kmer_alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)
 }
 
 .count_gapped_kmers_string_vector_proxy <- function(sequences, params) {
   .invoke_kmer_function(rcpp_counting_function=.cpp_count_gapped_kmers_string_vector,
-                        alphabet_validator=validate_string,
+                        kmer_alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)
 }
 
 .count_gapped_kmers_string_list_proxy <- function(sequences, params) {
   .invoke_kmer_function(rcpp_counting_function=.cpp_count_gapped_kmers_string_list,
-                        alphabet_validator=validate_string,
+                        kmer_alphabet_validator=validate_string,
                         sequences=sequences,
                         params=params)
 }
 
-.invoke_kmer_function <- function(rcpp_counting_function, alphabet_validator, sequences, params) {
-  alphabet <- params[["alphabet"]]
-  alphabet_validator(alphabet)
-  result_list <- rcpp_counting_function(sequences, alphabet, params)
+.invoke_kmer_function <- function(rcpp_counting_function, kmer_alphabet_validator, sequences, params) {
+  kmer_alphabet <- params[["kmer_alphabet"]]
+  kmer_alphabet_validator(kmer_alphabet)
+  result_list <- rcpp_counting_function(sequences, kmer_alphabet, params)
   .prepare_final_result(result_list)
 }
 

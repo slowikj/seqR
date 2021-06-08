@@ -7,20 +7,20 @@ NULL
 #' @importFrom  RcppParallel RcppParallelLibs
 NULL
 
-.cpp_count_contiguous_kmers_string_vector <- function(sq, alphabet, rcppParams) {
-    .Call('_seqR_count_contiguous_kmers_string_vector', PACKAGE = 'seqR', sq, alphabet, rcppParams)
+.cpp_count_contiguous_kmers_string_vector <- function(sq, kmerAlphabet, rcppParams) {
+    .Call('_seqR_count_contiguous_kmers_string_vector', PACKAGE = 'seqR', sq, kmerAlphabet, rcppParams)
 }
 
-.cpp_count_contiguous_kmers_string_list <- function(sq, alphabet, rcppParams) {
-    .Call('_seqR_count_contiguous_kmers_string_list', PACKAGE = 'seqR', sq, alphabet, rcppParams)
+.cpp_count_contiguous_kmers_string_list <- function(sq, kmerAlphabet, rcppParams) {
+    .Call('_seqR_count_contiguous_kmers_string_list', PACKAGE = 'seqR', sq, kmerAlphabet, rcppParams)
 }
 
-.cpp_count_gapped_kmers_string_vector <- function(sq, alphabet, rcppParams) {
-    .Call('_seqR_count_gapped_kmers_string_vector', PACKAGE = 'seqR', sq, alphabet, rcppParams)
+.cpp_count_gapped_kmers_string_vector <- function(sq, kmerAlphabet, rcppParams) {
+    .Call('_seqR_count_gapped_kmers_string_vector', PACKAGE = 'seqR', sq, kmerAlphabet, rcppParams)
 }
 
-.cpp_count_gapped_kmers_string_list <- function(sq, alphabet, rcppParams) {
-    .Call('_seqR_count_gapped_kmers_string_list', PACKAGE = 'seqR', sq, alphabet, rcppParams)
+.cpp_count_gapped_kmers_string_list <- function(sq, kmerAlphabet, rcppParams) {
+    .Call('_seqR_count_gapped_kmers_string_list', PACKAGE = 'seqR', sq, kmerAlphabet, rcppParams)
 }
 
 .cpp_merge_kmer_results <- function(resList) {

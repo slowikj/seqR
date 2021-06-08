@@ -26,7 +26,7 @@
 #' 
 #' @param k an \code{integer} representing the length of a k-mer
 #' 
-#' @param alphabet a \code{string vector} representing the elements that should be used
+#' @param kmer_alphabet a \code{string vector} representing the elements that should be used
 #' during the construction of k-mers. By default, all elements that are present in sequences
 #' are taking into account
 #' 
@@ -210,7 +210,7 @@
 #' @md
 count_kmers <- function(sequences,
                         k = length(kmer_gaps) + 1,
-                        alphabet = getOption("seqR_alphabet_default"),
+                        kmer_alphabet = getOption("seqR_kmer_alphabet_default"),
                         positional = getOption("seqR_positional_default"),
                         kmer_gaps = c(),
                         with_kmer_counts = getOption("seqR_with_kmer_counts_default"),
@@ -218,7 +218,7 @@ count_kmers <- function(sequences,
                         batch_size = getOption("seqR_batch_size_default"),
                         hash_dim = getOption("seqR_hash_dim_default"),
                         verbose = getOption("seqR_verbose_default")) {
-  if (is_empty(alphabet)) {
+  if (is_empty(kmer_alphabet)) {
     stop("alphabet param is empty")
   }
   
@@ -251,10 +251,10 @@ count_kmers <- function(sequences,
     stop("verbose must be a single logical value")
   }
   
-  alphabet <- unique(alphabet)
+  kmer_alphabet <- unique(kmer_alphabet)
   
   params <- rlang::env(
-    alphabet=alphabet,
+    kmer_alphabet=kmer_alphabet,
     positional=positional,
     with_kmer_counts=with_kmer_counts,
     with_kmer_names=with_kmer_names,

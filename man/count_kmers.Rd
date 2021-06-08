@@ -7,7 +7,7 @@
 count_kmers(
   sequences,
   k = length(kmer_gaps) + 1,
-  alphabet = getOption("seqR_alphabet_default"),
+  kmer_alphabet = getOption("seqR_kmer_alphabet_default"),
   positional = getOption("seqR_positional_default"),
   kmer_gaps = c(),
   with_kmer_counts = getOption("seqR_with_kmer_counts_default"),
@@ -24,7 +24,7 @@ either \code{string vector} or \code{list} of \code{string vectors}
 
 \item{k}{an \code{integer} representing the length of a k-mer}
 
-\item{alphabet}{a \code{string vector} representing the elements that should be used
+\item{kmer_alphabet}{a \code{string vector} representing the elements that should be used
 during the construction of k-mers. By default, all elements that are present in sequences
 are taking into account}
 
