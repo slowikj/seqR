@@ -66,7 +66,9 @@
 #' 
 #' 
 #' @details
+#' 
 #' # Supported variants of k-mers
+#' 
 #' A user explicitly specifies k-mer configuration using the following function params:
 #' \code{k}, \code{kmer_gaps}, and \code{positional}.
 #' There are four major variants of k-mers (for more information see the following subsections):
@@ -183,7 +185,7 @@
 #' 
 #' This feature is particularly used when a user wants to get information
 #' related to presence or absence of k-mers. Then, they might set this feature
-#' (\code{with_kmer_counts = FALSE}) and reduce the memory consumption.
+#' (\code{with_kmer_counts = FALSE}) and reduce the memory consumption
 #' 
 #' # Possibility to compute k-mer matrix with or without human-readable names (columns)
 #' 
@@ -194,7 +196,7 @@
 #' # Human-readable representation of k-mers
 #' 
 #' Each column of the result represent a single k-mer that has the following form:
-#' \deqn{[p_]s_1.s2....sk_g1.g2...gk-1}
+#' \deqn{[p_]s1.s2....sk_g1.g2...gk-1}
 #' 
 #' The \code{[p_]} value is an integer that is used only in case of positional k-mers
 #' (for more information on k-mer variants see section `Supported variants of k-mers`)
@@ -205,6 +207,7 @@
 #' (e.g., 0.0.0 for 4-mers). Importantly, for 1-mers, this part is not present.
 #' 
 #' @examples
+#' 
 #' # Counting 1-mers af two DNA sequences
 #' count_kmers(c("ACAT", "ACC"))
 #' 

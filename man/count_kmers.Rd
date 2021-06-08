@@ -62,10 +62,10 @@ if param \code{with_kmer_names = TRUE}
 (for more information see section \verb{Human-readable representation of k-mers})
 }
 \description{
-This is a highly-optimized, in-memory, probabilistic
+This is a in-memory, probabilistic
 (with configurable probability of exact results,
 for more detail see section \verb{Configurable dimension of the hash value of a k-mer}),
-and multi-threaded implementation of the k-mer counting algorithm.
+highly-optimized, and multi-threaded implementation of the k-mer counting algorithm.
 
 The function supports
 \enumerate{
@@ -78,12 +78,12 @@ The function supports
 Moreover, several extra features are provided
 (for more information see corresponding \code{details}' subsections):
 \enumerate{
-\item custom configuration of the alphabet of k-mers
+\item configurable k-mer alphabet
 (i.e., which elements of a sequence should be considered during the k-mer counting procedure)
 \item verbose mode
 \item configurable batch size (i.e., how many sequences are processed in a single step)
 \item configurable dimension of the hash value of a k-mer
-\item possibility to compute k-mers with or without their frequency
+\item possibility to compute k-mers with or without their frequencies
 \item possibility to compute a result k-mer matrix with or without human-readable k-mer (column) names
 }
 }
@@ -180,7 +180,7 @@ e.g., which batch of sequences is currently processed.
 
 \section{Configurable size of batch of sequences}{
 The internal algorithm processes input sequences in consecutive batches of a given size.
-The larger the size of batch is, the more sequences will be used at a single step
+The larger the size of a batch is, the more sequences will be used at a single step
 in which sequences are processed concurrently.
 Therefore, a user should be aware that in order to take full advantage of multi-threading,
 they should set the batch size to the number that is greater or equal to the number
@@ -208,7 +208,13 @@ However, a user must be aware that the more dimensions the vector has,
 both the memory consumption and CPU time increases.
 }
 
-\section{The choice to compute k-mers with or without their frequency}{
+\section{Possibility to compute k-mers with or without their frequencies}{
+This feature is particularly used when a user wants to get information
+related to presence or absence of k-mers. Then, they might set this feature
+(\code{with_kmer_counts = FALSE}) and reduce the memory consumption
+}
+
+\section{Possibility to compute k-mer matrix with or without human-readable names (columns)}{
 The aim of this feature is to optimize memory consumption and CPU time.
 It is particularly useful when many different k-mer models are tested
 and there is no need to get a human-readable features.
@@ -216,7 +222,7 @@ and there is no need to get a human-readable features.
 
 \section{Human-readable representation of k-mers}{
 Each column of the result represent a single k-mer that has the following form:
-\deqn{[p_]s_1.s2....sk_g1.g2...gk-1}
+\deqn{[p_]s1.s2....sk_g1.g2...gk-1}
 
 The \code{[p_]} value is an integer that is used only in case of positional k-mers
 (for more information on k-mer variants see section \verb{Supported variants of k-mers})
