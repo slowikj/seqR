@@ -1,3 +1,29 @@
+#' Bind rows of several k-mer matrices
+#' 
+#' @description
+#' 
+#' The function binds rows of several input k-mer matrices (of type \link[Matrix]{Matrix}),
+#' which are results of \link[seqR]{count_kmers} and \link[seqR]{count_multimers}.
+#' This implementation also handles properly k-mer matrices that do not have
+#' the same columns, as opposed to the implementation of \link[base]{rbind}.
+#' 
+#' @param ... kmer matrices of type \link[Matrix]{Matrix}
+#' 
+#' @return a kmer matrix of type \link[Matrix]{Matrix} that is the result of the rbind operation
+#' 
+#' @examples
+#' 
+#' # k-mer counting
+#' resA <- count_kmers(c("AAAAA", "ASASSSSASSA"), k=5)
+#' resB <- count_multimers(c("HWHSHS", "AASDCASD"), k_vector=c(3, 5))
+#' 
+#' # rbind
+#' res <- rbind_columnwise(resA, resB)
+#' 
+#' @seealso count_kmers
+#' @seealso count_multimers
+#' 
+#' @md
 #' @export
 rbind_columnwise <- function(...) {
   input <- lapply(list(...),
