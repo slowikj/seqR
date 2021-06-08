@@ -60,8 +60,7 @@ The i-th row of the matrix represents k-mers found in the i-th input sequence.
 Each column represents a distinct k-mer.
 The names of columns conform to human-readable schema for k-mers,
 if param \code{with_kmer_names = TRUE}
-(for more information see section `Human-readable representation of k-mers`
-in \link[seqR]{count_kmers})
+(for more information see section \verb{Human-readable representation of k-mers})
 }
 \description{
 This is a convenient wrapper over \link[seqR]{count_kmers} function
