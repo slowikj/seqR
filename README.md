@@ -1,7 +1,4 @@
-[![Build Status](https://travis-ci.com/slowikj/seqR.svg?branch=master)](https://travis-ci.com/slowikj/seqR)
 [![R build status](https://github.com/slowikj/seqR/workflows/R-CMD-check/badge.svg)](https://github.com/slowikj/seqR/actions)
-
-# seqR <img src = "man/images/logo.png" align = "right" width="120"/>
 
 `seqR` is an R package that implements feature extraction (`k-mer counting`) of biological sequences such as proteins and nucleic acids.
 It supports multiple types of sequences:
