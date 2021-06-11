@@ -11,22 +11,22 @@
 
 Rcpp::List count_contiguous_kmers_string_vector(
     Rcpp::StringVector &sq,
-    Rcpp::StringVector &alphabet,
+    Rcpp::StringVector &kmerAlphabet,
     Rcpp::Environment &rcppParams);
 
 Rcpp::List count_contiguous_kmers_string_list(
     Rcpp::List &sq,
-    Rcpp::StringVector &alphabet,
+    Rcpp::StringVector &kmerAlphabet,
     Rcpp::Environment &rcppParams);
 
 Rcpp::List count_gapped_kmers_string_vector(
     Rcpp::StringVector &sq,
-    Rcpp::StringVector &alphabet,
+    Rcpp::StringVector &kmerAlphabet,
     Rcpp::Environment &rcppParams);
 
 Rcpp::List count_gapped_kmers_string_list(
     Rcpp::List &sq,
-    Rcpp::StringVector &alphabet,
+    Rcpp::StringVector &kmerAlphabet,
     Rcpp::Environment &rcppParams);
 
 Rcpp::List merge_kmer_results(
@@ -38,10 +38,10 @@ inline hashing::ComplexHasher createKMerComplexHasher(
     int hashDim);
 
 template <class sequences_t,
-          class alphabet_t>
+          class kmer_alphabet_t>
 inline Rcpp::List countContiguousKMers(
     sequences_t &sequences,
-    alphabet_t &alphabet,
+    kmer_alphabet_t &kmerAlphabet,
     Rcpp::Environment &rcppParams);
 
 // ------------- HELPERS: GAPPED K-MERS COUNTING -------------
@@ -50,10 +50,10 @@ inline std::vector<hashing::PolynomialSingleHasherConfig> getGappedKMerHasherCon
     int hashDim);
 
 template <class sequences_t,
-          class alphabet_t>
+          class kmer_alphabet_t>
 Rcpp::List countGappedKMers(
     sequences_t &sequences,
-    alphabet_t &alphabet,
+    kmer_alphabet_t &kmerAlphabet,
     Rcpp::Environment &rcppParams);
 
 // ------------- IMPLEMENTATION -------------
@@ -73,33 +73,33 @@ inline hashing::ComplexHasher createKMerComplexHasher(int hashDim) {
 }
 
 template <class sequences_t,
-          class alphabet_t>
+          class kmer_alphabet_t>
 Rcpp::List countContiguousKMers(
     sequences_t &sequences,
-    alphabet_t &alphabet,
+    kmer_alphabet_t &kmerAlphabet,
     Rcpp::Environment &rcppParams) {
   auto userParams = UserParams::createForContiguous(rcppParams);
   std::function<hashing::ComplexHasher()> algorithmParams = [&userParams]() -> hashing::ComplexHasher {
     return createKMerComplexHasher(userParams.hashDim);
   };
-  return countKMers<sequences_t, alphabet_t, decltype(algorithmParams)>(
-      sequences, alphabet, userParams, algorithmParams);
+  return countKMers<sequences_t, kmer_alphabet_t, decltype(algorithmParams)>(
+      sequences, kmerAlphabet, userParams, algorithmParams);
 }
 
 // [[Rcpp::export(".cpp_count_contiguous_kmers_string_vector")]]
 Rcpp::List count_contiguous_kmers_string_vector(
     Rcpp::StringVector &sq,
-    Rcpp::StringVector &alphabet,
+    Rcpp::StringVector &kmerAlphabet,
     Rcpp::Environment &rcppParams) {
-  return countContiguousKMers(sq, alphabet, rcppParams);
+  return countContiguousKMers(sq, kmerAlphabet, rcppParams);
 }
 
 // [[Rcpp::export(".cpp_count_contiguous_kmers_string_list")]]
 Rcpp::List count_contiguous_kmers_string_list(
     Rcpp::List &sq,
-    Rcpp::StringVector &alphabet,
+    Rcpp::StringVector &kmerAlphabet,
     Rcpp::Environment &rcppParams) {
-  return countContiguousKMers(sq, alphabet, rcppParams);
+  return countContiguousKMers(sq, kmerAlphabet, rcppParams);
 }
 
 // ------------- GAPPED K-MER COUNTING -------------
@@ -113,31 +113,31 @@ inline std::vector<hashing::PolynomialSingleHasherConfig> getGappedKMerHasherCon
 }
 
 template <class sequences_t,
-          class alphabet_t>
+          class kmer_alphabet_t>
 Rcpp::List countGappedKMers(
     sequences_t &sequences,
-    alphabet_t &alphabet,
+    kmer_alphabet_t &kmerAlphabet,
     Rcpp::Environment &rcppParams) {
   auto userParams = UserParams::createForGapped(rcppParams);
   auto hasherConfigs = getGappedKMerHasherConfigs(userParams.hashDim);
-  return countKMers<sequences_t, alphabet_t, decltype(hasherConfigs)>(
-      sequences, alphabet, userParams, hasherConfigs);
+  return countKMers<sequences_t, kmer_alphabet_t, decltype(hasherConfigs)>(
+      sequences, kmerAlphabet, userParams, hasherConfigs);
 }
 
 // [[Rcpp::export(".cpp_count_gapped_kmers_string_vector")]]
 Rcpp::List count_gapped_kmers_string_vector(
     Rcpp::StringVector &sq,
-    Rcpp::StringVector &alphabet,
+    Rcpp::StringVector &kmerAlphabet,
     Rcpp::Environment &rcppParams) {
-  return countGappedKMers(sq, alphabet, rcppParams);
+  return countGappedKMers(sq, kmerAlphabet, rcppParams);
 }
 
 // [[Rcpp::export(".cpp_count_gapped_kmers_string_list")]]
 Rcpp::List count_gapped_kmers_string_list(
     Rcpp::List &sq,
-    Rcpp::StringVector &alphabet,
+    Rcpp::StringVector &kmerAlphabet,
     Rcpp::Environment &rcppParams) {
-  return countGappedKMers(sq, alphabet, rcppParams);
+  return countGappedKMers(sq, kmerAlphabet, rcppParams);
 }
 
 // ------------- MERGING K-MER RESULTS -------------

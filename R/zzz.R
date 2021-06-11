@@ -2,7 +2,7 @@
   prev_options <- options()
   
   new_options <- list(
-    seqR_alphabet_default = "all",
+    seqR_kmer_alphabet_default = "all",
     seqR_positional_default = FALSE,
     seqR_with_kmer_counts_default = TRUE,
     seqR_with_kmer_names_default = TRUE,

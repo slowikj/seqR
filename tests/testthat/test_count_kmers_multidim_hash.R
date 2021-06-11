@@ -18,7 +18,7 @@ invoke_dim_test <- function(hash_dim) {
               expected_res = expected_res,
               sequences = sq,
               k = 3,
-              alphabet = c("A", "B"))
+              kmer_alphabet = c("A", "B"))
 }
 
 test_that("test count_kmers for 1 dimentional hash", {

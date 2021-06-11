@@ -21,7 +21,7 @@ test_that("(string vector) count 2-mers and 3-mers for list input (AC){100}", {
   invoke_test(expected_res=expected_res,
               sequences=sq,
               k_vector=c(2, 3),
-              alphabet=c("A", "C"),
+              kmer_alphabet=c("A", "C"),
               positional_vector=rep(FALSE, 2),
               kmer_gaps_list=list(c(), c()),
               with_kmer_counts = TRUE
@@ -40,7 +40,7 @@ test_that("(string vector) count 2-mers and 3-mers for 2 sequences: (AC){100}, (
   invoke_test(expected_res=expected_res,
               sequences=sq,
               k_vector=c(2, 3),
-              alphabet=c("A", "C", "D"),
+              kmer_alphabet=c("A", "C", "D"),
               positional_vector=rep(FALSE, 2),
               kmer_gaps_list=list(c(), c()),
               with_kmer_counts = TRUE
@@ -56,7 +56,7 @@ test_that("(string vector) count 2-mers for 2 sequences: (AC){100}, (AD){10} wit
   
   sq <- c(strrep("AC", 100), strrep("AD", 10))
   
-  res <- seqR::count_multimers(sq, c(2,3), alphabet=c("A", "D", "C"))
+  res <- seqR::count_multimers(sq, c(2,3), kmer_alphabet=c("A", "D", "C"))
   expect_matrices_equal(expected_res, as.matrix(res))
 })
 
@@ -67,7 +67,7 @@ test_that("(string vector) the last sequence do not contain any k-mer", {
 
 test_that("(string vector) expect sparse Matrix as an output", {
   sq <- c(strrep("AC", 100), strrep("AD", 10))
-  res <- seqR::count_multimers(sq, c(2,3), alphabet=c("A", "D", "C"))
+  res <- seqR::count_multimers(sq, c(2,3), kmer_alphabet=c("A", "D", "C"))
   
   expect_is(res, "dgCMatrix")
 })

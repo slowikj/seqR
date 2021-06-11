@@ -20,3 +20,4 @@ config.status
 src/Makevars
 
 build/*
+src/*.tmp

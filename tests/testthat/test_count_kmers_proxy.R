@@ -3,43 +3,43 @@ source("utils.R")
 
 test_that("null alphabet throws an error", {
   expect_error(seqR::count_kmers(sequences=list(c("a", "a", "a")),
-                                 alphabet=c()),
+                                 kmer_alphabet=c()),
                "alphabet param is empty")
 })
 
 test_that("null sequences throws an error", {
   expect_error(seqR::count_kmers(sequences=c(),
-                                 alphabet=c("a"),
+                                 kmer_alphabet=c("a"),
                                  k=1),
                "sequences param is empty")
 })
 
-# ALPHABET ----
+# KMER ALPHABET ----
 
 test_that("alphabet has incompatible element (integer) type with sequences' elements (string list)", {
   expect_error(seqR::count_kmers(sequences=list(c("a", "b")),
-                                 alphabet=c(1,2),
+                                 kmer_alphabet=c(1,2),
                                  k=1),
                "alphabet should contain strings")
 })
 
 test_that("alphabet has incompatible element (numeric) type with sequences' elements (string)", {
   expect_error(seqR::count_kmers(sequences=list(c("aa", "bb")),
-                                 alphabet=c(1.2, 2.2),
+                                 kmer_alphabet=c(1.2, 2.2),
                                  k=1),
                "alphabet should contain strings")
 })
 
 test_that("alphabet has incompatible element (numeric) type with sequences from vector input (string)", {
   expect_error(seqR::count_kmers(sequences=c("aaaaaaa"),
-                                 alphabet=c(1.1, 2.2),
+                                 kmer_alphabet=c(1.1, 2.2),
                                  k=1),
                "alphabet should contain strings")
 })
 
 test_that("alphabet has incompatible element (integer) type with sequences from vector input (string)", {
   expect_error(seqR::count_kmers(sequences=c("aaaaaa"),
-                                 alphabet=c(1,2),
+                                 kmer_alphabet=c(1,2),
                                  k=1),
                "alphabet should contain strings")
 })
@@ -48,14 +48,14 @@ test_that("alphabet has incompatible element (integer) type with sequences from 
 
 test_that("k = 0 generate an error", {
   expect_error(seqR::count_kmers(sequences=c("AAAAA"),
-                                 alphabet=c("A"),
+                                 kmer_alphabet=c("A"),
                                  k=0),
                "k should be a positive integer")
 })
 
 test_that("non integer gaps vector generates an error", {
   expect_error(seqR::count_kmers(sequences=c("AAAAA"),
-                                 alphabet=c("A"),
+                                 kmer_alphabet=c("A"),
                                  k=1,
                                  kmer_gaps=c("A")),
                "gaps should be an integer vector")
@@ -63,7 +63,7 @@ test_that("non integer gaps vector generates an error", {
 
 test_that("kmer gaps length larger than k-1 generates an error", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                 alphabet=c("A"),
+                                 kmer_alphabet=c("A"),
                                  k=1,
                                  kmer_gaps=c(1,2)),
                "the length of kmer_gaps vector should be at most k-1")
@@ -73,7 +73,7 @@ test_that("kmer gaps length larger than k-1 generates an error", {
 
 test_that("provided batch size param is a negative integer", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                 alphabet=c("A"),
+                                 kmer_alphabet=c("A"),
                                  k=1,
                                  batch_size = -2),
                "batch size field must be a positive integer number")
@@ -81,7 +81,7 @@ test_that("provided batch size param is a negative integer", {
 
 test_that("provided batch size param is a positive non integer", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                 alphabet=c("A"),
+                                 kmer_alphabet=c("A"),
                                  k=1,
                                  batch_size = 2.2),
                "batch size field must be a positive integer number")
@@ -89,7 +89,7 @@ test_that("provided batch size param is a positive non integer", {
 
 test_that("provided batch size param is zero", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                 alphabet=c("A"),
+                                 kmer_alphabet=c("A"),
                                  k=1,
                                  batch_size = 0),
                "batch size field must be a positive integer number")
@@ -97,7 +97,7 @@ test_that("provided batch size param is zero", {
 
 test_that("provided batch size param is a string", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                 alphabet=c("A"),
+                                 kmer_alphabet=c("A"),
                                  k=1,
                                  batch_size = "aaaa"),
                "batch size field must be a positive integer number")
@@ -105,7 +105,7 @@ test_that("provided batch size param is a string", {
 
 test_that("provided batch size param is an integer vector", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                 alphabet=c("A"),
+                                 kmer_alphabet=c("A"),
                                  k=1,
                                  batch_size = c(1,2,3)),
                "batch size field must be a positive integer number")
@@ -113,7 +113,7 @@ test_that("provided batch size param is an integer vector", {
 
 test_that("provided batch size param is NULL", {
   expect_error(seqR::count_kmers(sequences=c("AAAA"),
-                                 alphabet=c("A"),
+                                 kmer_alphabet=c("A"),
                                  k=1,
                                  batch_size = NULL),
                "batch size field must be a positive integer number")
@@ -130,7 +130,7 @@ test_that("test list input sequences for gapped k-mers", {
   
   res <- seqR::count_kmers(sequences=sq,
                            k=2,
-                           alphabet=c("A", "C"),
+                           kmer_alphabet=c("A", "C"),
                            positional=FALSE,
                            kmer_gaps=c(1))
   
@@ -142,7 +142,7 @@ test_that("test the case when there is 0 found k-mers", {
   expected_res <- matrix(nrow=2, ncol=0)
   res <- seqR::count_kmers(sequences=sq,
                            k=100,
-                           alphabet=c("A"),
+                           kmer_alphabet=c("A"),
                            positional=FALSE,
                            kmer_gaps=c(1))
   
@@ -161,7 +161,7 @@ run_batch_test <- function(batch_size) {
   ), nrow=4, byrow=TRUE)
   colnames(expected_res) <- c("A.A.A_0.0", "A.A.B_0.0", "B.B.B_0.0")
   res <- seqR::count_kmers(sequences = sq,
-                           alphabet=c("A", "B"),
+                           kmer_alphabet=c("A", "B"),
                            k=3,
                            positional=FALSE,
                            with_kmer_counts=TRUE,
@@ -192,7 +192,7 @@ test_that("the last input sequence does not contain any specified k-mer", {
   colnames(expected_res) <- c("a.a.c.b.b_0.0.0.0", "a.a.a.c.b_0.0.0.0", "a.a.a.a.a_0.0.0.0", "a.a.a.a.c_0.0.0.0")
   
   res <- seqR::count_kmers(sequences=sq,
-                           alphabet=letters,
+                           kmer_alphabet=letters,
                            k=5,
                            positional=FALSE,
                            with_kmer_counts = FALSE,
@@ -212,7 +212,7 @@ test_that("more than one last input sequences do not contain any specified k-mer
   colnames(expected_res) <- c("a.a.c.b.b_0.0.0.0", "a.a.a.c.b_0.0.0.0", "a.a.a.a.a_0.0.0.0", "a.a.a.a.c_0.0.0.0")
   
   res <- seqR::count_kmers(sequences=sq,
-                           alphabet=letters,
+                           kmer_alphabet=letters,
                            k=5,
                            positional=FALSE,
                            with_kmer_counts = FALSE,
@@ -232,7 +232,7 @@ test_that("some input sequences do not contain any specified k-mer", {
   colnames(expected_res) <- c("a.a.c.b.b_0.0.0.0", "a.a.a.c.b_0.0.0.0", "a.a.a.a.a_0.0.0.0", "a.a.a.a.c_0.0.0.0")
   
   res <- seqR::count_kmers(sequences=sq,
-                           alphabet=letters,
+                           kmer_alphabet=letters,
                            k=5,
                            positional=FALSE,
                            with_kmer_counts = FALSE,
@@ -245,7 +245,7 @@ test_that("expect dgCMatrix as an output", {
   sq <- c("AAAAA", "AA", "AAAAAAAB", "BBB")
   
   res <- seqR::count_kmers(sequences = sq,
-                           alphabet=c("A", "B"),
+                           kmer_alphabet=c("A", "B"),
                            k=3,
                            positional=FALSE,
                            with_kmer_counts=TRUE,
@@ -264,7 +264,7 @@ test_that("count positional 1-mers for one-dimensional hash P_a, 1_b (P is hashi
   colnames(expected_res) <- c("102_A", "1_B")
   
   res <- seqR::count_kmers(sequences = sq,
-                           alphabet = c("A", "B"),
+                           kmer_alphabet = c("A", "B"),
                            k = 1,
                            positional = TRUE,
                            hash_dim = 1)
@@ -279,7 +279,7 @@ test_that("count positional gapped 2-mers (gap == 1) for one-dimensional hash 1_
   colnames(expected_res) <- c("1_B.A_1", "10202_A.A_1")
   
   res <- seqR::count_kmers(sequences = sq,
-                           alphabet = c("A", "B"),
+                           kmer_alphabet = c("A", "B"),
                            k = 2,
                            kmer_gaps = c(1),
                            positional = TRUE,
@@ -292,7 +292,7 @@ test_that("count 3-mers without k-mer names, one sequence", {
   sq <- c("AAAAAAAAA")
   
   res <- seqR::count_kmers(sequences = sq,
-                           alphabet = LETTERS,
+                           kmer_alphabet = LETTERS,
                            k = 3,
                            with_kmer_names = FALSE)
   
@@ -304,7 +304,7 @@ test_that("count 3-mers without k-mer names, multiple sequences", {
   sq <- c("AAAAAAAAA", "ACADSDSA", "AAABBB")
   
   res <- seqR::count_kmers(sequences = sq,
-                           alphabet = LETTERS,
+                           kmer_alphabet = LETTERS,
                            k = 3,
                            with_kmer_names = FALSE)
   
@@ -322,7 +322,7 @@ test_that("(string vector) count 2-mers with alphabet = all", {
   colnames(expected_res) <- c("X.X_0", "X.A_0", "A.X_0", "A.B_0", "B.C_0")
   
   res <- seqR::count_kmers(sequences = sq,
-                           alphabet = "all",
+                           kmer_alphabet = "all",
                            k = 2)
   
   expect_matrices_equal(as.matrix(res), expected_res)
@@ -339,7 +339,7 @@ test_that("(string vector) count 2-mers with alphabet = all, batch size = 1", {
   colnames(expected_res) <- c("X.X_0", "X.A_0", "A.X_0", "A.B_0", "B.C_0")
   
   res <- seqR::count_kmers(sequences = sq,
-                           alphabet = "all",
+                           kmer_alphabet = "all",
                            batch_size = 1,
                            k = 2)
   
@@ -359,7 +359,7 @@ test_that("(string list) count 2-mers with alphabet = all", {
   colnames(expected_res) <- c("X.X_0", "X.A_0", "A.X_0", "A.B_0", "B.C_0")
   
   res <- seqR::count_kmers(sequences = sq,
-                           alphabet = "all",
+                           kmer_alphabet = "all",
                            k = 2)
   
   expect_matrices_equal(as.matrix(res), expected_res)
@@ -378,7 +378,7 @@ test_that("(string list) count 2-mers with alphabet = all, batch_size = 1", {
   colnames(expected_res) <- c("X.X_0", "X.A_0", "A.X_0", "A.B_0", "B.C_0")
   
   res <- seqR::count_kmers(sequences = sq,
-                           alphabet = "all",
+                           kmer_alphabet = "all",
                            batch_size = 1,
                            k = 2)
   

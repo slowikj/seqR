@@ -13,7 +13,7 @@ invoke_test <- function(fun, expected_res, ...) {
 
 test_that("(string list) test one sequence with kmer_gaps (1) not positional", {
   invoke_test(expected_res=to_matrix(c("a.a_1"=3, "b.b_1"=1, "a.b_1"=1)),
-              alphabet=c("a", "b"),
+              kmer_alphabet=c("a", "b"),
               sequences=list(c("a", "a", "a", "b", "a", "b", "a")),
               kmer_gaps=c(1),
               positional=FALSE,
@@ -22,7 +22,7 @@ test_that("(string list) test one sequence with kmer_gaps (1) not positional", {
 
 test_that("(string list) test one sequence with kmer_gaps (1) positional", {
   invoke_test(expected_res=to_matrix(c("1_a.a_1"=1, "2_a.b_1"=1, "3_a.a_1"=1, "4_b.b_1"=1, "5_a.a_1"=1)),
-              alphabet=c("a", "b"),
+              kmer_alphabet=c("a", "b"),
               sequences=list(c("a", "a", "a", "b", "a", "b", "a")),
               kmer_gaps=c(1),
               positional=TRUE,
@@ -31,7 +31,7 @@ test_that("(string list) test one sequence with kmer_gaps (1) positional", {
 
 test_that("(string list) test one sequence with gapps (1,0) not positional", {
   invoke_test(expected_res=to_matrix(c("b.b.a_1.0"=1, "a.a.b_1.0"=2, "a.b.a_1.0"=1)),
-              alphabet=c("a", "b"),
+              kmer_alphabet=c("a", "b"),
               sequences=list(c("a", "a", "a", "b", "a", "b", "a")),
               kmer_gaps=c(1, 0),
               positional=FALSE,
@@ -40,7 +40,7 @@ test_that("(string list) test one sequence with gapps (1,0) not positional", {
 
 test_that("(string list) test one sequence with gapps (1,0) not positional, alphabet all", {
   invoke_test(expected_res=to_matrix(c("b.b.a_1.0"=1, "a.a.b_1.0"=2, "a.b.a_1.0"=1)),
-              alphabet="all",
+              kmer_alphabet="all",
               sequences=list(c("a", "a", "a", "b", "a", "b", "a")),
               kmer_gaps=c(1, 0),
               positional=FALSE,
@@ -58,7 +58,7 @@ test_that("(string list) test 2 sequences with kmer_gaps (1,1) positional; some 
   colnames(expectedRes) <- c("6_b.a.b_1.1", "7_b.a.a_1.1", "5_a.b.a_1.1")
   
   invoke_test(expected_res=expectedRes,
-              alphabet=c("a", "b"),
+              kmer_alphabet=c("a", "b"),
               sequences=sequences,
               kmer_gaps=c(1,1),
               positional=TRUE,
@@ -72,7 +72,7 @@ test_that("(string list) the k-mer is longer than a sequence", {
   expectedRes <- matrix(nrow=2, ncol=0)
   
   invoke_test(expected_res=expectedRes,
-              alphabet=c("a", "b"),
+              kmer_alphabet=c("a", "b"),
               sequences=sequences,
               kmer_gaps=rep(1, 10000),
               positional=FALSE,
@@ -89,7 +89,7 @@ test_that("(string vector) count non positional k-mers (0, 1)", {
     0, 1), nrow = 3, byrow=TRUE)
   colnames(expected_res) <- c("A.A.A_0.1", "A.A.C_0.1")
   invoke_test(expected_res = expected_res,
-              alphabet=c("A", "C"),
+              kmer_alphabet=c("A", "C"),
               sequences = sequences,
               kmer_gaps = c(0,1),
               positional = FALSE,
@@ -104,7 +104,7 @@ test_that("(string vector) count non positional k-mers (0, 1), alphabet all", {
     0, 1), nrow = 3, byrow=TRUE)
   colnames(expected_res) <- c("A.A.A_0.1", "A.A.C_0.1")
   invoke_test(expected_res = expected_res,
-              alphabet="all",
+              kmer_alphabet="all",
               sequences = sequences,
               kmer_gaps = c(0,1),
               positional = FALSE,
@@ -120,7 +120,7 @@ test_that("(string vector) count non positional k-mers (0, 1); some items are no
   ), nrow = 3, byrow=TRUE)
   colnames(expected_res) <- c("A.A.A_0.1", "A.A.T_0.1", "T.A.A_0.1")
   invoke_test(expected_res = expected_res,
-              alphabet=c("A", "T"),
+              kmer_alphabet=c("A", "T"),
               sequences = sequences,
               kmer_gaps = c(0, 1),
               positional = FALSE,
@@ -131,7 +131,7 @@ test_that("(string vector) the k-mer is longer than the sequence", {
   sequences <- c("AAAACAAAAC", "AACTAAAA", "AACTAAAAC")
   expected_res <- matrix(nrow=3, ncol=0)
   invoke_test(expected_res = expected_res,
-              alphabet=c("A", "T"),
+              kmer_alphabet=c("A", "T"),
               sequences = sequences,
               kmer_gaps = rep(1,100),
               positional = FALSE,

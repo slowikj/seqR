@@ -71,17 +71,17 @@ template <class algorithm_params_t,
           class kmer_manager_t,
           template <typename key, typename value, class...> class result_dictionary_t>
 inline Rcpp::List countKMersSpecific(Rcpp::List &sequences,
-                                           Rcpp::StringVector &alphabet,
-                                           const UserParams &userParams,
-                                           algorithm_params_t &algorithmParams) {
+                                     Rcpp::StringVector &kmerAlphabet,
+                                     const UserParams &userParams,
+                                     algorithm_params_t &algorithmParams) {
   using encodedElemType = uint8_t;
   std::unordered_map<std::string, encodedElemType> alphabetEncoder{};
   std::vector<std::string> alphabetDecoder{"", ""};
   encodedElemType invalidElemCode = 1;
   encodedElemType encodingCnt = 1;
-  bool allElementsAllowed = (alphabet[0] == config::ALPHABET_ALL_LABEL);
+  bool allElementsAllowed = (kmerAlphabet[0] == config::ALPHABET_ALL_LABEL);
   if (!allElementsAllowed) {
-    for (const auto &elem : alphabet) {
+    for (const auto &elem : kmerAlphabet) {
       std::string cppElem = Rcpp::as<std::string>(elem);
       alphabetEncoder[cppElem] = ++encodingCnt;
       alphabetDecoder.push_back(cppElem);
