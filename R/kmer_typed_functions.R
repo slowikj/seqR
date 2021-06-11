@@ -1,4 +1,4 @@
-#' @include validators.R
+#' @include atomic_validators.R
 #' @include seqR_result.R
 
 .count_contiguous_kmers_string_vector_proxy <- function(sequences, params) {

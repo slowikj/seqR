@@ -49,7 +49,7 @@
 #' that are being processed in a single step
 #' (for more information see section `Configurable size of batch of sequences`)
 #' 
-#' @param hash_dim a single \code{integer} value representing the length of hash vector
+#' @param hash_dim a single \code{integer} value (`1 <= hash_dim <= 8`) representing the length of hash vector
 #' that is internally used in the algorithm
 #' (for more information see section `Configurable dimension of the hash value of a k-mer`)
 #' 
@@ -228,7 +228,7 @@
 #' 
 #' @seealso Function that counts many k-mer variants in the single invocation: \link[seqR]{count_multimers}
 #' @seealso Function that merges two k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
-#' @include validators.R
+#' @include atomic_validators.R
 #' @include kmer_functions_provider.R
 #' @export
 #' @md
@@ -242,40 +242,15 @@ count_kmers <- function(sequences,
                         batch_size = getOption("seqR_batch_size_default"),
                         hash_dim = getOption("seqR_hash_dim_default"),
                         verbose = getOption("seqR_verbose_default")) {
-  if (is_empty(kmer_alphabet)) {
-    stop("alphabet param is empty")
-  }
-  
-  if(is_empty(sequences)) {
-    stop("sequences param is empty")
-  }
-  
-  if(!has_integers_only(k) || k <= 0) {
-    stop("k should be a positive integer")
-  }
-  
-  if(!is.null(kmer_gaps)) {
-    if(!has_integers_only(kmer_gaps)) {
-      stop("gaps should be an integer vector")
-    }
-    if(length(kmer_gaps) >= k) {
-      stop("the length of kmer_gaps vector should be at most k-1")
-    }
-  }
-  
-  if(!is_positive_integer(batch_size)) {
-    stop("batch size field must be a positive integer number")
-  }
-  
-  if(!is_positive_integer(hash_dim) || hash_dim > 8) {
-    stop("hash_dim is a single integer number from the range [1, 8]")
-  }
-  
-  if(!is_bool_value(verbose)) {
-    stop("verbose must be a single logical value")
-  }
-  
   kmer_alphabet <- unique(kmer_alphabet)
+  
+  .validate_kmer_alphabet(kmer_alphabet)
+  .validate_sequences(sequences)
+  .validate_k(k)
+  .validate_kmer_gaps(kmer_gaps, k)
+  .validate_batch_size(batch_size)
+  .validate_hash_dim(hash_dim)
+  .validate_verbose(verbose)
   
   params <- rlang::env(
     kmer_alphabet=kmer_alphabet,
@@ -289,13 +264,56 @@ count_kmers <- function(sequences,
   )
   
   if(sum(kmer_gaps) == 0) {
-    .invoke_contiguous_kmer_function(
-      sequences=sequences,
-      params=params)
+    .invoke_contiguous_kmer_function(sequences=sequences, params=params)
   } else {
-    params$gaps = rep(kmer_gaps, length.out=k-1)
-    .invoke_gapped_kmer_function(
-      sequences=sequences,
-      params)
+    params$gaps <- rep(kmer_gaps, length.out=k-1)
+    .invoke_gapped_kmer_function(sequences=sequences, params=params)
+  }
+}
+
+.validate_kmer_alphabet <- function(param) {
+  if (is_empty(param)) {
+    stop("alphabet param is empty")
+  }
+}
+
+.validate_sequences <-function(param) {
+  if(is_empty(param)) {
+    stop("sequences param is empty")
+  }
+}
+
+.validate_k <- function(param) {
+  if(!has_integers_only(param) || param <= 0) {
+    stop("k should be a positive integer")
+  }
+}
+
+.validate_kmer_gaps <- function(param, k) {
+  if(!is.null(param)) {
+    if(!has_integers_only(param)) {
+      stop("gaps should be an integer vector")
+    }
+    if(length(param) >= k) {
+      stop("the length of kmer_gaps vector should be at most k-1")
+    }
+  }
+}
+
+.validate_batch_size <- function(param) {
+  if(!is_positive_integer(param)) {
+    stop("batch size field must be a positive integer number")
+  }
+}
+
+.validate_hash_dim <- function(param) {
+  if(!is_positive_integer(param) || param > 8) {
+    stop("hash_dim is a single integer number from the range [1, 8]")
+  }
+}
+
+.validate_verbose <- function(param) {
+  if(!is_bool_value(param)) {
+    stop("verbose must be a single logical value")
   }
 }

@@ -45,7 +45,7 @@ should contain human-readable k-mer names}
 that are being processed in a single step
 (for more information see section \verb{Configurable size of batch of sequences})}
 
-\item{hash_dim}{a single \code{integer} value representing the length of hash vector
+\item{hash_dim}{a single \code{integer} value (\verb{1 <= hash_dim <= 8}) representing the length of hash vector
 that is internally used in the algorithm
 (for more information see section \verb{Configurable dimension of the hash value of a k-mer})}
 
