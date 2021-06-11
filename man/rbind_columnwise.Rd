@@ -7,10 +7,10 @@
 rbind_columnwise(...)
 }
 \arguments{
-\item{...}{kmer matrices of type \link[Matrix]{Matrix}}
+\item{...}{k-mer matrices of type \link[Matrix]{Matrix}}
 }
 \value{
-a kmer matrix of type \link[Matrix]{Matrix} that is the result of the rbind operation
+a k-mer matrix of type \link[Matrix]{Matrix} that is the result of the rbind operation
 }
 \description{
 The function binds rows of several input k-mer matrices (of type \link[Matrix]{Matrix}),

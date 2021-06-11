@@ -10,8 +10,7 @@ Authors@R: c(
            email = "jadwiga.slowik5@gmail.com")
     )
 Maintainer: Jadwiga Słowik <jadwiga.slowik5@gmail.com>
-Description: seqR is a package providing fast counting of k-mers in sequences. It allows user to specify
-  lengths of the k-mers and gaps between elements in the sequence.
+Description: a fast implementation of k-mer counting with the support of all biological sequences and k-mer variants
 License: MIT + file LICENSE
 Imports:
     Rcpp (>= 1.0.4),
