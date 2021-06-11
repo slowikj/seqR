@@ -7,9 +7,9 @@
 #' This implementation also handles properly k-mer matrices that do not have
 #' the same columns, as opposed to the implementation of \link[base]{rbind}.
 #' 
-#' @param ... kmer matrices of type \link[Matrix]{Matrix}
+#' @param ... k-mer matrices of type \link[Matrix]{Matrix}
 #' 
-#' @return a kmer matrix of type \link[Matrix]{Matrix} that is the result of the rbind operation
+#' @return a k-mer matrix of type \link[Matrix]{Matrix} that is the result of the rbind operation
 #' 
 #' @examples
 #' 
