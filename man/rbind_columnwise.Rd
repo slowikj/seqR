@@ -29,7 +29,7 @@ res <- rbind_columnwise(resA, resB)
 
 }
 \seealso{
-count_kmers
+Function that count k-mers of one type: count_kmers
 
-count_multimers
+Function that counts many k-mer variants in the single invocation: count_multimers
 }

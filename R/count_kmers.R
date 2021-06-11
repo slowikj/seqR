@@ -226,8 +226,8 @@
 #' # Counting gapped 3-mers with lengths of gaps 1 and 2
 #' count_kmers(c("ACATACTAT", "ACCCCCC"), kmer_gaps=c(1,2))
 #' 
-#' @seealso \link[seqR]{count_multimers}
-#' @seealso \link[seqR]{rbind_columnwise}
+#' @seealso Function that counts many k-mer variants in the single invocation: \link[seqR]{count_multimers}
+#' @seealso Function that merges two k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
 #' @include validators.R
 #' @include kmer_functions_provider.R
 #' @export

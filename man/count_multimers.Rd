@@ -102,7 +102,7 @@ count_multimers(
 
 }
 \seealso{
-\link[seqR]{count_kmers}
+Function that count k-mers of one type: \link[seqR]{count_kmers}
 
-\link[seqR]{rbind_columnwise}
+Function that merges two k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
 }

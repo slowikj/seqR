@@ -20,8 +20,8 @@
 #' # rbind
 #' res <- rbind_columnwise(resA, resB)
 #' 
-#' @seealso count_kmers
-#' @seealso count_multimers
+#' @seealso Function that count k-mers of one type: count_kmers
+#' @seealso Function that counts many k-mer variants in the single invocation: count_multimers
 #' 
 #' @md
 #' @export

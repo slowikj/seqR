@@ -78,8 +78,8 @@
 #'    kmer_gaps_list = list(NULL, NULL, c(1)),
 #'    positional_vector = c(FALSE, TRUE, TRUE))
 #' 
-#' @seealso \link[seqR]{count_kmers}
-#' @seealso \link[seqR]{rbind_columnwise}
+#' @seealso Function that count k-mers of one type: \link[seqR]{count_kmers}
+#' @seealso Function that merges two k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
 #' @md
 #' @export
 count_multimers <- function(sequences,

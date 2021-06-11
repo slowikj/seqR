@@ -255,7 +255,7 @@ count_kmers(c("ACATACTAT", "ACCCCCC"), kmer_gaps=c(1,2))
 
 }
 \seealso{
-\link[seqR]{count_multimers}
+Function that counts many k-mer variants in the single invocation: \link[seqR]{count_multimers}
 
-\link[seqR]{rbind_columnwise}
+Function that merges two k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
 }
