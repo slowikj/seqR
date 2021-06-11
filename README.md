@@ -30,7 +30,7 @@ processing k-mer matrices:
 
 -   `count_kmers` (used for counting k-mers of one type)
 -   `count_multimers` (a wrapper of `count_kmers`, used for counting
-    k-mers of many types)
+    k-mers of many types in a single invocation of the function)
 -   `rbind_columnwise` (a helper function used for merging several k-mer
     matrices that do not have same sets of columns)
 
@@ -237,9 +237,9 @@ microbenchmark::microbenchmark(
   times=11
 )
 #> Unit: milliseconds
-#>            expr      min       lq     mean   median       uq      max neval
-#>   multithreaded 162.0713 163.8967 170.9068 166.3870 167.6822 222.7021    11
-#>  singlethreaded 243.9163 247.2641 248.3639 247.9051 248.2058 255.6445    11
+#>            expr      min       lq     mean   median       uq     max neval
+#>   multithreaded 162.9529 164.2894 171.6594 165.2127 168.6545 226.133    11
+#>  singlethreaded 244.2680 247.6540 248.8109 248.6283 250.2557 252.699    11
 ```
 
 ### verbose mode
