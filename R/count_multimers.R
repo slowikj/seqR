@@ -29,7 +29,7 @@
 #' 
 #' @param kmer_gaps_list a \code{list} of \code{integer vectors} that represents the lengths of gaps of k-mers
 #' for each configuration separately. The i-th element of the list corresponds to the lengths of gaps of the i-th
-#' k-mer configuation
+#' k-mer configuration
 #' 
 #' @param with_kmer_counts a single \code{logical} value that determines whether the result
 #' should contain k-mer frequencies

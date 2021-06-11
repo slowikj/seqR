@@ -32,7 +32,7 @@ The i-th element corresponds to the i-th k-mer configuration (i.e., whether the 
 
 \item{kmer_gaps_list}{a \code{list} of \code{integer vectors} that represents the lengths of gaps of k-mers
 for each configuration separately. The i-th element of the list corresponds to the lengths of gaps of the i-th
-k-mer configuation}
+k-mer configuration}
 
 \item{with_kmer_counts}{a single \code{logical} value that determines whether the result
 should contain k-mer frequencies}
@@ -59,7 +59,7 @@ The result is a sparse matrix in order to reduce memory consumption.
 The i-th row of the matrix represents k-mers found in the i-th input sequence.
 Each column represents a distinct k-mer.
 The names of columns conform to human-readable schema for k-mers,
-if param \code{with_kmer_names = TRUE}
+if parameter \code{with_kmer_names = TRUE}
 (for more information see section \verb{Human-readable representation of k-mers})
 }
 \description{

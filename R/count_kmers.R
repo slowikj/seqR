@@ -61,7 +61,7 @@
 #' The i-th row of the matrix represents k-mers found in the i-th input sequence.
 #' Each column represents a distinct k-mer.
 #' The names of columns conform to human-readable schema for k-mers,
-#' if param \code{with_kmer_names = TRUE}
+#' if parameter \code{with_kmer_names = TRUE}
 #' (for more information see section `Human-readable representation of k-mers`)
 #' 
 #' 
@@ -69,7 +69,7 @@
 #' 
 #' # Supported variants of k-mers
 #' 
-#' A user explicitly specifies k-mer configuration using the following function params:
+#' A user explicitly specifies k-mer configuration using the following function parameters:
 #' \code{k}, \code{kmer_gaps}, and \code{positional}.
 #' There are four major variants of k-mers (for more information see the following subsections):
 #' contiguous k-mers, gapped k-mers, positional contiguous k-mers, positional gapped k-mers.
@@ -78,8 +78,8 @@
 #' 
 #' Contiguous k-mers can be defined as subwords of a fixed length.
 #' 
-#' A user specifies the length of the k-mer with \code{k} param.
-#' The other function params should be \code{kmer_gaps = NULL} (default)
+#' A user specifies the length of the k-mer with \code{k} parameter.
+#' The other function parameters should be \code{kmer_gaps = NULL} (default)
 #' and \code{positional = FALSE} (default).
 #' 
 #' For example, 3-mers of sequence AABC are:
@@ -87,12 +87,12 @@
 #' 
 #' ## gapped k-mers
 #' 
-#' Gapped k-mers can be defined as subsequences (not necessarilly contiguous) of a given sequence.
+#' Gapped k-mers can be defined as subsequences (not necessarily contiguous) of a given sequence.
 #' In particular, between two contiguous elements of the sequence there might be a gap
 #' of a length specified by a user separately.
 #' 
-#' A user specifies the length of each gap in \code{kmer_gaps} param.
-#' The other function params should be \code{k = length(kmer_gaps)} (default)
+#' A user specifies the length of each gap using \code{kmer_gaps} parameter.
+#' The other function parameters should be \code{k = length(kmer_gaps)} (default)
 #' and \code{positional = FALSE} (default).
 #' 
 #' For example, gapped 3-mers with gaps' lengths 0 and 1 of sequence AABCCA are:
@@ -106,8 +106,8 @@
 #' of a given sequence are considered not to be equal,
 #' as opposed to (non-positional) contiguous k-mers.
 #' 
-#' A user specifies the length of the k-mer with \code{k} param.
-#' The other function params should be \code{kmer_gaps = NULL} (default)
+#' A user specifies the length of the k-mer with \code{k} parameter.
+#' The other function parameters should be \code{kmer_gaps = NULL} (default)
 #' and \code{positional = TRUE}.
 #' 
 #' For example, positional contiguous 3-mers of sequence AABCCA are:
@@ -121,12 +121,12 @@
 #' of a given sequence are considered not to be equal,
 #' as opposed to (non-positional) gapped k-mers.
 #' 
-#' A user specifies the length of each gap in \code{kmer_gaps} param.
-#' The other function params should be \code{k = length(kmer_gaps)} (default)
+#' A user specifies the length of each gap using \code{kmer_gaps} parameter.
+#' The other function parameters should be \code{k = length(kmer_gaps)} (default)
 #' and \code{positional = TRUE}.
 #' 
-#' For example, positional gapped 3-mers with gaps' lengths 0 and 1 of sequence AABCCA are:
-#' 1_AAC, 2_ABC, 3_BCA.
+#' For example, positional gapped 3-mers with gaps' lengths 0 and 1 of sequence \code{AABCCA} are:
+#' \code{1_AAC}, \code{2_ABC}, \code{3_BCA}.
 #' 
 #' # Supported input sequences
 #' 

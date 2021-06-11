@@ -7,7 +7,7 @@ It supports multiple types of sequences:
 * a matrix of numbers
 * a matrix of strings
 
-Addationally, several types of k-mers are supported:
+Additionally, several types of k-mers are supported:
 * contiguous k-mers
 * gapped k-mers
 * position-specific (positional) k-mers
