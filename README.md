@@ -28,17 +28,6 @@ Moreover, the result optimizes memory consumption by the application of
 [ranger](https://cran.r-project.org/web/packages/ranger/index.html) and
 [xgboost](https://cran.r-project.org/web/packages/xgboost/index.html).
 
-### Available functions
-
-The package provides three functions that facilitate k-mer counting and
-processing k-mer matrices:
-
--   `count_kmers` (used for counting k-mers of one type)
--   `count_multimers` (a wrapper of `count_kmers`, used for counting
-    k-mers of many types in a single invocation of the function)
--   `rbind_columnwise` (a helper function used for merging several k-mer
-    matrices that do not have same sets of columns)
-
 ## How to…
 
 ### How to install
@@ -53,10 +42,46 @@ devtools::install_github("slowikj/seqR")
 
 ### How to use
 
-\[TODO\] Link to the documentation and vignettes
+The package provides two functions that facilitate k-mer counting
 
-See features overview vignette and documentation to learn how to use
-**seqR**.
+-   `count_kmers` (used for counting k-mers of one type)
+-   `count_multimers` (a wrapper of `count_kmers`, used for counting
+    k-mers of many types in a single invocation of the function)
+
+and one function used for custom processing of k-mer matrices:
+
+-   `rbind_columnwise` (a helper function used for merging several k-mer
+    matrices that do not have same sets of columns)
+
+To learn more, see features overview vignette and documentation.
+
+#### Examples
+
+##### counting 5-mers
+
+``` r
+count_kmers(sequences=c("AAAAAVVAVFF", "DFGSADFGSA"),
+            k=5)
+#> 2 x 12 sparse Matrix of class "dgCMatrix"
+#>    [[ suppressing 12 column names 'A.A.V.V.A_0.0.0.0', 'A.A.A.A.A_0.0.0.0', 'V.A.V.F.F_0.0.0.0' ... ]]
+#>                             
+#> [1,] 1 1 1 1 1 1 1 . . . . .
+#> [2,] . . . . . . . 1 1 1 2 1
+```
+
+##### couting gapped 5-mers with gaps (0, 1, 0, 2) (XX\_XX\_\_X)
+
+``` r
+count_kmers(sequences=c("AAAAAVVAVFF", "DFGSADFGSA"),
+            kmer_gaps=c(0, 1, 0, 2))
+#> 2 x 7 sparse Matrix of class "dgCMatrix"
+#>      A.A.V.A.F_0.1.0.2 A.A.A.A.A_0.1.0.2 A.A.V.V.F_0.1.0.2 A.A.A.V.V_0.1.0.2
+#> [1,]                 1                 1                 1                 1
+#> [2,]                 .                 .                 .                 .
+#>      F.G.A.D.S_0.1.0.2 G.S.D.F.A_0.1.0.2 D.F.S.A.G_0.1.0.2
+#> [1,]                 .                 .                 .
+#> [2,]                 1                 1                 1
+```
 
 ### How to cite
 
