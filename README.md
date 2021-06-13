@@ -69,7 +69,7 @@ count_kmers(sequences=c("AAAAAVVAVFF", "DFGSADFGSA"),
 #> [2,] . . . . . . . 1 1 1 2 1
 ```
 
-##### couting gapped 5-mers with gaps (0, 1, 0, 2) (XX\_XX\_\_X)
+##### counting gapped 5-mers with gaps (0, 1, 0, 2) (XX\_XX\_\_X)
 
 ``` r
 count_kmers(sequences=c("AAAAAVVAVFF", "DFGSADFGSA"),

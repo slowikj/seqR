@@ -2,18 +2,15 @@
 #' 
 #' @description 
 #' 
-#' This is a convenient wrapper over \link[seqR]{count_kmers} function
-#' in order to enable the computation of multiple types of k-mers
-#' in a single invocation of the function
-#' (for more information on k-mer types see \code{Supported variants of k-mers}
-#' in \link[seqR]{count_kmers}).
+#' This is a wrapper over \link[seqR]{count_kmers} function
+#' in order to enable the computation of many types of k-mers
+#' in a single invocation of the function.
 #' 
 #' A user can input multiple k-mer configurations in the following way.
 #' Each parameter that is related to the configuration
 #' (i.e., \code{k_vector}, \code{positional_vector}, and \code{kmer_gaps_list})
 #' is represented in a sequential form (i.e., a list or a vector).
 #' The i-th entry of each sequence corresponds to the i-th configuration.
-#' 
 #' 
 #' @param sequences input sequences of one of two supported types,
 #' either \code{string vector} or \code{list} of \code{string vectors}
@@ -22,12 +19,13 @@
 #' The i-th element corresponds to the value of \code{k} for the i-th k-mer configuration.
 #' 
 #' @param kmer_alphabet a \code{string vector} that represents elements of a sequence
-#' that should be considered
+#' that should be considered during k-mer counting
 #' 
-#' @param positional_vector a \code{logical vector} consisting of k-mer configurations related to the positional part.
+#' @param positional_vector a \code{logical vector} that consists of k-mer configurations
+#' related to the positional part.
 #' The i-th element corresponds to the i-th k-mer configuration (i.e., whether the k-mer is positional or not)
 #' 
-#' @param kmer_gaps_list a \code{list} of \code{integer vectors} that represents the lengths of gaps of k-mers
+#' @param kmer_gaps_list a \code{list} of \code{integer vectors} that represents the lengths of k-mer gaps
 #' for each configuration separately. The i-th element of the list corresponds to the lengths of gaps of the i-th
 #' k-mer configuration
 #' 
@@ -37,17 +35,13 @@
 #' @param with_kmer_names a single \code{logical} value that determines whether the result
 #' should contain human-readable k-mer names
 #' 
-#' @param batch_size a single \code{integer} value representing the number of sequences
+#' @param batch_size a single \code{integer} value that represents the number of sequences
 #' that are being processed in a single step
-#' (for more information see section `Configurable size of batch of sequences`
-#' in \link[seqR]{count_kmers})
 #' 
-#' @param hash_dim a single \code{integer} value representing the length of hash vector
+#' @param hash_dim a single \code{integer} value that determines the length of hash vector
 #' that is internally used in the algorithm
-#' (for more information see section `Configurable dimension of the hash value of a k-mer`
-#' in \link[seqR]{count_kmers})
 #' 
-#' @param verbose a single \code{logical} value representing whether a user wants to get
+#' @param verbose a single \code{logical} value that determines whether a user wants to get
 #' extra information on the current state of computations
 #' 
 #' @inherit count_kmers return
@@ -76,7 +70,7 @@
 #'    positional_vector = c(FALSE, TRUE, TRUE))
 #' 
 #' @seealso Function that count k-mers of one type: \link[seqR]{count_kmers}
-#' @seealso Function that merges two k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
+#' @seealso Function that merges several k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
 #' @md
 #' @export
 count_multimers <- function(sequences,

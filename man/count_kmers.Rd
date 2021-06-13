@@ -2,7 +2,7 @@
 % Please edit documentation in R/count_kmers.R
 \name{count_kmers}
 \alias{count_kmers}
-\title{Count k-mers of one, specific type for a given collection of sequences}
+\title{Count k-mers of one, particular type for a given collection of sequences}
 \usage{
 count_kmers(
   sequences,
@@ -19,8 +19,7 @@ count_kmers(
 }
 \arguments{
 \item{sequences}{input sequences of one of two supported types,
-either \code{string vector} or \code{list} of \code{string vectors}
-(for more information see section \verb{Supported input sequences})}
+either \code{string vector} or \code{list} of \code{string vectors}}
 
 \item{k}{an \code{integer} representing the length of a k-mer}
 
@@ -29,8 +28,7 @@ during the construction of k-mers. By default, all elements that are present in 
 are taking into account}
 
 \item{positional}{a single \code{logical} value that determines whether positional k-mer
-variant should be considered
-(for more information on k-mer types see section \verb{Supported variants of k-mers})}
+variant should be considered}
 
 \item{kmer_gaps}{an \code{integer vector} representing the lengths of gaps between consecutive
 k-mer elements. The length of the vector should be equal to \code{k - 1}}
@@ -41,42 +39,36 @@ should contain k-mer frequencies}
 \item{with_kmer_names}{a single \code{logical} value that determines whether the result
 should contain human-readable k-mer names}
 
-\item{batch_size}{a single \code{integer} value representing the number of sequences
-that are being processed in a single step
-(for more information see section \verb{Configurable size of batch of sequences})}
+\item{batch_size}{a single \code{integer} value that represents the number of sequences
+that are being processed in a single step}
 
-\item{hash_dim}{a single \code{integer} value (\verb{1 <= hash_dim <= 8}) representing the length of hash vector
-that is internally used in the algorithm
-(for more information see section \verb{Configurable dimension of the hash value of a k-mer})}
+\item{hash_dim}{a single \code{integer} value (\verb{1 <= hash_dim <= 8}) representing the length of a hash vector
+that is internally used in the algorithm}
 
-\item{verbose}{a single \code{logical} value representing whether a user wants to get
+\item{verbose}{a single \code{logical} value that denotes whether a user wants to get
 extra information on the current state of computations}
 }
 \value{
-a \code{\link[Matrix]{Matrix}} value that represents a result k-mer space.
+a \code{\link[Matrix]{Matrix}} value that represents a result k-mer matrix.
 The result is a sparse matrix in order to reduce memory consumption.
 The i-th row of the matrix represents k-mers found in the i-th input sequence.
 Each column represents a distinct k-mer.
 The names of columns conform to human-readable schema for k-mers,
 if parameter \code{with_kmer_names = TRUE}
-(for more information see section \verb{Human-readable representation of k-mers})
 }
 \description{
-This is a in-memory, probabilistic
-(with configurable probability of exact results,
-for more detail see section \verb{Configurable dimension of the hash value of a k-mer}),
-highly-optimized, and multi-threaded implementation of the k-mer counting algorithm.
+This is an in-memory, probabilistic, highly-optimized,
+and multi-threaded implementation of k-mer counting algorithm.
 
 The function supports
 \enumerate{
-\item several types of k-mers (for more information see section \verb{Supported variants of k-mers})
-\item all biological sequences (e.g., nucleic acids and proteins)
+\item several types of k-mers (contiguous, gapped, and positional variants)
+\item all biological sequences (in particular, nucleic acids and proteins)
 \item two common in-memory representations of sequences, i.e., string vectors and list of string vectors
-(for more information see section \verb{Supported input sequences})
 }
 
 Moreover, several extra features are provided
-(for more information see corresponding \code{details}' subsections):
+(for more information see \code{details}'):
 \enumerate{
 \item configurable k-mer alphabet
 (i.e., which elements of a sequence should be considered during the k-mer counting procedure)
@@ -115,5 +107,5 @@ count_kmers(c("ACATACTAT", "ACCCCCC"), kmer_gaps=c(1,2))
 \seealso{
 Function that counts many k-mer variants in the single invocation: \link[seqR]{count_multimers}
 
-Function that merges two k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
+Function that merges several k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
 }
