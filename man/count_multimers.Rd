@@ -71,7 +71,7 @@ The i-th entry of each sequence corresponds to the i-th configuration.
 }
 \details{
 The comprehensive description of supported features is available
-in \code{vignette("features_overview", package = "seqR")}.
+in \code{vignette("features-overview", package = "seqR")}.
 }
 \examples{
 

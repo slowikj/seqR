@@ -59,7 +59,7 @@
 #' @details
 #'
 #' The comprehensive description of supported features is available
-#' in \code{vignette("features_overview", package = "seqR")}. 
+#' in \code{vignette("features-overview", package = "seqR")}. 
 #'
 #' @examples
 #' 
