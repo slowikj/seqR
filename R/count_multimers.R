@@ -92,22 +92,13 @@ count_multimers <- function(sequences,
                             batch_size = getOption("seqR_batch_size_default"),
                             hash_dim = getOption("seqR_hash_dim_default"),
                             verbose = getOption("seqR_verbose_default")) {
-  if(length(k_vector) != length(kmer_gaps_list)) {
-    stop("the length of 'k_vector' must have equal length to 'kmer_gaps_list' ")
-  }
-  
-  if(length(k_vector) != length(positional_vector)) {
-    stop("the length of 'k_vector' must have equal length to 'positional vector'")
-  }
-  
-  if(!is_bool_value(verbose)) {
-    stop("verbose must be a single logical value")
-  }
+  .validate_verbose(verbose)
+  .validate_kmer_configs(k_vector, kmer_gaps_list, positional_vector)
   
   configs_num <- length(k_vector)
   r <- do.call(cbind, lapply(1:configs_num, function(index) {
     if(verbose) {
-      print(paste0("Processing sequences for ", index, " config"))
+      print(paste0("Processing sequences for config no.", index))
     }
     
     count_kmers(
@@ -123,4 +114,20 @@ count_multimers <- function(sequences,
       verbose = verbose)
   }))
   r
+}
+
+.validate_kmer_configs <- function(k_vector, kmer_gaps_list, positional_vector) {
+  if(length(k_vector) != length(kmer_gaps_list)) {
+    stop("the length of 'k_vector' must have equal length to 'kmer_gaps_list' ")
+  }
+  
+  if(length(k_vector) != length(positional_vector)) {
+    stop("the length of 'k_vector' must have equal length to 'positional vector'")
+  }
+}
+
+.validate_verbose <- function(param) {
+  if(!is_bool_value(param)) {
+    stop("verbose must be a single logical value")
+  }
 }
