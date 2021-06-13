@@ -33,7 +33,9 @@ Suggests:
     knitr,
     rmarkdown,
     spelling,
-    ggplot2
+    ggplot2,
+    microbenchmark,
+    pryr
 VignetteBuilder: knitr
 Language: en-US
 Collate: 

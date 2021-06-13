@@ -77,7 +77,7 @@ The i-th entry of each sequence corresponds to the i-th configuration.
 }
 \details{
 The comprehensive description of supported features is available
-in the documentation of \link[seqR]{count_kmers} function.
+in \code{vignette("features_overview", package = "seqR")}.
 }
 \examples{
 

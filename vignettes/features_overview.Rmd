@@ -1,0 +1,342 @@
+---
+title: "Overview of seqR features"
+vignette: |
+  %\VignetteIndexEntry{vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+output: rmarkdown::html_vignette
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, include = FALSE}
+library(seqR)
+```
+
+## Introduction
+
+This vignette provides comprehensive overview of the features provided by `seqR` package
+with appropriate examples.
+
+The package consists of three functions that facilitate k-mer counting:
+
+* `count_kmers` (used for counting k-mers of one type)
+* `count_multimers` (a wrapper of `count_kmers`, used for counting k-mers of many types in a single invocation of the function)
+
+and processing k-mer matrices:
+
+* `rbind_columnwise` (a helper function used for merging several k-mer matrices that do not have same sets of columns)
+
+## Supported input sequences
+
+The package supports all types of biological sequences, in particular,
+nucleic acids and proteins. The sequences can be represented as the input
+in following ways:
+1. string vectors (e.g, `c("AAA", "ACDA")`)
+2. list of string vectors (e.g., `list(c("A", "A", "A"), c("A", "C", "D", "A"))`)
+
+### String vector
+
+```{r}
+count_kmers(c("AADVS", "FFSFAFA"),
+            k=2)
+```
+
+This representation is more efficient and recommended to use.
+However, it does not support multi-character alphabets,
+as opposed to the second representation.
+
+### List of string vectors
+
+```{r}
+count_kmers(list(c("A", "A", "A", "AA", "V"),
+                 c("VA", "A", "A", "G", "D", "D")),
+            k=2)
+```
+
+## Supported variants of k-mers
+
+A user explicitly specifies k-mer configuration using the following function parameters:
+`k`, `kmer_gaps`, and `positional`.
+There are four major variants of k-mers:
+**contiguous k-mers**, **gapped k-mers**,
+**positional contiguous k-mers**, and **positional gapped k-mers**.
+
+### Contiguous k-mers
+
+Contiguous k-mers can be defined as subwords of a fixed length.
+A user specifies the length of the k-mer with `k` parameter.
+The other function parameters should be `kmer_gaps = NULL` (default)
+and `positional = FALSE` (default).
+
+For example, 3-mers of sequence AABC are: AAB and ABC.
+
+#### usage
+
+```{r}
+count_kmers(c("DDDVSVAA", "FFSFSVAAA"),
+            k=5)
+```
+
+### Gapped k-mers
+
+Gapped k-mers can be defined as subsequences (not necessarily contiguous) of a given sequence.
+In particular, between two contiguous elements of the sequence there might be a gap
+of a length specified by a user separately.
+
+A user specifies the length of each gap using `kmer_gaps` parameter.
+The other function parameters should be `k = length(kmer_gaps)` (default)
+and `positional = FALSE` (default).
+
+For example, gapped 3-mers with gaps' lengths 0 and 1 of sequence AABCCA are:
+AAC, ABC, BCA.
+
+#### usage
+
+```{r}
+count_kmers(c("DDDVSVAA", "FFSFSVAAA"),
+            kmer_gaps=c(2, 0)) # gapped 3-mer template: X__XX
+```
+
+### Positional contiguous k-mers
+
+A positional contiguous k-mer is a subtype of a contiguous k-mer
+with extra information about the exact (start) position of the k-mer.
+It means that two same contiguous k-mers that start at different positions
+of a given sequence are considered not to be equal,
+as opposed to (non-positional) contiguous k-mers.
+
+A user specifies the length of the k-mer with `k` parameter.
+The other function parameters should be `kmer_gaps = NULL` (default)
+and `positional = TRUE`.
+
+For example, positional contiguous 3-mers of sequence AABCCA are:
+1_AAB, 2_ABC, 3_BCC, 4_CCA.
+
+#### usage
+
+```{r}
+count_kmers(c("DDDVSVAA", "FFSFSVAAA"),
+            k=5,
+            positional=TRUE)
+```
+
+### Positional gapped k-mers
+
+A positional gapped k-mer is a subtype of a gapped k-mer
+with extra information about the exact (start) position of the k-mer.
+It means that two same gapped k-mers that start at different positions
+of a given sequence are considered not to be equal,
+as opposed to (non-positional) gapped k-mers.
+
+A user specifies the length of each gap using `kmer_gaps` parameter.
+The other function parameters should be `k = length(kmer_gaps)` (default)
+and `positional = TRUE`.
+
+For example, positional gapped 3-mers with gaps' lengths 0 and 1 of sequence AABCCA are:
+1_AAC, 2_ABC, 3_BCA.
+
+#### usage
+
+```{r}
+count_kmers(c("DDDVSVAA", "FFSFSVAAA"),
+            kmer_gaps=c(2, 0), # gapped 3-mer template: X__XX
+            positional=TRUE)
+```
+
+## Result type
+
+The result is the k-mer counting procedure is a k-mer matrix,
+represented as a **sparse matrix** (see [package Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)).
+
+The i-th row of the result matrix corresponds to the i-th input sequence
+and contains the information about particular occurrences of k-mers.
+On the other hand, columns correspond to k-mers found in input sequences
+and they are represented in a human-readable form.
+
+Due to the usage of a sparse matrix representation,
+a signification memory optimization is achieved.
+
+```{r, message=FALSE, warning=FALSE}
+get_random_string_vector <- function(seq_num, seq_len, alphabet, seed=123) {
+  set.seed(seed)
+  sapply(1:seq_num,
+         function(n) paste0(sample(alphabet, seq_len, replace=TRUE), collapse=""))
+}
+
+r <- count_kmers(get_random_string_vector(300, 1000, LETTERS),
+                 k=4)
+print(pryr::object_size(r))
+print(pryr::object_size(as.matrix(r)))
+```
+
+Importantly, such a representation is supported by machine learning packages
+such as [ranger](https://cran.r-project.org/web/packages/ranger/index.html)
+and [xgboost](https://cran.r-project.org/web/packages/xgboost/index.html).
+
+## Extra features
+
+In order to improve user experience and meet custom needs,
+several extra features are provided.
+
+### configurable k-mer alphabet
+
+A k-mer alphabet specifies which elements of a sequence
+should be considered during the k-mer counting procedure.
+
+K-mer counting using the alphabet derived from input sequences:
+
+```{r}
+count_kmers(c("VAAAAHDFAA", "KKKKAKAAVA"),
+            k=4)
+```
+
+K-mer counting using a custom alphabet:
+
+```{r}
+count_kmers(c("VAAAAHDFAA", "KKKKAKAAVA"),
+            k=4,
+            kmer_alphabet = c("A", "K"))
+```
+
+### configurable batch size
+
+The internal algorithm processes input sequences in consecutive batches of a given size.
+The larger the size of a batch is, the more sequences will be used at a single step
+in which sequences are processed concurrently.
+Therefore, a user should be aware that in order to take full advantage of multi-threading,
+they should set the batch size to the number that is greater or equal to the number
+of CPU cores. However, simultaneously, this number should not be too large
+in order to not consume too much memory, as during a single set, all sequences of a given
+batch are encoded. Thus, they consume additional memory.
+
+Generally, there are two common use cases when a user should explicitly set
+the size of a batch size (in other cases, the default value will be appropriate):
+1. a user does not want to process sequences concurrently
+(then, they should set `batch_size = 1`)
+2. a user needs to tweak the memory consumption accordingly to their custom needs
+
+Below there is the comparison of speed performance between single-threaded and multi-threaded mode.
+
+#### usage
+
+```{r}
+sequences <- get_random_string_vector(seq_num = 200, seq_len = 1000, alphabet = LETTERS)
+microbenchmark::microbenchmark(
+  multithreaded = count_kmers(sequences, k=5, batch_size = 200),
+  singlethreaded = count_kmers(sequences, k=5, batch_size = 1),
+  times=11
+)
+```
+
+### verbose mode
+
+Verbose mode allows a user to get extra information about the current state of computations,
+e.g., which batch of sequences is currently processed.
+
+#### usage
+
+```{r}
+count_kmers(c("VAAAAHDFAA", "KKKKAKAAVA", "ASDDA"),
+            k=3,
+            batch_size=1,
+            verbose = TRUE)
+```
+
+
+### configurable dimension of the hash value of a k-mer
+
+As the core k-mer counting algorithm intensively takes advantage of hashing functions,
+`seqR` package is a probabilistic solution.
+However, due to the application of multidimensional hash values,
+a user can specify the length of the hash vector, and, thus, increase the probability
+of a correct result.
+
+Nevertheless, for small values of `k` (`k <= 12`),
+the result is certainly correct for the default value (i.e., `hash_size = 2`).
+
+### compute k-mers with or without their frequencies
+
+This feature is particularly useful when a user wants to get information
+related to presence or absence of k-mers. Then, they might set this feature
+(`with_kmer_counts = FALSE`) and reduce the memory consumption.
+
+#### usage
+
+Compare the following two code snippets:
+
+```{r}
+count_kmers(c("AAAAAAADFSSAAAA", "AADADADADDAD"),
+            k=3,
+            with_kmer_counts=FALSE)
+```
+
+```{r}
+count_kmers(c("AAAAAAADFSSAAAA", "AADADADADDAD"),
+            k=3,
+            with_kmer_counts=TRUE)
+```
+
+
+### compute a result k-mer matrix with or without human-readable k-mer (column) names
+
+The aim of this feature is to optimize memory consumption and CPU time.
+It is particularly useful when many different k-mer models are tested
+and there is no need to get a human-readable features.
+
+#### usage
+
+Compare the following two code snippets:
+
+```{r}
+count_kmers(c("AAAAAAADFSSAAAA", "AADADADADDAD"),
+            k=3,
+            with_kmer_names=FALSE)
+```
+
+```{r}
+count_kmers(c("AAAAAAADFSSAAAA", "AADADADADDAD"),
+            k=3,
+            with_kmer_names=TRUE)
+```
+
+### count k-mers of several types in a single function invocation
+
+```{r}
+count_multimers(c("AAAAAAADFSSAAAA", "AADADADADDAD"),
+                k_vector=c(1,2,3,4),
+                verbose=TRUE)
+```
+
+### merge (rbind) two k-mer matrices derived from distinct sequences
+
+As `rbind` function does not work correctly if all input matrices have equivalent sets of columns,
+`seqR` package provides a new function (`rbind_columnwise`) to satisfy this use case:
+
+```{r}
+mA <- count_kmers(c("AAAAAAADFSSAAAA", "AADADADADDAD"),
+                  k=1)
+mB <- count_kmers(c("VVVVVAAVA", "ADSDDD", "AAAAAV"),
+                  k=1)
+
+rbind_columnwise(mA, mB)
+```
+
+## Human-readable representation of k-mers
+
+Each column of the result represent a single k-mer that has the following form:
+
+`[p_]s1.s2....sk_g1.g2...gk-1`
+
+The `[p_]` value is an integer that is used only in case of positional k-mers
+(for more information on k-mer variants see section **Supported variants of k-mers**)
+and it indicates the exact begin position of the k-mer in a sequence.
+The `s1.s2....sk` part represents consecutive elements of the k-mer.
+Finally, the `g1.g2...gk-1` part represents the consecutive lengths of gaps.
+In particular, if contiguous k-mers are considered, all elements of this part is equal to 0
+(e.g., `0.0.0` for 4-mers). Importantly, for 1-mers, this part is not present.
