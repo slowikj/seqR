@@ -7,3 +7,12 @@
 ^pkgdown$
 ^appveyor\.yml$
 ^\.github$
+^CRAN-RELEASE$
+^cran-comments.md$
+^README.Rmd$
+^cran-comments\.md$
+^CMakeLists.txt$
+^build/.*
+^\.vscode$
+^config.log$
+^config.status$
