@@ -24,17 +24,19 @@ Depends:
 LinkingTo:
     Rcpp,
     RcppParallel
-SystemRequirements: c++17, GNU make
-RoxygenNote: 7.1.1
-Encoding: UTF-8
 Suggests:
     testthat,
     covr,
     knitr,
     rmarkdown,
     spelling,
-    ggplot2
+    ggplot2,
+    microbenchmark,
+    pryr
 VignetteBuilder: knitr
+SystemRequirements: c++17, GNU make
+RoxygenNote: 7.1.1
+Encoding: UTF-8
 Language: en-US
 Collate: 
     'RcppExports.R'

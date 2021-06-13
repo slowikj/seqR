@@ -25,12 +25,13 @@ either \code{string vector} or \code{list} of \code{string vectors}}
 The i-th element corresponds to the value of \code{k} for the i-th k-mer configuration.}
 
 \item{kmer_alphabet}{a \code{string vector} that represents elements of a sequence
-that should be considered}
+that should be considered during k-mer counting}
 
-\item{positional_vector}{a \code{logical vector} consisting of k-mer configurations related to the positional part.
+\item{positional_vector}{a \code{logical vector} that consists of k-mer configurations
+related to the positional part.
 The i-th element corresponds to the i-th k-mer configuration (i.e., whether the k-mer is positional or not)}
 
-\item{kmer_gaps_list}{a \code{list} of \code{integer vectors} that represents the lengths of gaps of k-mers
+\item{kmer_gaps_list}{a \code{list} of \code{integer vectors} that represents the lengths of k-mer gaps
 for each configuration separately. The i-th element of the list corresponds to the lengths of gaps of the i-th
 k-mer configuration}
 
@@ -40,34 +41,27 @@ should contain k-mer frequencies}
 \item{with_kmer_names}{a single \code{logical} value that determines whether the result
 should contain human-readable k-mer names}
 
-\item{batch_size}{a single \code{integer} value representing the number of sequences
-that are being processed in a single step
-(for more information see section \verb{Configurable size of batch of sequences}
-in \link[seqR]{count_kmers})}
+\item{batch_size}{a single \code{integer} value that represents the number of sequences
+that are being processed in a single step}
 
-\item{hash_dim}{a single \code{integer} value representing the length of hash vector
-that is internally used in the algorithm
-(for more information see section \verb{Configurable dimension of the hash value of a k-mer}
-in \link[seqR]{count_kmers})}
+\item{hash_dim}{a single \code{integer} value that determines the length of hash vector
+that is internally used in the algorithm}
 
-\item{verbose}{a single \code{logical} value representing whether a user wants to get
+\item{verbose}{a single \code{logical} value that determines whether a user wants to get
 extra information on the current state of computations}
 }
 \value{
-a \code{\link[Matrix]{Matrix}} value that represents a result k-mer space.
+a \code{\link[Matrix]{Matrix}} value that represents a result k-mer matrix.
 The result is a sparse matrix in order to reduce memory consumption.
 The i-th row of the matrix represents k-mers found in the i-th input sequence.
 Each column represents a distinct k-mer.
 The names of columns conform to human-readable schema for k-mers,
 if parameter \code{with_kmer_names = TRUE}
-(for more information see section \verb{Human-readable representation of k-mers})
 }
 \description{
-This is a convenient wrapper over \link[seqR]{count_kmers} function
-in order to enable the computation of multiple types of k-mers
-in a single invocation of the function
-(for more information on k-mer types see \code{Supported variants of k-mers}
-in \link[seqR]{count_kmers}).
+This is a wrapper over \link[seqR]{count_kmers} function
+in order to enable the computation of many types of k-mers
+in a single invocation of the function.
 
 A user can input multiple k-mer configurations in the following way.
 Each parameter that is related to the configuration
@@ -77,7 +71,7 @@ The i-th entry of each sequence corresponds to the i-th configuration.
 }
 \details{
 The comprehensive description of supported features is available
-in the documentation of \link[seqR]{count_kmers} function.
+in \code{vignette("features_overview", package = "seqR")}.
 }
 \examples{
 
@@ -104,5 +98,5 @@ count_multimers(
 \seealso{
 Function that count k-mers of one type: \link[seqR]{count_kmers}
 
-Function that merges two k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
+Function that merges several k-mer matrices (rbind): \link[seqR]{rbind_columnwise}
 }
