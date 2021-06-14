@@ -43,7 +43,7 @@
 #' @param batch_size a single \code{integer} value that represents the number of sequences
 #' that are being processed in a single step
 #' 
-#' @param hash_dim a single \code{integer} value (`1 <= hash_dim <= 8`) representing the length of a hash vector
+#' @param hash_dim a single \code{integer} value (`1 <= hash_dim <= 500`) representing the length of a hash vector
 #' that is internally used in the algorithm
 #' 
 #' @param verbose a single \code{logical} value that denotes whether a user wants to get
@@ -162,8 +162,8 @@ count_kmers <- function(sequences,
 }
 
 .validate_hash_dim <- function(param) {
-  if(!is_positive_integer(param) || param > 8) {
-    stop("hash_dim is a single integer number from the range [1, 8]")
+  if(!is_positive_integer(param) || param > 500) {
+    stop("hash_dim is a single integer number from the range [1, 500]")
   }
 }
 

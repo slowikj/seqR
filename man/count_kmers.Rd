@@ -42,7 +42,7 @@ should contain human-readable k-mer names}
 \item{batch_size}{a single \code{integer} value that represents the number of sequences
 that are being processed in a single step}
 
-\item{hash_dim}{a single \code{integer} value (\verb{1 <= hash_dim <= 8}) representing the length of a hash vector
+\item{hash_dim}{a single \code{integer} value (\verb{1 <= hash_dim <= 500}) representing the length of a hash vector
 that is internally used in the algorithm}
 
 \item{verbose}{a single \code{logical} value that denotes whether a user wants to get

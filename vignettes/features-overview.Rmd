@@ -259,7 +259,7 @@ However, due to the application of multi-dimensional hash values,
 a user can specify the length of the hash vector, and, thus, increase the probability
 of a correct result.
 
-Nevertheless, for small values of `k` (`k <= 12`),
+Nevertheless, for small values of `k` (`k <= 10`),
 the result is certainly correct for the default value of the parameter
 (i.e., `hash_size = 2`).
 

@@ -53,7 +53,11 @@ test_that("test count_kmers for 8 dimentional hash", {
   invoke_dim_test(8)
 })
 
-test_that("expect error for the hash dimension larger than 8", {
-  expect_error(invoke_dim_test(9),
-               info="hash_dim is a single integer number from the range [1, 8]")
+test_that("test count_kmers for 8 dimentional hash", {
+  invoke_dim_test(50)
+})
+
+test_that("expect error for the hash dimension larger than 500", {
+  expect_error(invoke_dim_test(501),
+               info="hash_dim is a single integer number from the range [1, 500]")
 })
