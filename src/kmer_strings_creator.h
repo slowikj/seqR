@@ -63,8 +63,8 @@ class KMerStringsCreatorWorker : public RcppParallel::Worker {
       : kMersToGenerate(kMersToGenerate),
         kMerTaskConfig(kMerTaskConfig),
         gapsAccumulated(util::getGapsAccumulated(kMerTaskConfig.userParams.gaps)),
-        resultOffset(resultStrings.size()),
-        resultStrings(resultStrings) {
+        resultStrings(resultStrings),
+        resultOffset(resultStrings.size()) {
     resultStrings.resize(resultOffset + kMersToGenerate.size());
     prepareKMerStringsCreators();
     prepareCreateKMerFunc();
@@ -121,10 +121,10 @@ class KMerStringCreatorForSequence {
       const std::string &itemSeparator,
       const std::string &sectionSeparator)
       : sequence(std::move(sequence)),
-        gapsAccumulated(gapsAccumulated),
         itemSeparator(itemSeparator),
-        sectionSeparator(sectionSeparator) {
-    this->kmerInfoSuffix = prepareKMerInfoSuffix(gaps);
+        sectionSeparator(sectionSeparator),
+        kmerInfoSuffix(prepareKMerInfoSuffix(gaps)),
+        gapsAccumulated(gapsAccumulated) {
   }
 
   inline std::string get(std::size_t begin) const {

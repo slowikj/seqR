@@ -42,7 +42,6 @@ class PrefixSequencePolynomialHasher {
       int intervalLength = util::getIntervalLength(interval);
       for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
         int powerP = this->getHasherP(hasherInd, intervalLength);
-        int M = this->getHasherM(hasherInd);
         res[hasherInd] = moduloMComputers[hasherInd].get(
             res[hasherInd] * powerP + intervalHash[hasherInd]);
       }
@@ -72,13 +71,12 @@ class PrefixSequencePolynomialHasher {
 
   inline void initPrefixP(int sequenceLength, int hashersNum) {
     prefixP.reserve(sequenceLength);
-    prefixP.push_back(std::move(hash_t(hashersNum, 1)));
+    prefixP.push_back(hash_t(hashersNum, 1));
   }
 
   inline void initPrefixComplexHashes(int sequenceLength, int hashersNum) {
     prefixComplexHashes.reserve(sequenceLength);
-    prefixComplexHashes.push_back(
-        std::move(hash_t(hashersNum)));
+    prefixComplexHashes.push_back(hash_t(hashersNum));
   }
 
   inline void appendPrefixValues(const encoded_sequence_t &sequence,
@@ -91,7 +89,6 @@ class PrefixSequencePolynomialHasher {
     hash_t prefixHash(polynomialHasherConfigs.size());
     for (int hasherInd = 0; hasherInd < prefixHash.size(); ++hasherInd) {
       auto P = polynomialHasherConfigs[hasherInd].P;
-      auto M = polynomialHasherConfigs[hasherInd].M;
       prefixHash[hasherInd] = moduloMComputers[hasherInd].get(
           prefixComplexHashes.back()[hasherInd] * P + encodedElem);
     }
@@ -102,7 +99,6 @@ class PrefixSequencePolynomialHasher {
     hash_t powersP(polynomialHasherConfigs.size());
     for (int hasherInd = 0; hasherInd < powersP.size(); ++hasherInd) {
       auto P = polynomialHasherConfigs[hasherInd].P;
-      auto M = polynomialHasherConfigs[hasherInd].M;
       powersP[hasherInd] = moduloMComputers[hasherInd].get(prefixP.back()[hasherInd] * P);
     }
     prefixP.push_back(std::move(powersP));
