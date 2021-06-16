@@ -7,10 +7,10 @@
 status](https://github.com/slowikj/seqR/workflows/R-CMD-check/badge.svg)](https://github.com/slowikj/seqR/actions)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[\[Code Quality
-Status\]](https://www.code-inspector.com/project/23909/status/svg)
-[\[Code Quality
-Score\]](https://www.code-inspector.com/project/23909/score/svg)\]
+[![Code Quality
+Status](https://www.code-inspector.com/project/23909/status/svg)](https://www.code-inspector.com/project/23909/status/svg)
+[![Code Quality
+Score](https://www.code-inspector.com/project/23909/score/svg)](https://www.code-inspector.com/project/23909/status/svg)
 <!-- badges: end -->
 
 ## About
