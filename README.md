@@ -5,6 +5,12 @@
 
 [![R build
 status](https://github.com/slowikj/seqR/workflows/R-CMD-check/badge.svg)](https://github.com/slowikj/seqR/actions)
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[\[Code Quality
+Status\]](https://www.code-inspector.com/project/23909/status/svg)
+[\[Code Quality
+Score\]](https://www.code-inspector.com/project/23909/score/svg)\]
 <!-- badges: end -->
 
 ## About
@@ -24,7 +30,9 @@ implementation that supports
 -   **all biological sequences** (e.g., nucleic acids and proteins)
 
 Moreover, the result optimizes memory consumption by the application of
-**sparse matrices**, compatible with machine learning packages such as
+**sparse matrices** (see [package
+Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)),
+compatible with machine learning packages such as
 [ranger](https://cran.r-project.org/web/packages/ranger/index.html) and
 [xgboost](https://cran.r-project.org/web/packages/xgboost/index.html).
 
@@ -63,7 +71,7 @@ To learn more, see features overview vignette and documentation.
 count_kmers(sequences=c("AAAAAVVAVFF", "DFGSADFGSA"),
             k=5)
 #> 2 x 12 sparse Matrix of class "dgCMatrix"
-#>    [[ suppressing 12 column names 'A.A.V.V.A_0.0.0.0', 'A.A.A.A.A_0.0.0.0', 'V.A.V.F.F_0.0.0.0' ... ]]
+#>    [[ suppressing 12 column names 'A.A.A.A.A_0.0.0.0', 'A.V.V.A.V_0.0.0.0', 'V.V.A.V.F_0.0.0.0' ... ]]
 #>                             
 #> [1,] 1 1 1 1 1 1 1 . . . . .
 #> [2,] . . . . . . . 1 1 1 2 1
@@ -75,10 +83,10 @@ count_kmers(sequences=c("AAAAAVVAVFF", "DFGSADFGSA"),
 count_kmers(sequences=c("AAAAAVVAVFF", "DFGSADFGSA"),
             kmer_gaps=c(0, 1, 0, 2))
 #> 2 x 7 sparse Matrix of class "dgCMatrix"
-#>      A.A.V.A.F_0.1.0.2 A.A.A.A.A_0.1.0.2 A.A.V.V.F_0.1.0.2 A.A.A.V.V_0.1.0.2
+#>      A.A.A.A.A_0.1.0.2 A.A.V.V.F_0.1.0.2 A.A.V.A.F_0.1.0.2 A.A.A.V.V_0.1.0.2
 #> [1,]                 1                 1                 1                 1
 #> [2,]                 .                 .                 .                 .
-#>      F.G.A.D.S_0.1.0.2 G.S.D.F.A_0.1.0.2 D.F.S.A.G_0.1.0.2
+#>      G.S.D.F.A_0.1.0.2 F.G.A.D.S_0.1.0.2 D.F.S.A.G_0.1.0.2
 #> [1,]                 .                 .                 .
 #> [2,]                 1                 1                 1
 ```

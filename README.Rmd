@@ -19,6 +19,9 @@ library(seqR)
 
 <!-- badges: start -->
 [![R build status](https://github.com/slowikj/seqR/workflows/R-CMD-check/badge.svg)](https://github.com/slowikj/seqR/actions)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![Code Quality Status]](https://www.code-inspector.com/project/23909/status/svg)
+[![Code Quality Score]](https://www.code-inspector.com/project/23909/score/svg)]
 <!-- badges: end -->
 
 ## About
@@ -36,7 +39,8 @@ implementation that supports
 * **various variants of k-mers** (contiguous, gapped, and positional counterparts)
 * **all biological sequences** (e.g., nucleic acids and proteins)
 
-Moreover, the result optimizes memory consumption by the application of **sparse matrices**,
+Moreover, the result optimizes memory consumption by the application of **sparse matrices**
+(see [package Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)),
 compatible with machine learning packages
 such as [ranger](https://cran.r-project.org/web/packages/ranger/index.html)
 and [xgboost](https://cran.r-project.org/web/packages/xgboost/index.html).
