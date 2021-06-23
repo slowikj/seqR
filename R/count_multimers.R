@@ -12,14 +12,10 @@
 #' is represented in a sequential form (i.e., a list or a vector).
 #' The i-th entry of each sequence corresponds to the i-th configuration.
 #' 
-#' @param sequences input sequences of one of two supported types,
-#' either \code{string vector} or \code{list} of \code{string vectors}
+#' @inheritParams count_kmers
 #' 
 #' @param k_vector an \code{integer vector} that represents the lengths of k-mers.
 #' The i-th element corresponds to the value of \code{k} for the i-th k-mer configuration.
-#' 
-#' @param kmer_alphabet a \code{string vector} that represents elements of a sequence
-#' that should be considered during k-mer counting
 #' 
 #' @param positional_vector a \code{logical vector} that consists of k-mer configurations
 #' related to the positional part.
@@ -29,20 +25,6 @@
 #' for each configuration separately. The i-th element of the list corresponds to the lengths of gaps of the i-th
 #' k-mer configuration
 #' 
-#' @param with_kmer_counts a single \code{logical} value that determines whether the result
-#' should contain k-mer frequencies
-#' 
-#' @param with_kmer_names a single \code{logical} value that determines whether the result
-#' should contain human-readable k-mer names
-#' 
-#' @param batch_size a single \code{integer} value that represents the number of sequences
-#' that are being processed in a single step
-#' 
-#' @param hash_dim a single \code{integer} value that determines the length of hash vector
-#' that is internally used in the algorithm
-#' 
-#' @param verbose a single \code{logical} value that determines whether a user wants to get
-#' extra information on the current state of computations
 #' 
 #' @inherit count_kmers return
 #' 

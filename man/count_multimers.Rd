@@ -24,8 +24,9 @@ either \code{string vector} or \code{list} of \code{string vectors}}
 \item{k_vector}{an \code{integer vector} that represents the lengths of k-mers.
 The i-th element corresponds to the value of \code{k} for the i-th k-mer configuration.}
 
-\item{kmer_alphabet}{a \code{string vector} that represents elements of a sequence
-that should be considered during k-mer counting}
+\item{kmer_alphabet}{a \code{string vector} representing the elements that should be used
+during the construction of k-mers. By default, all elements that are present in sequences
+are taking into account}
 
 \item{positional_vector}{a \code{logical vector} that consists of k-mer configurations
 related to the positional part.
@@ -44,10 +45,10 @@ should contain human-readable k-mer names}
 \item{batch_size}{a single \code{integer} value that represents the number of sequences
 that are being processed in a single step}
 
-\item{hash_dim}{a single \code{integer} value that determines the length of hash vector
+\item{hash_dim}{a single \code{integer} value (\verb{1 <= hash_dim <= 500}) representing the length of a hash vector
 that is internally used in the algorithm}
 
-\item{verbose}{a single \code{logical} value that determines whether a user wants to get
+\item{verbose}{a single \code{logical} value that denotes whether a user wants to get
 extra information on the current state of computations}
 }
 \value{
