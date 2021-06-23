@@ -61,7 +61,9 @@ and one function used for custom processing of k-mer matrices:
 -   `rbind_columnwise` (a helper function used for merging several k-mer
     matrices that do not have same sets of columns)
 
-To learn more, see features overview vignette and documentation.
+To learn more, see [features overview
+vignette](https://slowikj.github.io/seqR/articles/features-overview.html)
+and [reference](https://slowikj.github.io/seqR/reference/index.html).
 
 #### Examples
 
