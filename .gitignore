@@ -23,4 +23,3 @@ build/*
 src/*.tmp
 config.log
 config.status
-docs
