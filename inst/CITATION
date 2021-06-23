@@ -1,0 +1,21 @@
+citHeader("To cite seqR in publications use:")
+
+if(!exists("meta") || is.null(meta)) meta <- packageDescription("seqR") 
+year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date) 
+vers <- paste("R package version", meta$Version)
+title <- paste0(meta[["Package"]], ": ", tolower(meta[["Title"]]))
+url <- paste0("https://cran.r-project.org/package=", meta[["Package"]])
+
+citEntry(
+  entry    = "Manual",
+  title    = title,
+  author   = "Jadwiga Słowik and Michał Burdukiewicz",
+  year     = year,
+  textVersion = paste0("Jadwiga Słowik and Michał Burdukiewicz (", 
+           year, 
+           "). ", 
+           title,
+           ". ",
+           vers, 
+           ". ")
+)

@@ -16,3 +16,4 @@
 ^\.vscode$
 ^config.log$
 ^config.status$
+^LICENSE\.md$

@@ -93,7 +93,16 @@ count_kmers(sequences=c("AAAAAVVAVFF", "DFGSADFGSA"),
 
 ### How to cite
 
-\[TODO\]
+For citation type:
+
+``` r
+citation("seqR")
+```
+
+or use:
+
+Jadwiga Słowik and Michał Burdukiewicz (2021). seqR: fast and
+comprehensive k-mer counting package. R package version 1.0.0.
 
 ## Benchmarks
 
