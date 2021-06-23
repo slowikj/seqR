@@ -25,7 +25,7 @@ class KMerCountingResult {
   inline bool addKMer(const hashing::config::multidim_hash_t &kMerHash,
                       int sequenceNum,
                       int count) {
-    if (kMerHash2ColumnIndex.isPresent(kMerHash)) {
+    if (kMerHash2ColumnIndex.find(kMerHash) != kMerHash2ColumnIndex.end()) {
       addKMerCountsInfo(kMerHash2ColumnIndex[kMerHash], sequenceNum, count);
       return false;
     } else {

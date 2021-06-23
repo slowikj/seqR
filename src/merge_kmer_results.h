@@ -4,6 +4,7 @@
 
 #include <tuple>
 
+#include "../inst/thirdparty/dictionaries/robin_hood_martinus.h"
 #include "common_config.h"
 
 namespace resultsMerging {
@@ -68,7 +69,7 @@ inline Rcpp::List mergeKMerResults(Rcpp::List resList) {
   std::size_t processedSeqNum = 0;
   std::size_t itemsOffset = 0;
   auto [rows, cols, counts] = initResultIntVectors(computeResultIntVecLength(resList));
-  dictionary::MartinusRobinHoodDictionary<Rcpp::String, uint32_t> kMerMapper;
+  robin_hood::unordered_map<Rcpp::String, uint32_t> kMerMapper;
 
   for (std::size_t resList_i = 0; resList_i < resList.size(); ++resList_i) {
     Rcpp::List currentRes = resList[resList_i];
@@ -77,7 +78,7 @@ inline Rcpp::List mergeKMerResults(Rcpp::List resList) {
     std::vector<uint32_t> colMapper(currentKMers.size());
     for (int i = 0; i < currentKMers.size(); ++i) {
       auto newKMer = currentKMers[i];
-      if (!kMerMapper.isPresent(newKMer)) {
+      if (kMerMapper.find(newKMer) == kMerMapper.end()) {
         uint32_t newIndex = kMerMapper.size() + 1;
         kMerMapper[newKMer] = newIndex;
       }

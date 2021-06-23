@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../inst/thirdparty/dictionaries/robin_hood_martinus.h"
 #include "count_kmers_specific/count_kmers_specific.h"
-#include "dictionary/dictionaries.h"
 #include "kmer_manager.h"
 #include "user_params.h"
 
@@ -24,6 +24,9 @@ inline Rcpp::List countKMersKMerManagerDispatch(
 
 // ------------------ IMPLEMENTATION ------------------
 
+template <class k, class v, class h = std::hash<k>>
+using custom_hash_map = robin_hood::unordered_map<k, v, h>;
+
 template <class sequences_t,
           class alphabet_t,
           class algorithm_params_t>
@@ -33,7 +36,7 @@ inline Rcpp::List countKMers(
     const UserParams &userParams,
     algorithm_params_t &algorithmParams) {
   return countKMersKMerManagerDispatch<sequences_t, alphabet_t, algorithm_params_t,
-                                       dictionary::MartinusRobinHoodDictionary>(
+                                       custom_hash_map>(
       sequences, alphabet, userParams, algorithmParams);
 }
 

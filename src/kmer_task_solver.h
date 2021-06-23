@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "contiguous_kmer_counter.h"
-#include "dictionary/supported_dict_names.h"
 #include "gapped_kmer_counter.h"
 #include "kmer_counting_result.h"
 #include "kmer_strings_creator.h"

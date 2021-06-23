@@ -44,7 +44,7 @@ class CountingKMerManager {
   operator=(CountingKMerManager &&) = default;
 
   inline void add(hash_t &&hash, int position) {
-    if (!dictionary.isPresent(hash)) {
+    if (dictionary.find(hash) == dictionary.end()) {
       dictionary[std::move(hash)] = KMerHashInfo(position, 1);
     } else {
       dictionary[hash].cnt++;
