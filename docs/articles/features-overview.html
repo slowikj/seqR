@@ -75,7 +75,7 @@
       <h1 data-toc-skip>Overview of seqR features</h1>
                         <h4 class="author">Jadwiga Słowik</h4>
             
-            <h4 class="date">2021-06-23</h4>
+            <h4 class="date">2021-06-24</h4>
       
       
       <div class="hidden name"><code>features-overview.Rmd</code></div>
@@ -105,9 +105,9 @@
 <h2 class="hasAnchor">
 <a href="#supported-input-sequences" class="anchor"></a>Supported input sequences</h2>
 <p>The package supports all types of biological sequences, in particular, nucleic acids and proteins. In fact, there is no constraint regarding the domain of input. However, input sequences must conform to the one of the following representations.</p>
-<div id="string-vectors-e-g-caaa-acda" class="section level3">
+<div id="string-vectors" class="section level3">
 <h3 class="hasAnchor">
-<a href="#string-vectors-e-g-caaa-acda" class="anchor"></a>string vectors (e.g, <code>c("AAA", "ACDA")</code>)</h3>
+<a href="#string-vectors" class="anchor"></a>String vectors</h3>
 <p>Example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AAA"</span>, <span class="st">"ACDA"</span><span class="op">)</span>,
@@ -118,9 +118,9 @@
 <span class="co">#&gt; [2,]     .     1     1     1</span></code></pre></div>
 <p>This representation is more efficient and recommended to use. However, it does not support multi-character alphabets, as opposed to the second representation.</p>
 </div>
-<div id="list-of-string-vectors-e-g--listca-a-a-ca-c-d-a" class="section level3">
+<div id="list-of-string-vectors" class="section level3">
 <h3 class="hasAnchor">
-<a href="#list-of-string-vectors-e-g--listca-a-a-ca-c-d-a" class="anchor"></a>list of string vectors (e.g., <code>list(c("A", "A", "A"), c("A", "C", "D", "A"))</code>)</h3>
+<a href="#list-of-string-vectors" class="anchor"></a>List of string vectors</h3>
 <p>Example:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"A"</span>, <span class="st">"A"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"A"</span><span class="op">)</span><span class="op">)</span>,
@@ -142,7 +142,7 @@
 <p>For example, 3-mers of sequence AABC are: AAB and ABC.</p>
 <div id="usage" class="section level4">
 <h4 class="hasAnchor">
-<a href="#usage" class="anchor"></a>usage</h4>
+<a href="#usage" class="anchor"></a>Usage</h4>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"DDDVSVAA"</span>, <span class="st">"FFSFSVAAA"</span><span class="op">)</span>,
             k<span class="op">=</span><span class="fl">5</span><span class="op">)</span>
@@ -166,7 +166,7 @@
 <p>For example, gapped 3-mers with gaps’ lengths 0 and 1 of sequence AABCCA are: AAC, ABC, BCA.</p>
 <div id="usage-1" class="section level4">
 <h4 class="hasAnchor">
-<a href="#usage-1" class="anchor"></a>usage</h4>
+<a href="#usage-1" class="anchor"></a>Usage</h4>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"DDDVSVAA"</span>, <span class="st">"FFSFSVAAA"</span><span class="op">)</span>,
             kmer_gaps<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="co"># gapped 3-mer template: X__XX</span>
@@ -187,7 +187,7 @@
 <p>For example, positional contiguous 3-mers of sequence AABCCA are: 1_AAB, 2_ABC, 3_BCC, 4_CCA.</p>
 <div id="usage-2" class="section level4">
 <h4 class="hasAnchor">
-<a href="#usage-2" class="anchor"></a>usage</h4>
+<a href="#usage-2" class="anchor"></a>Usage</h4>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"DDDVSVAA"</span>, <span class="st">"FFSFSVAAA"</span><span class="op">)</span>,
             k<span class="op">=</span><span class="fl">5</span>,
@@ -212,7 +212,7 @@
 <p>For example, positional gapped 3-mers with gaps’ lengths 0 and 1 of sequence AABCCA are: 1_AAC, 2_ABC, 3_BCA.</p>
 <div id="usage-3" class="section level4">
 <h4 class="hasAnchor">
-<a href="#usage-3" class="anchor"></a>usage</h4>
+<a href="#usage-3" class="anchor"></a>Usage</h4>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"DDDVSVAA"</span>, <span class="st">"FFSFSVAAA"</span><span class="op">)</span>,
             kmer_gaps<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span>, <span class="co"># gapped 3-mer template: X__XX</span>
@@ -254,7 +254,7 @@
 <p>In order to improve user experience and meet custom needs, several extra features are provided.</p>
 <div id="configurable-k-mer-alphabet" class="section level3">
 <h3 class="hasAnchor">
-<a href="#configurable-k-mer-alphabet" class="anchor"></a>configurable k-mer alphabet</h3>
+<a href="#configurable-k-mer-alphabet" class="anchor"></a>Configurable k-mer alphabet</h3>
 <p>A k-mer alphabet defines which elements of a sequence should be considered during the k-mer counting procedure.</p>
 <p>By default, alphabet derived from input sequences is used:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -280,12 +280,12 @@
 </div>
 <div id="configurable-batch-size" class="section level3">
 <h3 class="hasAnchor">
-<a href="#configurable-batch-size" class="anchor"></a>configurable batch size</h3>
+<a href="#configurable-batch-size" class="anchor"></a>Configurable batch size</h3>
 <p>The internal algorithm processes input sequences in consecutive batches of a given size. The larger the size of a batch is, the more sequences will be used in a single step that processes entries concurrently. Therefore, a user should be aware that in order to take full advantage of multi-threading, they should set the batch size to the number that is greater or equal to the number of CPU cores. However, simultaneously, this number should not be too large in order not to consume too much memory, as during a single step, all sequences of a given batch are encoded, which, in turn, increases memory usage additionally.</p>
 <p>Generally, there are two common use cases when a user should explicitly set the size of a batch size (in other cases, the default value is sufficient): 1. a user does not want to process sequences concurrently (then, they should set <code>batch_size = 1</code>) 2. a user needs to tweak the memory consumption accordingly to their custom needs</p>
 <div id="usage-4" class="section level4">
 <h4 class="hasAnchor">
-<a href="#usage-4" class="anchor"></a>usage</h4>
+<a href="#usage-4" class="anchor"></a>Usage</h4>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sequences</span> <span class="op">&lt;-</span> <span class="fu">get_random_string_vector</span><span class="op">(</span>seq_num <span class="op">=</span> <span class="fl">200</span>, seq_len <span class="op">=</span> <span class="fl">1000</span>, alphabet <span class="op">=</span> <span class="va">LETTERS</span><span class="op">)</span>
 <span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html">microbenchmark</a></span><span class="op">(</span>
@@ -295,17 +295,17 @@
 <span class="op">)</span>
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;            expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#&gt;   multithreaded 180.1680 182.4085 193.3819 188.0645 191.5806 260.1496    11</span>
-<span class="co">#&gt;  singlethreaded 254.2423 267.5810 276.9698 278.7111 285.5844 301.1033    11</span></code></pre></div>
+<span class="co">#&gt;   multithreaded 182.2750 187.8959 200.2052 191.8827 204.3189 265.1047    11</span>
+<span class="co">#&gt;  singlethreaded 257.3537 270.0543 271.6014 271.1895 276.5600 280.0404    11</span></code></pre></div>
 </div>
 </div>
 <div id="verbose-mode" class="section level3">
 <h3 class="hasAnchor">
-<a href="#verbose-mode" class="anchor"></a>verbose mode</h3>
+<a href="#verbose-mode" class="anchor"></a>Verbose mode</h3>
 <p>Verbose mode allows a user to get extra information about the current state of computations, e.g., which batch of sequences is currently processed.</p>
 <div id="usage-5" class="section level4">
 <h4 class="hasAnchor">
-<a href="#usage-5" class="anchor"></a>usage</h4>
+<a href="#usage-5" class="anchor"></a>Usage</h4>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"VAAAAHDFAA"</span>, <span class="st">"KKKKAKAAVA"</span>, <span class="st">"ASDDA"</span><span class="op">)</span>,
             k<span class="op">=</span><span class="fl">3</span>,
@@ -324,7 +324,7 @@
 </div>
 <div id="configurable-dimension-of-the-hash-value-of-a-k-mer" class="section level3">
 <h3 class="hasAnchor">
-<a href="#configurable-dimension-of-the-hash-value-of-a-k-mer" class="anchor"></a>configurable dimension of the hash value of a k-mer</h3>
+<a href="#configurable-dimension-of-the-hash-value-of-a-k-mer" class="anchor"></a>Configurable dimension of the hash value of a k-mer</h3>
 <p>As the core k-mer counting algorithm intensively takes advantage of hashing functions, <code>seqR</code> package is a probabilistic solution. However, due to the application of multi-dimensional hash values, a user can specify the length of the hash vector, and, thus, increase the probability of a correct result.</p>
 <p>Nevertheless, for small values of <code>k</code> (<code>k &lt;= 10</code>), the result is certainly correct for the default value of the parameter (i.e., <code>hash_size = 2</code>).</p>
 </div>
@@ -334,7 +334,7 @@
 <p>This feature is particularly useful when a user only wants to get information related to presence or absence of k-mers. Then, they might set this feature (<code>with_kmer_counts = FALSE</code>).</p>
 <div id="usage-6" class="section level4">
 <h4 class="hasAnchor">
-<a href="#usage-6" class="anchor"></a>usage</h4>
+<a href="#usage-6" class="anchor"></a>Usage</h4>
 <p>Compare the following two code snippets:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AAAAAAADFSSAAAA"</span>, <span class="st">"AADADADADDAD"</span><span class="op">)</span>,
@@ -358,11 +358,11 @@
 </div>
 <div id="compute-a-result-k-mer-matrix-with-or-without-human-readable-k-mer-column-names" class="section level3">
 <h3 class="hasAnchor">
-<a href="#compute-a-result-k-mer-matrix-with-or-without-human-readable-k-mer-column-names" class="anchor"></a>compute a result k-mer matrix with or without human-readable k-mer (column) names</h3>
+<a href="#compute-a-result-k-mer-matrix-with-or-without-human-readable-k-mer-column-names" class="anchor"></a>Compute a result k-mer matrix with or without human-readable k-mer (column) names</h3>
 <p>The aim of this feature is to optimize memory consumption and CPU time. It is particularly useful when many different k-mer models are tested and there is no need to get a human-readable features.</p>
 <div id="usage-7" class="section level4">
 <h4 class="hasAnchor">
-<a href="#usage-7" class="anchor"></a>usage</h4>
+<a href="#usage-7" class="anchor"></a>Usage</h4>
 <p>Compare the following two code snippets:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AAAAAAADFSSAAAA"</span>, <span class="st">"AADADADADDAD"</span><span class="op">)</span>,
@@ -385,7 +385,7 @@
 </div>
 <div id="count-k-mers-of-several-types-in-a-single-function-invocation" class="section level3">
 <h3 class="hasAnchor">
-<a href="#count-k-mers-of-several-types-in-a-single-function-invocation" class="anchor"></a>count k-mers of several types in a single function invocation</h3>
+<a href="#count-k-mers-of-several-types-in-a-single-function-invocation" class="anchor"></a>Count k-mers of several types in a single function invocation</h3>
 <p>For the sake of convenient usage, an extra wrapper (<code>count_multimers</code>) has been implemented. It makes possible counting k-mers of various type using only a single invocation of a function. In this case, a user must provide sequences (rather than single values) that denote k-mer configurations (for more detail see the documentation of <code>count_multimers</code>).</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/count_multimers.html">count_multimers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AAAAAAADFSSAAAA"</span>, <span class="st">"AADADADADDAD"</span><span class="op">)</span>,
@@ -407,7 +407,7 @@
 </div>
 <div id="merge-rbind-two-k-mer-matrices-derived-from-distinct-sequences" class="section level3">
 <h3 class="hasAnchor">
-<a href="#merge-rbind-two-k-mer-matrices-derived-from-distinct-sequences" class="anchor"></a>merge (rbind) two k-mer matrices derived from distinct sequences</h3>
+<a href="#merge-rbind-two-k-mer-matrices-derived-from-distinct-sequences" class="anchor"></a>Merge (rbind) two k-mer matrices derived from distinct sequences</h3>
 <p>As <code>rbind</code> function does not work correctly if input matrices does not have equivalent sets of columns, <code>seqR</code> package provides a new function (<code>rbind_columnwise</code>) to satisfy this use case:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"AAAAAAADFSSAAAA"</span>, <span class="st">"AADADADADDAD"</span><span class="op">)</span>,
@@ -429,8 +429,8 @@
 <h2 class="hasAnchor">
 <a href="#human-readable-representation-of-k-mers" class="anchor"></a>Human-readable representation of k-mers</h2>
 <p>Each column of the result represents a single k-mer that has the following form:</p>
-<p><code>[p_]s1.s2....sk_g1.g2...gk-1</code></p>
-<p>The first part (<code>[p_]</code>) is an integer that is used only in case of positional k-mers and it indicates the exact (start) position of the k-mer in a sequence. The second part (<code>s1.s2....sk</code>) represents consecutive elements of the k-mer. Finally, the last part (<code>g1.g2...gk-1</code>) represents the consecutive lengths of gaps. In particular, if contiguous k-mers are considered, all elements of this part is equal to 0 (e.g., <code>0.0.0</code> for 4-mers). Importantly, for 1-mers, this part is not present.</p>
+<p><code>[p_]s₁.s₂....sₖ_g₁.g₂...gₖ₋₁</code></p>
+<p>The first part (<code>[p_]</code>) is an integer that is used only in case of positional k-mers and it indicates the exact (start) position of the k-mer in a sequence. The second part (<code>s₁.s₂....sₖ</code>) represents consecutive elements of the k-mer. Finally, the last part (<code>g₁.g₂...gₖ₋₁</code>) represents the consecutive lengths of gaps. In particular, if contiguous k-mers are considered, all elements of this part is equal to 0 (e.g., <code>0.0.0</code> for 4-mers). Importantly, for 1-mers, this part is not present.</p>
 </div>
   </div>
 
