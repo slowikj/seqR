@@ -10,7 +10,7 @@ stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://
 [![Code Quality
 Status](https://www.code-inspector.com/project/23909/status/svg)](https://www.code-inspector.com/project/23909/status/svg)
 [![Code Quality
-Score](https://www.code-inspector.com/project/23909/score/svg)](https://www.code-inspector.com/project/23909/status/svg)
+Score](https://www.code-inspector.com/project/23909/score/svg)](https://www.code-inspector.com/project/23909/score/svg)
 <!-- badges: end -->
 
 ## About
