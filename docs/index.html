@@ -59,7 +59,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/slowikj/seqR/">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -168,13 +175,55 @@
 <div id="benchmarks" class="section level2">
 <h2 class="hasAnchor">
 <a href="#benchmarks" class="anchor"></a>Benchmarks</h2>
-<p><span class="math display"><em>T</em><em>O</em><em>D</em><em>O</em></span></p>
+<p>The <code>seqR</code> package has been compared with other existing k-mer counting R packages: <a href="https://cran.r-project.org/web/packages/biogram/index.html">biogram</a>, <a href="https://cran.r-project.org/web/packages/kmer/index.html">kmer</a>, <a href="https://cran.r-project.org/web/packages/seqinr/index.html">seqinr</a>, and <a href="https://bioconductor.org/packages/release/bioc/html/Biostrings.html">biostrings</a>.</p>
+<p>All benchmark experiments have been performed using Intel Core i7-6700HQ 2.60GHz, 8 cores using the (microbenchmark)<span class="math display"> &lt; <em>h</em><em>t</em><em>t</em><em>p</em><em>s</em> : //<em>c</em><em>r</em><em>a</em><em>n</em>.<em>r</em> − <em>p</em><em>r</em><em>o</em><em>j</em><em>e</em><em>c</em><em>t</em>.<em>o</em><em>r</em><em>g</em>/<em>w</em><em>e</em><em>b</em>/<em>p</em><em>a</em><em>c</em><em>k</em><em>a</em><em>g</em><em>e</em><em>s</em>/<em>m</em><em>i</em><em>c</em><em>r</em><em>o</em><em>b</em><em>e</em><em>n</em><em>c</em><em>h</em><em>m</em><em>a</em><em>r</em><em>k</em>/<em>i</em><em>n</em><em>d</em><em>e</em><em>x</em>.<em>h</em><em>t</em><em>m</em><em>l</em>&gt;</span> R package.</p>
+<div id="contiguous-k-mers" class="section level3">
+<h3 class="hasAnchor">
+<a href="#contiguous-k-mers" class="anchor"></a>Contiguous k-mers</h3>
+<div id="changing-k" class="section level4">
+<h4 class="hasAnchor">
+<a href="#changing-k" class="anchor"></a>Changing k</h4>
+<p><img src="inst/img/packages_different_k.png" align="center" width="1200"></p>
+<p>The input consists of one <em>DNA</em> sequence of length 3000.</p>
+</div>
+</div>
+<div id="changing-the-number-of-sequences" class="section level3">
+<h3 class="hasAnchor">
+<a href="#changing-the-number-of-sequences" class="anchor"></a>Changing the number of sequences</h3>
+<p><img src="inst/img/packages_different_seq_num.png" align="center" width="1200"></p>
+<p>Each sequence has 3000 elements, contiguous 5-mer counting.</p>
+</div>
+<div id="gapped-k-mers" class="section level3">
+<h3 class="hasAnchor">
+<a href="#gapped-k-mers" class="anchor"></a>Gapped k-mers</h3>
+<div id="changing-the-first-contiguous-part-of-a-k-mer" class="section level4">
+<h4 class="hasAnchor">
+<a href="#changing-the-first-contiguous-part-of-a-k-mer" class="anchor"></a>Changing the first contiguous part of a k-mer</h4>
+<p><img src="inst/img/gapped_kmers_changing_the_first_contiguous_part.png" align="center" width="800"></p>
+<p>The input consists of one <em>DNA</em> sequence of length 1000000. Gapped 5-mers counting with base gaps <code>(1, 0, 0, 1)</code>.</p>
+</div>
+<div id="changing-the-first-gap-size" class="section level4">
+<h4 class="hasAnchor">
+<a href="#changing-the-first-gap-size" class="anchor"></a>Changing the first gap size</h4>
+<p><img src="inst/img/gapped_kmers_changing_the_first_gap.png" align="center" width="800"></p>
+<p>The input consists of one <em>DNA</em> sequence of length 100000. Gapped 5-mers counting with base gaps <code>(1, 0, 0, 1)</code>.</p>
+</div>
+</div>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Browse source code at <br><a href="https://github.com/slowikj/seqR/">https://​github.com/​slowikj/​seqR/​</a>
+</li>
+<li>Report a bug at <br><a href="https://github.com/slowikj/seqR/issues">https://​github.com/​slowikj/​seqR/​issues</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -201,7 +250,7 @@
 <li><a href="https://github.com/slowikj/seqR/actions"><img src="https://github.com/slowikj/seqR/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></li>
 <li><a href="https://www.code-inspector.com/project/23909/status/svg"><img src="https://www.code-inspector.com/project/23909/status/svg" alt="Code Quality Status"></a></li>
-<li><a href="https://www.code-inspector.com/project/23909/status/svg"><img src="https://www.code-inspector.com/project/23909/score/svg" alt="Code Quality Score"></a></li>
+<li><a href="https://www.code-inspector.com/project/23909/score/svg"><img src="https://www.code-inspector.com/project/23909/score/svg" alt="Code Quality Score"></a></li>
 </ul>
 </div>
 </div>

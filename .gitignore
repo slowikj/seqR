@@ -23,3 +23,5 @@ build/*
 src/*.tmp
 config.log
 config.status
+
+inst/img/*.sh
