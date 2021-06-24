@@ -124,13 +124,13 @@ R package.
 
 #### Changing k
 
-<img src = "inst/img/packages_different_k.png" align = "center" width="1200"/>
+<img src = "man/img/packages_different_k.png" align = "center" width="1200"/>
 
 The input consists of one *DNA* sequence of length 3000.
 
 ### Changing the number of sequences
 
-<img src = "inst/img/packages_different_seq_num.png" align = "center" width="1200"/>
+<img src = "man/img/packages_different_seq_num.png" align = "center" width="1200"/>
 
 Each sequence has 3000 elements, contiguous 5-mer counting.
 
@@ -138,14 +138,14 @@ Each sequence has 3000 elements, contiguous 5-mer counting.
 
 #### Changing the first contiguous part of a k-mer
 
-<img src = "inst/img/gapped_kmers_changing_the_first_contiguous_part.png" align = "center" width="800"/>
+<img src = "man/img/gapped_kmers_changing_the_first_contiguous_part.png" align = "center" width="800"/>
 
 The input consists of one *DNA* sequence of length 1000000. Gapped
 5-mers counting with base gaps `(1, 0, 0, 1)`.
 
 #### Changing the first gap size
 
-<img src = "inst/img/gapped_kmers_changing_the_first_gap.png" align = "center" width="800"/>
+<img src = "man/img/gapped_kmers_changing_the_first_gap.png" align = "center" width="800"/>
 
 The input consists of one *DNA* sequence of length 100000. Gapped 5-mers
 counting with base gaps `(1, 0, 0, 1)`.
