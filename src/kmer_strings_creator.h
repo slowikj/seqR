@@ -71,7 +71,7 @@ class KMerStringsCreatorWorker : public RcppParallel::Worker {
   }
 
   inline void operator()(std::size_t begin, std::size_t end) override {
-    for (int i = begin; i < end; ++i) {
+    for (std::size_t i = begin; i < end; ++i) {
       this->resultStrings[i + resultOffset] = createKMerFunc(
           this->kMersToGenerate[i].seqNum, this->kMersToGenerate[i].position);
     }
@@ -89,7 +89,7 @@ class KMerStringsCreatorWorker : public RcppParallel::Worker {
   inline void prepareKMerStringsCreators() {
     std::size_t sequencesNum = kMerTaskConfig.encodedSequencesList.size();
     this->kmerStringCreators.reserve(sequencesNum);
-    for (int i = 0; i < sequencesNum; ++i) {
+    for (std::size_t i = 0; i < sequencesNum; ++i) {
       auto seq = kMerTaskConfig.encodedSequencesList[i];
       this->kmerStringCreators.emplace_back(
           std::move(seq),
@@ -167,10 +167,10 @@ class KMerStringCreatorForSequence {
       return "";
     }
     std::string res;
-    int approximateResSize = gaps.size() + (gaps.size() - 1) * itemSeparator.size();
+    std::size_t approximateResSize = gaps.size() + (gaps.size() - 1) * itemSeparator.size();
     res.reserve(approximateResSize);
     res += std::to_string(gaps[0]);
-    for (int gaps_i = 1; gaps_i < gaps.size(); ++gaps_i) {
+    for (std::size_t gaps_i = 1; gaps_i < gaps.size(); ++gaps_i) {
       res += itemSeparator;
       res += std::to_string(gaps[gaps_i]);
     }

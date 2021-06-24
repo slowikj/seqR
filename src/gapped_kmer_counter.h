@@ -22,7 +22,7 @@ inline kmer_manager_t count(
     const std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs);
 
 template <class vector_t>
-inline std::vector<std::pair<int, int>> getContiguousIntervals(const vector_t &gaps);
+inline std::vector<std::pair<std::size_t, std::size_t>> getContiguousIntervals(const vector_t &gaps);
 
 template <class encoded_sequence_t>
 class SequenceWrapper;
@@ -38,7 +38,7 @@ inline kmer_manager_t count(
     bool isPositionalKMer,
     const std::vector<hashing::PolynomialSingleHasherConfig> &hasherConfigs) {
   SequenceWrapper<encoded_sequence_t> sequenceWrapper(sequence, hasherConfigs);
-  std::vector<std::pair<int, int>> contiguousIntervals = getContiguousIntervals(gaps);
+  std::vector<std::pair<std::size_t, std::size_t>> contiguousIntervals = getContiguousIntervals(gaps);
 
   kmer_manager_t kMerManager;
   int lastSequenceIndex = static_cast<int>(sequence.size()) - totalKMerSize + 1;
@@ -53,11 +53,11 @@ inline kmer_manager_t count(
 }
 
 template <class vector_t>
-inline std::vector<std::pair<int, int>> getContiguousIntervals(
+inline std::vector<std::pair<std::size_t, std::size_t>> getContiguousIntervals(
     const vector_t &gaps) {
-  std::vector<std::pair<int, int>> res;
+  std::vector<std::pair<std::size_t, std::size_t>> res;
   int currentKMerIndex = 0;
-  for (int gapIndex = 0; gapIndex < gaps.size(); ++gapIndex) {
+  for (std::size_t gapIndex = 0; gapIndex < gaps.size(); ++gapIndex) {
     int beginGapIndex = gapIndex;
     while (gapIndex < gaps.size() && gaps[gapIndex] == 0) {
       ++gapIndex;
@@ -91,12 +91,12 @@ class SequenceWrapper {
 
   inline bool isGappedKMerAllowed(
       int seqBegin,
-      const std::vector<std::pair<int, int>> &contiguousKMerIntervals) const {
+      const std::vector<std::pair<std::size_t, std::size_t>> &contiguousKMerIntervals) const {
     return _sequence.areAllElementsAllowed() ||
            std::all_of(
                std::begin(contiguousKMerIntervals),
                std::end(contiguousKMerIntervals),
-               [this, &seqBegin](const std::pair<int, int> &interval) -> bool {
+               [this, &seqBegin](const std::pair<std::size_t, std::size_t> &interval) -> bool {
                  int notAllowedItems = (_optionalNotAllowedPrefixCount[seqBegin + interval.second] -
                                         ((seqBegin + interval.first) == 0
                                              ? 0
@@ -108,7 +108,7 @@ class SequenceWrapper {
   inline typename hashing::PrefixSequencePolynomialHasher<encoded_sequence_t>::hash_t
   getGappedKMerHash(
       int beginPosition,
-      const std::vector<std::pair<int, int>> &contiguousKMerIntervals,
+      const std::vector<std::pair<std::size_t, std::size_t>> &contiguousKMerIntervals,
       bool isPositionalKMer) const {
     auto res = _sequenceHasher.getHashForSeveralIntervals(beginPosition, contiguousKMerIntervals);
     if (isPositionalKMer) {
@@ -127,7 +127,7 @@ class SequenceWrapper {
       const encoded_sequence_t &sequence) const {
     std::vector<int> res;
     res.reserve(sequence.size());
-    for (int i = 0; i < sequence.size(); ++i) {
+    for (std::size_t i = 0; i < sequence.size(); ++i) {
       bool isNotPresent = !sequence.isAllowed(i);
       res[i] = (i == 0) ? isNotPresent : res[i - 1] + isNotPresent;
     }

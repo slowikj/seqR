@@ -134,7 +134,7 @@ inline void updateKMerCountingResult(
       kMerTaskConfig.encodedSequencesList);
 
   std::vector<stringsCreator::KMerPositionInfo> kMersToCreate;
-  for (int seqNum = 0; seqNum < kMersManagers.size(); ++seqNum) {
+  for (std::size_t seqNum = 0; seqNum < kMersManagers.size(); ++seqNum) {
     for (const auto &kMerPair : kMersManagers[seqNum].getDictionary()) {
       bool kMerStringNeedsCreation = kMerCountingResult.addKMer(
           kMerPair.first,
@@ -180,7 +180,7 @@ class KMerCounterWorker : public RcppParallel::Worker {
   }
 
   inline void operator()(size_t begin, size_t end) override {
-    for (int rowNum = begin; rowNum < end; ++rowNum) {
+    for (std::size_t rowNum = begin; rowNum < end; ++rowNum) {
       auto row = encodedSequencesList[rowNum];
       kMers[rowNum] = countingKMersProc(row);
     }

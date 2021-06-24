@@ -44,7 +44,7 @@ template <class encoded_sequence_t,
           class kmer_manager_t>
 inline kmer_manager_t count(
     const encoded_sequence_t &sequence,
-    int k,
+    std::size_t k,
     bool isPositionalKMer,
     hashing::ComplexHasher &&complexHasher) {
   kmer_manager_t kMerManager;
@@ -52,11 +52,11 @@ inline kmer_manager_t count(
       sequence,
       std::move(complexHasher));
   auto notAllowedSequencePositions = computeNotAllowedPositions(sequence);
-  for (int i = 0; i < notAllowedSequencePositions.size() - 1; ++i) {
-    int allowedItemsBetween = notAllowedSequencePositions[i + 1] - notAllowedSequencePositions[i] - 1;
+  for (std::size_t i = 0; i < notAllowedSequencePositions.size() - 1; ++i) {
+    std::size_t allowedItemsBetween = notAllowedSequencePositions[i + 1] - notAllowedSequencePositions[i] - 1;
     if (allowedItemsBetween >= k) {
-      int begin = notAllowedSequencePositions[i] + 1;
-      int end = notAllowedSequencePositions[i + 1] - 1;
+      std::size_t begin = notAllowedSequencePositions[i] + 1;
+      std::size_t end = notAllowedSequencePositions[i + 1] - 1;
       countKMersForContiguousSeq<encoded_sequence_t, kmer_manager_t>(
           rollingWindow, kMerManager, k, begin, end, isPositionalKMer);
     }
@@ -76,7 +76,7 @@ inline std::vector<int> computeNotAllowedPositions(
 
   std::vector<int> res;
   res.push_back(leftSentinel);
-  for (int seq_i = 0; seq_i < sequence.size(); ++seq_i) {
+  for (std::size_t seq_i = 0; seq_i < sequence.size(); ++seq_i) {
     if (!sequence.isAllowed(seq_i)) {
       res.push_back(seq_i);
     }

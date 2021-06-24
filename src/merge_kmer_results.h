@@ -58,7 +58,7 @@ inline std::size_t getIntVectorLength(Rcpp::List res) {
 
 inline std::size_t computeResultIntVecLength(Rcpp::List resList) {
   std::size_t resultLength = 0;
-  for (int i = 0; i < resList.size(); ++i) {
+  for (R_xlen_t i = 0; i < resList.size(); ++i) {
     Rcpp::List elem = resList[i];
     resultLength += getIntVectorLength(elem);
   }
@@ -71,12 +71,12 @@ inline Rcpp::List mergeKMerResults(Rcpp::List resList) {
   auto [rows, cols, counts] = initResultIntVectors(computeResultIntVecLength(resList));
   robin_hood::unordered_map<Rcpp::String, uint32_t> kMerMapper;
 
-  for (std::size_t resList_i = 0; resList_i < resList.size(); ++resList_i) {
+  for (R_xlen_t resList_i = 0; resList_i < resList.size(); ++resList_i) {
     Rcpp::List currentRes = resList[resList_i];
     auto [currentRows, currentCols, currentCounts, currentKMers, currentNRow] = getParams(currentRes);
 
     std::vector<uint32_t> colMapper(currentKMers.size());
-    for (int i = 0; i < currentKMers.size(); ++i) {
+    for (R_xlen_t i = 0; i < currentKMers.size(); ++i) {
       auto newKMer = currentKMers[i];
       if (kMerMapper.find(newKMer) == kMerMapper.end()) {
         uint32_t newIndex = kMerMapper.size() + 1;
@@ -85,8 +85,8 @@ inline Rcpp::List mergeKMerResults(Rcpp::List resList) {
       colMapper[i] = kMerMapper[newKMer];
     }
 
-    for (int i = 0; i < currentRows.size(); ++i) {
-      std::size_t shiftedIndex = i + itemsOffset;
+    for (R_xlen_t i = 0; i < currentRows.size(); ++i) {
+      auto shiftedIndex = i + itemsOffset;
       rows[shiftedIndex] = currentRows[i] + processedSeqNum;
       cols[shiftedIndex] = colMapper[currentCols[i] - 1];
       counts[shiftedIndex] = currentCounts[i];

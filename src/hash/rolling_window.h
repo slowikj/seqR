@@ -21,7 +21,7 @@ class RollingWindow {
 
   RollingWindow() = delete;
 
-  inline void resetIndex(int nextElementIndex) {
+  inline void resetIndex(std::size_t nextElementIndex) {
     this->nextElementIndex = nextElementIndex;
     util::clear<encoded_elem_t>(this->window);
     this->hasher.clear();
@@ -56,7 +56,7 @@ class RollingWindow {
     return this->hasher.getHashes(this->nextElementIndex);
   }
 
-  inline int currentBeginIndex() const {
+  inline std::size_t currentBeginIndex() const {
     return this->nextElementIndex - this->window.size();
   }
 
@@ -67,6 +67,6 @@ class RollingWindow {
 
   std::queue<encoded_elem_t> window;
 
-  int nextElementIndex;
+  std::size_t nextElementIndex;
 };
 }  // namespace hashing

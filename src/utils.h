@@ -30,7 +30,7 @@ inline std::vector<int> getGapsAccumulated(const std::vector<int> &v) {
   std::vector<int> res(v.size());
   if (v.size() > 0) {
     res[0] = v[0] + 1;
-    for (int v_i = 1; v_i < v.size(); ++v_i) {
+    for (std::size_t v_i = 1; v_i < v.size(); ++v_i) {
       res[v_i] = res[v_i - 1] + v[v_i] + 1;
     }
   }
@@ -45,7 +45,7 @@ inline std::size_t getKMerRange(const std::vector<int> &gaps) {
   return util::getSum(gaps) + gaps.size() + 1;  // Rcpp::sum(gaps + 1) + 1
 }
 
-inline int getIntervalLength(const std::pair<int, int> &interval) {
+inline std::size_t getIntervalLength(const std::pair<std::size_t, std::size_t> &interval) {
   return interval.second - interval.first + 1;
 }
 

@@ -19,9 +19,9 @@ class PrefixSequencePolynomialHasher {
     computePrefixValues(sequence);
   }
 
-  [[nodiscard]] inline hash_t getHash(int begin, int end) const {
+  [[nodiscard]] inline hash_t getHash(std::size_t begin, std::size_t end) const {
     hash_t res(polynomialHasherConfigs.size());
-    for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
+    for (std::size_t hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
       auto M = polynomialHasherConfigs[hasherInd].M;
       res[hasherInd] = moduloMComputers[hasherInd].get(
           M + prefixComplexHashes[end + 1][hasherInd] -
@@ -32,15 +32,15 @@ class PrefixSequencePolynomialHasher {
   }
 
   [[nodiscard]] inline hash_t getHashForSeveralIntervals(
-      int beginPosition,
-      const std::vector<std::pair<int, int>> &contiguousIntervals) const {
+      std::size_t beginPosition,
+      const std::vector<std::pair<std::size_t, std::size_t>> &contiguousIntervals) const {
     hash_t res(this->getHashersNum());
     for (const auto &interval : contiguousIntervals) {
       auto intervalHash = this->getHash(
           interval.first + beginPosition,
           interval.second + beginPosition);
-      int intervalLength = util::getIntervalLength(interval);
-      for (int hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
+      std::size_t intervalLength = util::getIntervalLength(interval);
+      for (std::size_t hasherInd = 0; hasherInd < res.size(); ++hasherInd) {
         int powerP = this->getHasherP(hasherInd, intervalLength);
         res[hasherInd] = moduloMComputers[hasherInd].get(
             res[hasherInd] * powerP + intervalHash[hasherInd]);
@@ -64,30 +64,30 @@ class PrefixSequencePolynomialHasher {
   inline void computePrefixValues(const encoded_sequence_t &sequence) {
     initPrefixP(sequence.size(), polynomialHasherConfigs.size());
     initPrefixComplexHashes(sequence.size(), polynomialHasherConfigs.size());
-    for (int seqInd = 0; seqInd < sequence.size(); ++seqInd) {
+    for (std::size_t seqInd = 0; seqInd < sequence.size(); ++seqInd) {
       appendPrefixValues(sequence, seqInd);
     }
   }
 
-  inline void initPrefixP(int sequenceLength, int hashersNum) {
+  inline void initPrefixP(std::size_t sequenceLength, std::size_t hashersNum) {
     prefixP.reserve(sequenceLength);
     prefixP.push_back(hash_t(hashersNum, 1));
   }
 
-  inline void initPrefixComplexHashes(int sequenceLength, int hashersNum) {
+  inline void initPrefixComplexHashes(std::size_t sequenceLength, std::size_t hashersNum) {
     prefixComplexHashes.reserve(sequenceLength);
     prefixComplexHashes.push_back(hash_t(hashersNum));
   }
 
   inline void appendPrefixValues(const encoded_sequence_t &sequence,
-                                 int seqInd) {
+                                 std::size_t seqInd) {
     appendCurrentComplexHash(sequence[seqInd]);
     appendCurrentPowerP();
   }
 
   inline void appendCurrentComplexHash(const typename encoded_sequence_t::encoded_elem_t &encodedElem) {
     hash_t prefixHash(polynomialHasherConfigs.size());
-    for (int hasherInd = 0; hasherInd < prefixHash.size(); ++hasherInd) {
+    for (std::size_t hasherInd = 0; hasherInd < prefixHash.size(); ++hasherInd) {
       auto P = polynomialHasherConfigs[hasherInd].P;
       prefixHash[hasherInd] = moduloMComputers[hasherInd].get(
           prefixComplexHashes.back()[hasherInd] * P + encodedElem);
@@ -97,22 +97,22 @@ class PrefixSequencePolynomialHasher {
 
   inline void appendCurrentPowerP() {
     hash_t powersP(polynomialHasherConfigs.size());
-    for (int hasherInd = 0; hasherInd < powersP.size(); ++hasherInd) {
+    for (std::size_t hasherInd = 0; hasherInd < powersP.size(); ++hasherInd) {
       auto P = polynomialHasherConfigs[hasherInd].P;
       powersP[hasherInd] = moduloMComputers[hasherInd].get(prefixP.back()[hasherInd] * P);
     }
     prefixP.push_back(std::move(powersP));
   }
 
-  [[nodiscard]] inline PolynomialSingleHasherConfig::elem_t getHasherP(int hasherIndex, int power = 1) const {
+  [[nodiscard]] inline PolynomialSingleHasherConfig::elem_t getHasherP(std::size_t hasherIndex, std::size_t power = 1) const {
     return this->prefixP[power][hasherIndex];
   }
 
-  [[nodiscard]] inline PolynomialSingleHasherConfig::elem_t getHasherM(int hasherIndex) const {
+  [[nodiscard]] inline PolynomialSingleHasherConfig::elem_t getHasherM(std::size_t hasherIndex) const {
     return this->polynomialHasherConfigs[hasherIndex].M;
   }
 
-  [[nodiscard]] inline int getHashersNum() const {
+  [[nodiscard]] inline std::size_t getHashersNum() const {
     return this->polynomialHasherConfigs.size();
   }
 };
