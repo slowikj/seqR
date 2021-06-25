@@ -23,8 +23,6 @@ add_library(seqR
         src/count_kmers_specific/encoded_sequence/encoded_sequence_proxy.h
         src/count_kmers_specific/encoded_sequence/raw_encoded_sequences_list.h
         src/kmer_strings_creator.h
-        src/dictionary/helper/iterator_wrapper.h
-        src/dictionary/supported_dict_names.h
         src/kmer_task_config.h
         src/kmer_task_solver.h
         src/kmer_counting_result.h
@@ -36,8 +34,6 @@ add_library(seqR
         src/hash/globals.h
         src/hash/prefix_sequence_polynomial_hasher.h
         inst/thirdparty/dictionaries/robin_hood_martinus.h
-        src/dictionary/martinus_robin_hood_dictionary.h
         src/merge_kmer_results.h
-        src/dictionary/dictionaries.h
         src/merge_kmer_results.h
         src/proxy.cpp)
