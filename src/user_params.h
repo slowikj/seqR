@@ -14,6 +14,7 @@ struct UserParams {
   int batchSize;
   int hashDim;
   bool verbose;
+  bool parallelMode;
 
   static UserParams createForContiguous(Rcpp::Environment &params) {
     UserParams res(params);
@@ -35,6 +36,7 @@ struct UserParams {
         withKMerNames(Rcpp::as<bool>(params.get("with_kmer_names"))),
         batchSize(Rcpp::as<int>(params.get("batch_size"))),
         hashDim(Rcpp::as<int>(params.get("hash_dim"))),
-        verbose(Rcpp::as<bool>(params.get("verbose"))) {
+        verbose(Rcpp::as<bool>(params.get("verbose"))),
+        parallelMode(batchSize > 1) {
   }
 };

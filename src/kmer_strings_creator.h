@@ -36,7 +36,7 @@ inline void generate(
     const KMerTaskConfig<encoded_sequences_list_t> &kMerTaskConfig,
     std::vector<std::string> &resultStrings) {
   KMerStringsCreatorWorker<encoded_sequences_list_t> worker(indexedKMers, kMerTaskConfig, resultStrings);
-  RcppParallel::parallelFor(0, indexedKMers.size(), worker);
+  util::invokeRcppParallelOrSequentialIfSingle(worker, kMerTaskConfig.userParams.parallelMode);
 }
 
 class KMerPositionInfo {
@@ -75,6 +75,10 @@ class KMerStringsCreatorWorker : public RcppParallel::Worker {
       this->resultStrings[i + resultOffset] = createKMerFunc(
           this->kMersToGenerate[i].seqNum, this->kMersToGenerate[i].position);
     }
+  }
+
+  inline std::size_t tasksNum() const {
+    return kMersToGenerate.size();
   }
 
  private:

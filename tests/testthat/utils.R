@@ -1,3 +1,5 @@
+options(list(seqR_batch_size_default = 1))
+
 expect_matrices_equal <- function(a, b) {
   if(nrow(a) == 0 || ncol(a) == 0) {
     testthat::expect_true(nrow(a) == nrow(b) && ncol(a) == ncol(b))

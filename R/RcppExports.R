@@ -27,3 +27,6 @@ NULL
     .Call(`_seqR_merge_kmer_results`, resList)
 }
 
+#' @importFrom  RcppParallel RcppParallelLibs
+NULL
+

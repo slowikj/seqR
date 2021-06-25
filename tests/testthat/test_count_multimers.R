@@ -3,8 +3,7 @@ source("utils.R")
 
 invoke_test <- function(expected_res,
                         ...) {
-  triplet_matrix_res <- seqR::count_multimers(batch_size=200,
-                                              hash_dim=2,
+  triplet_matrix_res <- seqR::count_multimers(hash_dim=2,
                                               verbose=FALSE,
                                               ...)
   expect_matrices_equal(expected_res, as.matrix(triplet_matrix_res))

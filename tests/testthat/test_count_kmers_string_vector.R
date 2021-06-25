@@ -21,8 +21,7 @@ test_that("(string vector) count 3-mers for sequences A+", {
               sequences=sq,
               k=3,
               positional=FALSE,
-              with_kmer_counts=TRUE,
-              batch_size = 200)
+              with_kmer_counts=TRUE)
 })
 
 test_that("(string vector) count 3-mers for sequences A+ longer", {
@@ -38,8 +37,7 @@ test_that("(string vector) count 3-mers for sequences A+ longer", {
               sequences=sq,
               k=3,
               positional=FALSE,
-              with_kmer_counts=TRUE,
-              batch_size = 200)
+              with_kmer_counts=TRUE)
 })
 
 test_that("(string vector) count non positional 10-mers sequences A+ longer", {
@@ -57,8 +55,7 @@ test_that("(string vector) count non positional 10-mers sequences A+ longer", {
               sequences=sq,
               k=10,
               positional=FALSE,
-              with_kmer_counts=TRUE,
-              batch_size = 200)
+              with_kmer_counts=TRUE)
 })
 
 test_that("(string vector) find 3-mers for sequences A+ (without k-mer counts)", {
@@ -74,8 +71,7 @@ test_that("(string vector) find 3-mers for sequences A+ (without k-mer counts)",
               sequences=sq,
               k=3,
               positional=FALSE,
-              with_kmer_counts=FALSE,
-              batch_size = 200)
+              with_kmer_counts=FALSE)
 })
 
 test_that("(string vector) find 15-mers for sequences (AC){1000000}", {
@@ -94,6 +90,5 @@ test_that("(string vector) find 15-mers for sequences (AC){1000000}", {
               sequences=sq,
               k=15,
               positional=FALSE,
-              with_kmer_counts=TRUE,
-              batch_size = 10)
+              with_kmer_counts=TRUE)
 })

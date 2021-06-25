@@ -170,14 +170,17 @@ run_batch_test <- function(batch_size) {
 }
 
 test_that("test list input sequences that are processed in ONE batch iteration", {
+  skip_on_cran()
   run_batch_test(batch_size=3)
 })
 
 test_that("test list input sequences that are processed in TWO batch iterations", {
+  skip_on_cran()
   run_batch_test(batch_size=2)
 })
 
 test_that("test list input sequences that are processed in THREE batch iterations", {
+  skip_on_cran()
   run_batch_test(batch_size=1)
 })
 
@@ -195,8 +198,7 @@ test_that("the last input sequence does not contain any specified k-mer", {
                            kmer_alphabet=letters,
                            k=5,
                            positional=FALSE,
-                           with_kmer_counts = FALSE,
-                           batch_size = 100)
+                           with_kmer_counts = FALSE)
   
   expect_matrices_equal(as.matrix(res), expected_res)
 })
@@ -215,8 +217,7 @@ test_that("more than one last input sequences do not contain any specified k-mer
                            kmer_alphabet=letters,
                            k=5,
                            positional=FALSE,
-                           with_kmer_counts = FALSE,
-                           batch_size = 100)
+                           with_kmer_counts = FALSE)
   
   expect_matrices_equal(as.matrix(res), expected_res)
 })
@@ -235,8 +236,7 @@ test_that("some input sequences do not contain any specified k-mer", {
                            kmer_alphabet=letters,
                            k=5,
                            positional=FALSE,
-                           with_kmer_counts = FALSE,
-                           batch_size = 100)
+                           with_kmer_counts = FALSE)
   
   expect_matrices_equal(as.matrix(res), expected_res)
 })
@@ -248,8 +248,7 @@ test_that("expect dgCMatrix as an output", {
                            kmer_alphabet=c("A", "B"),
                            k=3,
                            positional=FALSE,
-                           with_kmer_counts=TRUE,
-                           batch_size = 100)
+                           with_kmer_counts=TRUE)
   
   expect_is(res, "dgCMatrix")
 })

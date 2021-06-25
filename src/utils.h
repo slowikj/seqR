@@ -3,6 +3,11 @@
 #include <algorithm>
 #include <queue>
 #include <vector>
+// [[Rcpp::depends(RcppParallel)]]
+//' @importFrom  RcppParallel RcppParallelLibs
+#include <RcppParallel.h>
+
+#include <exception>
 
 namespace util {
 
@@ -47,6 +52,15 @@ inline std::size_t getKMerRange(const std::vector<int> &gaps) {
 
 inline std::size_t getIntervalLength(const std::pair<std::size_t, std::size_t> &interval) {
   return interval.second - interval.first + 1;
+}
+
+template <class worker_t>
+inline void invokeRcppParallelOrSequentialIfSingle(worker_t &worker, bool parallelMode) {
+  if (parallelMode) {
+    RcppParallel::parallelFor(0, worker.tasksNum(), worker);
+  } else {
+    worker(0, worker.tasksNum());
+  }
 }
 
 // encapsulated for further optimizations (e.g., a custom, optimized modulo operation)
