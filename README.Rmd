@@ -106,32 +106,32 @@ The `seqR` package has been compared with other existing k-mer counting R packag
 [seqinr](https://cran.r-project.org/web/packages/seqinr/index.html),
 and [biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html).
 
-All benchmark experiments have been performed using Intel Core i7-6700HQ 2.60GHz, 8 cores using the (microbenchmark)[https://cran.r-project.org/web/packages/microbenchmark/index.html] R package. 
+All benchmark experiments have been performed using Intel Core i7-6700HQ 2.60GHz  8 cores, using the (microbenchmark)[https://cran.r-project.org/web/packages/microbenchmark/index.html] R package. 
 
 ### Contiguous k-mers
 
 #### Changing k
 
-<img src = "man/img/packages_different_k.png" align = "center" width="1200"/>
+<img src = "https://raw.githubusercontent.com/slowikj/seqR/master/man/img/packages_different_k.png" align = "center" width="100%"/>
 
-The input consists of one *DNA* sequence of length 3000.
+The input consists of one `DNA` sequence of length `3 000`.
 
-### Changing the number of sequences
+#### Changing the number of sequences
 
-<img src = "man/img/packages_different_seq_num.png" align = "center" width="1200"/>
+<img src = "https://raw.githubusercontent.com/slowikj/seqR/master/man/img/packages_different_seq_num.png" align = "center" width="100%"/>
 
-Each sequence has 3000 elements, contiguous 5-mer counting.
+Each `DNA` sequence has `3 000` elements, `contiguous 5-mer` counting.
 
 ### Gapped k-mers
 
 #### Changing the first contiguous part of a k-mer
 
-<img src = "man/img/gapped_kmers_changing_the_first_contiguous_part.png" align = "center" width="800"/>
+<img src = "https://raw.githubusercontent.com/slowikj/seqR/master/man/img/gapped_kmers_changing_the_first_contiguous_part.png" align = "center" width="100%"/>
 
-The input consists of one *DNA* sequence of length 1000000. Gapped 5-mers counting with base gaps `(1, 0, 0, 1)`.
+The input consists of one `DNA` sequence of length `1 000 000`. `Gapped 5-mers` counting with base gaps `(1, 0, 0, 1)`.
 
 #### Changing the first gap size
 
-<img src = "man/img/gapped_kmers_changing_the_first_gap.png" align = "center" width="800"/>
+<img src = "https://raw.githubusercontent.com/slowikj/seqR/master/man/img/gapped_kmers_changing_the_first_gap.png" align = "center" width="100%"/>
 
-The input consists of one *DNA* sequence of length 100000. Gapped 5-mers counting with base gaps `(1, 0, 0, 1)`.
+The input consists of one `DNA` sequence of length `100 000`. `Gapped 5-mers` counting with base gaps `(1, 0, 0, 1)`.
