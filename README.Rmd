@@ -106,7 +106,7 @@ The `seqR` package has been compared with other existing k-mer counting R packag
 [seqinr](https://cran.r-project.org/web/packages/seqinr/index.html),
 and [biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html).
 
-All benchmark experiments have been performed using Intel Core i7-6700HQ 2.60GHz  8 cores, using the (microbenchmark)[https://cran.r-project.org/web/packages/microbenchmark/index.html] R package. 
+All benchmark experiments have been performed using Intel Core i7-6700HQ 2.60GHz  8 cores, using the [microbenchmark](https://cran.r-project.org/web/packages/microbenchmark/index.html) R package. 
 
 ### Contiguous k-mers
 

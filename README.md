@@ -117,7 +117,7 @@ R packages:
 
 All benchmark experiments have been performed using Intel Core i7-6700HQ
 2.60GHz 8 cores, using the
-(microbenchmark)\[<https://cran.r-project.org/web/packages/microbenchmark/index.html>\]
+[microbenchmark](https://cran.r-project.org/web/packages/microbenchmark/index.html)
 R package.
 
 ### Contiguous k-mers
