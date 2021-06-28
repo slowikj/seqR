@@ -32,24 +32,34 @@
 #'  
 #' @examples
 #' 
+#' batch_size <- 1
+#' 
 #' # Counting 1-mers
-#' count_multimers(c("AAAACFVV", "AAAAAA", "AAAAD"), k_vector = c(1))
+#' count_multimers(
+#'    c("AAAACFVV", "AAAAAA", "AAAAD"),
+#'    k_vector = c(1),
+#'    batch_size=batch_size)
 #' 
 #' # Counting 1-mers and 2-mers
-#' count_multimers(c("AAAACFVV", "AAAAAA", "AAAAD"), k_vector = c(1, 2))
+#' count_multimers(
+#'     c("AAAACFVV", "AAAAAA", "AAAAD"),
+#'     k_vector = c(1, 2),
+#'     batch_size = batch_size)
 #' 
 #' # Counting 1-mers, 2-mers, and gapped 2-mers with the length of the gap = 1
 #' count_multimers(
 #'    c("AAAACFVV", "AAAAAA", "AAAAD"),
 #'    k_vector = c(1, 2, 2),
-#'    kmer_gaps = list(NULL, NULL, c(1)))
+#'    kmer_gaps = list(NULL, NULL, c(1)),
+#'    batch_size=batch_size)
 #' 
 #' # Counting 3-mers, positional 3-mers, and positional gapped 2-mers with the length of the gap = 1
 #' count_multimers(
 #'    c("AAAACFVV", "AAAAAA", "AAAAD"),
 #'    k_vector = c(3, 3, 2),
 #'    kmer_gaps_list = list(NULL, NULL, c(1)),
-#'    positional_vector = c(FALSE, TRUE, TRUE))
+#'    positional_vector = c(FALSE, TRUE, TRUE),
+#'    batch_size=batch_size)
 #' 
 #' @seealso Function that count k-mers of one type: \link[seqR]{count_kmers}
 #' @seealso Function that merges several k-mer matrices (rbind): \link[seqR]{rbind_columnwise}

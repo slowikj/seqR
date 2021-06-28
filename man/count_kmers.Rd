@@ -85,23 +85,45 @@ in \code{vignette("features-overview", package = "seqR")}.
 }
 \examples{
 
+batch_size <- 1
+
 # Counting 1-mers af two DNA sequences
-count_kmers(c("ACAT", "ACC"))
+count_kmers(
+   c("ACAT", "ACC"),
+   batch_size=batch_size)
 
 # Counting 2-mers of two DNA sequences
-count_kmers(c("ACAT", "ACC"), k=2)
+count_kmers(
+    c("ACAT", "ACC"),
+    k=2,
+    batch_size=batch_size)
 
 # Counting positional 2-mers of two DNA sequences
-count_kmers(c("ACAT", "ACC"), k=2, positional=TRUE)
+count_kmers(
+    c("ACAT", "ACC"),
+    k=2,
+    positional=TRUE,
+    batch_size=batch_size)
 
 # Counting positional 2-mers of two DNA sequences (second representation)
-count_kmers(list(c("A", "C", "A", "T"), c("A", "C", "C")), k=2, positional=TRUE)
+count_kmers(
+     list(c("A", "C", "A", "T"), c("A", "C", "C")),
+     k=2,
+     positional=TRUE,
+     batch_size=batch_size)
 
 # Counting 3-mers of two DNA sequences, considering only A and C elements
-count_kmers(c("ACAT", "ACC"), k=2, kmer_alphabet=c("A", "C"))
+count_kmers(
+    c("ACAT", "ACC"),
+    k=2,
+    kmer_alphabet=c("A", "C"),
+    batch_size=batch_size)
 
 # Counting gapped 3-mers with lengths of gaps 1 and 2
-count_kmers(c("ACATACTAT", "ACCCCCC"), kmer_gaps=c(1,2))
+count_kmers(
+    c("ACATACTAT", "ACCCCCC"),
+    kmer_gaps=c(1,2),
+    batch_size=batch_size)
 
 }
 \seealso{

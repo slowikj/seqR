@@ -90,7 +90,7 @@ possibility to compute a result k-mer matrix with or without human-readable k-me
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seqR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -252,38 +252,60 @@ in <code><a href='../articles/features-overview.html'>vignette("features-overvie
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
+<span class='va'>batch_size</span> <span class='op'>&lt;-</span> <span class='fl'>1</span>
+
 <span class='co'># Counting 1-mers af two DNA sequences</span>
-<span class='fu'>count_kmers</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ACAT"</span>, <span class='st'>"ACC"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>count_kmers</span><span class='op'>(</span>
+   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ACAT"</span>, <span class='st'>"ACC"</span><span class='op'>)</span>,
+   batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 2 x 3 sparse Matrix of class "dgCMatrix"
 #&gt;      C A T
 #&gt; [1,] 1 2 1
 #&gt; [2,] 2 1 .</div><div class='input'>
 <span class='co'># Counting 2-mers of two DNA sequences</span>
-<span class='fu'>count_kmers</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ACAT"</span>, <span class='st'>"ACC"</span><span class='op'>)</span>, k<span class='op'>=</span><span class='fl'>2</span><span class='op'>)</span>
+<span class='fu'>count_kmers</span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ACAT"</span>, <span class='st'>"ACC"</span><span class='op'>)</span>,
+    k<span class='op'>=</span><span class='fl'>2</span>,
+    batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 2 x 4 sparse Matrix of class "dgCMatrix"
 #&gt;      A.T_0 A.C_0 C.A_0 C.C_0
 #&gt; [1,]     1     1     1     .
 #&gt; [2,]     .     1     .     1</div><div class='input'>
 <span class='co'># Counting positional 2-mers of two DNA sequences</span>
-<span class='fu'>count_kmers</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ACAT"</span>, <span class='st'>"ACC"</span><span class='op'>)</span>, k<span class='op'>=</span><span class='fl'>2</span>, positional<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>count_kmers</span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ACAT"</span>, <span class='st'>"ACC"</span><span class='op'>)</span>,
+    k<span class='op'>=</span><span class='fl'>2</span>,
+    positional<span class='op'>=</span><span class='cn'>TRUE</span>,
+    batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 2 x 4 sparse Matrix of class "dgCMatrix"
 #&gt;      3_A.T_0 1_A.C_0 2_C.A_0 2_C.C_0
 #&gt; [1,]       1       1       1       .
 #&gt; [2,]       .       1       .       1</div><div class='input'>
 <span class='co'># Counting positional 2-mers of two DNA sequences (second representation)</span>
-<span class='fu'>count_kmers</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"C"</span>, <span class='st'>"A"</span>, <span class='st'>"T"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"C"</span>, <span class='st'>"C"</span><span class='op'>)</span><span class='op'>)</span>, k<span class='op'>=</span><span class='fl'>2</span>, positional<span class='op'>=</span><span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='fu'>count_kmers</span><span class='op'>(</span>
+     <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"C"</span>, <span class='st'>"A"</span>, <span class='st'>"T"</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"C"</span>, <span class='st'>"C"</span><span class='op'>)</span><span class='op'>)</span>,
+     k<span class='op'>=</span><span class='fl'>2</span>,
+     positional<span class='op'>=</span><span class='cn'>TRUE</span>,
+     batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 2 x 4 sparse Matrix of class "dgCMatrix"
 #&gt;      1_A.C_0 2_C.A_0 3_A.T_0 2_C.C_0
 #&gt; [1,]       1       1       1       .
 #&gt; [2,]       1       .       .       1</div><div class='input'>
 <span class='co'># Counting 3-mers of two DNA sequences, considering only A and C elements</span>
-<span class='fu'>count_kmers</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ACAT"</span>, <span class='st'>"ACC"</span><span class='op'>)</span>, k<span class='op'>=</span><span class='fl'>2</span>, kmer_alphabet<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"C"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>count_kmers</span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ACAT"</span>, <span class='st'>"ACC"</span><span class='op'>)</span>,
+    k<span class='op'>=</span><span class='fl'>2</span>,
+    kmer_alphabet<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"C"</span><span class='op'>)</span>,
+    batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 2 x 3 sparse Matrix of class "dgCMatrix"
 #&gt;      A.C_0 C.A_0 C.C_0
 #&gt; [1,]     1     1     .
 #&gt; [2,]     1     .     1</div><div class='input'>
 <span class='co'># Counting gapped 3-mers with lengths of gaps 1 and 2</span>
-<span class='fu'>count_kmers</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ACATACTAT"</span>, <span class='st'>"ACCCCCC"</span><span class='op'>)</span>, kmer_gaps<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>count_kmers</span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ACATACTAT"</span>, <span class='st'>"ACCCCCC"</span><span class='op'>)</span>,
+    kmer_gaps<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span>,
+    batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 2 x 6 sparse Matrix of class "dgCMatrix"
 #&gt;      C.T.T_1.2 T.C.T_1.2 A.A.A_1.2 A.A.C_1.2 A.C.C_1.2 C.C.C_1.2
 #&gt; [1,]         1         1         1         1         .         .

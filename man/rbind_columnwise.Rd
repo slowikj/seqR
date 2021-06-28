@@ -20,9 +20,11 @@ the same columns, as opposed to the implementation of \link[base]{rbind}.
 }
 \examples{
 
+batch_size <- 1
+
 # k-mer counting
-resA <- count_kmers(c("AAAAA", "ASASSSSASSA"), k=5)
-resB <- count_multimers(c("HWHSHS", "AASDCASD"), k_vector=c(3, 5))
+resA <- count_kmers(c("AAAAA", "ASASSSSASSA"), k=5, batch_size=batch_size)
+resB <- count_multimers(c("HWHSHS", "AASDCASD"), k_vector=c(3, 5), batch_size=batch_size)
 
 # rbind
 res <- rbind_columnwise(resA, resB)

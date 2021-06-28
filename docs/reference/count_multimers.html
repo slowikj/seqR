@@ -79,7 +79,7 @@ The i-th entry of each sequence corresponds to the i-th configuration." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seqR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -233,15 +233,23 @@ in <code><a href='../articles/features-overview.html'>vignette("features-overvie
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
+<span class='va'>batch_size</span> <span class='op'>&lt;-</span> <span class='fl'>1</span>
+
 <span class='co'># Counting 1-mers</span>
-<span class='fu'>count_multimers</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AAAACFVV"</span>, <span class='st'>"AAAAAA"</span>, <span class='st'>"AAAAD"</span><span class='op'>)</span>, k_vector <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>count_multimers</span><span class='op'>(</span>
+   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AAAACFVV"</span>, <span class='st'>"AAAAAA"</span>, <span class='st'>"AAAAD"</span><span class='op'>)</span>,
+   k_vector <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>,
+   batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 3 x 5 sparse Matrix of class "dgCMatrix"
 #&gt;      C A F V D
 #&gt; [1,] 1 4 1 2 .
 #&gt; [2,] . 6 . . .
 #&gt; [3,] . 4 . . 1</div><div class='input'>
 <span class='co'># Counting 1-mers and 2-mers</span>
-<span class='fu'>count_multimers</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AAAACFVV"</span>, <span class='st'>"AAAAAA"</span>, <span class='st'>"AAAAD"</span><span class='op'>)</span>, k_vector <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>count_multimers</span><span class='op'>(</span>
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AAAACFVV"</span>, <span class='st'>"AAAAAA"</span>, <span class='st'>"AAAAD"</span><span class='op'>)</span>,
+    k_vector <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span><span class='op'>)</span>,
+    batch_size <span class='op'>=</span> <span class='va'>batch_size</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 3 x 11 sparse Matrix of class "dgCMatrix"</div><div class='output co'>#&gt; <span class='message'>   [[ suppressing 11 column names ‘C’, ‘A’, ‘F’ ... ]]</span></div><div class='output co'>#&gt;                           
 #&gt; [1,] 1 4 1 2 . 3 1 1 1 1 .
 #&gt; [2,] . 6 . . . 5 . . . . .
@@ -250,7 +258,8 @@ in <code><a href='../articles/features-overview.html'>vignette("features-overvie
 <span class='fu'>count_multimers</span><span class='op'>(</span>
    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AAAACFVV"</span>, <span class='st'>"AAAAAA"</span>, <span class='st'>"AAAAD"</span><span class='op'>)</span>,
    k_vector <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>2</span><span class='op'>)</span>,
-   kmer_gaps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='cn'>NULL</span>, <span class='cn'>NULL</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+   kmer_gaps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='cn'>NULL</span>, <span class='cn'>NULL</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>,
+   batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 3 x 17 sparse Matrix of class "dgCMatrix"</div><div class='output co'>#&gt; <span class='message'>   [[ suppressing 17 column names ‘C’, ‘A’, ‘F’ ... ]]</span></div><div class='output co'>#&gt;                                       
 #&gt; [1,] 1 4 1 2 . 3 1 1 1 1 . 2 1 1 1 1 .
 #&gt; [2,] . 6 . . . 5 . . . . . 4 . . . . .
@@ -260,7 +269,8 @@ in <code><a href='../articles/features-overview.html'>vignette("features-overvie
    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AAAACFVV"</span>, <span class='st'>"AAAAAA"</span>, <span class='st'>"AAAAD"</span><span class='op'>)</span>,
    k_vector <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>3</span>, <span class='fl'>2</span><span class='op'>)</span>,
    kmer_gaps_list <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='cn'>NULL</span>, <span class='cn'>NULL</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>,
-   positional_vector <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>, <span class='cn'>TRUE</span>, <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>
+   positional_vector <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>, <span class='cn'>TRUE</span>, <span class='cn'>TRUE</span><span class='op'>)</span>,
+   batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 3 x 24 sparse Matrix of class "dgCMatrix"</div><div class='output co'>#&gt; <span class='message'>   [[ suppressing 24 column names ‘A.C.F_0.0’, ‘F.V.V_0.0’, ‘A.A.A_0.0’ ... ]]</span></div><div class='output co'>#&gt;                                                     
 #&gt; [1,] 1 1 2 1 1 . 1 1 1 1 1 1 . . . 1 1 1 1 1 1 . . .
 #&gt; [2,] . . 4 . . . 1 1 . . . . 1 1 . . . . . 1 1 1 1 .

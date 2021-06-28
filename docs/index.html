@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">seqR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.3</span>
       </span>
     </div>
 
@@ -176,22 +176,22 @@
 <h2 class="hasAnchor">
 <a href="#benchmarks" class="anchor"></a>Benchmarks</h2>
 <p>The <code>seqR</code> package has been compared with other existing k-mer counting R packages: <a href="https://cran.r-project.org/web/packages/biogram/index.html">biogram</a>, <a href="https://cran.r-project.org/web/packages/kmer/index.html">kmer</a>, <a href="https://cran.r-project.org/web/packages/seqinr/index.html">seqinr</a>, and <a href="https://bioconductor.org/packages/release/bioc/html/Biostrings.html">biostrings</a>.</p>
-<p>All benchmark experiments have been performed using Intel Core i7-6700HQ 2.60GHz, 8 cores using the (microbenchmark)<span class="math display"> &lt; <em>h</em><em>t</em><em>t</em><em>p</em><em>s</em> : //<em>c</em><em>r</em><em>a</em><em>n</em>.<em>r</em> − <em>p</em><em>r</em><em>o</em><em>j</em><em>e</em><em>c</em><em>t</em>.<em>o</em><em>r</em><em>g</em>/<em>w</em><em>e</em><em>b</em>/<em>p</em><em>a</em><em>c</em><em>k</em><em>a</em><em>g</em><em>e</em><em>s</em>/<em>m</em><em>i</em><em>c</em><em>r</em><em>o</em><em>b</em><em>e</em><em>n</em><em>c</em><em>h</em><em>m</em><em>a</em><em>r</em><em>k</em>/<em>i</em><em>n</em><em>d</em><em>e</em><em>x</em>.<em>h</em><em>t</em><em>m</em><em>l</em>&gt;</span> R package.</p>
+<p>All benchmark experiments have been performed using Intel Core i7-6700HQ 2.60GHz 8 cores, using the <a href="https://cran.r-project.org/web/packages/microbenchmark/index.html">microbenchmark</a> R package.</p>
 <div id="contiguous-k-mers" class="section level3">
 <h3 class="hasAnchor">
 <a href="#contiguous-k-mers" class="anchor"></a>Contiguous k-mers</h3>
 <div id="changing-k" class="section level4">
 <h4 class="hasAnchor">
 <a href="#changing-k" class="anchor"></a>Changing k</h4>
-<p><img src="man/img/packages_different_k.png" align="center" width="1200"></p>
-<p>The input consists of one <em>DNA</em> sequence of length 3000.</p>
+<p><img src="https://raw.githubusercontent.com/slowikj/seqR/master/man/img/packages_different_k.png" align="center" width="100%"></p>
+<p>The input consists of one <code>DNA</code> sequence of length <code>3 000</code>.</p>
 </div>
+<div id="changing-the-number-of-sequences" class="section level4">
+<h4 class="hasAnchor">
+<a href="#changing-the-number-of-sequences" class="anchor"></a>Changing the number of sequences</h4>
+<p><img src="https://raw.githubusercontent.com/slowikj/seqR/master/man/img/packages_different_seq_num.png" align="center" width="100%"></p>
+<p>Each <code>DNA</code> sequence has <code>3 000</code> elements, <code>contiguous 5-mer</code> counting.</p>
 </div>
-<div id="changing-the-number-of-sequences" class="section level3">
-<h3 class="hasAnchor">
-<a href="#changing-the-number-of-sequences" class="anchor"></a>Changing the number of sequences</h3>
-<p><img src="man/img/packages_different_seq_num.png" align="center" width="1200"></p>
-<p>Each sequence has 3000 elements, contiguous 5-mer counting.</p>
 </div>
 <div id="gapped-k-mers" class="section level3">
 <h3 class="hasAnchor">
@@ -199,14 +199,14 @@
 <div id="changing-the-first-contiguous-part-of-a-k-mer" class="section level4">
 <h4 class="hasAnchor">
 <a href="#changing-the-first-contiguous-part-of-a-k-mer" class="anchor"></a>Changing the first contiguous part of a k-mer</h4>
-<p><img src="man/img/gapped_kmers_changing_the_first_contiguous_part.png" align="center" width="800"></p>
-<p>The input consists of one <em>DNA</em> sequence of length 1000000. Gapped 5-mers counting with base gaps <code>(1, 0, 0, 1)</code>.</p>
+<p><img src="https://raw.githubusercontent.com/slowikj/seqR/master/man/img/gapped_kmers_changing_the_first_contiguous_part.png" align="center" width="100%"></p>
+<p>The input consists of one <code>DNA</code> sequence of length <code>1 000 000</code>. <code>Gapped 5-mers</code> counting with base gaps <code>(1, 0, 0, 1)</code>.</p>
 </div>
 <div id="changing-the-first-gap-size" class="section level4">
 <h4 class="hasAnchor">
 <a href="#changing-the-first-gap-size" class="anchor"></a>Changing the first gap size</h4>
-<p><img src="man/img/gapped_kmers_changing_the_first_gap.png" align="center" width="800"></p>
-<p>The input consists of one <em>DNA</em> sequence of length 100000. Gapped 5-mers counting with base gaps <code>(1, 0, 0, 1)</code>.</p>
+<p><img src="https://raw.githubusercontent.com/slowikj/seqR/master/man/img/gapped_kmers_changing_the_first_gap.png" align="center" width="100%"></p>
+<p>The input consists of one <code>DNA</code> sequence of length <code>100 000</code>. <code>Gapped 5-mers</code> counting with base gaps <code>(1, 0, 0, 1)</code>.</p>
 </div>
 </div>
 </div>
@@ -226,8 +226,9 @@
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
 <div class="citation">
