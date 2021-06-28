@@ -75,7 +75,7 @@ the same columns, as opposed to the implementation of rbind." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seqR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -156,9 +156,11 @@ the same columns, as opposed to the implementation of <a href='https://rdrr.io/r
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
+<span class='va'>batch_size</span> <span class='op'>&lt;-</span> <span class='fl'>1</span>
+
 <span class='co'># k-mer counting</span>
-<span class='va'>resA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='count_kmers.html'>count_kmers</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AAAAA"</span>, <span class='st'>"ASASSSSASSA"</span><span class='op'>)</span>, k<span class='op'>=</span><span class='fl'>5</span><span class='op'>)</span>
-<span class='va'>resB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='count_multimers.html'>count_multimers</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"HWHSHS"</span>, <span class='st'>"AASDCASD"</span><span class='op'>)</span>, k_vector<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>resA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='count_kmers.html'>count_kmers</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"AAAAA"</span>, <span class='st'>"ASASSSSASSA"</span><span class='op'>)</span>, k<span class='op'>=</span><span class='fl'>5</span>, batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
+<span class='va'>resB</span> <span class='op'>&lt;-</span> <span class='fu'><a href='count_multimers.html'>count_multimers</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"HWHSHS"</span>, <span class='st'>"AASDCASD"</span><span class='op'>)</span>, k_vector<span class='op'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>5</span><span class='op'>)</span>, batch_size<span class='op'>=</span><span class='va'>batch_size</span><span class='op'>)</span>
 
 <span class='co'># rbind</span>
 <span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>rbind_columnwise</span><span class='op'>(</span><span class='va'>resA</span>, <span class='va'>resB</span><span class='op'>)</span>
