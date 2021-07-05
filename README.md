@@ -31,10 +31,10 @@ implementation that supports
 
 Moreover, the result optimizes memory consumption by the application of
 **sparse matrices** (see [package
-Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)),
-compatible with machine learning packages such as
-[ranger](https://cran.r-project.org/web/packages/ranger/index.html) and
-[xgboost](https://cran.r-project.org/web/packages/xgboost/index.html).
+Matrix](https://CRAN.R-project.org/package=Matrix)), compatible with
+machine learning packages such as
+[ranger](https://CRAN.R-project.org/package=ranger) and
+[xgboost](https://CRAN.R-project.org/package=xgboost).
 
 ## How to…
 
@@ -109,16 +109,15 @@ comprehensive k-mer counting package. R package version 1.0.0.
 ## Benchmarks
 
 The `seqR` package has been compared with other existing k-mer counting
-R packages:
-[biogram](https://cran.r-project.org/web/packages/biogram/index.html),
-[kmer](https://cran.r-project.org/web/packages/kmer/index.html),
-[seqinr](https://cran.r-project.org/web/packages/seqinr/index.html), and
-[biostrings](https://bioconductor.org/packages/release/bioc/html/Biostrings.html).
+R packages: [biogram](https://CRAN.R-project.org/package=biogram),
+[kmer](https://CRAN.R-project.org/package=kmer),
+[seqinr](https://CRAN.R-project.org/package=seqinr), and
+[biostrings](https://bioconductor.org/packages/Biostrings).
 
 All benchmark experiments have been performed using Intel Core i7-6700HQ
 2.60GHz 8 cores, using the
-[microbenchmark](https://cran.r-project.org/web/packages/microbenchmark/index.html)
-R package.
+[microbenchmark](https://CRAN.R-project.org/package=microbenchmark) R
+package.
 
 ### Contiguous k-mers
 

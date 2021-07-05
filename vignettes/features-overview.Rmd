@@ -155,7 +155,7 @@ count_kmers(c("DDDVSVAA", "FFSFSVAAA"),
 ## Result type
 
 The result of the k-mer counting function is a k-mer matrix,
-represented as a **sparse matrix** (see [package Matrix](https://cran.r-project.org/web/packages/Matrix/index.html)).
+represented as a **sparse matrix** (see [package Matrix](https://CRAN.R-project.org/package=Matrix)).
 
 The i-th row of the result matrix corresponds to the i-th input sequence
 and contains the information about particular occurrences of k-mers.
@@ -180,8 +180,8 @@ print(pryr::object_size(as.matrix(r)))
 ```
 
 Importantly, such a representation is supported by machine learning packages
-such as [ranger](https://cran.r-project.org/web/packages/ranger/index.html)
-and [xgboost](https://cran.r-project.org/web/packages/xgboost/index.html).
+such as [ranger](https://CRAN.R-project.org/package=ranger)
+and [xgboost](https://CRAN.R-project.org/package=xgboost).
 Therefore, in those cases, it does not require extra conversions.
 
 ## Extra features

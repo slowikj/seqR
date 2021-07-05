@@ -1,8 +1,8 @@
 Package: seqR
 Type: Package
 Title: Fast and Comprehensive K-Mer Counting Package
-Version: 1.0.1
-Date: 2021-06-16
+Version: 1.0.0
+Date: 2021-07-05
 Authors@R: c(
     person(given = "Jadwiga",
            family = "Słowik",
@@ -39,7 +39,10 @@ Suggests:
     microbenchmark,
     pryr
 VignetteBuilder: knitr
-SystemRequirements: c++17, GNU make
+SystemRequirements:
+    c++17,
+    GNU make
+NeedsCompilation: yes
 RoxygenNote: 7.1.1
 Encoding: UTF-8
 Language: en-US
