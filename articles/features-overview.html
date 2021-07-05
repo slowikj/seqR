@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">seqR</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -58,6 +58,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -82,7 +85,7 @@
       <h1 data-toc-skip>Overview of seqR features</h1>
                         <h4 class="author">Jadwiga Słowik</h4>
             
-            <h4 class="date">2021-06-28</h4>
+            <h4 class="date">2021-07-05</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/slowikj/seqR/blob/master/vignettes/features-overview.Rmd"><code>vignettes/features-overview.Rmd</code></a></small>
       <div class="hidden name"><code>features-overview.Rmd</code></div>
@@ -237,7 +240,7 @@
 <div id="result-type" class="section level2">
 <h2 class="hasAnchor">
 <a href="#result-type" class="anchor"></a>Result type</h2>
-<p>The result of the k-mer counting function is a k-mer matrix, represented as a <strong>sparse matrix</strong> (see <a href="https://cran.r-project.org/web/packages/Matrix/index.html">package Matrix</a>).</p>
+<p>The result of the k-mer counting function is a k-mer matrix, represented as a <strong>sparse matrix</strong> (see <a href="https://CRAN.R-project.org/package=Matrix">package Matrix</a>).</p>
 <p>The i-th row of the result matrix corresponds to the i-th input sequence and contains the information about particular occurrences of k-mers. On the other hand, columns correspond to k-mers found in input sequences and they are represented in a human-readable form (for more detail see section <code>Human-readable representation of k-mers</code>).</p>
 <p>Due to the usage of a sparse matrix representation, a signification memory optimization is achieved, as it can be seen below.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -253,7 +256,7 @@
 <span class="co">#&gt; 20.3 MB</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu">pryr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pryr/man/object_size.html">object_size</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; 543 MB</span></code></pre></div>
-<p>Importantly, such a representation is supported by machine learning packages such as <a href="https://cran.r-project.org/web/packages/ranger/index.html">ranger</a> and <a href="https://cran.r-project.org/web/packages/xgboost/index.html">xgboost</a>. Therefore, in those cases, it does not require extra conversions.</p>
+<p>Importantly, such a representation is supported by machine learning packages such as <a href="https://CRAN.R-project.org/package=ranger">ranger</a> and <a href="https://CRAN.R-project.org/package=xgboost">xgboost</a>. Therefore, in those cases, it does not require extra conversions.</p>
 </div>
 <div id="extra-features" class="section level2">
 <h2 class="hasAnchor">
@@ -302,8 +305,8 @@
 <span class="op">)</span>
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;            expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#&gt;   multithreaded 231.2673 240.2071 253.4666 246.2874 257.5380 291.8506    11</span>
-<span class="co">#&gt;  singlethreaded 275.2471 283.4091 287.7990 288.7841 291.2349 300.6384    11</span></code></pre></div>
+<span class="co">#&gt;   multithreaded 256.2467 260.6078 270.9295 267.0380 269.3737 333.8882    11</span>
+<span class="co">#&gt;  singlethreaded 292.5373 296.1939 300.9650 300.8332 302.2836 318.2141    11</span></code></pre></div>
 </div>
 </div>
 <div id="verbose-mode" class="section level3">
