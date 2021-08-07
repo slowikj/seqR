@@ -85,7 +85,7 @@
       <h1 data-toc-skip>Overview of seqR features</h1>
                         <h4 class="author">Jadwiga Słowik</h4>
             
-            <h4 class="date">2021-07-20</h4>
+            <h4 class="date">2021-08-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/slowikj/seqR/blob/master/vignettes/features-overview.Rmd"><code>vignettes/features-overview.Rmd</code></a></small>
       <div class="hidden name"><code>features-overview.Rmd</code></div>
@@ -253,9 +253,9 @@
 <span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/count_kmers.html">count_kmers</a></span><span class="op">(</span><span class="fu">get_random_string_vector</span><span class="op">(</span><span class="fl">300</span>, <span class="fl">1000</span>, <span class="va">LETTERS</span><span class="op">)</span>,
                  k<span class="op">=</span><span class="fl">4</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu">pryr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pryr/man/object_size.html">object_size</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; 20.3 MB</span>
+<span class="co">#&gt; 20,272,168 B</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="fu">pryr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pryr/man/object_size.html">object_size</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; 543 MB</span></code></pre></div>
+<span class="co">#&gt; 542,725,568 B</span></code></pre></div>
 <p>Importantly, such a representation is supported by machine learning packages such as <a href="https://CRAN.R-project.org/package=ranger">ranger</a> and <a href="https://CRAN.R-project.org/package=xgboost">xgboost</a>. Therefore, in those cases, it does not require extra conversions.</p>
 </div>
 <div id="extra-features" class="section level2">
@@ -305,8 +305,8 @@
 <span class="op">)</span>
 <span class="co">#&gt; Unit: milliseconds</span>
 <span class="co">#&gt;            expr      min       lq     mean   median       uq      max neval</span>
-<span class="co">#&gt;   multithreaded 257.5263 261.7902 270.7680 265.9175 269.8540 324.1531    11</span>
-<span class="co">#&gt;  singlethreaded 299.8893 304.5463 308.7739 307.0304 311.4691 327.5105    11</span></code></pre></div>
+<span class="co">#&gt;   multithreaded 235.7328 255.6218 259.2515 259.3927 261.4981 292.7372    11</span>
+<span class="co">#&gt;  singlethreaded 280.5501 290.1118 297.6218 300.2037 303.1995 313.8287    11</span></code></pre></div>
 </div>
 </div>
 <div id="verbose-mode" class="section level3">
