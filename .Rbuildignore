@@ -8,7 +8,6 @@
 ^appveyor\.yml$
 ^\.github$
 ^CRAN-RELEASE$
-^cran-comments.md$
 ^README.Rmd$
 ^cran-comments\.md$
 ^CMakeLists.txt$
@@ -18,5 +17,4 @@
 ^config.status$
 ^LICENSE\.md$
 ^.covrignore$
-^cran_comments.md$
 ^NEWS.md$
