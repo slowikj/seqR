@@ -25,3 +25,5 @@ config.log
 config.status
 
 inst/img/*.sh
+/doc/
+/Meta/

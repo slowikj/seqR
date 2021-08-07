@@ -18,3 +18,5 @@
 ^LICENSE\.md$
 ^.covrignore$
 ^NEWS.md$
+^doc$
+^Meta$
