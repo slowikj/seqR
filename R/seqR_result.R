@@ -30,7 +30,7 @@
 rbind_columnwise <- function(...) {
   input <- lapply(list(...),
                   function(x) slam::as.simple_triplet_matrix(x))
-  .convert_seqR_list_to_Matrix_class(.cpp_merge_kmer_results(input))
+  .convert_internal_result_to_seqR_Matrix_class(.cpp_merge_kmer_results(input))
 }
 
 .convert_internal_result_to_seqR_Matrix_class <- function(seqR_list) {
