@@ -25,7 +25,10 @@ Score](https://www.code-inspector.com/project/23909/score/svg)](https://www.code
 -   **in-memory**
 -   **probabilistic** (with configurable dimensionality of a hash value
     used for storing k-mers internally),
--   **multi-threaded**
+-   **multi-threaded** (with a configurable size of the batch of
+    sequences (`batch_size`) to process in a single step. If
+    `batch_size` equals 1, the multi-threaded mode is disabled, which
+    potentially causes a longer computation time)
 
 implementation that supports
 

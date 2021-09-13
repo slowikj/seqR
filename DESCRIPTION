@@ -52,6 +52,7 @@ Collate:
     'CsgA.R'
     'RcppExports.R'
     'atomic_validators.R'
+    'common.R'
     'seqR_result.R'
     'kmer_typed_functions.R'
     'kmer_functions_provider.R'

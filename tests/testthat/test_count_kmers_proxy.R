@@ -119,6 +119,11 @@ test_that("provided batch size param is NULL", {
                "batch size field must be a positive integer number")
 })
 
+test_that("batch_size = 1 generates message", {
+  expect_message(seqR::count_kmers(sequences=c("AAAAA"),
+                                   batch_size=1))
+})
+
 # COUNTING ----
 
 test_that("test list input sequences for gapped k-mers", {

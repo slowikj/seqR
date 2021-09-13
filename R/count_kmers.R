@@ -177,10 +177,13 @@ count_kmers <- function(sequences,
   }
 }
 
+#' @include common.R
 .validate_batch_size <- function(param) {
   if(!is_positive_integer(param)) {
     stop("batch size field must be a positive integer number")
   }
+  
+  .show_message_if_batch_size_1(param)
 }
 
 .validate_hash_dim <- function(param) {

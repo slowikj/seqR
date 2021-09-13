@@ -70,3 +70,7 @@ test_that("(string vector) expect sparse Matrix as an output", {
   
   expect_is(res, "dgCMatrix")
 })
+
+test_that("batch_size = 1 generates message", {
+  expect_message(seqR::count_multimers("AAAA", k_vector=c(1, 2)))
+})

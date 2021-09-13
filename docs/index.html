@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Fast and Comprehensive K-Mer Counting Package">
-<meta property="og:description" content="A fast implementation of k-mer counting with the support for all biological sequences and k-mer variants.">
+<meta property="og:description" content="A fast implementation of k-mer (subsequences of length k) counting with the support for all types of biological sequences and k-mer variants.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -96,7 +96,8 @@
 <li><strong>in-memory</strong></li>
 <li>
 <strong>probabilistic</strong> (with configurable dimensionality of a hash value used for storing k-mers internally),</li>
-<li><strong>multi-threaded</strong></li>
+<li>
+<strong>multi-threaded</strong> (with a configurable size of the batch of sequences (<code>batch_size</code>) to process in a single step. If <code>batch_size</code> equals 1, the multi-threaded mode is disabled, which potentially causes a longer computation time)</li>
 </ul>
 <p>implementation that supports</p>
 <ul>
@@ -163,13 +164,71 @@
 <span class="co">#&gt; [1,]                 .                 .                 .</span>
 <span class="co">#&gt; [2,]                 1                 1                 1</span></code></pre></div>
 </div>
+<div id="counting-1-mers-and-2-mers" class="section level5">
+<h5 class="hasAnchor">
+<a href="#counting-1-mers-and-2-mers" class="anchor"></a>counting 1-mers and 2-mers</h5>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">CsgA</span><span class="op">)</span>
+
+<span class="va">CsgA</span><span class="op">[</span><span class="fl">1L</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>
+<span class="co">#&gt; $`sp|P28307|CSGA_ECOLI Major curlin subunit OS=Escherichia coli (strain K12) OX=83333 GN=csgA PE=1 SV=3`</span>
+<span class="co">#&gt;   [1] "M" "K" "L" "L" "K" "V" "A" "A" "I" "A" "A" "I" "V" "F" "S" "G" "S" "A"</span>
+<span class="co">#&gt;  [19] "L" "A" "G" "V" "V" "P" "Q" "Y" "G" "G" "G" "G" "N" "H" "G" "G" "G" "G"</span>
+<span class="co">#&gt;  [37] "N" "N" "S" "G" "P" "N" "S" "E" "L" "N" "I" "Y" "Q" "Y" "G" "G" "G" "N"</span>
+<span class="co">#&gt;  [55] "S" "A" "L" "A" "L" "Q" "T" "D" "A" "R" "N" "S" "D" "L" "T" "I" "T" "Q"</span>
+<span class="co">#&gt;  [73] "H" "G" "G" "G" "N" "G" "A" "D" "V" "G" "Q" "G" "S" "D" "D" "S" "S" "I"</span>
+<span class="co">#&gt;  [91] "D" "L" "T" "Q" "R" "G" "F" "G" "N" "S" "A" "T" "L" "D" "Q" "W" "N" "G"</span>
+<span class="co">#&gt; [109] "K" "N" "S" "E" "M" "T" "V" "K" "Q" "F" "G" "G" "G" "N" "G" "A" "A" "V"</span>
+<span class="co">#&gt; [127] "D" "Q" "T" "A" "S" "N" "S" "S" "V" "N" "V" "T" "Q" "V" "G" "F" "G" "N"</span>
+<span class="co">#&gt; [145] "N" "A" "T" "A" "H" "Q" "Y"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`sp|P0A1E7|CSGA_SALEN Major curlin subunit OS=Salmonella enteritidis OX=149539 GN=csgA PE=1 SV=1`</span>
+<span class="co">#&gt;   [1] "M" "K" "L" "L" "K" "V" "A" "A" "F" "A" "A" "I" "V" "V" "S" "G" "S" "A"</span>
+<span class="co">#&gt;  [19] "L" "A" "G" "V" "V" "P" "Q" "W" "G" "G" "G" "G" "N" "H" "N" "G" "G" "G"</span>
+<span class="co">#&gt;  [37] "N" "S" "S" "G" "P" "D" "S" "T" "L" "S" "I" "Y" "Q" "Y" "G" "S" "A" "N"</span>
+<span class="co">#&gt;  [55] "A" "A" "L" "A" "L" "Q" "S" "D" "A" "R" "K" "S" "E" "T" "T" "I" "T" "Q"</span>
+<span class="co">#&gt;  [73] "S" "G" "Y" "G" "N" "G" "A" "D" "V" "G" "Q" "G" "A" "D" "N" "S" "T" "I"</span>
+<span class="co">#&gt;  [91] "E" "L" "T" "Q" "N" "G" "F" "R" "N" "N" "A" "T" "I" "D" "Q" "W" "N" "A"</span>
+<span class="co">#&gt; [109] "K" "N" "S" "D" "I" "T" "V" "G" "Q" "Y" "G" "G" "N" "N" "A" "A" "L" "V"</span>
+<span class="co">#&gt; [127] "N" "Q" "T" "A" "S" "D" "S" "S" "V" "M" "V" "R" "Q" "V" "G" "F" "G" "N"</span>
+<span class="co">#&gt; [145] "N" "A" "T" "A" "N" "Q" "Y"</span>
+
+<span class="fu"><a href="reference/count_multimers.html">count_multimers</a></span><span class="op">(</span>sequences<span class="op">=</span><span class="va">CsgA</span>,
+                k_vector <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; 5 x 144 sparse Matrix of class "dgCMatrix"</span>
+<span class="co">#&gt;    [[ suppressing 144 column names 'R', 'L', 'Y' ... ]]</span>
+<span class="co">#&gt;                                                                                </span>
+<span class="co">#&gt; [1,] 2 9 4 1 8 5 10 2 2 4 16 29 4 11  9 2 16 3 14 1 2 1 1 1 1 2 1 1 1 1 1 3 1 2</span>
+<span class="co">#&gt; [2,] 3 8 5 2 7 6 11 2 2 4 17 22 3 11 10 2 20 1 15 1 3 1 . . 3 1 1 1 2 5 2 3 . 2</span>
+<span class="co">#&gt; [3,] 3 8 5 2 7 6 11 2 2 4 17 22 3 11 10 2 20 1 15 1 3 1 . . 3 1 1 1 2 5 2 3 . 2</span>
+<span class="co">#&gt; [4,] 2 9 4 1 9 5 10 2 1 4 15 30 4 11  9 2 17 4 13 1 2 1 1 1 1 2 1 1 1 1 1 3 1 2</span>
+<span class="co">#&gt; [5,] 3 8 5 2 7 6 11 2 2 4 17 22 3 11 10 2 20 1 15 1 3 1 . . 3 1 1 1 2 5 2 3 . 2</span>
+<span class="co">#&gt;                                                                                </span>
+<span class="co">#&gt; [1,] 1 3 1 3 1 2 7 1 1 1 1 3 1 1 2 2 1 1 12 3 1 2 1 1 1 1 1 1 1 1 1 1 1 2 1 2 2</span>
+<span class="co">#&gt; [2,] . 2 . 2 1 2 3 . 1 2 . 3 1 . 3 2 2 1  6 4 2 3 1 2 1 . 1 . 1 1 . 1 . 1 1 2 .</span>
+<span class="co">#&gt; [3,] . 2 . 2 1 2 3 . 1 2 . 3 1 . 3 2 2 1  6 4 2 3 1 2 1 . 1 . 1 1 . 1 . 1 1 2 .</span>
+<span class="co">#&gt; [4,] 1 3 1 3 1 2 6 1 1 2 1 3 2 1 2 2 1 . 13 3 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2</span>
+<span class="co">#&gt; [5,] . 2 . 2 1 2 3 . 1 2 . 3 1 . 3 2 2 1  6 4 2 3 1 2 1 . 1 . 1 1 . 1 . 1 1 2 .</span>
+<span class="co">#&gt;                                                                               </span>
+<span class="co">#&gt; [1,] 1 1 1 1 1 1 2 7 1 1 2 1 1 1 2 1 1 1 1 1 1 2 2 3 1 1 1 1 1 1 1 2 2 1 1 3 1</span>
+<span class="co">#&gt; [2,] . 1 . 1 1 1 1 5 . . 2 . . 1 1 1 . . . 1 1 2 1 4 1 1 1 1 . 1 . 2 3 1 1 1 .</span>
+<span class="co">#&gt; [3,] . 1 . 1 1 1 1 5 . . 2 . . 1 1 1 . . . 1 1 2 1 4 1 1 1 1 . 1 . 2 3 1 1 1 .</span>
+<span class="co">#&gt; [4,] 1 1 . 1 1 1 1 7 1 1 2 1 1 1 2 1 . 1 1 1 1 2 2 3 1 . 1 1 1 1 1 1 2 1 1 3 1</span>
+<span class="co">#&gt; [5,] . 1 . 1 1 1 1 5 . . 2 . . 1 1 1 . . . 1 1 2 1 4 1 1 1 1 . 1 . 2 3 1 1 1 .</span>
+<span class="co">#&gt;                                                                             </span>
+<span class="co">#&gt; [1,] 1 1 2 1 2 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .</span>
+<span class="co">#&gt; [2,] . 1 . 1 3 1 1 1 1 1 1 1 1 1 1 2 1 1 2 2 1 1 1 2 1 1 1 1 1 1 1 1 . . . .</span>
+<span class="co">#&gt; [3,] . 1 . 1 3 1 1 1 1 1 1 1 1 1 1 2 1 1 2 2 1 1 1 2 1 1 1 1 1 1 1 1 . . . .</span>
+<span class="co">#&gt; [4,] 1 1 2 1 2 . . . . . . . . . . . . . 1 . . . . . . . . . . . . . 1 1 1 1</span>
+<span class="co">#&gt; [5,] . 1 . 1 3 1 1 1 1 1 1 1 1 1 1 2 1 1 2 2 1 1 1 2 1 1 1 1 1 1 1 1 . . . .</span></code></pre></div>
+</div>
 </div>
 </div>
 <div id="how-to-cite" class="section level3">
 <h3 class="hasAnchor">
 <a href="#how-to-cite" class="anchor"></a>How to cite</h3>
 <p>For citation type:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html">citation</a></span><span class="op">(</span><span class="st">"seqR"</span><span class="op">)</span></code></pre></div>
 <p>or use:</p>
 <p>Jadwiga Słowik and Michał Burdukiewicz (2021). seqR: fast and comprehensive k-mer counting package. R package version 1.0.0.</p>
@@ -229,9 +288,7 @@
 <div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
+<li>GPL (&gt;= 3)</li>
 </ul>
 </div>
 <div class="citation">
@@ -251,8 +308,11 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=seqR"><img src="http://www.r-pkg.org/badges/version/seqR" alt="CRAN_Status_Badge"></a></li>
 <li><a href="https://github.com/slowikj/seqR/actions"><img src="https://github.com/slowikj/seqR/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></li>
+<li><a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPL v3"></a></li>
+<li><a href="https://codecov.io/github/slowikj/seqR?branch=master"><img src="https://codecov.io/github/slowikj/seqR/coverage.svg?branch=master" alt="codecov.io"></a></li>
 <li><a href="https://www.code-inspector.com/project/23909/status/svg"><img src="https://www.code-inspector.com/project/23909/status/svg" alt="Code Quality Status"></a></li>
 <li><a href="https://www.code-inspector.com/project/23909/score/svg"><img src="https://www.code-inspector.com/project/23909/score/svg" alt="Code Quality Score"></a></li>
 </ul>
