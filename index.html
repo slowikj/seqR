@@ -96,7 +96,8 @@
 <li><strong>in-memory</strong></li>
 <li>
 <strong>probabilistic</strong> (with configurable dimensionality of a hash value used for storing k-mers internally),</li>
-<li><strong>multi-threaded</strong></li>
+<li>
+<strong>multi-threaded</strong> (with a configurable size of the batch of sequences (<code>batch_size</code>) to process in a single step. If <code>batch_size</code> equals 1, the multi-threaded mode is disabled, which potentially causes a longer computation time)</li>
 </ul>
 <p>implementation that supports</p>
 <ul>
