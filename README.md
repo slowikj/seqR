@@ -8,6 +8,8 @@
 status](https://github.com/slowikj/seqR/workflows/R-CMD-check/badge.svg)](https://github.com/slowikj/seqR/actions)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![License: GPL
+v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![codecov.io](https://codecov.io/github/slowikj/seqR/coverage.svg?branch=master)](https://codecov.io/github/slowikj/seqR?branch=master)
 [![Code Quality
 Status](https://www.code-inspector.com/project/23909/status/svg)](https://www.code-inspector.com/project/23909/status/svg)
