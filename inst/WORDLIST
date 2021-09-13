@@ -41,3 +41,5 @@ cran
 https
 microbenchmark
 seqinr
+io
+codecov
