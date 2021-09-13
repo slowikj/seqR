@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // count_contiguous_kmers_string_vector
 Rcpp::List count_contiguous_kmers_string_vector(Rcpp::StringVector& sq, Rcpp::StringVector& kmerAlphabet, Rcpp::Environment& rcppParams);
 RcppExport SEXP _seqR_count_contiguous_kmers_string_vector(SEXP sqSEXP, SEXP kmerAlphabetSEXP, SEXP rcppParamsSEXP) {
