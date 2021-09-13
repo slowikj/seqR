@@ -16,9 +16,10 @@ terms widely used in bioinformatics.
 
 #### Installed size is 6.6Mb, sub-directories of 1Mb or more: libs 6.3Mb
 
-The package has a slightly increased size only when it is compiled using g++ compiler.
-The main reason is related to speed performance optimizations
-that take advantage of C++ templates which increase the size of the compiled code.
+The package has a larger size only if it is compiled with a g++ compiler.
+In this case, the size of the compiled code is increased
+due to speed performance optimizations
+that take advantage of C++ templates.
 
 #### GNU make is a SystemRequirements
 

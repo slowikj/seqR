@@ -2,7 +2,7 @@ Package: seqR
 Type: Package
 Title: Fast and Comprehensive K-Mer Counting Package
 Version: 1.0.0
-Date: 2021-07-05
+Date: 2021-09-13
 Authors@R: c(
     person(given = "Jadwiga",
            family = "Słowik",

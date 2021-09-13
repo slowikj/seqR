@@ -1,9 +1,9 @@
-#' seqR: an R package for fast and comprehensive k-mer counting
+#' seqR: Fast and Comprehensive K-Mer Counting Package
 #' 
 #' @description
 #' 
 #' The \code{seqR} package provides in-memory, probabilistic,
-#' highly-optimized, and multi-threaded implementation of k-mer counting algorithm.
+#' highly-optimized, and multi-threaded implementation of k-mer counting.
 #' 
 #' @author Jadwiga Słowik
 #' 
