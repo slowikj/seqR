@@ -17,7 +17,7 @@ Authors@R: c(
     )
 Maintainer: Jadwiga Słowik <jadwiga.slowik5@gmail.com>
 Description: A fast implementation of k-mer counting with the support for all biological sequences and k-mer variants.
-License: MIT + file LICENSE
+License: GPL (>= 3)
 Imports:
     Rcpp (>= 1.0.4),
     RcppParallel,
