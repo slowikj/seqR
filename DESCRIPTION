@@ -48,7 +48,9 @@ Encoding: UTF-8
 Language: en-US
 URL: https://github.com/slowikj/seqR
 BugReports: https://github.com/slowikj/seqR/issues
+LazyData: TRUE
 Collate: 
+    'CsgA.R'
     'RcppExports.R'
     'atomic_validators.R'
     'seqR_result.R'
