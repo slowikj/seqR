@@ -89,6 +89,19 @@ count_kmers(sequences=c("AAAAAVVAVFF", "DFGSADFGSA"),
             kmer_gaps=c(0, 1, 0, 2))
 ```
 
+
+##### counting 1-mers and 2-mers
+
+```{r}
+data(CsgA)
+
+CsgA[1L:2]
+
+count_multimers(sequences=CsgA,
+                k_vector = c(1, 2))
+```
+
+
 ### How to cite
 
 For citation type:
