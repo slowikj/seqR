@@ -5,12 +5,12 @@
 \alias{CsgA}
 \title{CsgA data set}
 \format{
-a list of 24 proteins.
+a list of 5 proteins.
 }
 \usage{
 CsgA
 }
 \description{
-24 reviewed sequences of CsgA proteins obtained from UniProt on 13-09-2021.
+5 reviewed sequences of CsgA proteins obtained from UniProt on 13-09-2021.
 }
 \keyword{datasets}

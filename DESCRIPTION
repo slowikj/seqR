@@ -15,7 +15,6 @@ Authors@R: c(
            email = "michalburdukiewicz@gmail.com", 
            comment = c(ORCID = "0000-0001-8926-582X"))
     )
-Maintainer: Jadwiga Słowik <jadwiga.slowik5@gmail.com>
 Description: A fast implementation of k-mer (subsequences of length k) counting with the support for all types of biological sequences and k-mer variants.
 License: GPL (>= 3)
 Imports:
