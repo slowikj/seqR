@@ -18,8 +18,10 @@ library(seqR)
 # seqR - fast and comprehensive k-mer counting package
 
 <!-- badges: start -->
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/seqR)](https://cran.r-project.org/package=seqR)
 [![R build status](https://github.com/slowikj/seqR/workflows/R-CMD-check/badge.svg)](https://github.com/slowikj/seqR/actions)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![codecov.io](https://codecov.io/github/slowikj/seqR/coverage.svg?branch=master)](https://codecov.io/github/slowikj/seqR?branch=master)
 [![Code Quality Status](https://www.code-inspector.com/project/23909/status/svg)](https://www.code-inspector.com/project/23909/status/svg)
 [![Code Quality Score](https://www.code-inspector.com/project/23909/score/svg)](https://www.code-inspector.com/project/23909/score/svg)
 <!-- badges: end -->
