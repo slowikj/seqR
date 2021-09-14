@@ -19,10 +19,3 @@
 ^NEWS.md$
 ^doc$
 ^Meta$
-
-build/cmake_install.cmake
-build/CMakeCache.txt
-build/CMakeFiles
-build/compile_commands.json
-build/Makefile
-build/.cmake/*
