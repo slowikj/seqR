@@ -37,7 +37,8 @@ Suggests:
     rmarkdown,
     spelling,
     testthat
-VignetteBuilder: knitr
+VignetteBuilder: 
+    knitr
 SystemRequirements:
     c++17,
     GNU make

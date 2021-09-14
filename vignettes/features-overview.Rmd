@@ -2,7 +2,7 @@
 title: "Overview of seqR features"
 author: "Jadwiga Słowik"
 date: "`r Sys.Date()`"
-vignette: |
+vignette: >
   %\VignetteIndexEntry{Overview of seqR features}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
