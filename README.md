@@ -47,8 +47,13 @@ machine learning packages such as
 
 ### How to install
 
-It is possible to download the development version directly from GitHub
-repository:
+To install `seqR` from CRAN:
+
+``` r
+install.packages("seqR")
+```
+
+Alternatively, if you want to use the latest development version:
 
 ``` r
 # install.packages("devtools")

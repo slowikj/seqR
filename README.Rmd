@@ -52,7 +52,13 @@ and [xgboost](https://CRAN.R-project.org/package=xgboost).
 
 ### How to install
 
-It is possible to download the development version directly from GitHub repository:
+To install `seqR` from CRAN:
+
+```{r, eval=FALSE}
+install.packages("seqR")
+```
+
+Alternatively, if you want to use the latest development version:
 
 ```{r, eval=FALSE}
 # install.packages("devtools")
