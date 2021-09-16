@@ -125,8 +125,7 @@ class SequenceWrapper {
 
   inline std::vector<int> _prepareNotAllowedItemsPrefixCount(
       const encoded_sequence_t &sequence) const {
-    std::vector<int> res;
-    res.reserve(sequence.size());
+    std::vector<int> res(sequence.size());
     for (std::size_t i = 0; i < sequence.size(); ++i) {
       bool isNotPresent = !sequence.isAllowed(i);
       res[i] = (i == 0) ? isNotPresent : res[i - 1] + isNotPresent;
