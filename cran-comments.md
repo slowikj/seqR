@@ -7,19 +7,10 @@
 
 ## R CMD check results
 
+* This is a reupload.
+* Fixed an error thrown by **clang-ASAN**
+
 ### NOTES
-
-#### CRAN pre-check feedback
-
-> Flavor: r-devel-windows-ix86+x86_64
-> Check: re-building of vignette outputs, Result: WARNING
->   Error(s) in re-building vignettes:
->   --- re-building 'features-overview.Rmd' using rmarkdown
->   Error: processing vignette 'features-overview.Rmd' failed with diagnostics:
->   there is no package called 'stringi'
->   --- failed re-building 'features-overview.Rmd'
-
-Fixed by removed the build directory from .Rbuildignore.
 
 #### Possibly mis-spelled words in DESCRIPTION: Mer (3:33), mer (19:41, 19:106)
 
